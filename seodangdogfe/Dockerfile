@@ -18,13 +18,17 @@ RUN npm run build
 # nginx 
 FROM nginx:stable-alpine
 # 기본 nginx 설정 파일을 삭제한다. (custom 설정과 충돌 방지)
+
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+
+
 RUN rm /etc/nginx/conf.d/default.conf
 # nignx 위치에 넣어주기
 
 # custom 설정파일을 컨테이너 내부로 복사한다.
 COPY nginx/nginx.conf /etc/nginx/conf.d
 
-COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+
 
 # 컨테이너의 80번 포트를 열어준다.
 EXPOSE 80
