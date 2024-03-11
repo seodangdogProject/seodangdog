@@ -3,7 +3,7 @@ FROM node:20.11.1
 # 경로 설정하기
 WORKDIR /app
 # package.json 워킹 디렉토리에 복사 (.은 설정한 워킹 디렉토리를 뜻함)
-COPY package*.json ./
+COPY package.json .
 
 # 명령어 실행 (의존성 설치)
 RUN npm install
@@ -17,15 +17,14 @@ RUN npm run build
 # ---------------- 
 # nginx 
 FROM nginx:stable-alpine
-
-# nignx 위치에 넣어주기
-COPY --from=builder /app/build /ubuntu/share/nginx/html
-
 # 기본 nginx 설정 파일을 삭제한다. (custom 설정과 충돌 방지)
 RUN rm /etc/nginx/conf.d/default.conf
+# nignx 위치에 넣어주기
 
 # custom 설정파일을 컨테이너 내부로 복사한다.
 COPY nginx/nginx.conf /etc/nginx/conf.d
+
+COPY --from=builder /app/build /ubuntu/share/nginx/html
 
 # 컨테이너의 80번 포트를 열어준다.
 EXPOSE 80
