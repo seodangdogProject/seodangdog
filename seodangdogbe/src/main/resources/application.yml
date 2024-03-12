@@ -18,6 +18,9 @@ spring:
       database: seodangdog
       username: seodangdog
       password: dogseodang0311
-
+    redis:
+      host: mongodb://j10e104.p.ssafy.io
+      port: 6379
+      password: seodangdog
 server:
   port : 8081
