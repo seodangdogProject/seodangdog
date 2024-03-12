@@ -12,14 +12,12 @@ spring:
       ddl-auto: update
   data:
     mongodb:
-      host: mongodb://j10e104.p.ssafy.io
-      port: 27017
+      uri: mongodb://j10e104.p.ssafy.io:27017/seodangdog
       authentication-database: admin
-      database: seodangdog
       username: seodangdog
       password: dogseodang0311
     redis:
-      host: mongodb://j10e104.p.ssafy.io
+      host: j10e104.p.ssafy.io
       port: 6379
       password: seodangdog
 server:
