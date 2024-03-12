@@ -40,9 +40,6 @@ tasks.named('test') {
 }
 
 // jar 하나만 생성하기
-bootJar {
-	enabled = false
-}
 jar {
-	enabled = true
+	enabled = false
 }
