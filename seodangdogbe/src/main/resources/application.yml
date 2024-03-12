@@ -10,6 +10,14 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  data:
+    mongodb:
+      host: mongodb://j10e104.p.ssafy.io
+      port: 27017
+      authentication-database: admin
+      database: seodangdog
+      username: seodangdog
+      password: dogseodang0311
 
 server:
   port : 8081
