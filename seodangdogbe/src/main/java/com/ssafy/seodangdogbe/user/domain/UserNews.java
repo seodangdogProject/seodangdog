@@ -33,6 +33,17 @@ public class UserNews {
 
     @Column(name = "highlight_list", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
-    private Map<String, String> highlight;
+    private Map<String, String> highlightList;
 
+    @Column(name = "word_list", columnDefinition = "json")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Map<String, String> wordList;
+
+    @Column(name = "answer_list", columnDefinition = "json")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Map<String, String> answerList;
+
+    @Column(name = "summary", columnDefinition = "json")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Map<String, String> summary;
 }

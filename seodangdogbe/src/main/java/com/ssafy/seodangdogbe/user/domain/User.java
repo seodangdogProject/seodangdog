@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -12,7 +14,6 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id @GeneratedValue
-//    @Column(name = "user_seq")    // 디폴트랑 똑같은 것 같은데 없어도 되나?
     private int userSeq;
 
     // 사용자 경험치
@@ -28,4 +29,21 @@ public class User {
     private String userId;
 
     private String password;
+
+    // 양방향 연관관계 매핑 (주인X)
+    @OneToMany(mappedBy = "user")
+    private List<UserWord> userWords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserKeyword> userKeywords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserBadge> userBadges = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserMedia> userMediaList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserNews> userNewsList = new ArrayList<>();
+
 }

@@ -34,6 +34,4 @@ public class News {
 
     @OneToMany(mappedBy = "news")
     private List<KeywordNews> keywordNewsList = new ArrayList<>();
-
-
 }
