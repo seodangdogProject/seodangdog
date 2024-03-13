@@ -27,7 +27,4 @@ public class UserExp {
     private int wordGameExp;
 
 
-
-
-
 }

@@ -7,16 +7,18 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class UserBadge {
+public class UserMedia {
 
     @Id @GeneratedValue
-    private int userBadgeSeq;
+    private Long userMediaSeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "badge_seq")
-    private Badge badge;
+    @JoinColumn(name = "media_code")
+    private Media media;
+
+    private int weight;
 }

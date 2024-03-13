@@ -12,10 +12,10 @@ public class UserWord {
     @Id @GeneratedValue
     private Long wordSeq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq")
     private User user;
 
-    // 단어 자체가 mongodb 접근 아이디가 된다
+    // 단어 자체가 mongodb 단어 접근 아이디가 된다
     private String word;
 }
