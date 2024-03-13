@@ -15,19 +15,21 @@ COPY ./ ./
 # npm build
 RUN npm run build
 
+# nextJS 실행하기 
+RUN npm run dev 
+
 # ---------------- 
 # nginx 
 FROM nginx:stable-alpine
 # 기본 nginx 설정 파일을 삭제한다. (custom 설정과 충돌 방지)
 
-COPY --from=builder /usr/src/app/build/standalone/build/server/app /usr/share/nginx/html
+# COPY --from=builder /usr/src/app/build/standalone /usr/share/nginx/html
 
+# RUN rm /etc/nginx/conf.d/default.conf
+# # nignx 위치에 넣어주기
 
-RUN rm /etc/nginx/conf.d/default.conf
-# nignx 위치에 넣어주기
-
-# custom 설정파일을 컨테이너 내부로 복사한다.
-COPY nginx/nginx.conf /etc/nginx/conf.d
+# # custom 설정파일을 컨테이너 내부로 복사한다.
+# COPY nginx/nginx.conf /etc/nginx/conf.d
 
 # 컨테이너의 80번 포트를 열어준다.
 EXPOSE 80
