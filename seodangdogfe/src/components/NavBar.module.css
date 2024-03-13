@@ -7,7 +7,7 @@
 }
 .logo {
   font-size: 45px;
-  font-family: "SF함박눈";
+  font-family: "hambaknoon";
   font-weight: 900;
   margin-top: 35px;
   text-align: center;
@@ -15,8 +15,42 @@
 }
 .item_container {
   margin-top: 58px;
+  text-align: center;
 }
 .item {
-  font-family: "EBS훈민정음SB";
+  font-family: "hunminjungum";
   font-size: 20px;
+  color: #fff;
+  display: flex;
+  box-sizing: border-box;
+  margin-left: 20px;
+  padding: 17px 14px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+.item div:first-child {
+  margin-right: 20px;
+}
+.item div:nth-child(2) {
+  display: flex;
+  align-items: center;
+}
+.item.active {
+  background-color: #fff;
+  color: #000;
+}
+
+.logout {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  margin-bottom: 50px;
+}
+/* .logout > div {
+  margin-bottom: 50px;
+} */
+.logout_item div:first-child {
+  display: flex;
+  justify-content: center;
 }
