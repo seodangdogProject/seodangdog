@@ -1,3 +1,14 @@
+/* fonts */
+@font-face {
+  font-family: "hunminjungum";
+  font-weight: 200;
+  src: url("/fonts/EBS훈민정음SB.ttf") format("truetype");
+}
+@font-face {
+  font-family: "hambaknoon";
+  font-weight: 200;
+  src: url("/fonts/SF함박눈TTF.ttf") format("truetype");
+}
 /* reset css */
 html,
 body,
