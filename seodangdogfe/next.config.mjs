@@ -3,15 +3,10 @@ const nextConfig = {
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,
+      issuer: { and: [/\.(js|ts|md)x?$/] },
       use: ["@svgr/webpack"],
     });
     return config;
   },
 };
-
-// module.exports = {
-//     typescript : {
-//         ignoreBuildErrors : true,  // typeScript 타입 에러시 build 안되는거 무시하기
-//     }
-// }
 export default nextConfig;
