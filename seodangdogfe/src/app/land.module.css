@@ -1,0 +1,36 @@
+.rounded_button{
+    /* 시작하기 버튼*/
+    border-radius: 10px;
+    background-color: #493971;
+    color: #fff;
+    font-size: 50px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.main {
+    /* 메인 컨테이너*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
+}
+
+.description {
+    font-size: 60px;
+    margin-bottom: 50px;
+}
+
+
+.center_container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
+}
