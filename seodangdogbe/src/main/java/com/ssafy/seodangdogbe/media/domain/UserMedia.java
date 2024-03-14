@@ -1,5 +1,7 @@
-package com.ssafy.seodangdogbe.user.domain;
+package com.ssafy.seodangdogbe.media.domain;
 
+import com.ssafy.seodangdogbe.media.domain.Media;
+import com.ssafy.seodangdogbe.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class UserMedia {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userMediaSeq;
 
     @ManyToOne(fetch = FetchType.LAZY)

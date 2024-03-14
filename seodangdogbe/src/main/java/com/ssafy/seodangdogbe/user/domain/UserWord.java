@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class UserWord {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long wordSeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -17,5 +17,6 @@ public class UserWord {
     private User user;
 
     // 단어 자체가 mongodb 단어 접근 아이디가 된다
+    @Column(length = 20)
     private String word;
 }

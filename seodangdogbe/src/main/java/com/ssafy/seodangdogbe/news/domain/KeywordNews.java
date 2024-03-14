@@ -1,5 +1,7 @@
-package com.ssafy.seodangdogbe.user.domain;
+package com.ssafy.seodangdogbe.news.domain;
 
+import com.ssafy.seodangdogbe.keyword.domain.Keyword;
+import com.ssafy.seodangdogbe.news.domain.News;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class KeywordNews {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long keywordNewsSeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -17,5 +19,6 @@ public class KeywordNews {
     private News news;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "keyword")
     private Keyword keyword;
 }

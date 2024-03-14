@@ -1,7 +1,6 @@
-package com.ssafy.seodangdogbe.user.domain;
+package com.ssafy.seodangdogbe.keyword.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,5 +10,6 @@ import lombok.Setter;
 public class Keyword {
 
     @Id
+    @Column(length = 20)
     private String keyword;
 }

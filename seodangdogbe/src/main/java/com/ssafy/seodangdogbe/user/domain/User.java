@@ -1,10 +1,12 @@
 package com.ssafy.seodangdogbe.user.domain;
 
+import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
+import com.ssafy.seodangdogbe.media.domain.UserMedia;
+import com.ssafy.seodangdogbe.news.domain.UserNews;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
 @Setter
 public class User {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userSeq;
 
     // 사용자 경험치
@@ -26,6 +28,7 @@ public class User {
     @JoinColumn(name = "badge_seq")
     private Badge badge;
 
+    @Column(length = 15)
     private String userId;
 
     private String password;

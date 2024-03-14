@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class UserBadge {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userBadgeSeq;
 
     @ManyToOne(fetch = FetchType.LAZY)

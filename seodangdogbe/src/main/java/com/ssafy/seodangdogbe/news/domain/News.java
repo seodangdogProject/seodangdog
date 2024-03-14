@@ -1,10 +1,10 @@
-package com.ssafy.seodangdogbe.user.domain;
+package com.ssafy.seodangdogbe.news.domain;
 
+import com.ssafy.seodangdogbe.media.domain.Media;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 public class News {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long newsSeq;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -22,6 +22,7 @@ public class News {
     private Media media;
 
     // mongodb 뉴스 접근 아이디
+    @Column(length = 20)
     private String newsAccessId;
 
     private int countSolve;
