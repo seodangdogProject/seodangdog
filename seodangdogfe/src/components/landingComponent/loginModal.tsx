@@ -1,13 +1,18 @@
 import React, { PropsWithChildren, useState } from 'react';
+import Link from 'next/link';
 import styled from 'styled-components';
 import styles from './modal.module.css';
+import OpenPassword from '../../assets/openPassword-icon.svg';
+import ClosePassword from '../../assets/closePassword-icon.svg';
+import CloseModal from '../../assets/closeModal-icon.svg';
+import LoginLogo from '../../assets/loginLogo-icon.svg';
 
 const Backdrop = styled.div`
     width: 100vw;
     height: 100vh;
     position: fixed;
     top: 0;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.4);
 `;
 
 interface ModalDefaultType {
@@ -19,9 +24,15 @@ function Modal({
     children,
 }: PropsWithChildren<ModalDefaultType>) {
     let [inputType, setInputType] = useState('password');
+    let [closeVisible, setCloseVisibleVisible] = useState(true);
+    let [openVisible, setOpenVisibleVisible] = useState(false);
+
     function passwordToggle() {
         setInputType(inputType === 'text' ? 'password' : 'text');
+        setCloseVisibleVisible(closeVisible === true ? false : true);
+        setOpenVisibleVisible(openVisible === true ? false : true);
     }
+
     return (
         <>
             <div className={styles.modal_container}>
@@ -34,9 +45,11 @@ function Modal({
                             }
                         }}
                     >
-                        X
+                        <CloseModal />
                     </div>
-                    <div>로고 이미지</div>
+                    <div className={styles.logo_container}>
+                        <LoginLogo />
+                    </div>
                 </div>
                 <div className={styles.form_container}>
                     <div
@@ -60,12 +73,13 @@ function Modal({
                                 name="inputPassword"
                                 placeholder="비밀번호"
                             />
-                            <i
+                            <div
                                 className={styles.pass_button}
                                 onClick={passwordToggle}
                             >
-                                i
-                            </i>
+                                {closeVisible && <ClosePassword />}
+                                {openVisible && <OpenPassword />}
+                            </div>
                         </div>
                         <div className={styles.horizontal}></div>
                     </div>
@@ -81,7 +95,10 @@ function Modal({
                         }}
                     >
                         아이디가 없으신가요? 지금{' '}
-                        <a className={styles.link}>회원가입</a> 하세요!{' '}
+                        <Link href="/join_game" className={styles.link}>
+                            회원가입
+                        </Link>{' '}
+                        하세요!{' '}
                     </div>
                 </div>
             </div>
