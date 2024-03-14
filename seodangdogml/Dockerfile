@@ -3,7 +3,7 @@ FROM python:3.11-slim
 WORKDIR /code
 
 # 현재 디렉토리의 모든 파일들을 컨테이너의 /app 디렉토리에 복사한다.
-COPY .fastapi_env/Scripts/requirements.txt /code/requirements.txt
+COPY ./fastapi_env/Scripts/requirements.txt /code/requirements.txt
 
 # pip install 해주기 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
