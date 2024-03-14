@@ -22,6 +22,7 @@
 }
 
 .modal_container {
+    border-radius: 10px;
     width: 30%;
     display: flex;
     position: fixed;
@@ -29,15 +30,17 @@
     justify-content: center;
     background-color: white;
     height: 80%;
-    border: 1px solid red;
+    /* border: 1px solid red; */
     z-index: 100;
+    padding: 10px;
 }
 
 .header_container {
     height: 20%;
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
     display: flex;
     flex-direction: column; /* 세로로 정렬 */
+    align-items: center;
 }
 
 .exit_button {
@@ -45,12 +48,19 @@
     align-self: flex-end; /* 오른쪽 정렬 */
     margin-right: 2%;
     margin-top: 2%;
+    display: inline-block;
+}
+
+.logo_container {
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
 }
 
 /*form container*/
 .form_container {
     height: 40%;
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
+    padding-top: 5%;
     padding-left: 10%;
     padding-right: 10%;
     display: flex;
@@ -118,4 +128,5 @@
 
 .pass_button {
     cursor: pointer;
+    display: inline-block;
 }
