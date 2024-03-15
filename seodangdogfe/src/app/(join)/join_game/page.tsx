@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import styles from './game_layout.module.css';
-import bucketCursor from '../../../assets/bucket.png';
 interface FallingLetter {
     id: number;
     keyword: string;
@@ -19,6 +18,20 @@ export default function Join() {
     >([]);
     const [keywordListIndex, setKeywordListIndex] = useState(0);
     const [startIndex, setStartIndex] = useState(0);
+    const [unLock, setUnLock] = useState(true);
+    const [userKeywordsSize, setUserKeywordsSize] = useState(0);
+    function lockToggle() {
+        setUnLock(false);
+    }
+
+    const [xy, setXY] = useState({ x: 0, y: 0 });
+
+    const xyHandler: React.MouseEventHandler<HTMLDivElement> = (e) => {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+
+        setXY({ x: mouseX, y: mouseY });
+    };
 
     useEffect(() => {
         const keywordList = [
@@ -78,11 +91,11 @@ export default function Join() {
             id: number;
             keyword: string;
         }) => {
-            const randomSpeed = 1;
+            const randomSpeed = Math.random() * 2;
             return {
                 id: keywordItem.id,
                 keyword: keywordItem.keyword,
-                x: Math.random() * window.innerWidth,
+                x: 10 + Math.random() * (window.innerWidth - 70),
                 y: 0,
                 isCaught: false,
                 isShown: true,
@@ -97,17 +110,24 @@ export default function Join() {
         setFallingLetters(initialFallingLetters);
 
         const fallingInterval = setInterval(() => {
-            console.log(startIndex);
             let newStartIndex = startIndex + 10;
+            console.log(newStartIndex);
             if (newStartIndex >= keywordList.length) {
                 console.log('리스트 끝남');
                 clearInterval(fallingInterval);
                 return; // Interval 종료
             }
 
-            const newFallingLetters: FallingLetter[] = keywordList
-                .slice(newStartIndex, newStartIndex + 10) // startIndex 대신 newStartIndex 사용
-                .map((keywordItem) => createFallingLetter(keywordItem));
+            let newFallingLetters: FallingLetter[];
+            if (newStartIndex + 10 >= keywordList.length) {
+                newFallingLetters = keywordList
+                    .slice(newStartIndex, keywordList.length) // startIndex 대신 newStartIndex 사용
+                    .map((keywordItem) => createFallingLetter(keywordItem));
+            } else {
+                newFallingLetters = keywordList
+                    .slice(newStartIndex, newStartIndex + 10) // startIndex 대신 newStartIndex 사용
+                    .map((keywordItem) => createFallingLetter(keywordItem));
+            }
 
             setFallingLetters((prevLetters) => [
                 ...prevLetters,
@@ -115,7 +135,7 @@ export default function Join() {
             ]);
 
             setStartIndex(newStartIndex);
-        }, 5000);
+        }, 6000);
 
         const update = () => {
             setFallingLetters((prevLetters) =>
@@ -123,7 +143,7 @@ export default function Join() {
                     .map((letter) => ({
                         ...letter,
                         y: letter.y + letter.speed,
-                        isShown: letter.y < window.innerHeight - 40,
+                        isShown: letter.y < innerHeight - 100,
                     }))
                     .filter((letter) => letter.isShown && !letter.isCaught)
             );
@@ -140,9 +160,10 @@ export default function Join() {
         };
     }, [keywordListIndex, startIndex]);
 
-    const handleLetterClick = (id: number, keyword: string) => {
+    const handleLetterClick = async (id: number, keyword: string) => {
         console.log(keyword, ' 잡음');
         setUserKeywords((prevKeywords) => [...prevKeywords, { id, keyword }]);
+        setUserKeywordsSize((count) => count + 1);
         setFallingLetters((prevLetters) =>
             prevLetters.map((letter) =>
                 letter.id === id
@@ -150,15 +171,28 @@ export default function Join() {
                     : letter
             )
         );
+        console.log(userKeywordsSize);
+
+        if (userKeywordsSize >= 9) {
+            lockToggle();
+        }
+
+        // 잡았을 때 커서 변경 및 2초 후 복구
+        // document.body.classList.add('custom-cursor');
+        // setTimeout(() => {
+        //     document.body.classList.remove('custom-cursor');
+        // }, 2000);
+    };
+
+    const goNext = () => {
+        console.log(' 다음페이지로 넘어가기 ');
     };
 
     return (
         <div
-            className={`${styles.stage_bg} ${styles.stage}`}
+            className={`${styles.stage_bg} ${styles.stage} ${styles.mouse}`}
+            onMouseMove={xyHandler}
             style={{
-                cursor: `url(${bucketCursor}), auto`,
-                overflowY: 'hidden',
-                overflowX: 'hidden',
                 width: '100%',
                 height: '100vh',
                 backgroundSize: 'cover', // 이미지가 요소에 맞게 자동으로 조절되도록 cover 값을 설정합니다.
@@ -167,42 +201,64 @@ export default function Join() {
                     'url(https://images.unsplash.com/photo-1628006203055-b4aa5f6300f3?q=60&w=2000',
             }}
         >
+            <div
+                className={styles.pointer}
+                style={{
+                    transform: `translate(${xy.x}px, ${xy.y}px)`,
+                }}
+            />
             {fallingLetters.map(
                 (letter) =>
                     letter.isShown && (
                         <div
                             key={letter.id} // 요소의 id를 고유한 키로 사용
                             style={{
-                                cursor: `url(${bucketCursor}), auto`,
-                                color: 'white',
+                                color: 'black',
                                 position: 'absolute',
                                 top: letter.y,
                                 left: letter.x,
-                                fontSize: '24px',
+                                fontSize: '60px',
                                 zIndex: 1, // 클릭 가능하도록 다른 요소보다 위에 표시
                             }}
                             onClick={() =>
                                 handleLetterClick(letter.id, letter.keyword)
                             }
                         >
-                            {letter.id}
+                            {letter.keyword}
                         </div>
                     )
             )}
             <div
                 style={{
+                    fontSize: '50px',
                     position: 'absolute',
-                    bottom: 20,
-                    left: 20,
+                    top: 40,
+                    left: 40,
                     color: 'white',
+                    zIndex: '',
                 }}
             >
                 <p>
-                    잡은 키워드:{' '}
-                    {userKeywords
+                    담은 개수 : {userKeywords.length}
+                    {/* 잡은 키워드 :  */}
+                    {/* {userKeywords
                         .map((keyword) => `${keyword.keyword}(${keyword.id})`)
-                        .join(', ')}
+                        .join(', ')} */}
                 </p>
+            </div>
+            <div
+                onClick={goNext}
+                style={{
+                    fontSize: '100px',
+                    position: 'absolute',
+                    bottom: 40,
+                    left: 20,
+                    color: 'white',
+                    zIndex: '',
+                }}
+            >
+                {unLock && '🔒'}
+                {!unLock && '🔓'}
             </div>
         </div>
     );
