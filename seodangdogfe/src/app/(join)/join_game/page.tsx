@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
+import { useRouter } from "next/navigation";
+import { useRecoilState, RecoilRoot } from "recoil";
+
 import { userKeywords } from "../../../atoms/joinRecoil";
 import Link from "next/link";
 import styles from "./game_layout.module.css";
@@ -191,11 +192,8 @@ export default function Join() {
 
   return (
     <>
-      {isOpenModal && (
-        <JoinModal onClickToggleModal={onClickToggleModal}></JoinModal>
-      )}
       <div
-        className={`${styles.stage_bg} ${styles.stage} ${styles.mouse}`}
+        className={`${styles.stage_bg} ${styles.mouse}`}
         onMouseMove={xyHandler}
         style={{
           width: "100%",
@@ -206,6 +204,12 @@ export default function Join() {
             "url(https://images.unsplash.com/photo-1628006203055-b4aa5f6300f3?q=60&w=2000",
         }}
       >
+        {isOpenModal && (
+          <JoinModal
+            data={userKeywords}
+            onClickToggleModal={onClickToggleModal}
+          ></JoinModal>
+        )}
         <div
           className={styles.pointer}
           style={{

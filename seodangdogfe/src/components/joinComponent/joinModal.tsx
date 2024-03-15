@@ -1,11 +1,18 @@
 import React, { PropsWithChildren, useState } from "react";
+import { useRecoilState, useRecoilValue, RecoilRoot } from "recoil";
 import Link from "next/link";
 import styled from "styled-components";
+// css
 import styles from "./modal.module.css";
+
+//recoil
+import { userKeywords } from "../../atoms/joinRecoil";
+
+// assets
 import OpenPassword from "../../assets/openPassword-icon.svg";
 import ClosePassword from "../../assets/closePassword-icon.svg";
 import CloseModal from "../../assets/closeModal-icon.svg";
-import LoginLogo from "../../assets/loginLogo-icon.svg";
+import JoinLogo from "../../assets/joinLogo-icon.svg";
 
 const Backdrop = styled.div`
   width: 100vw;
@@ -18,11 +25,15 @@ const Backdrop = styled.div`
 interface ModalDefaultType {
   onClickToggleModal: () => void;
 }
+interface ModalProps extends ModalDefaultType {
+  data: { id: number; keyword: string }[];
+}
 
 function Modal({
+  data,
   onClickToggleModal,
   children,
-}: PropsWithChildren<ModalDefaultType>) {
+}: PropsWithChildren<ModalProps>) {
   let [inputType, setInputType] = useState("password");
   let [closeVisible, setCloseVisibleVisible] = useState(true);
   let [openVisible, setOpenVisibleVisible] = useState(false);
@@ -48,7 +59,7 @@ function Modal({
             <CloseModal />
           </div>
           <div className={styles.logo_container}>
-            <LoginLogo />
+            <JoinLogo />
           </div>
         </div>
         <div className={styles.form_container}>
@@ -61,6 +72,18 @@ function Modal({
               id="username"
               name="inputId"
               placeholder="아이디"
+            />
+            <div className={styles.horizontal}></div>
+          </div>
+          <div
+            className={styles.input_group_id}
+            style={{ marginBottom: "50px" }}
+          >
+            <input
+              type="text"
+              id="nickname"
+              name="inputNickname"
+              placeholder="닉네임"
             />
             <div className={styles.horizontal}></div>
           </div>
@@ -84,7 +107,12 @@ function Modal({
         <div className={styles.login_button_container}>
           <button className={styles.login_button}>Sign up</button>
         </div>
-        <div className={styles.footer}></div>
+        <div className={styles.footer}>
+          select : {data.length}
+          {/* {data
+            .map((keyword) => `${keyword.keyword}(${keyword.id})`)
+            .join(", ")} */}
+        </div>
       </div>
       <Backdrop
         onClick={(e: React.MouseEvent) => {
