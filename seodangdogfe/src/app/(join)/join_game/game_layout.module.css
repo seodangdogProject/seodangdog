@@ -55,3 +55,13 @@
     font-family: 'Kdam Thmor Pro', sans-serif;
     color: #fff;
 }
+
+.next_button_enable {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.next_button_block {
+    cursor: none;
+    pointer-events: none;
+}

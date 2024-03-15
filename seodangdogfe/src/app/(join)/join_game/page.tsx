@@ -78,7 +78,7 @@ export default function Join() {
             id: number;
             keyword: string;
         }) => {
-            const randomSpeed = 1;
+            const randomSpeed = Math.random() * 2;
             return {
                 id: keywordItem.id,
                 keyword: keywordItem.keyword,
@@ -97,17 +97,24 @@ export default function Join() {
         setFallingLetters(initialFallingLetters);
 
         const fallingInterval = setInterval(() => {
-            console.log(startIndex);
             let newStartIndex = startIndex + 10;
+            console.log(newStartIndex);
             if (newStartIndex >= keywordList.length) {
                 console.log('리스트 끝남');
                 clearInterval(fallingInterval);
                 return; // Interval 종료
             }
 
-            const newFallingLetters: FallingLetter[] = keywordList
-                .slice(newStartIndex, newStartIndex + 10) // startIndex 대신 newStartIndex 사용
-                .map((keywordItem) => createFallingLetter(keywordItem));
+            let newFallingLetters: FallingLetter[];
+            if (newStartIndex + 10 >= keywordList.length) {
+                newFallingLetters = keywordList
+                    .slice(newStartIndex, keywordList.length) // startIndex 대신 newStartIndex 사용
+                    .map((keywordItem) => createFallingLetter(keywordItem));
+            } else {
+                newFallingLetters = keywordList
+                    .slice(newStartIndex, newStartIndex + 10) // startIndex 대신 newStartIndex 사용
+                    .map((keywordItem) => createFallingLetter(keywordItem));
+            }
 
             setFallingLetters((prevLetters) => [
                 ...prevLetters,
@@ -115,7 +122,7 @@ export default function Join() {
             ]);
 
             setStartIndex(newStartIndex);
-        }, 5000);
+        }, 6000);
 
         const update = () => {
             setFallingLetters((prevLetters) =>
@@ -123,7 +130,7 @@ export default function Join() {
                     .map((letter) => ({
                         ...letter,
                         y: letter.y + letter.speed,
-                        isShown: letter.y < window.innerHeight - 40,
+                        isShown: letter.y < window.innerHeight - 30,
                     }))
                     .filter((letter) => letter.isShown && !letter.isCaught)
             );
@@ -152,6 +159,8 @@ export default function Join() {
         );
     };
 
+    const goNext = () => {};
+
     return (
         <div
             className={`${styles.stage_bg} ${styles.stage}`}
@@ -173,7 +182,8 @@ export default function Join() {
                         <div
                             key={letter.id} // 요소의 id를 고유한 키로 사용
                             style={{
-                                cursor: `url(${bucketCursor}), auto`,
+                                // cursor: `url(${bucketCursor}), auto`,
+                                //cursor: 'url(${https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0sncWCzz9t3udH4HZwqeMQ0nmoSLTQV3ZxOvjIk-m0w&s})',
                                 color: 'white',
                                 position: 'absolute',
                                 top: letter.y,
@@ -203,6 +213,8 @@ export default function Join() {
                         .map((keyword) => `${keyword.keyword}(${keyword.id})`)
                         .join(', ')}
                 </p>
+
+                <button onClick={goNext}> 다음으로 넘어가기 </button>
             </div>
         </div>
     );
