@@ -82,22 +82,9 @@ function Modal({
           </div>
         </div>
         <div className={styles.login_button_container}>
-          <button className={styles.login_button}>LOGIN</button>
+          <button className={styles.login_button}>Sign up</button>
         </div>
-        <div className={styles.footer}>
-          <div
-            style={{
-              paddingLeft: "20px",
-              paddingRight: "20px",
-            }}
-          >
-            아이디가 없으신가요? 지금{" "}
-            <Link href="/join_game" className={styles.link}>
-              회원가입
-            </Link>{" "}
-            하세요!{" "}
-          </div>
-        </div>
+        <div className={styles.footer}></div>
       </div>
       <Backdrop
         onClick={(e: React.MouseEvent) => {
