@@ -1,5 +1,6 @@
 .stage_bg {
     background: linear-gradient(rgba(0, 0, 0, 0) 77%, rgba(0, 0, 0, 0.5));
+    font-family: 'hunminjungum';
 }
 
 .follower {
@@ -62,6 +63,26 @@
 }
 
 .next_button_block {
-    cursor: none;
+    visibility: visible;
     pointer-events: none;
+}
+
+.mouse {
+    /* cursor: url('../../../assets/punch-icon.svg'), auto; */
+    /* cursor: url('../../../assets/closeModal-icon.svg'), auto; */
+}
+
+.custom-cursor {
+    /* cursor: url('../../../assets/punch-icon.svg'), auto; */
+}
+
+.pointer {
+    position: absolute;
+    background-color: rgb(108, 12, 31);
+    /* background-image: url('../../../assets/punch-icon.svg'); */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    left: -15px;
+    top: -15px;
 }

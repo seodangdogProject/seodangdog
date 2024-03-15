@@ -90,7 +90,6 @@ function Modal({
                 <div className={styles.footer}>
                     <div
                         style={{
-                            cursor: 'url(https://helpx.adobe.com/content/dam/help/en/photoshop/using/quick-actions/remove-background-before-qa1.png), auto',
                             paddingLeft: '20px',
                             paddingRight: '20px',
                         }}
