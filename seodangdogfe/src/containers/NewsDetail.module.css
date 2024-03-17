@@ -1,0 +1,35 @@
+.container {
+	display: flex;
+	width: 60%;
+}
+.news-content {
+	display: flex;
+	flex-direction: column;
+}
+.title {
+	font-size: 3rem;
+}
+.date {
+	font-size: 20px;
+	color: #4d4d4d;
+	text-align: end;
+	padding-right: 30px;
+}
+.hashtag {
+	display: flex;
+}
+.hashtag-item {
+	background-color: #d1c2f2;
+	padding: 6px 17px;
+	border-radius: 20px;
+	color: #fff;
+}
+.img {
+	text-align: center;
+	margin: 50px 0;
+}
+.img img {
+	width: 50%;
+	object-fit: cover;
+	text-align: center;
+}
