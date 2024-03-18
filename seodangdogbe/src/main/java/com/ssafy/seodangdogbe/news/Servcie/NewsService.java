@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -22,8 +24,6 @@ public class NewsService {
     
     // newsSeq(Long)로 mysql의 news 테이블조회
     public NewsResponseDto getNewsPreview(Long newsSeq){
-        System.out.println("NewsService - getNewsPreview");
-
         Optional<News> findNews = newsRepository.findByNewsSeq(newsSeq);
         if (findNews.isPresent()){
             System.out.println(findNews);
@@ -35,10 +35,7 @@ public class NewsService {
 
     // newsAccessId(String)로 mongodb의 news collection에서 뉴스 조회
     public NewsDetailsResponseDto getNewsDetails(String id){
-        System.out.println("NewsService - getNewsDetails");
-
         Optional<MetaNews> findMetaNews = newsDetailsRepository.findById(id);
-        System.out.println("NewsService - findMetaNews : "+findMetaNews.toString());
 
         if (findMetaNews.isPresent()){
             NewsDetailsResponseDto dto = new NewsDetailsResponseDto(findMetaNews.get());
@@ -48,6 +45,14 @@ public class NewsService {
         return null;
     }
 
-
+    // 뉴스 메타데이터 전체 목록 가져오기
+    public List<NewsDetailsResponseDto> getNewsDetailsList(){
+        List<MetaNews> list = newsDetailsRepository.findAll();
+        List<NewsDetailsResponseDto> result = new ArrayList<>();
+        for (MetaNews mnews : list) {
+            result.add(new NewsDetailsResponseDto(mnews));
+        }
+        return result;
+    }
 
 }

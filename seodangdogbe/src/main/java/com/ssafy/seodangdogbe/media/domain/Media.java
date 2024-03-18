@@ -19,5 +19,5 @@ public class Media {
     @Column(length = 10)
     private String mediaName;
 
-//    private String mediaImgUrl;
+    private String mediaImgUrl;
 }

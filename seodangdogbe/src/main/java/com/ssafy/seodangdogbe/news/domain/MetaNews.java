@@ -19,7 +19,6 @@ import java.util.List;
 public class MetaNews {
 
     @Id
-    @Field("_id")
     private String id;
 
     private String newsTitle;
@@ -28,7 +27,7 @@ public class MetaNews {
 
     private String newsReporter;
     private String newsImgUrl;
-    private String newsMainText;
+    private String newsMainText;    // 형태소 별로 나누어서 저장해놓기로 했지 않나?
     private String newsUrl;
 
     private Media media;    // media code, name
