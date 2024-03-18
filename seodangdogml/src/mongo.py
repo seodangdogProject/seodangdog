@@ -23,7 +23,14 @@ def saveNews():
     return {"message": "news saved!"}
 
 
+
 @router.get("/getNews")
 def getNews():
     response = client.news.find({}).limit(5)
+    return json.loads(json_util.dumps(response))
+
+
+@router.get("/findNews/{limits}")
+def findNews(limits):
+    response = client.news.find({}).sort("newsCreatedAt", -1).limit(int(limits))
     return json.loads(json_util.dumps(response))
