@@ -26,7 +26,7 @@ def saveNews():
 
 @router.get("/getNews")
 def getNews():
-    response = client.news.find({}).limit(5)
+    response = client.news.find({})
     return json.loads(json_util.dumps(response))
 
 
