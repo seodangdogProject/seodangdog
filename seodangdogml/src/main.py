@@ -17,10 +17,10 @@ uri = f"mongodb://{username}:{password}@j10e104.p.ssafy.io:{port}/{host}?authSou
 dbname = 'test'
 client = MongoClient(uri)[dbname]
 
-
+# client = MongoClient('mongodb+srv://seodangdog:dogseodang0311@cluster0.vsnd8fy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')         # URL : mongoDB 의 주소
+# db = client.dbsparta
 with open('news.json', 'r', encoding="utf8") as f:
     news_data = json.load(f)
-
 
 @app.get("/hello")
 def hello():
