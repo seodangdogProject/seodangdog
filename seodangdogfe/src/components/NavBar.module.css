@@ -1,56 +1,56 @@
 .nav {
-  background-color: #493971;
-  width: 187px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+    background-color: #493971;
+    min-width: 187px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 .logo {
-  font-size: 45px;
-  font-family: "hambaknoon";
-  font-weight: 900;
-  margin-top: 35px;
-  text-align: center;
-  color: #fff;
+    font-size: 45px;
+    font-family: 'hambaknoon';
+    font-weight: 900;
+    margin-top: 35px;
+    text-align: center;
+    color: #fff;
 }
 .item_container {
-  margin-top: 58px;
-  text-align: center;
+    margin-top: 58px;
+    text-align: center;
 }
 .item {
-  font-family: "hunminjungum";
-  font-size: 20px;
-  color: #fff;
-  display: flex;
-  box-sizing: border-box;
-  margin-left: 20px;
-  padding: 17px 14px;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+    font-family: 'hunminjungum';
+    font-size: 20px;
+    color: #fff;
+    display: flex;
+    box-sizing: border-box;
+    margin-left: 20px;
+    padding: 17px 14px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
 }
 .item div:first-child {
-  margin-right: 20px;
+    margin-right: 20px;
 }
 .item div:nth-child(2) {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 .item.active {
-  background-color: #fff;
-  color: #000;
+    background-color: #fff;
+    color: #000;
 }
 
 .logout {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  margin-bottom: 50px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-bottom: 50px;
 }
 /* .logout > div {
-  margin-bottom: 50px;
-} */
+    margin-bottom: 50px;
+  } */
 .logout_item div:first-child {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
