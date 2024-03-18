@@ -4,11 +4,35 @@ import { useRouter } from 'next/navigation';
 import { useRecoilState, RecoilRoot } from 'recoil';
 import styles from './wordgame_layout.module.css';
 import GameLogo from '../../../assets/wordgame-logo-icon.svg';
+import { wordListState, Item } from '../../../atoms/wordGame';
+import Link from 'next/link';
 
 export default function WordGame() {
     const router = useRouter();
-    const [isAvailable, setIsAvailable] = useState<boolean>(false); // api 요청으로 받아오기
+    const [isAvailable, setIsAvailable] = useState<boolean>(true); // api 요청으로 받아오기
     const [count, setCount] = useState<number>(0); // api 요청으로 받아오기
+    const [wordList, setWordList] = useRecoilState(wordListState);
+
+    // async function fetchWordList(): Promise<Item[]> {
+    //     // 데이터를 받아오는 비동기 작업을 수행합니다. 예를 들어, API 호출을 수행합니다.
+    //     const response = await fetch('https://api.example.com/word-list');
+    //     const data = await response.json();
+    //     return data.wordList; // 데이터에서 원하는 형태로 추출하여 반환합니다.
+    // }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                //const data = await fetchWordList();
+                const data = [{ idx: 1, answer: '정답', mean: '뜻' }];
+                setWordList(data); // 여기서 setWordList에 전달되는 값이 올바른지 확인해야 합니다.
+            } catch (error) {
+                console.error('Error fetching word list:', error);
+            }
+        };
+
+        fetchData();
+    }, [setWordList]);
 
     return (
         <>
@@ -18,14 +42,22 @@ export default function WordGame() {
                     <div className={styles.word_count_box}>
                         {!isAvailable && (
                             <>
-                                <span className={styles.word_count}>
+                                <span
+                                    className={styles.word_count}
+                                    style={{ color: 'red' }}
+                                >
                                     {count}
                                 </span>
                             </>
                         )}
                         {isAvailable && (
                             <>
-                                <span className={styles.word_count}>10+</span>
+                                <span
+                                    className={styles.word_count}
+                                    style={{ color: 'rgba(88, 104, 255, 1)' }}
+                                >
+                                    10+
+                                </span>
                             </>
                         )}
 
@@ -67,9 +99,28 @@ export default function WordGame() {
                         </>
                     )}
 
-                    <div className={styles.game_start_btn}>시작</div>
+                    {isAvailable && (
+                        <Link href="/oneword">
+                            <div className={styles.game_start_btn}>시작</div>
+                        </Link>
+                    )}
+                    {!isAvailable && (
+                        <Link href="/oneword">
+                            <div
+                                className={styles.game_start_btn}
+                                style={{
+                                    color: 'rgba(180, 188, 255, 1)',
+                                    cursor: 'none',
+                                }}
+                            >
+                                시작
+                            </div>
+                        </Link>
+                    )}
                     <div className={styles.footer}>
-                        맞힌 단어는 단어장에서 삭제됩니다.
+                        <div className={styles.footer_text}>
+                            맞힌 단어는 단어장에서 삭제됩니다.
+                        </div>
                     </div>
                 </div>
             </div>
