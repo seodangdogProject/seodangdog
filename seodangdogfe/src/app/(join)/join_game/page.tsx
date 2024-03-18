@@ -1,6 +1,13 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { useRecoilState, RecoilRoot } from 'recoil';
+
+import { userKeywords } from '../../../atoms/joinRecoil';
+import Link from 'next/link';
 import styles from './game_layout.module.css';
+import JoinModal from '../../../components/joinComponent/joinModal';
+
 interface FallingLetter {
     id: number;
     keyword: string;
@@ -12,6 +19,8 @@ interface FallingLetter {
 }
 
 export default function Join() {
+    const router = useRouter();
+    const [isOpenModal, setOpenModal] = useState<boolean>(false);
     const [fallingLetters, setFallingLetters] = useState<FallingLetter[]>([]);
     const [userKeywords, setUserKeywords] = useState<
         { id: number; keyword: string }[]
@@ -20,9 +29,14 @@ export default function Join() {
     const [startIndex, setStartIndex] = useState(0);
     const [unLock, setUnLock] = useState(true);
     const [userKeywordsSize, setUserKeywordsSize] = useState(0);
+
     function lockToggle() {
         setUnLock(false);
     }
+
+    const onClickToggleModal = useCallback(() => {
+        setOpenModal(!isOpenModal);
+    }, [isOpenModal]);
 
     const [xy, setXY] = useState({ x: 0, y: 0 });
 
@@ -176,90 +190,90 @@ export default function Join() {
         if (userKeywordsSize >= 9) {
             lockToggle();
         }
-
-        // 잡았을 때 커서 변경 및 2초 후 복구
-        // document.body.classList.add('custom-cursor');
-        // setTimeout(() => {
-        //     document.body.classList.remove('custom-cursor');
-        // }, 2000);
-    };
-
-    const goNext = () => {
-        console.log(' 다음페이지로 넘어가기 ');
     };
 
     return (
-        <div
-            className={`${styles.stage_bg} ${styles.stage} ${styles.mouse}`}
-            onMouseMove={xyHandler}
-            style={{
-                width: '100%',
-                height: '100vh',
-                backgroundSize: 'cover', // 이미지가 요소에 맞게 자동으로 조절되도록 cover 값을 설정합니다.
-                backgroundPosition: 'center', // 이미지를 가운데 정렬합니다.
-                backgroundImage:
-                    'url(https://images.unsplash.com/photo-1628006203055-b4aa5f6300f3?q=60&w=2000',
-            }}
-        >
+        <>
             <div
-                className={styles.pointer}
+                className={`${styles.stage_bg} ${styles.mouse}`}
+                onMouseMove={xyHandler}
                 style={{
-                    transform: `translate(${xy.x}px, ${xy.y}px)`,
-                }}
-            />
-            {fallingLetters.map(
-                (letter) =>
-                    letter.isShown && (
-                        <div
-                            key={letter.id} // 요소의 id를 고유한 키로 사용
-                            style={{
-                                color: 'black',
-                                position: 'absolute',
-                                top: letter.y,
-                                left: letter.x,
-                                fontSize: '60px',
-                                zIndex: 1, // 클릭 가능하도록 다른 요소보다 위에 표시
-                            }}
-                            onClick={() =>
-                                handleLetterClick(letter.id, letter.keyword)
-                            }
-                        >
-                            {letter.keyword}
-                        </div>
-                    )
-            )}
-            <div
-                style={{
-                    fontSize: '50px',
-                    position: 'absolute',
-                    top: 40,
-                    left: 40,
-                    color: 'white',
-                    zIndex: '',
+                    width: '100%',
+                    height: '100vh',
+                    backgroundSize: 'cover', // 이미지가 요소에 맞게 자동으로 조절되도록 cover 값을 설정합니다.
+                    backgroundPosition: 'center', // 이미지를 가운데 정렬합니다.
+                    backgroundImage:
+                        'url(https://images.unsplash.com/photo-1628006203055-b4aa5f6300f3?q=60&w=2000',
                 }}
             >
-                <p>
-                    담은 개수 : {userKeywords.length}
-                    {/* 잡은 키워드 :  */}
-                    {/* {userKeywords
+                {isOpenModal && (
+                    <JoinModal
+                        data={userKeywords}
+                        onClickToggleModal={onClickToggleModal}
+                    ></JoinModal>
+                )}
+                <div
+                    className={styles.pointer}
+                    style={{
+                        transform: `translate(${xy.x}px, ${xy.y}px)`,
+                    }}
+                />
+                {fallingLetters.map(
+                    (letter) =>
+                        letter.isShown && (
+                            <div
+                                key={letter.id} // 요소의 id를 고유한 키로 사용
+                                style={{
+                                    color: 'black',
+                                    position: 'absolute',
+                                    top: letter.y,
+                                    left: letter.x,
+                                    fontSize: '60px',
+                                    zIndex: 1, // 클릭 가능하도록 다른 요소보다 위에 표시
+                                }}
+                                onClick={() =>
+                                    handleLetterClick(letter.id, letter.keyword)
+                                }
+                            >
+                                {letter.keyword}
+                            </div>
+                        )
+                )}
+                <div
+                    style={{
+                        fontSize: '50px',
+                        position: 'absolute',
+                        top: 40,
+                        left: 40,
+                        color: 'white',
+                        zIndex: '',
+                    }}
+                >
+                    <p>
+                        담은 개수 : {userKeywords.length}
+                        {/* 잡은 키워드 :  */}
+                        {/* {userKeywords
                         .map((keyword) => `${keyword.keyword}(${keyword.id})`)
                         .join(', ')} */}
-                </p>
+                    </p>
+                </div>
+                <Link href="/join_game">
+                    <div
+                        onClick={onClickToggleModal}
+                        style={{
+                            fontSize: '100px',
+                            position: 'absolute',
+                            bottom: 40,
+                            left: 20,
+                            color: 'white',
+                            zIndex: '',
+                        }}
+                    >
+                        {unLock && '🔒'}
+                        {!unLock && '🔓'}
+                    </div>
+                </Link>
             </div>
-            <div
-                onClick={goNext}
-                style={{
-                    fontSize: '100px',
-                    position: 'absolute',
-                    bottom: 40,
-                    left: 20,
-                    color: 'white',
-                    zIndex: '',
-                }}
-            >
-                {unLock && '🔒'}
-                {!unLock && '🔓'}
-            </div>
-        </div>
+        </>
     );
 }

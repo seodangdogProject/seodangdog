@@ -1,0 +1,11 @@
+.quiz-container {
+  flex-grow: 1;
+  background-color: #f9f9f9;
+  border-radius: 20px;
+  margin: 0 26px;
+}
+.quiz-container img {
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}

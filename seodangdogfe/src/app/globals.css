@@ -9,7 +9,26 @@
   font-weight: 200;
   src: url("/fonts/SF함박눈TTF.ttf") format("truetype");
 }
+@font-face {
+  font-family: "pretendard";
+  font-weight: 200;
+  src: url("/fonts/pretendardVariable.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
 /* reset css */
+@font-face {
+  font-family: "NanumMyeongjo";
+  src: url("https://cdn.jsdelivr.net/gh/wizfile/font/NanumMyeongjo.woff")
+    format("woff");
+  font-style: normal;
+}
+
 html,
 body,
 div,
@@ -133,4 +152,7 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+a {
+  text-decoration: none;
 }

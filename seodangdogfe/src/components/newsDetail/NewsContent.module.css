@@ -1,0 +1,58 @@
+.news-content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  width: 60%;
+  font-family: "Pretendard-Regular";
+  padding-right: 26px;
+}
+.news-content::-webkit-scrollbar {
+  width: 23px; /* 스크롤 바의 너비 */
+}
+.news-content::-webkit-scrollbar-track {
+  background: #f0f0f0; /* 추적부분의 배경색 */
+  opacity: 0.7;
+  border-radius: 15px;
+}
+.news-content::-webkit-scrollbar-thumb {
+  background: #493971; /* 슬라이더의 배경색 */
+  border-radius: 10px; /* 슬라이더의 모서리를 둥글게 만듦 */
+}
+.title {
+  font-size: 44px;
+  font-family: "Pretendard-Regular";
+  font-weight: 900;
+}
+.date {
+  font-size: 12px;
+  color: #4d4d4d;
+  text-align: end;
+  margin-right: 10px;
+  font-weight: 400;
+}
+.hashtag {
+  display: flex;
+  margin-top: 35px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.hashtag-item {
+  background-color: #d1c2f2;
+  padding: 6px 10px;
+  border-radius: 20px;
+  color: #fff;
+}
+.img {
+  text-align: center;
+  margin: 50px 0;
+}
+.img img {
+  width: 50%;
+  object-fit: cover;
+  text-align: center;
+}
+
+.text {
+  font-weight: 500;
+  line-height: 1.3;
+}
