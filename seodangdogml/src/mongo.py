@@ -14,14 +14,10 @@ dbname = 'test'
 client = MongoClient(uri)[dbname]
 
 
-# client = MongoClient('mongodb+srv://seodangdog:dogseodang0311@cluster0.vsnd8fy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')         # URL : mongoDB 의 주소
-# db = client.dbsparta
-with open('news.json', 'r', encoding="utf8") as f:
-    news_data = json.load(f)
-
-
 @router.get("/saveNews")
 def saveNews():
+    with open('news.json', 'r', encoding="utf8") as f:
+        news_data = json.load(f)
     client["news"].insert_many(news_data)
     return {"message": "news saved!"}
 
