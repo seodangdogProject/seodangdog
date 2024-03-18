@@ -1,14 +1,21 @@
 package com.ssafy.seodangdogbe.user.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+import java.util.List;
+
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class MyWordResponseDto {
-    private Long wordSeq;
-    private String word;
-//    private String mean;
+    private List<WordInfo> wordList;
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    public static class WordInfo {
+        private long wordSeq;
+        private String word;
+        private String mean;
+    }
+
 }

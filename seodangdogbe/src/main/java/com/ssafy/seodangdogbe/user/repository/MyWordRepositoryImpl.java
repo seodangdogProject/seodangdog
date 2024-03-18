@@ -1,32 +1,35 @@
 package com.ssafy.seodangdogbe.user.repository;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seodangdogbe.user.domain.QUserWord;
+import com.ssafy.seodangdogbe.user.domain.UserWord;
 import com.ssafy.seodangdogbe.user.dto.MyWordResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class MyWordRepositoryImpl implements MyWordRepositoryCustom { // 인터페이스 구현이 누락되어 추가했습니다.
+public class MyWordRepositoryImpl implements MyWordRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-    @Override
-    public List<MyWordResponseDto> findAllUserWords(int userSeq) {
-        QUserWord userWord = QUserWord.userWord;
 
+
+    // MyWordRepositoryImpl 구현체
+    @Override
+    public List<UserWord> findAllUserWords(int userSeq) {
+        QUserWord qUserWord = QUserWord.userWord;
         return queryFactory
-                .select(Projections.constructor(MyWordResponseDto.class,
-                        userWord.wordSeq,
-                        userWord.word
-                        //userWord.mean
-                ))
-                .from(userWord)
-                .where(userWord.user.userSeq.eq(userSeq))
+                .select(qUserWord)
+                .from(qUserWord)
+                .where(qUserWord.user.userSeq.eq(userSeq))
                 .fetch();
+
+
     }
 }
 
