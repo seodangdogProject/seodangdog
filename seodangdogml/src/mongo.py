@@ -1,4 +1,5 @@
 import json
+from bson import json_util
 from pymongo import MongoClient
 from fastapi import APIRouter
 router = APIRouter()
@@ -24,5 +25,5 @@ def saveNews():
 
 @router.get("/getNews")
 def getNews():
-    response = client.news.find({}, {'_id': 0}).limit(5)
-    return list(response)
+    response = client.news.find({}).limit(5)
+    return json.loads(json_util.dumps(response))
