@@ -21,9 +21,9 @@ export default function NavBar() {
   return (
     <>
       <nav className={style.nav}>
-        <h3 className={style.logo}>
-          <Link href="/main">서당독</Link>
-        </h3>
+        <Link href="/main">
+          <h3 className={style.logo}>서당독</h3>
+        </Link>
         <ul className={style.item_container}>
           <Link href="/main">
             <li
