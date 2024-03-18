@@ -9,6 +9,11 @@
   font-weight: 200;
   src: url("/fonts/SF함박눈TTF.ttf") format("truetype");
 }
+@font-face {
+  font-family: "pretendard";
+  font-weight: 200;
+  src: url("/fonts/pretendardVariable.ttf") format("truetype");
+}
 /* reset css */
 html,
 body,
