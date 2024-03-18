@@ -24,5 +24,5 @@ def saveNews():
 
 @router.get("/getNews")
 def getNews():
-    response = client.news.find({"newsCreatedAt": "2024-03-17 21:03:01"})
-    return {"message": response}
+    response = client.news.find({}, {'_id': 0}).limit(5)
+    return list(response)
