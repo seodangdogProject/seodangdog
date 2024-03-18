@@ -9,7 +9,8 @@ export default function NewsDetailContainer() {
     <>
       <div className={cx("container")}>
         <NewsContent />
-        <Cover />
+        {/* <Cover /> */}
+        <Quiz />
       </div>
     </>
   );
