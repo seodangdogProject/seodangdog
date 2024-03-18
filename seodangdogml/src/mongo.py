@@ -23,6 +23,7 @@ def saveNews():
     return {"message": "news saved!"}
 
 
+
 @router.get("/getNews")
 def getNews():
     response = client.news.find({},{"_id": 1, "newsTitle": 1})
