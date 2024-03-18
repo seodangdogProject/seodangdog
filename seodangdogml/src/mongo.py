@@ -9,7 +9,7 @@ router = APIRouter()
 host="seodangdog"
 port="27017"
 username="seodangdog"
-password="dogseodang0311"
+password="Yan!gCh#anE104!"
 uri = f"mongodb://{username}:{password}@j10e104.p.ssafy.io:{port}/{host}?authSource=admin"
 dbname = 'test'
 client = MongoClient(uri)[dbname]
