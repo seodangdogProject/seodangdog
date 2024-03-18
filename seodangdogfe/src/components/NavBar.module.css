@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
 }
+
 .logo {
     font-size: 45px;
     font-family: 'hambaknoon';
@@ -13,10 +14,12 @@
     text-align: center;
     color: #fff;
 }
+
 .item_container {
     margin-top: 58px;
     text-align: center;
 }
+
 .item {
     font-family: 'hunminjungum';
     font-size: 20px;
