@@ -22,23 +22,21 @@ public class QUserNews extends EntityPathBase<UserNews> {
 
     public static final QUserNews userNews = new QUserNews("userNews");
 
-    public final MapPath<String, String, StringPath> answerList = this.<String, String, StringPath>createMap("answerList", String.class, String.class, StringPath.class);
-
-    public final MapPath<String, String, StringPath> highlightList = this.<String, String, StringPath>createMap("highlightList", String.class, String.class, StringPath.class);
+    public final ListPath<Integer, NumberPath<Integer>> highlightList = this.<Integer, NumberPath<Integer>>createList("highlightList", Integer.class, NumberPath.class, PathInits.DIRECT2);
 
     public final BooleanPath isSolved = createBoolean("isSolved");
 
     public final QNews news;
 
-    public final MapPath<String, String, StringPath> summary = this.<String, String, StringPath>createMap("summary", String.class, String.class, StringPath.class);
-
     public final com.ssafy.seodangdogbe.user.domain.QUser user;
 
-    public final StringPath userNewsAccessId = createString("userNewsAccessId");
+    public final ListPath<Integer, NumberPath<Integer>> userAnswerList = this.<Integer, NumberPath<Integer>>createList("userAnswerList", Integer.class, NumberPath.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> userNewsSeq = createNumber("userNewsSeq", Long.class);
 
-    public final MapPath<String, String, StringPath> wordList = this.<String, String, StringPath>createMap("wordList", String.class, String.class, StringPath.class);
+    public final QUserSummary userSummary;
+
+    public final ListPath<Integer, NumberPath<Integer>> wordList = this.<Integer, NumberPath<Integer>>createList("wordList", Integer.class, NumberPath.class, PathInits.DIRECT2);
 
     public QUserNews(String variable) {
         this(UserNews.class, forVariable(variable), INITS);
@@ -60,6 +58,7 @@ public class QUserNews extends EntityPathBase<UserNews> {
         super(type, metadata, inits);
         this.news = inits.isInitialized("news") ? new QNews(forProperty("news"), inits.get("news")) : null;
         this.user = inits.isInitialized("user") ? new com.ssafy.seodangdogbe.user.domain.QUser(forProperty("user"), inits.get("user")) : null;
+        this.userSummary = inits.isInitialized("userSummary") ? new QUserSummary(forProperty("userSummary")) : null;
     }
 
 }

@@ -13,10 +13,16 @@ spring:
       use_sql_comments: true
   data:
     mongodb:
-      uri: mongodb://j10e104.p.ssafy.io:27017/seodangdog
-      authentication-database: admin
-      username: seodangdogi
-      password: seo@7220311p!!
+#      uri: mongodb://j10e104.p.ssafy.io:27017/seodangdog
+#      authentication-database: admin
+#      username: dogsoedang
+#      password: sssdangorg56
+      host: j10e104.p.ssafy.io
+      port: 27017
+      database: seodangdog
+      authentication-database: admin  # 사용자 인증에 사용되는 데이터베이스
+      username: dogsoedang
+      password: sssdangorg56
     redis:
       host: j10e104.p.ssafy.io
       port: 6379

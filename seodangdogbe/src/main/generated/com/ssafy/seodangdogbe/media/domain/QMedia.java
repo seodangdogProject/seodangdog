@@ -21,6 +21,8 @@ public class QMedia extends EntityPathBase<Media> {
 
     public final StringPath mediaCode = createString("mediaCode");
 
+    public final StringPath mediaImgUrl = createString("mediaImgUrl");
+
     public final StringPath mediaName = createString("mediaName");
 
     public QMedia(String variable) {

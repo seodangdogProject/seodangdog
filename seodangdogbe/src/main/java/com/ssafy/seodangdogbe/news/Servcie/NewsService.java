@@ -1,10 +1,12 @@
 package com.ssafy.seodangdogbe.news.Servcie;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seodangdogbe.news.Repository.NewsDetailsRepository;
 import com.ssafy.seodangdogbe.news.Repository.NewsRepository;
 import com.ssafy.seodangdogbe.news.Repository.UserNewsRepository;
 import com.ssafy.seodangdogbe.news.domain.MetaNews;
 import com.ssafy.seodangdogbe.news.domain.News;
+import com.ssafy.seodangdogbe.news.domain.UserNews;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,13 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.ssafy.seodangdogbe.news.domain.QUserNews.*;
 import static com.ssafy.seodangdogbe.news.dto.NewsDetailsDto.*;
 import static com.ssafy.seodangdogbe.news.dto.NewsDto.*;
+import static com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 
-@Transactional
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class NewsService {
+
+    public final JPAQueryFactory jpaQueryFactory;
 
     public final NewsRepository newsRepository;
     public final NewsDetailsRepository newsDetailsRepository;
@@ -32,7 +38,7 @@ public class NewsService {
             System.out.println(findNews);
             return new NewsResponseDto(findNews.get());
         }
-        System.out.println("Optional is empty");
+        System.out.println("findNews(mysql) is empty");
         return null;
     }
 
@@ -44,7 +50,7 @@ public class NewsService {
             NewsDetailsResponseDto dto = new NewsDetailsResponseDto(findMetaNews.get());
             return dto;
         }
-        System.out.println("findMetaNews is Empty");
+        System.out.println("findMetaNews(mongodb) is Empty");
         return null;
     }
 
@@ -58,6 +64,22 @@ public class NewsService {
         return result;
     }
 
-    // 뉴스 읽기 내역 저장
+    // 뉴스 읽기 내역 저장(읽기만 하고 나갈때, 문제 풀기 시작했을 때)
+    public UserNewsResponseDto saveUserNewsRead(int userSeq, UserNewsReadRequestDto dto){
+        // 뉴스 읽기 시퀀스, 형광펜 리스트, 단어 리스트
+        Long newsSeq = dto.getNewsSeq();
+        UserNews findUserNews = jpaQueryFactory
+                .selectFrom(userNews)
+                .where(userNews.user.userSeq.eq(userSeq)
+                        .and(userNews.news.newsSeq.eq(newsSeq)))
+                .fetchOne();
 
+        // 찾은 user news의 읽기 내역 업데이트
+
+        return null;
+    }
+
+//    public UserNewsResponseDto saveUserNewsSolve(UserNewsSolveRequestDto dto){
+//
+//    }
 }
