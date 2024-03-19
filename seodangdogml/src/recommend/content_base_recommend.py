@@ -18,8 +18,9 @@ class Item(BaseModel):
 
 
 class News:
-    def __init__(self, title):
+    def __init__(self, title, content):
         self.title = title
+        self.content = content
 
 
 allNews = getNews()
@@ -83,3 +84,30 @@ def recommend_news(news_data_objects, user_keywords, keyword_weights):
     recommended_news = [(news_data_objects[i].title, similarities[0][i]) for i in recommendation_indices]
 
     return recommended_news
+
+@router.post("/keyword_generator")
+def keyword_generator(item: Item):
+    news_data_objects = []
+    for news in allNews:
+        title = news['newsTitle']
+        content = news['newsMainText']
+        news_data_objects.append(News(title, content))
+    # 뉴스 데이터프레임 생성
+    df_news = pd.DataFrame([[news.title, news.content] for news in news_data_objects], columns=['title', 'content'])
+
+    # TF-IDF 변환기 생성
+    tfidf_vectorizer = TfidfVectorizer()
+    # 뉴스 제목과 본문을 합쳐서 벡터화
+    corpus = df_news['title'] + ' ' + df_news['content']
+    fitted = tfidf_vectorizer.fit(corpus)
+
+    # print(pd.DataFrame(news_vectors.toarray()))
+    df = pd.DataFrame(fitted.transform(corpus).toarray())
+    df.columns = fitted.vocabulary_
+    # for i in range(df.shape[0]):
+    df_news['keywords'] = None
+    print(df_news[['keywords', 'title']].head(5))
+    for i in range(5):
+        df_news.loc[[i], ['keywords']] = str(list(df.loc[i].sort_values(ascending=False).index[:20]))
+    print(df_news[['keywords', 'title']].head(5))
+    return "success"

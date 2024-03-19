@@ -11,6 +11,5 @@ app = FastAPI()
 def hello():
     return {"message": "Hello! FastAPI!!"}
 
-
 app.include_router(content_base_recommend_router)
 app.include_router(mongo_router)
