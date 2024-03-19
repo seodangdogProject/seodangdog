@@ -1,0 +1,36 @@
+// recoilState.ts
+import { atom } from 'recoil';
+
+export type Item = {
+    idx: number;
+    answer: string;
+    mean: any;
+};
+
+// 테스트용
+const testItems: Item[] = [
+    { idx: 1, answer: 'apple', mean: '사과' },
+    { idx: 2, answer: 'banana', mean: '바나나' },
+    { idx: 3, answer: 'orange', mean: '오렌지' },
+    { idx: 1, answer: 'apple', mean: '사과' },
+    { idx: 2, answer: 'banana', mean: '바나나' },
+    { idx: 3, answer: 'orange', mean: '오렌지' },
+    { idx: 1, answer: 'apple', mean: '사과' },
+    { idx: 2, answer: 'banana', mean: '바나나' },
+    { idx: 3, answer: 'orange', mean: '오렌지' },
+];
+
+export const wordListState = atom<Item[]>({
+    key: 'wordListState',
+    default: [],
+});
+
+export const correctWordListState = atom<Item[]>({
+    key: 'correctWordListState',
+    default: testItems,
+});
+
+export const unCorrectWordListState = atom<Item[]>({
+    key: 'unCorrectWordListState',
+    default: testItems,
+});

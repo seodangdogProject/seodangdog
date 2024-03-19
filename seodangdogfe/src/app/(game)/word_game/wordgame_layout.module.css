@@ -4,7 +4,8 @@
     align-items: center; /* 수직 가운데 정렬 */
     max-width: 100%;
     height: 100vh;
-    background-color: black;
+    background-color: white;
+    font-family: 'NanumMyeongjo';
 }
 
 .content_cotainer {
@@ -12,13 +13,13 @@
     display: flex;
     flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
     align-items: center; /* 수직 가운데 정렬 */
-    width: 80%;
-    height: 80%;
+    width: 90%;
+    height: 90%;
     background-color: rgba(240, 244, 255, 1);
 }
 
 .logo {
-    margin-top: 10%;
+    margin-top: 30px;
 }
 
 .word_count_box {
@@ -30,6 +31,7 @@
     justify-content: center; /* 수평 가운데 정렬 */
     align-items: center; /* 수직 가운데 정렬 */
     margin-bottom: 20px;
+    font-weight: 1000;
 }
 
 .des_container {
@@ -39,6 +41,7 @@
     justify-content: center; /* 수평 가운데 정렬 */
     align-items: center; /* 수직 가운데 정렬 */
 }
+
 .game_start_btn {
     /* 시작하기 버튼*/
     border-radius: 10px;
@@ -56,4 +59,13 @@
 }
 
 .footer {
+    margin-top: 100px;
+}
+
+.footer_text {
+    /* position: absolute; */
+    color: grey;
+    font-family: 'hunminjungum';
+    display: flex;
+    text-align: left;
 }
