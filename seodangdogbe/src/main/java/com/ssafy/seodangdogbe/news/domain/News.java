@@ -17,7 +17,7 @@ public class News {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long newsSeq;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "media_code")
     private Media media;
 
