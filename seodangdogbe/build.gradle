@@ -42,6 +42,10 @@ dependencies {
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
+
+	// Swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
 	//mongodb 드라이버 중복 방지를 위해 Querydsl에 포함된 드라이버 제외처리
 	//의존성 충돌 방지
 	implementation("com.querydsl:querydsl-mongodb:5.0.0") {
@@ -51,6 +55,7 @@ dependencies {
 	// sql log
 	// https://mvnrepository.com/artifact/com.github.gavlyukovskiy/p6spy-spring-boot-starter
 	//	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.1'
+
 }
 
 tasks.named('test') {
