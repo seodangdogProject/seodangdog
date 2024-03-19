@@ -57,11 +57,9 @@ def conn_test():
         news['newsTitle'] = news['newsTitle'].replace("\'", "%\\\'")
         news['newsTitle'] = news['newsTitle'].replace("\"", "%\\\"")
 
-        if news == news_data[len(news_data) - 1]:
-            sql += f"(0, 0, \"{news['_id']['$oid']}\", str_to_date(\"{news['newsCreatedAt']}\", '%Y-%m-%d %H:%i:%s'), \"{mainText}\", \"{news['newsImgUrl']}\", \"{news['newsTitle']}\", \"{news['media']['mediaCode']}\", now(), now());"
-            break
         sql += f"(0, 0, \"{news['_id']['$oid']}\", str_to_date(\"{news['newsCreatedAt']}\", '%Y-%m-%d %H:%i:%s'), \"{mainText}\", \"{news['newsImgUrl']}\", \"{news['newsTitle']}\", \"{news['media']['mediaCode']}\", now(), now()),\n"
     #
+    sql = sql[:-2] + ";"
     result = cursor.execute(sql)
     db.commit()
     db.close()
