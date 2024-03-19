@@ -63,5 +63,3 @@ def conn_test():
     result = cursor.execute(sql)
     db.commit()
     db.close()
-
-conn_test()
