@@ -3,6 +3,7 @@
 // next 모듈
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // 외부 모듈
 import classNames from "classnames/bind";
@@ -16,8 +17,15 @@ import DashboardIcon from "../assets/dashboard-icon.svg";
 import DictIcon from "../assets/dict-icon.svg";
 import GameIcon from "../assets/game-icon.svg";
 import LogoutIcon from "../assets/logout-icon.svg";
+import { useEffect, useState } from "react";
 export default function NavBar() {
   const cx = classNames.bind(style);
+  const [active, setActive] = useState<string>("");
+  const pathname: string = usePathname();
+  useEffect(() => {
+    setActive(pathname.split("/")[1]);
+  }, [pathname]);
+
   return (
     <>
       <nav className={style.nav}>
@@ -28,7 +36,7 @@ export default function NavBar() {
           <Link href="/main">
             <li
               className={cx("item", {
-                active: true,
+                active: active === "main",
               })}
             >
               <div>
@@ -38,7 +46,11 @@ export default function NavBar() {
             </li>
           </Link>
           <Link href="/dashboard">
-            <li className={cx("item", {})}>
+            <li
+              className={cx("item", {
+                active: active === "dashboard",
+              })}
+            >
               <div>
                 <DashboardIcon />
               </div>
@@ -46,7 +58,11 @@ export default function NavBar() {
             </li>
           </Link>
           <Link href="/dict">
-            <li className={cx("item", {})}>
+            <li
+              className={cx("item", {
+                active: active === "dict",
+              })}
+            >
               <div>
                 <DictIcon />
               </div>
@@ -54,7 +70,11 @@ export default function NavBar() {
             </li>
           </Link>
           <Link href="/word_game">
-            <li className={cx("item", {})}>
+            <li
+              className={cx("item", {
+                active: active === "word_game",
+              })}
+            >
               <div>
                 <GameIcon />
               </div>
