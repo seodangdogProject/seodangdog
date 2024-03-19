@@ -1,3 +1,17 @@
+/* variables */
+:root {
+  --light-purple: #f6f7fb;
+}
+/* commons */
+.bg-light-purple {
+  background-color: var(--light-purple);
+}
+.box-shodow-custom {
+  box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
+  border-radius: 15px;
+  background-color: #fff;
+}
+
 /* fonts */
 @font-face {
   font-family: "hunminjungum";
@@ -21,13 +35,14 @@
   font-weight: 400;
   font-style: normal;
 }
-/* reset css */
 @font-face {
   font-family: "NanumMyeongjo";
   src: url("https://cdn.jsdelivr.net/gh/wizfile/font/NanumMyeongjo.woff")
     format("woff");
   font-style: normal;
 }
+
+/* reset css */
 
 html,
 body,
