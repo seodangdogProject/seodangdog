@@ -1,29 +1,45 @@
 package com.ssafy.seodangdogbe.news.dto;
 
-import jakarta.persistence.Id;
-import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.ssafy.seodangdogbe.news.domain.News;
+import lombok.*;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
-@Data
-@Document(collection = "meta_news")
 public class NewsDto {
-    @Id
-    private ObjectId id; // MongoDB의 _id
-    private String newsTitle;
-    private List<String> newsSummary;
-    private String newsCreatedAt;
-    private String newsReporter;
-    private String newsImgUrl;
-    private String newsMainText;
-    private String newsUrl;
-    private MediaDto media;
-
-    @Data
-    public static class MediaDto {
+    
+    // mysql 뉴스 테이블 접근
+    @Getter
+    @NoArgsConstructor
+    public static class NewsResponseDto {
+        private Long newsSeq;
         private String mediaCode;
-        private String mediaName;
+
+        private String newsAccessId;
+
+        private int countSolve;
+        private int countView;
+
+        private String newsImgUrl;
+        private String newsTitle;
+        private String newsDescription;
+        private LocalDateTime newsCreatedAt;    // 뉴스 published Date
+
+        // news url은 필요 없는지?
+
+        public NewsResponseDto(News news){
+            this.newsSeq = news.getNewsSeq();
+            this.mediaCode = news.getMedia().getMediaCode();
+            this.newsAccessId = news.getNewsAccessId();
+            this.countSolve = news.getCountSolve();
+            this.countView = news.getCountView();
+            this.newsImgUrl = news.getNewsImgUrl();
+            this.newsTitle = news.getNewsTitle();
+            this.newsDescription = news.getNewsDescription();
+            this.newsCreatedAt = news.getNewsCreatedAt();
+
+        }
     }
+
+
+
 }
