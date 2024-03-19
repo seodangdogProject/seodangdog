@@ -10,8 +10,8 @@ import time
 import os
 import sys
 sys.path.append(os.path.abspath('src'))
-from src.mongo import getNews
-from src.create_dummy.make_user_data import make_keywordlist
+from mongo import getNews
+from create_dummy.make_user_data import make_keywordlist
 
 router = APIRouter()
 
