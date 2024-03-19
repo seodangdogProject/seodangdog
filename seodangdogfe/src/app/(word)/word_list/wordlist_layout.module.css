@@ -1,0 +1,125 @@
+.container {
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    max-width: 100%;
+    height: 100vh;
+    background-color: #ffffff;
+}
+
+.content_cotainer {
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
+    align-items: center; /* 수직 가운데 정렬 */
+    width: 90%;
+    height: 90%;
+    background-color: rgba(240, 244, 255, 1);
+}
+
+.background_container {
+    width: 85%;
+    height: 100%;
+    /* background-color: white; */
+    flex-grow: 1; /* 남은 공간을 채우기 위해 확장 */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* 수직 스크롤바를 오른쪽에 배치 */
+.background_container::-webkit-scrollbar {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 20px;
+    right: 20px;
+}
+
+/* 스크롤바의 배경색 설정 */
+.background_container::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: white;
+}
+
+/* 스크롤바의 슬라이더 설정 */
+.background_container::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+
+    background: rgba(73, 57, 113, 1);
+}
+
+.toggel_container {
+    align-self: flex-start;
+    margin-top: 40px;
+    margin-left: 90px;
+    display: flex;
+}
+
+.toggle_item {
+    width: 80px;
+    background-color: white;
+    padding: 20px;
+    font-size: 20px;
+    border-top-left-radius: 20px; /* 윗변을 동그랗게 설정 */
+    border-top-right-radius: 20px; /* 윗변을 동그랗게 설정 */
+    color: black;
+    font-weight: bold;
+    font-family: 'NanumMyeongjo';
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    cursor: pointer;
+}
+
+.selected_toggle_item {
+    background-color: white;
+}
+
+.unselected_toggle_item {
+    background-color: rgba(197, 204, 221, 1);
+}
+.wordBox {
+    background-color: white;
+    font-family: 'NanumMyeongjo';
+    border-radius: 5px;
+    padding: 10px;
+    padding-top: 20px;
+    width: 100%;
+    min-height: 70px;
+    box-shadow: 2px 2px 2px gray;
+    margin-bottom: 3px;
+}
+
+.word {
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.mean {
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+.search_cotinaer {
+    position: absolute;
+    top: 50px; /* 원하는 위치의 상단 여백 */
+    right: 200px; /* 원하는 위치의 왼쪽 여백 */
+    background-color: white; /* 배경색 */
+    box-shadow: 2px 2px 2px gray;
+    width: 250px;
+    height: 50px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+}
+
+.search_input {
+    height: 30px;
+    width: 60%;
+    margin-right: 20px;
+    border: none;
+    outline: none;
+}
