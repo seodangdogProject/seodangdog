@@ -15,8 +15,10 @@
 /* fonts */
 @font-face {
   font-family: "hunminjungum";
-  font-weight: 200;
-  src: url("/fonts/EBS훈민정음SB.ttf") format("truetype");
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/EBSHunminjeongeum.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
 }
 @font-face {
   font-family: "hambaknoon";

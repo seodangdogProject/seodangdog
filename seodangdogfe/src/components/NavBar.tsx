@@ -57,10 +57,10 @@ export default function NavBar() {
               <div>대시보드</div>
             </li>
           </Link>
-          <Link href="/dict">
+          <Link href="/word_list">
             <li
               className={cx("item", {
-                active: active === "dict",
+                active: active === "word_list",
               })}
             >
               <div>
