@@ -49,4 +49,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<UserNews> userNewsList = new ArrayList<>();
 
+
+    public User(int userSeq){
+        this.userSeq = userSeq;
+    }
 }

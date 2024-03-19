@@ -14,6 +14,7 @@ public class NewsDetailsDto {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    @ToString
     public static class NewsDetailsResponseDto{
         private Long newsSeq;   // newsSeq는 mysql에서의 pk
 

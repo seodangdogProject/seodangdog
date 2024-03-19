@@ -30,7 +30,7 @@ public class News extends BaseTimeEntity {
     private Media media;
 
     // mongodb 뉴스 접근 아이디
-    @Column(length = 20)
+    @Column(length = 24)
     private String newsAccessId;
 
     @ColumnDefault("0")
@@ -45,6 +45,12 @@ public class News extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "news")
     private List<KeywordNews> keywordNewsList = new ArrayList<>();
+
+
+    // newsSeq로 news를 반환하기 위해 사용하는 생성자
+    public News(Long newsSeq){
+        this.newsSeq = newsSeq;
+    }
 
     @Override
     public String toString() {
