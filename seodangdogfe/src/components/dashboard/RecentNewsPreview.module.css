@@ -1,0 +1,57 @@
+.container {
+}
+.caption {
+  font-family: "hunminjungum";
+  margin: 10px 0;
+  cursor: pointer;
+}
+.preview {
+  background-color: #d1c2f2;
+  height: 100px;
+  border-radius: 15px;
+  display: flex;
+  padding: 15px 20px;
+  position: relative;
+}
+
+.preview img {
+  display: block;
+  margin-right: 12px;
+  box-sizing: border-box;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.body {
+  font-family: "Pretendard-Regular";
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.title {
+  font-weight: bold;
+  font-size: 19px;
+}
+.hashtag {
+  display: flex;
+  gap: 10px;
+}
+.hashtag .item {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 14px;
+  border-radius: 20px;
+  background-color: #ffda92;
+  color: #4d4d4d;
+}
+.date {
+  font-family: "Pretendard-Regular";
+  position: absolute;
+  right: 8px;
+  bottom: 5px;
+  color: #525252;
+  font-size: 13px;
+}
+.last_solved_container .preview {
+  background-color: #f1d1a8;
+}
