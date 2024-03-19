@@ -1,14 +1,15 @@
 import styled from "./DashboardContainer.module.css";
 import classNames from "classnames/bind";
+import RecentNewsPreview from "@/components/dashboard/RecentNewsPreview";
 function Info() {
-  return <>asdf</>;
+  return <>Info</>;
 }
 function Chart() {
-  return <>1234</>;
+  return <>Chart</>;
 }
-function RecentPreview() {
-  return <></>;
-}
+// function RecentPreview() {
+//   return <></>;
+// }
 function State() {
   return <></>;
 }
@@ -28,8 +29,16 @@ export default function DashboardContainer() {
           </div>
           {/* 두 번째 */}
           <div className={cx("dashboard__first", "$bg__light__purple")}>
-            <RecentPreview />
-            <State />
+            <div
+              className={cx("dashboard__second", ["bg-light-purple"], "recent")}
+            >
+              <RecentNewsPreview />
+            </div>
+            <div
+              className={cx("dashboard__second", ["bg-light-purple"], "state")}
+            >
+              <State />
+            </div>
           </div>
         </div>
       </div>

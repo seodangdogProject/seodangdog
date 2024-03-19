@@ -24,7 +24,21 @@
   border-radius: 15px;
 }
 .dashboard__second {
-  display: flex;
+  /* display: flex; */
+  width: 100%;
+  border: 15px;
+  padding: 0px 30px;
+  border-radius: 15px;
+  padding-bottom: 15px;
+}
+.dashboard__second:first-child {
+  margin-right: 30px;
+}
+.recent {
+  flex-basis: 70%;
+}
+.state {
+  flex-basis: 30%;
 }
 .bg__light__purple {
   background-color: var(--light-purple);
