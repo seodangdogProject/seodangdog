@@ -18,16 +18,17 @@ router = APIRouter()
 users = create_user_keyword()
 u_cols = ['user_id', 'keyword', 'weight']
 users_df = pd.DataFrame(users, columns=u_cols)
-# print(users_df)
+print(users_df)
 
 # News 객체를 딕셔너리로 변환
 news = {'id': [news.id for news in news_data_objects],
         'title': [news.title for news in news_data_objects]}
 news_df = pd.DataFrame(news)
-#
+# print(news_df)
+
 ratings = make_user_news_df()
 ratings_df = user_news_df = pd.DataFrame(ratings)
-print(ratings_df)
+# print(ratings_df)
 # print(ratings_df[['user_id','title']])
 # ratings_df.loc[ratings_df['user_id'] == 98]
 
