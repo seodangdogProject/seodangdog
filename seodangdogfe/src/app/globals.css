@@ -1,15 +1,51 @@
+/* variables */
+:root {
+  --light-purple: #f6f7fb;
+}
+/* commons */
+.bg-light-purple {
+  background-color: var(--light-purple);
+}
+.box-shodow-custom {
+  box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
+  border-radius: 15px;
+  background-color: #fff;
+}
+
 /* fonts */
 @font-face {
   font-family: "hunminjungum";
-  font-weight: 200;
-  src: url("/fonts/EBS훈민정음SB.ttf") format("truetype");
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/EBSHunminjeongeum.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
 }
 @font-face {
   font-family: "hambaknoon";
   font-weight: 200;
   src: url("/fonts/SF함박눈TTF.ttf") format("truetype");
 }
+@font-face {
+  font-family: "pretendard";
+  font-weight: 200;
+  src: url("/fonts/pretendardVariable.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "NanumMyeongjo";
+  src: url("https://cdn.jsdelivr.net/gh/wizfile/font/NanumMyeongjo.woff")
+    format("woff");
+  font-style: normal;
+}
+
 /* reset css */
+
 html,
 body,
 div,
@@ -133,4 +169,7 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+a {
+  text-decoration: none;
 }
