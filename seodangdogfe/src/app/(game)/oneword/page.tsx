@@ -2,7 +2,7 @@
 // WordGame.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRecoilState, RecoilRoot } from 'recoil';
-import { wordListState, Item } from '../../../atoms/wordGame';
+import { gameWordListState, Item } from '../../../atoms/wordGame';
 import styles from './oneword_layout.module.css';
 import Lottie from 'lottie-react';
 import TimerIcon from '../../../assets/timer-icon.svg';
@@ -11,7 +11,7 @@ import ProgressBar from '@ramonak/react-progress-bar';
 const OneWord: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [sec, setSec] = useState(0);
-    const [wordList, setWordList] = useRecoilState(wordListState);
+    const [wordList, setWordList] = useRecoilState(gameWordListState);
     const [testWord, setTestWord] = useState('김아림특화');
     const [inputValues, setInputValues] = useState(
         Array(testWord.length).fill('')

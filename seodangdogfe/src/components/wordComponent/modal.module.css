@@ -1,0 +1,52 @@
+.horizontal {
+    width: 100%; /* 수평선의 가로 길이 */
+    height: 1px; /* 수평선의 세로 길이 */
+    background-color: #ccc; /* 수평선의 색상 */
+    margin: 10px 0; /* 수평선 위 아래 여백 */
+}
+
+.modal_content {
+    font-family: 'NanumMyeongjo';
+    position: absolute;
+    background-color: white;
+    border-radius: 5px;
+    transition: opacity 0.3s;
+}
+
+.modal_container {
+    border-radius: 10px;
+    border: 1px solid black;
+    width: 45%;
+    display: flex;
+    position: fixed;
+    flex-direction: column; /* 세로로 정렬 */
+    justify-content: center;
+    background-color: white;
+    height: 40%;
+    /* border: 1px solid red; */
+    z-index: 100;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.title {
+    font-family: 'NanumMyeongjo';
+    font-weight: bold;
+    height: 30%;
+    font-size: 45px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.mean_container {
+    font-family: 'NanumMyeongjo';
+    margin-top: 10px;
+    height: 60%;
+    font-size: 20px;
+    background-color: aliceblue;
+    padding: 20px;
+}
+
+.mean {
+    margin: 10px;
+}

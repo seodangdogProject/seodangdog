@@ -20,8 +20,8 @@ const testItems: Item[] = [
     { idx: 3, answer: 'orange', mean: '오렌지' },
 ];
 
-export const wordListState = atom<Item[]>({
-    key: 'wordListState',
+export const gameWordListState = atom<Item[]>({
+    key: 'gamewordList',
     default: [],
 });
 

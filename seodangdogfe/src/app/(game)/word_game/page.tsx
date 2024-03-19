@@ -4,14 +4,14 @@ import { useRouter } from 'next/navigation';
 import { useRecoilState, RecoilRoot } from 'recoil';
 import styles from './wordgame_layout.module.css';
 import GameLogo from '../../../assets/wordgame-logo-icon.svg';
-import { wordListState, Item } from '../../../atoms/wordGame';
+import { gameWordListState, Item } from '../../../atoms/wordGame';
 import Link from 'next/link';
 
 export default function WordGame() {
     const router = useRouter();
     const [isAvailable, setIsAvailable] = useState<boolean>(true); // api 요청으로 받아오기
     const [count, setCount] = useState<number>(0); // api 요청으로 받아오기
-    const [wordList, setWordList] = useRecoilState(wordListState);
+    const [wordList, setWordList] = useRecoilState(gameWordListState);
 
     // async function fetchWordList(): Promise<Item[]> {
     //     // 데이터를 받아오는 비동기 작업을 수행합니다. 예를 들어, API 호출을 수행합니다.
