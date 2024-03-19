@@ -1,14 +1,12 @@
 package com.ssafy.seodangdogbe.news.domain;
 
 import com.ssafy.seodangdogbe.keyword.domain.Keyword;
-import com.ssafy.seodangdogbe.news.domain.News;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 public class KeywordNews {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

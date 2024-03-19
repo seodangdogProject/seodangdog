@@ -13,10 +13,10 @@ spring:
       use_sql_comments: true
   data:
     mongodb:
-      uri: mongodb://j10e104.p.ssafy.io:27017/test
+      uri: mongodb://j10e104.p.ssafy.io:27017/seodangdog
       authentication-database: admin
-      username: seodangdog
-      password: Yan!gCh#anE104!
+      username: seodangdogi
+      password: seo@7220311p!!
     redis:
       host: j10e104.p.ssafy.io
       port: 6379

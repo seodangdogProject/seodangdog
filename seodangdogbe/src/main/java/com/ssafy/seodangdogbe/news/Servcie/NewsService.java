@@ -2,10 +2,9 @@ package com.ssafy.seodangdogbe.news.Servcie;
 
 import com.ssafy.seodangdogbe.news.Repository.NewsDetailsRepository;
 import com.ssafy.seodangdogbe.news.Repository.NewsRepository;
+import com.ssafy.seodangdogbe.news.Repository.UserNewsRepository;
 import com.ssafy.seodangdogbe.news.domain.MetaNews;
 import com.ssafy.seodangdogbe.news.domain.News;
-import com.ssafy.seodangdogbe.news.dto.NewsDetailsResponseDto;
-import com.ssafy.seodangdogbe.news.dto.NewsResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.ssafy.seodangdogbe.news.dto.NewsDetailsDto.*;
+import static com.ssafy.seodangdogbe.news.dto.NewsDto.*;
+
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class NewsService {
 
     public final NewsRepository newsRepository;
     public final NewsDetailsRepository newsDetailsRepository;
+    public final UserNewsRepository userNewsRepository;
     
     // newsSeq(Long)로 mysql의 news 테이블조회
     public NewsResponseDto getNewsPreview(Long newsSeq){
@@ -33,7 +36,7 @@ public class NewsService {
         return null;
     }
 
-    // newsAccessId(String)로 mongodb의 news collection에서 뉴스 조회
+    // newsAccessId(String)로 mongodb의 meta_news collection에서 뉴스 조회
     public NewsDetailsResponseDto getNewsDetails(String id){
         Optional<MetaNews> findMetaNews = newsDetailsRepository.findById(id);
 
@@ -54,5 +57,7 @@ public class NewsService {
         }
         return result;
     }
+
+    // 뉴스 읽기 내역 저장
 
 }

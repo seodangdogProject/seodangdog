@@ -2,6 +2,7 @@ package com.ssafy.seodangdogbe.news.domain;
 
 import com.ssafy.seodangdogbe.keyword.domain.Keyword;
 import com.ssafy.seodangdogbe.media.domain.Media;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.bson.types.ObjectId;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Document(collection = "news") //mongodb collection명 (meta_news)
+@Document(collection = "meta_news") //mongodb collection명 (meta_news)
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,7 +23,7 @@ public class MetaNews {
     private String id;
 
     private String newsTitle;
-    private ArrayList<String> newsSummary;
+    private List<String> newsSummary;
     private String newsCreatedAt;
 
     private String newsReporter;
@@ -33,6 +34,8 @@ public class MetaNews {
     private Media media;    // media code, name
 
 //    private List<Keyword> newsKeyword;
+
+//    @ElementCollection
 //    private List<Quiz> newsQuiz;    // 퀴즈 1,2,3
 
     @Override
