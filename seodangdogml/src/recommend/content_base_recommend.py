@@ -10,8 +10,8 @@ import time
 import os
 import sys
 sys.path.append(os.path.abspath('src'))
-from mongo import getNews
-from create_dummy.make_user_data import make_keywordlist
+from src.mongo import getNews
+from src.create_dummy.make_user_data import make_keywordlist
 
 router = APIRouter()
 
@@ -26,32 +26,32 @@ class News:
         self.title = title
 
 
+news_data_objects = []
 allNews = getNews()
+for news in allNews:
+    id = news['_id']['$oid']
+    title = news['newsTitle']
+    news_data_objects.append(News(id, title))
+
 
 @router.post("/recommend_news")
 # def process_data(item: Item):
 def process_data():
-    # item 객체를 이용하여 요청 데이터 처리
-    # print(item.message)
-    news_data_objects = []
-    for news in allNews:
-        id = news['_id']['$oid']
-        title = news['newsTitle']
-        news_data_objects.append(News(id, title))
-
     # keyword_weights = {"北 해킹 의혹": 16.0, "대법원": 1.1, "EU": 1.3, "애플": 2.0}
     keyword_weights = make_keywordlist(50)
-    print(keyword_weights)
     user_keywords = list(keyword_weights.keys())  # 키들을 배열 형태로 반환
-    print(user_keywords)
+    print(keyword_weights)
+
     start_time = time.time()
+
     recommended_news = recommend_news(news_data_objects, user_keywords, keyword_weights)
+
     end_time = time.time()
     execution_time = end_time - start_time
     print(f"함수 실행 시간: {execution_time} 초")
-    print("추천 뉴스:")
+
     for id, title, similarity in recommended_news:
-        print(f"제목: {title} {similarity * 100}")
+        print(f"제목: {title} {similarity}")
 
     return recommended_news
 
@@ -60,7 +60,6 @@ def recommend_news(news_data_objects, user_keywords, keyword_weights):
 
     # 뉴스 데이터프레임 생성
     df_news = pd.DataFrame([[news.title] for news in news_data_objects], columns=['title'])
-
     # TF-IDF 변환기 생성
     tfidf_vectorizer = TfidfVectorizer()
 
@@ -89,7 +88,7 @@ def recommend_news(news_data_objects, user_keywords, keyword_weights):
     # 유사도가 높은 순으로 뉴스 추천
     recommendation_indices = similarities.argsort()[0][::-1]
     # recommended_news = [(news_data_objects[i].title, news_data_objects[i].content) for i in recommendation_indices]
-    recommended_news = [(news_data_objects[i].id ,news_data_objects[i].title, similarities[0][i]) for i in recommendation_indices[:10]]
+    recommended_news = [(news_data_objects[i].id, news_data_objects[i].title, similarities[0][i]) for i in recommendation_indices[:10]]
 
     return recommended_news
 
@@ -97,22 +96,52 @@ def recommend_news(news_data_objects, user_keywords, keyword_weights):
 # 사용자 한명당 30개의 뉴스를 읽었다고 가정한다
 
 @router.get("/random")
-def random_data():
-    random_news = random.sample(allNews, 30)
-    random_users= random.sample(range(101), 30)
-    print(random_users)
+def make_user_news_df():
+    recommended_news_list = []
+    random_users = random.sample(range(101), 30)
 
     for user_id in random_users:
         keyword_weights = make_keywordlist(user_id)
         user_keywords = list(keyword_weights.keys())  # 키들을 배열 형태로 반환
-        print(keyword_weights)
-        for news in random_news:
-            data = News(user_id,news['newsTitle'])
-            result = user_news_rating(news['newsTitle'], user_keywords, keyword_weights)
-            print(result, end=' / ')
-        print()
+
+        # print(keyword_weights)
+
+        recommended_news = recommend_news(news_data_objects, user_keywords, keyword_weights)
+
+        for id, title, similarity in recommended_news:
+            recommended_news_list.append({'id': id, 'user_id': user_id, 'title': title, 'similarity': similarity})
+
+    return recommended_news_list
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##########################test##################################################
 # def user_news_rating(news_title, user_keywords, keyword_weights):
 def user_news_rating(news_title, user_keywords, keyword_weights, max_df=1.0, min_df=1, max_features=None):
     # TF-IDF 변환기 생성
