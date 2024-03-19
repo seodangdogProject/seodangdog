@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ramonak/react-progress-bar": "^5.2.0",
     "@svgr/webpack": "^8.1.0",
     "classnames": "^2.5.1",
     "lottie-react": "^2.4.0",

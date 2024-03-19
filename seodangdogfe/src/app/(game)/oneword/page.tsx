@@ -6,11 +6,13 @@ import { wordListState, Item } from '../../../atoms/wordGame';
 import styles from './oneword_layout.module.css';
 import Lottie from 'lottie-react';
 import TimerIcon from '../../../assets/timer-icon.svg';
+import ProgressBar from '@ramonak/react-progress-bar';
 
 const OneWord: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [sec, setSec] = useState(0);
     const [wordList, setWordList] = useRecoilState(wordListState);
-    const [testWord, setTestWord] = useState('김아림');
+    const [testWord, setTestWord] = useState('김아림특화');
     const [inputValues, setInputValues] = useState(
         Array(testWord.length).fill('')
     ); // 입력된 문자열을 추적하는 상태
@@ -24,8 +26,16 @@ const OneWord: React.FC = () => {
         newInputValues[index] = value; // 변경된 값으로 업데이트
         setInputValues(newInputValues); // 변경된 입력 값을 상태에 저장
 
-        // 모든 input이 채워졌는지 확인하여 자동으로 단어를 변환합니다.
-        if (newInputValues.every((input) => input !== '')) {
+        // 모든 input이 채워졌는지 확인하여 자동으로 단어를 변환=> 빈칸 처리가 너무 힘들어서 일단 보류... ㅜ.ㅜ
+        // if (newInputValues.every((input) => input !== '' && input !== ' ')) {
+        //     handleConvertWord();
+        //     console.log('검사하러가기');
+        // }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            console.log('검사하러가기');
             handleConvertWord();
         }
     };
@@ -37,6 +47,20 @@ const OneWord: React.FC = () => {
     };
 
     useEffect(() => {
+        const interval_id = setInterval(() => {
+            setSec((sec) => {
+                const newcount = sec + 1;
+                console.log(newcount);
+                if (newcount == 11) {
+                    console.log('정지');
+                    clearInterval(interval_id);
+                    //alert('종료');
+                }
+                return newcount;
+            });
+        }, 1000);
+
+        // 이부분 뒤에 수정하기 (자동으로 넘기도록 -> 타이머 없애고 조건되면 자동으로 바뀌면서 타이머 재시동)
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => {
                 if (prevIndex + 1 >= wordList.length) {
@@ -46,7 +70,10 @@ const OneWord: React.FC = () => {
             });
         }, 5000);
 
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(interval_id);
+            clearInterval(interval);
+        };
     }, [wordList.length]);
 
     return (
@@ -59,7 +86,9 @@ const OneWord: React.FC = () => {
                         <span> /</span>
                         <span> 10</span>
                     </div>
-                    <div className={styles.meaning_container}></div>
+                    <div className={styles.meaning_container}>
+                        조선 왕조가 자신들의 역사를 편찬한 사서
+                    </div>
                     <div className={styles.answer_conatiner}>
                         {testWord.split('').map((char, index) => (
                             <div key={index} className={styles.characterBox}>
@@ -70,13 +99,36 @@ const OneWord: React.FC = () => {
                                     onChange={(e) =>
                                         handleChange(index, e.target.value)
                                     }
+                                    onKeyDown={handleKeyDown}
                                 />
                             </div>
                         ))}
                     </div>
                     <div className={styles.timer}>
-                        <TimerIcon></TimerIcon>
-                        <div className={styles.timer_bar}></div>
+                        <div className={styles.time_icon}>
+                            <TimerIcon></TimerIcon>
+                        </div>
+                        <div className={styles.progress_wrapper}>
+                            <div
+                                className={styles.progress_container}
+                                style={{
+                                    width: `${(sec / 10) * 100}%`,
+                                    transition: 'width 0.5s ease',
+                                }}
+                            >
+                                {/* <div>{sec}</div> */}
+                            </div>
+                        </div>
+                        {/* <ProgressBar
+                            completed={sec}
+                            width="700px"
+                            height="40px"
+                            customLabel={`${sec}`}
+                            className={styles.progress_wrapper}
+                            barContainerClassName={styles.progress_container}
+                            completedClassName={styles.progress_barCompleted}
+                            labelClassName={styles.progress_label}
+                        /> */}
                     </div>
                 </div>
             </div>
