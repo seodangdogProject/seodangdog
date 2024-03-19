@@ -3,12 +3,15 @@ from fastapi import APIRouter
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import random
 
-import sys
 import time
 
-sys.path.append("/src")
-from mongo import getNews
+import os
+import sys
+sys.path.append(os.path.abspath('src'))
+from src.mongo import getNews
+from src.create_dummy.make_user_data import make_keywordlist
 
 router = APIRouter()
 
@@ -18,44 +21,48 @@ class Item(BaseModel):
 
 
 class News:
-    def __init__(self, title, content):
+    def __init__(self, id, title):
+        self.id = id
         self.title = title
-        self.content = content
 
 
+news_data_objects = []
 allNews = getNews()
+for news in allNews:
+    id = news['_id']['$oid']
+    title = news['newsTitle']
+    news_data_objects.append(News(id, title))
 
 
 @router.post("/recommend_news")
-def process_data(item: Item):
-    # item 객체를 이용하여 요청 데이터 처리
-    # print(item.message)
-    news_data_objects = []
-    for news in allNews:
-        title = news['newsTitle']
-        news_data_objects.append(News(title))
+# def process_data(item: Item):
+def process_data():
+    # keyword_weights = {"北 해킹 의혹": 16.0, "대법원": 1.1, "EU": 1.3, "애플": 2.0}
+    keyword_weights = make_keywordlist(50)
+    user_keywords = list(keyword_weights.keys())  # 키들을 배열 형태로 반환
+    print(keyword_weights)
 
-    keyword_weights = {"대법원": 1.1, "EU": 1.3}
-    user_keywords = ["대법원", "EU"]
     start_time = time.time()
+
     recommended_news = recommend_news(news_data_objects, user_keywords, keyword_weights)
+
     end_time = time.time()
     execution_time = end_time - start_time
     print(f"함수 실행 시간: {execution_time} 초")
-    print("추천 뉴스:")
-    # for title, content, similarity in recommended_news:
-    #     print(f"제목: {title} {similarity}")
-    return getNews()
+
+    for id, title, similarity in recommended_news:
+        print(f"제목: {title} {similarity}")
+
+    return recommended_news
 
 
 def recommend_news(news_data_objects, user_keywords, keyword_weights):
+
     # 뉴스 데이터프레임 생성
     df_news = pd.DataFrame([[news.title] for news in news_data_objects], columns=['title'])
-
     # TF-IDF 변환기 생성
     tfidf_vectorizer = TfidfVectorizer()
 
-    print("start")
     # 뉴스 제목과 본문을 합쳐서 벡터화
     corpus = df_news['title']
     news_vectors = tfidf_vectorizer.fit_transform(corpus)
@@ -81,33 +88,81 @@ def recommend_news(news_data_objects, user_keywords, keyword_weights):
     # 유사도가 높은 순으로 뉴스 추천
     recommendation_indices = similarities.argsort()[0][::-1]
     # recommended_news = [(news_data_objects[i].title, news_data_objects[i].content) for i in recommendation_indices]
-    recommended_news = [(news_data_objects[i].title, similarities[0][i]) for i in recommendation_indices]
+    recommended_news = [(news_data_objects[i].id, news_data_objects[i].title, similarities[0][i]) for i in recommendation_indices[:10]]
 
     return recommended_news
 
-@router.post("/keyword_generator")
-def keyword_generator(item: Item):
-    news_data_objects = []
-    for news in allNews:
-        title = news['newsTitle']
-        content = news['newsMainText']
-        news_data_objects.append(News(title, content))
-    # 뉴스 데이터프레임 생성
-    df_news = pd.DataFrame([[news.title, news.content] for news in news_data_objects], columns=['title', 'content'])
+# 하나의 뉴스와 한명의 사용자의 유사도 (추천도)
+# 사용자 한명당 30개의 뉴스를 읽었다고 가정한다
 
+@router.get("/random")
+def make_user_news_df():
+    recommended_news_list = []
+    random_users = random.sample(range(101), 30)
+
+    for user_id in random_users:
+        keyword_weights = make_keywordlist(user_id)
+        user_keywords = list(keyword_weights.keys())  # 키들을 배열 형태로 반환
+
+        # print(keyword_weights)
+
+        recommended_news = recommend_news(news_data_objects, user_keywords, keyword_weights)
+
+        for id, title, similarity in recommended_news:
+            recommended_news_list.append({'id': id, 'user_id': user_id, 'title': title, 'similarity': similarity})
+
+    return recommended_news_list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##########################test##################################################
+# def user_news_rating(news_title, user_keywords, keyword_weights):
+def user_news_rating(news_title, user_keywords, keyword_weights, max_df=1.0, min_df=1, max_features=None):
     # TF-IDF 변환기 생성
-    tfidf_vectorizer = TfidfVectorizer()
-    # 뉴스 제목과 본문을 합쳐서 벡터화
-    corpus = df_news['title'] + ' ' + df_news['content']
-    fitted = tfidf_vectorizer.fit(corpus)
+    # tfidf_vectorizer = TfidfVectorizer()
 
-    # print(pd.DataFrame(news_vectors.toarray()))
-    df = pd.DataFrame(fitted.transform(corpus).toarray())
-    df.columns = fitted.vocabulary_
-    # for i in range(df.shape[0]):
-    df_news['keywords'] = None
-    print(df_news[['keywords', 'title']].head(5))
-    for i in range(5):
-        df_news.loc[[i], ['keywords']] = str(list(df.loc[i].sort_values(ascending=False).index[:20]))
-    print(df_news[['keywords', 'title']].head(5))
-    return "success"
+    tfidf_vectorizer = TfidfVectorizer(max_df=max_df, min_df=min_df, max_features=max_features)
+
+    # 사용자 키워드를 TF-IDF 벡터로 변환
+    user_vector = tfidf_vectorizer.fit_transform([" ".join(user_keywords)])
+
+    # 키워드별 가중치 반영
+    user_vector_weighted = user_vector.copy()
+    for keyword, weight in keyword_weights.items():
+        keyword_index = tfidf_vectorizer.vocabulary_.get(keyword)
+        if keyword_index is not None:
+            user_vector_weighted[:, keyword_index] *= weight
+
+    # 뉴스 제목을 TF-IDF 벡터로 변환
+    news_vector = tfidf_vectorizer.transform([news_title])
+
+    # 유사도 계산
+    similarity = cosine_similarity(user_vector_weighted, news_vector)[0][0]
+
+    return similarity

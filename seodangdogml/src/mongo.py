@@ -15,7 +15,6 @@ uri = f"mongodb://{username}:{password}@j10e104.p.ssafy.io:{port}/{host}?authSou
 dbname = 'seodangdog'
 client = MongoClient(uri)[dbname]
 
-
 @router.get("/saveNews")
 def saveNews():
     with open('news.json', 'r', encoding="utf8") as f:
@@ -27,7 +26,7 @@ def saveNews():
 
 @router.get("/getNews")
 def getNews():
-    response = client.meta_news.find({},{"_id": 1, "newsTitle": 1, "newsMainText":1})
+    response = client.meta_news.find({},{"_id": 1, "newsTitle": 1})
     return json.loads(json_util.dumps(response))
 
 @router.get("/getNewsAll")
