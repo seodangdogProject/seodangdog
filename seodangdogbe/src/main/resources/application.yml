@@ -13,10 +13,10 @@ spring:
       use_sql_comments: true
   data:
     mongodb:
-#      uri: mongodb://j10e104.p.ssafy.io:27017/seodangdog
-#      authentication-database: admin
-#      username: dogsoedang
-#      password: sssdangorg56
+      #      uri: mongodb://j10e104.p.ssafy.io:27017/seodangdog
+      #      authentication-database: admin
+      #      username: dogsoedang
+      #      password: sssdangorg56
       host: j10e104.p.ssafy.io
       port: 27017
       database: seodangdog
@@ -32,9 +32,16 @@ spring:
       load-on-startup: 1
 server:
   port : 8081
+  forward-headers-strategy: FRAMEWORK
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
 #logging:
 #  level:
 #    org.hibernate.sql: debug
 #    org.hibernate.type: trace
+
