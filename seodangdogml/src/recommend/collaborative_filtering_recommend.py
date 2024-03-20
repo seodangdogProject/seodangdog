@@ -5,9 +5,9 @@ import pandas as pd
 import os
 import sys
 
-sys.path.append(os.path.abspath('src'))
-from recommend.content_base_recommend import news_data_objects
-from recommend.content_base_recommend import make_user_news_df
+# sys.path.append(os.path.abspath('src'))
+from .content_base_recommend import news_data_objects
+from .content_base_recommend import make_user_news_df
 
 router = APIRouter()
 
@@ -20,13 +20,13 @@ news_df = pd.DataFrame(news)
 ratings = make_user_news_df()
 ratings_df = pd.DataFrame(ratings)
 
+
 # 데이터셋 만들기# 사용자 기반 이기 때문에 모든 데이터와 user_id를 데이터셋으로 한다
 # x = ratings.copy()
 # y = ratings['user_id']
 
 @router.get('/fast/cf_recom')
 def cf_recom():
-
     user_ids = list(range(1, 1000))
     users_df = pd.DataFrame({'user_id': user_ids})
     users_df.to_csv('users.csv', sep='|', index=False)
@@ -56,6 +56,7 @@ def score(model, neighbor_size=0):
     y_pred = np.array([model(user, movie, neighbor_size) for (user, movie) in id_pairs])
     y_true = np.array(x_test['rating'])
     return RMSE(y_true, y_pred)
+
 
 def test():
     pass

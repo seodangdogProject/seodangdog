@@ -2,6 +2,7 @@ from faker import Faker
 import random
 import pandas as pd
 
+
 # user_id를 요청하면 키워드 + 가중치 리스트 반환
 def create_user_keyword():
     fake = Faker()
