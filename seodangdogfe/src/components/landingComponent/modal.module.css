@@ -22,10 +22,13 @@
 }
 
 .modal_container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     border-radius: 10px;
     width: 30%;
     display: flex;
-    position: fixed;
     flex-direction: column; /* 세로로 정렬 */
     justify-content: center;
     background-color: white;

@@ -50,8 +50,8 @@
 
 .toggel_container {
     align-self: flex-start;
-    margin-top: 40px;
-    margin-left: 90px;
+    margin-top: 90px;
+    margin-left: 120px;
     display: flex;
 }
 
@@ -104,7 +104,7 @@
 
 .search_cotinaer {
     position: absolute;
-    top: 50px; /* 원하는 위치의 상단 여백 */
+    top: 80px; /* 원하는 위치의 상단 여백 */
     right: 200px; /* 원하는 위치의 왼쪽 여백 */
     background-color: white; /* 배경색 */
     box-shadow: 2px 2px 2px gray;
