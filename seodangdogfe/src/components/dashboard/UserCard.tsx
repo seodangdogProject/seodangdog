@@ -4,7 +4,9 @@ export default function UserCard() {
   const cx = classNames.bind(styled);
   return (
     <div className={cx("container", ["box-shodow-cutom"])}>
-      <div className={styled.king}></div>
+      <div className={styled.king}>
+        <img src="/images/어휘왕임시_지워야함.svg" alt="" />
+      </div>
       <div className={styled.name}>아기아림</div>
       <div className={styled.email}>babyarim@naver.com</div>
       <ul className={styled.hashtag}>
