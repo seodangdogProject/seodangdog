@@ -1,0 +1,54 @@
+.container {
+  width: 100%;
+  height: 220px;
+  margin-top: 20px;
+  position: relative;
+  font-family: "hunminjungum";
+  padding: 20px 0 160px 160px;
+  box-sizing: border-box;
+}
+.king {
+  left: 0;
+  bottom: 0;
+  position: absolute;
+  width: 150px;
+  height: 100%;
+  background-color: #1c1b1b;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  overflow: hidden; /* 내부가 넘치는 경우를 방지하기 위해 overflow 속성을 hidden으로 설정 */
+}
+.king::before {
+  content: "";
+  position: absolute;
+  top: 62px;
+  right: -70px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 220px 100px 0; /* 삼각형 모양으로 잘리도록 설정 */
+  border-color: transparent #fff transparent transparent; /* 삼각형의 색상 설정 */
+  transform: rotate(90deg); /* 삼각형을 180도 회전하여 방향을 바꿈 */
+}
+
+.name {
+  margin-bottom: 60px;
+  font-size: 36px;
+}
+
+.email {
+  font-size: 20px;
+  color: #b7b5b5;
+  margin-bottom: 40px;
+}
+.hashtag {
+  display: flex;
+  gap: 42px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.hashtag .item {
+  font-size: 20px;
+  color: #d65757;
+  font-weight: bold;
+}
