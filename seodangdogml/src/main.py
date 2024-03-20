@@ -8,7 +8,7 @@ from mongo import router as mongo_router
 app = FastAPI()
 
 
-@app.get("/hello")
+@app.get("/fast/hello")
 def hello():
     return {"message": "Hello! FastAPI!!"}
 
