@@ -1,6 +1,7 @@
 import styled from "./DashboardContainer.module.css";
 import classNames from "classnames/bind";
 import RecentNewsPreview from "@/components/dashboard/RecentNewsPreview";
+import UserCard from "@/components/dashboard/UserCard";
 function Info() {
   return <></>;
 }
@@ -27,7 +28,7 @@ export default function DashboardContainer() {
             >
               <div className={styled.title}>Info</div>
               <div className={cx("user", ["box-shodow-custom"])}>
-                {/* 여기에 User 컴포넌트들어감 */}
+                <UserCard />
               </div>
               <div className={cx("streak", ["box-shodow-custom"])}></div>
             </div>
