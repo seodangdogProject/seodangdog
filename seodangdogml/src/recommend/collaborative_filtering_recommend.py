@@ -20,12 +20,10 @@ router = APIRouter()
 news = {'news_id': [news.id for news in news_data_objects],
         'title': [news.title for news in news_data_objects]}
 news_df = pd.DataFrame(news)
-news_df.to_csv('news.csv', sep='|', index=False)
 
 # 일치률 데이터프레임
 ratings = make_user_news_df()
 ratings_df = pd.DataFrame(ratings)
-ratings_df.to_csv('ratings2s.csv', sep='|', index=False)
 
 # 데이터셋 만들기# 사용자 기반 이기 때문에 모든 데이터와 user_id를 데이터셋으로 한다
 # x = ratings.copy()
@@ -33,7 +31,6 @@ ratings_df.to_csv('ratings2s.csv', sep='|', index=False)
 
 @router.get('/cf_recom')
 def cf_recom():
-    print("하이")
 
     user_ids = list(range(1, 1000))
     users_df = pd.DataFrame({'user_id': user_ids})
