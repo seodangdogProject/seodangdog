@@ -4,6 +4,8 @@ import com.ssafy.seodangdogbe.user.dto.GameActivatedResponseDto;
 import com.ssafy.seodangdogbe.user.dto.GameGetProblemResponseDto;
 import com.ssafy.seodangdogbe.user.dto.GameResultRequestDto;
 import com.ssafy.seodangdogbe.user.service.GameService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ public class GameController {
     }
 
     //단어 게임 활성화 기능
+    @Operation(description = "단어 게임 활성화 기능")
     @GetMapping("/activate")
     public ResponseEntity<GameActivatedResponseDto> checkGameActivation(@RequestParam int userSeq) {
         GameActivatedResponseDto response = gameService.checkGameActivation(userSeq);

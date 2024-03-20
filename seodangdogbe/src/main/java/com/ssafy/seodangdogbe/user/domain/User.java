@@ -1,5 +1,6 @@
 package com.ssafy.seodangdogbe.user.domain;
 
+import com.ssafy.seodangdogbe.common.BaseTimeEntity;
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.media.domain.UserMedia;
 import com.ssafy.seodangdogbe.news.domain.UserNews;
@@ -13,7 +14,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userSeq;
