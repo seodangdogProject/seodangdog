@@ -26,6 +26,13 @@ class News:
         self.title = title
 
 
+class NewsDto:
+    def __init__(self, id, title, similarity):
+        self.id = id
+        self.title = title
+        self.similarity=similarity
+
+
 news_data_objects = []
 allNews = getNews()
 for news in allNews:
@@ -33,8 +40,7 @@ for news in allNews:
     title = news['newsTitle']
     news_data_objects.append(News(id, title))
 
-
-@router.post("/recommend_news")
+@router.get("/fast/cbf_recom")
 # def process_data(item: Item):
 def process_data():
     # keyword_weights = {"北 해킹 의혹": 16.0, "대법원": 1.1, "EU": 1.3, "애플": 2.0}
@@ -50,10 +56,11 @@ def process_data():
     execution_time = end_time - start_time
     print(f"함수 실행 시간: {execution_time} 초")
 
+    result = []
     for id, title, similarity in recommended_news:
-        print(f"제목: {title} {similarity}")
-
-    return recommended_news
+        result.append(NewsDto(id,title,similarity))
+    print(result)
+    return result
 
 
 def recommend_news(news_data_objects, user_keywords, keyword_weights):
@@ -87,18 +94,14 @@ def recommend_news(news_data_objects, user_keywords, keyword_weights):
 
     # 유사도가 높은 순으로 뉴스 추천
     recommendation_indices = similarities.argsort()[0][::-1]
-    # recommended_news = [(news_data_objects[i].title, news_data_objects[i].content) for i in recommendation_indices]
     recommended_news = [(news_data_objects[i].id, news_data_objects[i].title, similarities[0][i]) for i in recommendation_indices[:10]]
 
     return recommended_news
 
-# 하나의 뉴스와 한명의 사용자의 유사도 (추천도)
-# 사용자 한명당 30개의 뉴스를 읽었다고 가정한다
 
-@router.get("/random")
 def make_user_news_df():
     recommended_news_list = []
-    random_users = random.sample(range(101), 30)
+    random_users = random.sample(range(100), 50)
 
     for user_id in random_users:
         keyword_weights = make_keywordlist(user_id)
@@ -109,36 +112,16 @@ def make_user_news_df():
         recommended_news = recommend_news(news_data_objects, user_keywords, keyword_weights)
 
         for id, title, similarity in recommended_news:
-            recommended_news_list.append({'id': id, 'user_id': user_id, 'title': title, 'similarity': similarity})
+            recommended_news_list.append({'news_id': id, 'user_id': user_id, 'title': title, 'similarity': get_weight(similarity)})
 
     return recommended_news_list
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def get_weight(v):
+    v = v*100
+    w = round(v, 0)
+    int_w = int(w)
+    if int_w <= 0: int_w = 1
+    return int_w
 
 
 ##########################test##################################################
