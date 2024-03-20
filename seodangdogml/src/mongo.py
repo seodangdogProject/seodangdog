@@ -3,6 +3,8 @@ from bson import json_util
 from pymongo import MongoClient
 import pymysql
 from fastapi import APIRouter
+from konlpy.tag import Okt
+import time
 router = APIRouter()
 
 
@@ -17,8 +19,27 @@ client = MongoClient(uri)[dbname]
 
 @router.get("/saveNews")
 def saveNews():
+    start_t = time.time()
     with open('news.json', 'r', encoding="utf8") as f:
         news_data = json.load(f)
+
+    ### 형태소 분리
+    okt = Okt()
+    for i in range(len(news_data)):
+    # for i in range(3,4):
+        main_text = news_data[i]["newsMainText"]
+        # 띄어쓰기 포함 형태소 분리
+        pos_list = []
+        for phrase in main_text.split(" "):
+            pos_list += okt.pos(phrase)
+            pos_list.append((" ", "Whitespace"))
+
+        pos_list_convtd = []
+        for pos in pos_list:
+            pos_list_convtd.append(list(pos))
+        news_data[i]["newsPos"] = pos_list_convtd
+
+    end_t = time.time()
     client["meta_news"].insert_many(news_data)
     return {"message": "news saved!"}
 
@@ -32,6 +53,11 @@ def getNews():
 @router.get("/getNewsAll")
 def getNewsAll():
     response = client.meta_news.find({})
+    return json.loads(json_util.dumps(response))
+
+@router.get("/findNews/{limit}")
+def findNews(limit):
+    response = client.meta_news.find({}).limit(limit)
     return json.loads(json_util.dumps(response))
 
 @router.get("/mysql")
