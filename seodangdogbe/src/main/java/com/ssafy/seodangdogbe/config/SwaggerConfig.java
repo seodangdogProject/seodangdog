@@ -14,9 +14,9 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI springShopOpenAPI() {
         Server localhost = new Server();
-        localhost.setUrl("http://localhost:8081/api");
+        localhost.setUrl("http://localhost:8081");
         Server server = new Server();
-        server.setUrl("https://j10e104.p.ssafy.io/api");
+        server.setUrl("https://j10e104.p.ssafy.io");
         return new OpenAPI()
                 .info(new Info()
                         .title("seodangdog API")
