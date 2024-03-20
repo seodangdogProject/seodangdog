@@ -17,6 +17,6 @@ public class UserWord {
     private User user;
 
     // 단어 자체가 mongodb 단어 접근 아이디가 된다
-    @Column(length = 20)
+    @Column(length = 50)
     private String word;
 }
