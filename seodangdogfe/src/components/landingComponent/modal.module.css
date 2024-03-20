@@ -29,6 +29,7 @@
     border-radius: 10px;
     width: 30%;
     display: flex;
+    position: fixed;
     flex-direction: column; /* 세로로 정렬 */
     justify-content: center;
     background-color: white;

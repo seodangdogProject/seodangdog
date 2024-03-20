@@ -12,3 +12,7 @@ export type ability = {
     summary_exp: number; // 요약 경험치 -> 푼 뉴스 / 본 뉴스
     constant_exp: number; // 성실 경험치 -> 뉴스를 푼 날짜 수 / 가입 D+Day
 };
+
+export type IPageObj = {
+    pageNum: number;
+};
