@@ -3,6 +3,7 @@ package com.ssafy.seodangdogbe.news.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -16,7 +17,7 @@ public class MostSummaryRecommendResponseDto {
         private String newsImgUrl;
         private String newsTitle;
         private String newsDescription;
-        private String newsCreatedAt;
+        private LocalDateTime newsCreatedAt;
         private List<String> newsKeyword;
     }
 }
