@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WordMeanService {
-    
+
     public String findMeanByWord(String word) {
         // MongoDB 접근 로직 구현
         // 실제로는 MongoDB에서 단어에 해당하는 뜻을 조회하여 반환해야 합니다.

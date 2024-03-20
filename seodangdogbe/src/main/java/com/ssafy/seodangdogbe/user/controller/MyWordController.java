@@ -3,6 +3,7 @@ package com.ssafy.seodangdogbe.user.controller;
 import com.ssafy.seodangdogbe.user.dto.MyWordResponseDto;
 import com.ssafy.seodangdogbe.user.repository.MyWordRepository;
 import com.ssafy.seodangdogbe.user.service.MyWordService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,9 @@ public class MyWordController {
     public MyWordController(MyWordService myWordService) {
         this.myWordService = myWordService;
     }
+
     // 단어 조회 기능
+    @Operation(description = "단어장 - 단어 조회")
     @GetMapping
     public ResponseEntity<MyWordResponseDto> getWords(@RequestParam int userSeq) {
         MyWordResponseDto wordList = myWordService.findAllUserWords(userSeq);
@@ -28,6 +31,7 @@ public class MyWordController {
     }
 
     //단어 삭제 기능
+    @Operation(description = "단어장 - 단어 삭제")
     @PatchMapping("/{wordSeq}")
     public ResponseEntity<?> deleteWord(@PathVariable Long wordSeq) {
         boolean isDeleted = myWordService.deleteWord(wordSeq);
