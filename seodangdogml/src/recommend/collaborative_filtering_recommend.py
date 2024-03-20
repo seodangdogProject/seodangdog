@@ -2,15 +2,10 @@ import numpy as np
 from pydantic import BaseModel
 from fastapi import APIRouter
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import random
-import time
 import os
 import sys
 
 sys.path.append(os.path.abspath('src'))
-from create_dummy.make_user_data import create_user_keyword
 from recommend.content_base_recommend import news_data_objects
 from recommend.content_base_recommend import make_user_news_df
 
@@ -29,7 +24,7 @@ ratings_df = pd.DataFrame(ratings)
 # x = ratings.copy()
 # y = ratings['user_id']
 
-@router.get('/cf_recom')
+@router.get('/fast/cf_recom')
 def cf_recom():
 
     user_ids = list(range(1, 1000))
