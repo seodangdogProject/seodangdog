@@ -16,19 +16,25 @@
   background-color: #1c1b1b;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
-  overflow: hidden; /* 내부가 넘치는 경우를 방지하기 위해 overflow 속성을 hidden으로 설정 */
+  /* 내부가 넘치는 경우를 방지하기 위해 overflow 속성을 hidden으로 설정 */
+  /* overflow: hidden; */
 }
 .king::before {
   content: "";
   position: absolute;
   top: 62px;
-  right: -70px;
+  right: -58px;
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 0 220px 100px 0; /* 삼각형 모양으로 잘리도록 설정 */
+  border-width: 0 215px 102px 0; /* 삼각형 모양으로 잘리도록 설정 */
   border-color: transparent #fff transparent transparent; /* 삼각형의 색상 설정 */
   transform: rotate(90deg); /* 삼각형을 180도 회전하여 방향을 바꿈 */
+}
+.king img {
+  position: absolute;
+  left: 40px;
+  top: 30px;
 }
 
 .name {
