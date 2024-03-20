@@ -10,6 +10,6 @@ import java.util.List;
 public interface NewsRecommendRepositoryCustom {
     List<UserRecommendResponseDto> findNewsRecommendations(int userSeq);
     List<OtherRecommendResponseDto> findOtherNewsRecommendations(int userSeq);
-    List<MostViewRecommendResponseDto> findMostViewNewsRecommendations(int userSeq);
-    List<MostSummaryRecommendResponseDto> findMostSummaryNewsRecommendations(int userSeq);
+    List<MostViewRecommendResponseDto> findMostViewNewsRecommendations();
+    List<MostSummaryRecommendResponseDto> findMostSummaryNewsRecommendations();
 }

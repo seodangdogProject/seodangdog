@@ -1,5 +1,6 @@
 package com.ssafy.seodangdogbe.news.domain;
 
+import com.ssafy.seodangdogbe.common.BaseTimeEntity;
 import com.ssafy.seodangdogbe.user.domain.User;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class UserNews {
+public class UserNews extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userNewsSeq;

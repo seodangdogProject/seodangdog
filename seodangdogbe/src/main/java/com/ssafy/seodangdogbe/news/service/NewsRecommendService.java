@@ -24,17 +24,17 @@ public class NewsRecommendService {
         }
     }
 
-    public List<MostViewRecommendResponseDto> getMostViewNewsRecommendations(int userSeq) {
+    public List<MostViewRecommendResponseDto> getMostViewNewsRecommendations() {
         try {
-            return newsRecommendRepository.findMostViewNewsRecommendations(userSeq);
+            return newsRecommendRepository.findMostViewNewsRecommendations();
         } catch (Exception e) {
             throw new UnauthorizedException("미인증 사용자입니다.");
         }
     }
 
-    public List<MostSummaryRecommendResponseDto> getMostSummaryNewsRecommendations(int userSeq) {
+    public List<MostSummaryRecommendResponseDto> getMostSummaryNewsRecommendations() {
         try {
-            return newsRecommendRepository.findMostSummaryNewsRecommendations(userSeq);
+            return newsRecommendRepository.findMostSummaryNewsRecommendations();
         } catch (Exception e) {
             throw new UnauthorizedException("미인증 사용자입니다.");
         }
@@ -47,4 +47,5 @@ public class NewsRecommendService {
             throw new UnauthorizedException("미인증 사용자입니다.");
         }
     }
+
 }

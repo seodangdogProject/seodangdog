@@ -1,9 +1,9 @@
 package com.ssafy.seodangdogbe.news.Servcie;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.seodangdogbe.news.Repository.NewsDetailsRepository;
-import com.ssafy.seodangdogbe.news.Repository.NewsRepository;
-import com.ssafy.seodangdogbe.news.Repository.UserNewsRepository;
+import com.ssafy.seodangdogbe.news.repository.NewsDetailsRepository;
+import com.ssafy.seodangdogbe.news.repository.NewsRepository;
+import com.ssafy.seodangdogbe.news.repository.UserNewsRepository;
 import com.ssafy.seodangdogbe.news.domain.MetaNews;
 import com.ssafy.seodangdogbe.news.domain.News;
 import com.ssafy.seodangdogbe.news.domain.UserNews;
