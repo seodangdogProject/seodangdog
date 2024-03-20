@@ -7,14 +7,25 @@ import com.ssafy.seodangdogbe.news.dto.OtherRecommendResponseDto;
 import com.ssafy.seodangdogbe.news.dto.UserRecommendResponseDto;
 import com.ssafy.seodangdogbe.news.repository.NewsRecommendRepositoryCustom;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import com.ssafy.seodangdogbe.news.service.FastApiService.CbfRecommendResponse;
+
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class NewsRecommendService {
 
-    private final NewsRecommendRepositoryCustom newsRecommendRepository;
+    @Autowired
+    private FastApiService fastApiService;
+
+    @Autowired
+    private NewsRecommendRepositoryCustom newsRecommendRepository;
 
     public List<UserRecommendResponseDto> getNewsRecommendations(int userSeq) {
         try {
@@ -40,12 +51,24 @@ public class NewsRecommendService {
         }
     }
 
-    public List<OtherRecommendResponseDto> getOtherNewsRecommendations(int userSeq) {
-        try {
-            return newsRecommendRepository.findOtherNewsRecommendations(userSeq);
-        } catch (Exception e) {
-            throw new UnauthorizedException("미인증 사용자입니다.");
-        }
+//    public List<OtherRecommendResponseDto> getOtherNewsRecommendationsByNewsAccessId(List<String> newsAccessIds) {
+//        try {
+//            return newsRecommendRepository.findOtherNewsRecommendationsByNewsAccessId(newsAccessIds);
+//        } catch (Exception e) {
+//            throw new UnauthorizedException("미인증 사용자입니다.");
+//        }
+//    }
+    public Mono<List<OtherRecommendResponseDto>> getOtherNewsRecommendationsByNewsAccessId(List<String> newsAccessIds) {
+        // FastApiService를 통해 추천받은 뉴스 ID 목록을 가져온다.
+        return fastApiService.fetchRecommendations()
+                // Mono<List<CbfRecommendResponse>>에서 List<CbfRecommendResponse>로 변환
+                .flatMapMany(Flux::fromIterable)
+                // CbfRecommendResponse에서 id만 추출하여 List<String>으로 변환
+                .map(cbfRecommendResponse -> cbfRecommendResponse.getId())
+                .collectList()
+                // newsAccessIds 리스트를 사용하여 뉴스 정보를 조회
+                .flatMap(newsAccessIds ->
+                        Mono.just(newsRecommendRepository.findOtherNewsRecommendationsByNewsAccessId(newsAccessIds))
+                );
     }
-
 }
