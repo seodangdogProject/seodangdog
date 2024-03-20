@@ -32,7 +32,13 @@ spring:
       load-on-startup: 1
 server:
   port : 8081
+  forward-headers-strategy: FRAMEWORK
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
 #logging:
 #  level:
