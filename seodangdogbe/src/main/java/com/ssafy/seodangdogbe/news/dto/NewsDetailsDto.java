@@ -2,10 +2,12 @@ package com.ssafy.seodangdogbe.news.dto;
 
 import com.ssafy.seodangdogbe.media.domain.Media;
 import com.ssafy.seodangdogbe.news.domain.MetaNews;
+import com.ssafy.seodangdogbe.news.domain.UserSummary;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 // mongodb MetaNews 관련 dto
@@ -15,7 +17,7 @@ public class NewsDetailsDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @ToString
-    public static class NewsDetailsResponseDto{
+    public static class NewsDetailsResponseDto {
         private Long newsSeq;   // newsSeq는 mysql에서의 pk
 
         private String newsTitle;
@@ -31,6 +33,16 @@ public class NewsDetailsDto {
     //    private List<Keyword> newsKeyword;
 
     //    private List<Quiz> newsQuiz;
+
+        // 뉴스 풀이 기록
+        @Setter
+        private List<Integer> highlightList;
+        @Setter
+        private List<Integer> wordList;
+        @Setter
+        private List<Integer> userAnswerList;
+        @Setter
+        private UserSummary userSummary;
 
         public NewsDetailsResponseDto(MetaNews metaNews) {
             this.newsTitle = metaNews.getNewsTitle();
