@@ -40,7 +40,7 @@ for news in allNews:
     title = news['newsTitle']
     news_data_objects.append(News(id, title))
 
-@router.get("/cbf_recom")
+@router.get("/fast/cbf_recom")
 # def process_data(item: Item):
 def process_data():
     # keyword_weights = {"北 해킹 의혹": 16.0, "대법원": 1.1, "EU": 1.3, "애플": 2.0}
