@@ -2,10 +2,10 @@ import styled from "./DashboardContainer.module.css";
 import classNames from "classnames/bind";
 import RecentNewsPreview from "@/components/dashboard/RecentNewsPreview";
 function Info() {
-  return <>Info</>;
+  return <></>;
 }
 function Chart() {
-  return <>Chart</>;
+  return <></>;
 }
 // function RecentPreview() {
 //   return <></>;
@@ -19,24 +19,54 @@ export default function DashboardContainer() {
     <>
       <div className={cx("container")}>
         <div className={cx("dashboard")}>
-          <div className={cx("dashboard__first")}>
-            <div className={cx("dashboard__second", ["bg-light-purple"])}>
-              <Info />
+          <div className={cx("dashboard__top")}>
+            <div
+              className={cx("dashboard__top__first", "padding-item", [
+                "bg-light-purple",
+              ])}
+            >
+              <div className={styled.title}>Info</div>
+              <div className={cx("user", ["box-shodow-custom"])}>
+                {/* 여기에 User 컴포넌트들어감 */}
+              </div>
+              <div className={cx("streak", ["box-shodow-custom"])}></div>
             </div>
-            <div className={cx("dashboard__second", ["bg-light-purple"])}>
+            <div
+              className={cx("dashboard__top__second", "padding-item", [
+                "bg-light-purple",
+              ])}
+            >
+              <div className={styled.title}>워드클라우드</div>.
+              <div className={cx("wordcloud", ["box-shodow-custom"])}>
+                <div className={cx("boxshadow", ["box-shodow-custom"])}>
+                  {/* 여기에 워드클라우드 컴포넌트 */}
+                </div>
+              </div>
               <Chart />
             </div>
           </div>
           {/* 두 번째 */}
-          <div className={cx("dashboard__first", "$bg__light__purple")}>
+          <div className={cx("dashboard__bottom", "bg__light__purple")}>
             <div
-              className={cx("dashboard__second", ["bg-light-purple"], "recent")}
+              className={cx(
+                "dashboard__bottom__first",
+                ["bg-light-purple"],
+                "padding-item"
+              )}
             >
               <RecentNewsPreview />
             </div>
             <div
-              className={cx("dashboard__second", ["bg-light-purple"], "state")}
+              className={cx(
+                "dashboard__bottom__second",
+                ["bg-light-purple"],
+                "padding-item"
+              )}
             >
+              <div className={styled.title}>능력치</div>.
+              <div className={cx("state", ["box-shodow-custom"])}>
+                {/* 능력치 컴포넌트 들어감 */}
+              </div>
               <State />
             </div>
           </div>

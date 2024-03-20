@@ -1,60 +1,93 @@
 .container {
-  width: 100%;
-  height: 100%;
+  width: 1733px;
+  height: 1080px;
   background-color: #fff;
   box-sizing: border-box;
-  padding: 25px 45px;
+  padding: 25px 44px;
 }
 
 /* layout */
 .dashboard {
+  width: 1660px;
+  height: 1027px;
+}
+
+.dashboard__top {
+  height: 588px;
   display: flex;
-  flex-direction: column;
+  border-radius: 15px;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.dashboard__top__first {
+  width: 736px;
+  border-radius: 15px;
+}
+.dashboard__top__second {
+  width: 926px;
+  border-radius: 15px;
+}
+
+.dashboard__bottom {
+  height: 413px;
+  display: flex;
+  gap: 37px;
+}
+
+.dashboard__bottom__first {
+  width: 1111px;
+  border-radius: 15px;
+}
+.dashboard__bottom__second {
+  width: 534px;
+  border-radius: 15px;
+}
+.padding-item {
   box-sizing: border-box;
-  height: 100%;
-}
-.dashboard .dashboard__first:first-child {
-  margin-bottom: 25px;
+  padding: 21px 50px;
 }
 
-.dashboard__first {
-  display: flex;
-  flex-direction: row;
-  padding: 25px 35px;
-  border-radius: 15px;
+.title {
+  font-family: "hunminjungum";
+  font-size: 30px;
+  font-weight: bold;
 }
-.dashboard__second {
-  /* display: flex; */
+
+.wordcloud {
   width: 100%;
-  border: 15px;
-  padding: 0px 30px;
+  height: 465px;
+  background-color: #d6e3f8;
+  box-sizing: border-box;
   border-radius: 15px;
-  padding-bottom: 15px;
+  padding: 40px 25px;
 }
-.dashboard__second:first-child {
-  margin-right: 30px;
-}
-.recent {
-  flex-basis: 70%;
-}
-.state {
-  flex-basis: 30%;
-}
-.bg__light__purple {
-  background-color: var(--light-purple);
-}
-
-.box__shadow__custom {
-  box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
-  border-radius: 15px;
-}
-
-.info {
+.boxshadow {
+  width: 100%;
+  height: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.info__user {
-  width: 200px;
-  height: 100px;
-  background-color: #fff;
-  padding: 15px 20px;
+
+.state {
+  width: 100%;
+  height: 314px;
+  background-color: #d6e3f8;
+  border-radius: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user {
+  width: 100%;
+  height: 220px;
+  margin-top: 10px;
+}
+.streak {
+  width: 100%;
+  height: 220px;
+  background-color: white;
+  margin-top: 40px;
 }
