@@ -1,0 +1,28 @@
+.main {
+    /* 메인 컨테이너*/
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    overflow: hidden;
+    /* align-items: center; */
+    height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
+    width: 100vw;
+    background-image: url('../../assets/landing-background-image.png');
+    z-index: -1;
+}
+
+.description {
+    letter-spacing: 0.4em; /* 자간을 0.1em으로 설정합니다. */
+    line-height: 1.5; /* 줄 간격을 1.5로 설정합니다. */
+}
+
+.title {
+    font-family: 'hambaknoon';
+    font-size: 70px;
+}
+
+.content {
+    margin-top: 100px;
+    font-family: 'NanumMyeongjo';
+    font-size: 35px;
+}
