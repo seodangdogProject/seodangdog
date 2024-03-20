@@ -14,7 +14,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI springShopOpenAPI() {
         Server localhost = new Server();
-        localhost.setUrl("http://localhost:8081/api");
+        localhost.setUrl("http://localhost:8081");
         Server server = new Server();
         server.setUrl("https://j10e104.p.ssafy.io/api");
         return new OpenAPI()
@@ -25,4 +25,4 @@ public class SwaggerConfig {
                 .servers(List.of(localhost, server));
     }
 }
-//http://127.0.0.1:8081/swagger-ui.html
+// http://127.0.0.1:8081/swagger-ui.html

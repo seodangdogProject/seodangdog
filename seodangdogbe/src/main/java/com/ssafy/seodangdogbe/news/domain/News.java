@@ -3,10 +3,7 @@ package com.ssafy.seodangdogbe.news.domain;
 import com.ssafy.seodangdogbe.common.BaseTimeEntity;
 import com.ssafy.seodangdogbe.media.domain.Media;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -20,6 +17,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor
 public class News extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +28,7 @@ public class News extends BaseTimeEntity {
     private Media media;
 
     // mongodb 뉴스 접근 아이디
-    @Column(length = 20)
+    @Column(length = 24)
     private String newsAccessId;
 
     @ColumnDefault("0")
@@ -45,6 +43,12 @@ public class News extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "news")
     private List<KeywordNews> keywordNewsList = new ArrayList<>();
+
+
+    // newsSeq로 news를 반환하기 위해 사용하는 생성자
+    public News(Long newsSeq){
+        this.newsSeq = newsSeq;
+    }
 
     @Override
     public String toString() {

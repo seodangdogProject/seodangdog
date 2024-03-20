@@ -1,4 +1,4 @@
-package com.ssafy.seodangdogbe.news.Repository;
+package com.ssafy.seodangdogbe.news.repository;
 
 import com.ssafy.seodangdogbe.news.domain.MetaNews;
 import org.springframework.data.mongodb.repository.MongoRepository;

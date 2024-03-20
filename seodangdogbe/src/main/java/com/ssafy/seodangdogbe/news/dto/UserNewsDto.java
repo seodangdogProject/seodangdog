@@ -1,15 +1,10 @@
 package com.ssafy.seodangdogbe.news.dto;
 
-import com.ssafy.seodangdogbe.keyword.domain.Keyword;
-import com.ssafy.seodangdogbe.media.domain.Media;
-import com.ssafy.seodangdogbe.news.domain.Quiz;
 import com.ssafy.seodangdogbe.news.domain.UserSummary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.cglib.core.Local;
+import lombok.Setter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +25,7 @@ public class UserNewsDto {
     public static class UserNewsSolveRequestDto {
         private Long newsSeq;
         private List<Integer> userAnswerList = new ArrayList<>();
+        private List<Boolean> correctList = new ArrayList<>();
         private UserSummary userSummary;
     }
 
@@ -37,23 +33,18 @@ public class UserNewsDto {
     @Getter
     @AllArgsConstructor
     public static class UserNewsResponseDto {
-//        private String newsTitle;
-//        private List<String> newsSummary;
-//        private LocalDateTime newsCreatedAt;
-//
-//        private String newsReporter;
-//        private String newsImgUrl;
-//        private String newsMainText;
-//
-//        private Media media;
-//
-//        private List<Keyword> newsKeyword;
-//        private List<Quiz> newsQuiz;
-
         private List<Integer> highlightList = new ArrayList<>();
         private List<Integer> wordList = new ArrayList<>();
+        @Setter
         private List<Integer> userAnswers = new ArrayList<>();
-        private UserSummary userSummary;
+        @Setter
+        private UserSummary userSummary = new UserSummary();
+
+        public UserNewsResponseDto(List<Integer> highlightList, List<Integer> wordList) {
+            this.highlightList = highlightList;
+            this.wordList = wordList;
+        }
+
     }
 }
 
