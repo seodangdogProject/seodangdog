@@ -11,8 +11,10 @@ const Backdrop = styled.div`
     width: 100vw;
     height: 100vh;
     position: fixed;
+    display: flex;
     top: 0;
     background-color: rgba(0, 0, 0, 0.4);
+    z-index: 50;
 `;
 
 interface ModalDefaultType {

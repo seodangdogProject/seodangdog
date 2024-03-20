@@ -7,6 +7,7 @@ import styles from './oneword_layout.module.css';
 import Lottie from 'lottie-react';
 import TimerIcon from '../../../assets/timer-icon.svg';
 import ProgressBar from '@ramonak/react-progress-bar';
+import GameIcon from '../../../assets/quiz-logo-icon.svg';
 
 const OneWord: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -80,7 +81,9 @@ const OneWord: React.FC = () => {
         <>
             <div className={styles.container}>
                 <div className={styles.content_cotainer}>
-                    <div className={styles.header_container}>스피드 퀴즈 !</div>
+                    <div className={styles.header_container}>
+                        <GameIcon></GameIcon>
+                    </div>
                     <div className={styles.count_container}>
                         <span> 1</span>
                         <span> /</span>

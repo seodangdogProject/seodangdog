@@ -6,7 +6,7 @@
     overflow: hidden;
     /* align-items: center; */
     height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
-    background-image: url('../assets/landing-background-image-first.png');
+    background-image: url('../../assets/landing-background-image-first.png');
 }
 
 .rounded_button {
