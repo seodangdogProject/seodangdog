@@ -7,4 +7,8 @@ public interface UserNewsRepository extends JpaRepository<UserNews, Long> {
     @Override
     UserNews save(UserNews userNews);
 
+    UserNews findByUserUserSeqAndNewsNewsSeq(int userSeq, Long newsSeq);
+
+
+//    UserNews findByUserSeqAndNewsSeq(int userSeq, Long newsSeq);
 }

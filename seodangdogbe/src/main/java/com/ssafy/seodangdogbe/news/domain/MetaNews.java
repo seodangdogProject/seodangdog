@@ -29,6 +29,8 @@ public class MetaNews {
     private String newsReporter;
     private String newsImgUrl;
     private String newsMainText;    // 형태소 별로 나누어서 저장해놓기로 했지 않나?
+
+    @Field("news_url")
     private String newsUrl;
 
     private Media media;    // media code, name

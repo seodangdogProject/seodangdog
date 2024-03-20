@@ -25,4 +25,4 @@ public class SwaggerConfig {
                 .servers(List.of(localhost, server));
     }
 }
-//http://127.0.0.1:8081/swagger-ui.html
+// http://127.0.0.1:8081/swagger-ui.html
