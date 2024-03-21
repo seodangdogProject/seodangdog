@@ -15,8 +15,8 @@ const Buttons = (props: IButtonsProps) => {
                     <div
                         key={item.pageNum}
                         style={{
-                            width: '1rem', // w-4
-                            height: '1rem', // h-4
+                            width: '0.5rem', // w-4
+                            height: '0.5rem', // h-4
                             borderRadius: '9999px', // rounded-full
                             cursor: 'pointer', // cursor-pointer
                             transition: 'all 0.3s', // transition-all
