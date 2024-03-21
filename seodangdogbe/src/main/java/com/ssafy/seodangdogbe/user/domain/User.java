@@ -4,6 +4,7 @@ import com.ssafy.seodangdogbe.common.BaseTimeEntity;
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.media.domain.UserMedia;
 import com.ssafy.seodangdogbe.news.domain.UserNews;
+import com.ssafy.seodangdogbe.word.domain.UserWord;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,11 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 @Entity
-@Getter @Setter
 @NoArgsConstructor
 @Data
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 public class User extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

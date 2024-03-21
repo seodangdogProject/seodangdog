@@ -1,10 +1,8 @@
-package com.ssafy.seodangdogbe.user.service;
+package com.ssafy.seodangdogbe.word.service;
 
-import com.ssafy.seodangdogbe.user.domain.UserWord;
-import com.ssafy.seodangdogbe.user.dto.GameGetProblemResponseDto;
-import com.ssafy.seodangdogbe.user.dto.MyWordResponseDto;
-import com.ssafy.seodangdogbe.user.repository.MyWordRepository;
-import com.ssafy.seodangdogbe.user.repository.MyWordRepositoryCustom;
+import com.ssafy.seodangdogbe.word.domain.UserWord;
+import com.ssafy.seodangdogbe.word.dto.MyWordResponseDto;
+import com.ssafy.seodangdogbe.word.repository.MyWordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.ssafy.seodangdogbe.exceptions;
+package com.ssafy.seodangdogbe.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

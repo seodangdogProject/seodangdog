@@ -1,11 +1,10 @@
-package com.ssafy.seodangdogbe.user.controller;
+package com.ssafy.seodangdogbe.word.controller;
 
-import com.ssafy.seodangdogbe.user.dto.GameActivatedResponseDto;
-import com.ssafy.seodangdogbe.user.dto.GameGetProblemResponseDto;
-import com.ssafy.seodangdogbe.user.dto.GameResultRequestDto;
-import com.ssafy.seodangdogbe.user.service.GameService;
+import com.ssafy.seodangdogbe.word.dto.GameActivatedResponseDto;
+import com.ssafy.seodangdogbe.word.dto.GameGetProblemResponseDto;
+import com.ssafy.seodangdogbe.word.dto.GameResultRequestDto;
+import com.ssafy.seodangdogbe.word.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

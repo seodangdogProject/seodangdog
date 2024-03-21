@@ -11,6 +11,7 @@ import com.ssafy.seodangdogbe.news.domain.UserNews;
 import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.domain.UserExp;
 import jakarta.transaction.Transactional;
+import jdk.jshell.spi.ExecutionControl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -117,7 +118,7 @@ public class NewsService {
         findUserNews.setUserSummary(dto.getUserSummary());
 
         // ** 채점 -> 더 효율적인 방법으로 바꾸기
-        User user = userRepository.findById(userSeq).orElse(null);
+        User user = userRepository.findById(userSeq).orElseThrow(() -> new NullPointerException());
         UserExp userExp = user.getUserExp();
         List<Boolean> correctList = dto.getCorrectList();
         
