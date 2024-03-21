@@ -1,10 +1,13 @@
+import Link from "next/link";
 import styled from "./RecentNewsPreview.module.css";
 export default function RecentNewsPreview() {
   return (
     <>
       <div className={styled.container}>
         <div className={styled.last_seen_container}>
-          <h3 className={styled.caption}>최근 본 기사&#32;&#32;&gt;</h3>
+          <h3 className={styled.caption}>
+            <Link href="/dashboard/last-seen">최근 본 기사&#32;&#32;&gt;</Link>
+          </h3>
           <div className={styled.preview}>
             <div className={styled.date}>2024.03.06. 오전 11:37</div>
             <img
@@ -24,7 +27,7 @@ export default function RecentNewsPreview() {
         </div>
         {/* 두 번째 */}
         <div className={styled.last_solved_container}>
-          <h3 className={styled.caption}>최근 본 기사&#32;&#32;&gt;</h3>
+          <h3 className={styled.caption}>최근 푼 기사&#32;&#32;&gt;</h3>
           <div className={styled.preview}>
             <div className={styled.date}>2024.03.06. 오전 11:37</div>
             <img

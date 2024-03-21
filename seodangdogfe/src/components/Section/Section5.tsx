@@ -23,8 +23,8 @@ const Section = (props: ISectionProps) => {
                 <Image
                     src="/images/landing-fifth.png"
                     alt="fifthImage"
-                    width={909}
-                    height={511}
+                    width={600}
+                    height={400}
                     style={{
                         marginRight: '40px',
                     }}

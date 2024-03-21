@@ -6,7 +6,6 @@ import Section2 from '@/components/Section/Section2';
 import Section3 from '@/components/Section/Section3';
 import Section4 from '@/components/Section/Section4';
 import Section5 from '@/components/Section/Section5';
-
 import { useEffect, useRef, useState } from 'react';
 
 export interface IPageObj {
@@ -72,7 +71,7 @@ const Landing = () => {
 
     return (
         <>
-            <main style={{ position: 'relative' }}>
+            <main style={{ position: 'relative', overflow: 'hidden' }}>
                 <Section1
                     key={1}
                     pageNum={1}
@@ -109,7 +108,7 @@ const Landing = () => {
                         display: 'flex', // flex
                         flexDirection: 'column', // flex-col
                         gap: '1rem', // space-y-4
-                        top: '24rem', // top-96
+                        top: '20rem', // top-96
                         right: '2.5rem', // right-10
                         zIndex: 999, // z-10
                     }}
