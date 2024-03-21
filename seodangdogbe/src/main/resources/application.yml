@@ -40,6 +40,9 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
+jwt:
+  secret: 3877e4994655b008c3cc4f3a95b5a09efe068dd09a8da9cea760dcfaaa621a3e69f1adc7e1be4b0b4fa008fe2818da4b581c52095c5418475cdca6dcf440690b
+  accessTokenExpireTime : 86400000
 #logging:
 #  level:
 #    org.hibernate.sql: debug

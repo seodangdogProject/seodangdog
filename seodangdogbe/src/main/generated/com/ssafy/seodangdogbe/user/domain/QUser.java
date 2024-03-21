@@ -22,9 +22,22 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
+    public final com.ssafy.seodangdogbe.common.QBaseTimeEntity _super = new com.ssafy.seodangdogbe.common.QBaseTimeEntity(this);
+
     public final QBadge badge;
 
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
+    //inherited
+    public final BooleanPath isDelete = _super.isDelete;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
+
     public final StringPath password = createString("password");
+
+    public final StringPath role = createString("role");
 
     public final ListPath<UserBadge, QUserBadge> userBadges = this.<UserBadge, QUserBadge>createList("userBadges", UserBadge.class, QUserBadge.class, PathInits.DIRECT2);
 
