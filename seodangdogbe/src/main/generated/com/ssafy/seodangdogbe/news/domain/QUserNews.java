@@ -22,9 +22,20 @@ public class QUserNews extends EntityPathBase<UserNews> {
 
     public static final QUserNews userNews = new QUserNews("userNews");
 
+    public final com.ssafy.seodangdogbe.common.QBaseTimeEntity _super = new com.ssafy.seodangdogbe.common.QBaseTimeEntity(this);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
     public final ListPath<Integer, NumberPath<Integer>> highlightList = this.<Integer, NumberPath<Integer>>createList("highlightList", Integer.class, NumberPath.class, PathInits.DIRECT2);
 
+    //inherited
+    public final BooleanPath isDelete = _super.isDelete;
+
     public final BooleanPath isSolved = createBoolean("isSolved");
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
     public final QNews news;
 
@@ -34,7 +45,7 @@ public class QUserNews extends EntityPathBase<UserNews> {
 
     public final NumberPath<Long> userNewsSeq = createNumber("userNewsSeq", Long.class);
 
-    public final QUserSummary userSummary;
+    public final SimplePath<UserSummary> userSummary = createSimple("userSummary", UserSummary.class);
 
     public final ListPath<Integer, NumberPath<Integer>> wordList = this.<Integer, NumberPath<Integer>>createList("wordList", Integer.class, NumberPath.class, PathInits.DIRECT2);
 
@@ -58,7 +69,6 @@ public class QUserNews extends EntityPathBase<UserNews> {
         super(type, metadata, inits);
         this.news = inits.isInitialized("news") ? new QNews(forProperty("news"), inits.get("news")) : null;
         this.user = inits.isInitialized("user") ? new com.ssafy.seodangdogbe.user.domain.QUser(forProperty("user"), inits.get("user")) : null;
-        this.userSummary = inits.isInitialized("userSummary") ? new QUserSummary(forProperty("userSummary")) : null;
     }
 
 }
