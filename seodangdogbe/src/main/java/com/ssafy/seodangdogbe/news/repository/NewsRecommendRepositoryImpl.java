@@ -10,6 +10,8 @@ import com.ssafy.seodangdogbe.user.domain.QUser;
 import com.ssafy.seodangdogbe.news.dto.MostViewRecommendResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import com.ssafy.seodangdogbe.news.service.FastApiService;
+import com.ssafy.seodangdogbe.news.service.FastApiService.CbfRecommendResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    private final FastApiService fastApiService;
     private final QNews qNews = QNews.news;
     private final QUser qUser = QUser.user;
     private final QKeywordNews qKeywordNews = QKeywordNews.keywordNews;
@@ -56,18 +59,32 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
     }
     @Override
     public List<OtherRecommendResponseDto> findOtherNewsRecommendations() {
+        List<String> recommendedNewsIds = fastApiService.fetchRecommendations().block().stream()
+                .map(CbfRecommendResponse::getId)
+                .collect(Collectors.toList());
 
-        return queryFactory
-                .select(Projections.constructor(OtherRecommendResponseDto.class,
-                        qNews.newsSeq,
-                        qNews.newsImgUrl,
-                        qNews.newsTitle,
-                        qNews.newsDescription,
-                        qNews.newsCreatedAt,
-                        qNews.keywordNewsList
-                ))
-                .from(qNews)
+        List<News> newsList = queryFactory
+                .selectFrom(QNews.news)
+                .where(QNews.news.newsAccessId.in(recommendedNewsIds)) // 추천된 ID 목록에 속하는 뉴스만 조회
                 .fetch();
+
+        List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
+            // KeywordNews 리스트에서 키워드만 추출하여 새 리스트로 생성
+            List<String> keywords = news.getKeywordNewsList().stream()
+                    .map(keywordNews -> keywordNews.getKeyword().getKeyword())
+                    .collect(Collectors.toList());
+
+            return new NewsPreviewListDto(
+                    news.getNewsSeq(),
+                    news.getNewsImgUrl(),
+                    news.getNewsTitle(),
+                    news.getNewsDescription(),
+                    news.getNewsCreatedAt(),
+                    keywords
+            );
+        }).collect(Collectors.toList());
+
+        return List.of(new OtherRecommendResponseDto(newsPreviewLists));
     }
 
 
