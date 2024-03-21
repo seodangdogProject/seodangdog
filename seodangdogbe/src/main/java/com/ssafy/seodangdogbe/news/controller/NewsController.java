@@ -39,7 +39,7 @@ public class NewsController {
             newsDetailsResponseDto.setHighlightList(userRecord.getHighlightList());
             newsDetailsResponseDto.setWordList(userRecord.getWordList());
             newsDetailsResponseDto.setUserAnswerList(userRecord.getUserAnswers());
-            newsDetailsResponseDto.setWordList(userRecord.getWordList());
+            newsDetailsResponseDto.setUserSummary(userRecord.getUserSummary());
         }
 
         return newsDetailsResponseDto;
