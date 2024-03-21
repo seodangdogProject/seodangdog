@@ -57,3 +57,4 @@ public class UserNews extends BaseTimeEntity {
         this.news = news;
     }
 }
+

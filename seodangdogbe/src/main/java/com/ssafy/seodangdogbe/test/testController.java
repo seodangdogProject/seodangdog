@@ -5,6 +5,8 @@ import com.ssafy.seodangdogbe.auth.dto.ReqUserSignUpDto;
 import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.jwt.JWT;
 import com.ssafy.seodangdogbe.jwt.JWTDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
+
 public class testController {
 
     private final UserService userService;
@@ -39,8 +42,8 @@ public class testController {
                         .build();
         return ResponseEntity.ok(responseDto);
     }
-
     @GetMapping("/test") // login 후 test용도
+    @Operation(security = @SecurityRequirement(name = "accessToken"))
     public ResponseEntity<String> test(){
         log.info("*** test 요청 *** ");
         System.out.println(userService.getUserSeq());

@@ -13,10 +13,10 @@ spring:
       use_sql_comments: true
   data:
     mongodb:
-#      uri: mongodb://j10e104.p.ssafy.io:27017/seodangdog
-#      authentication-database: admin
-#      username: dogsoedang
-#      password: sssdangorg56
+      #      uri: mongodb://j10e104.p.ssafy.io:27017/seodangdog
+      #      authentication-database: admin
+      #      username: dogsoedang
+      #      password: sssdangorg56
       host: j10e104.p.ssafy.io
       port: 27017
       database: seodangdog
@@ -47,3 +47,4 @@ jwt:
 #  level:
 #    org.hibernate.sql: debug
 #    org.hibernate.type: trace
+
