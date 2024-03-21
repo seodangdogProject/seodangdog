@@ -1,10 +1,10 @@
-package com.ssafy.seodangdogbe.user.service;
+package com.ssafy.seodangdogbe.word.service;
 
-import com.ssafy.seodangdogbe.user.domain.UserWord;
-import com.ssafy.seodangdogbe.user.dto.GameActivatedResponseDto;
-import com.ssafy.seodangdogbe.user.dto.GameGetProblemResponseDto;
-import com.ssafy.seodangdogbe.user.dto.GameResultRequestDto;
-import com.ssafy.seodangdogbe.user.repository.GameRepository;
+import com.ssafy.seodangdogbe.word.domain.UserWord;
+import com.ssafy.seodangdogbe.word.dto.GameActivatedResponseDto;
+import com.ssafy.seodangdogbe.word.dto.GameGetProblemResponseDto;
+import com.ssafy.seodangdogbe.word.dto.GameResultRequestDto;
+import com.ssafy.seodangdogbe.word.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

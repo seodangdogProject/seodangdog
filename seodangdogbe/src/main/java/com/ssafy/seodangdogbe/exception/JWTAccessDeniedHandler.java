@@ -21,7 +21,7 @@ public class JWTAccessDeniedHandler implements AccessDeniedHandler {
         sendErrorRes(response);
     }
 
-    private void sendErrorRes(HttpServletResponse res) throws IOException{
+    private void sendErrorRes(HttpServletResponse res) throws IOException {
         res.setStatus(HttpStatus.FORBIDDEN.value());
     }
 }

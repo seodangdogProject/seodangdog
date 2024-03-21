@@ -1,4 +1,4 @@
-package com.ssafy.seodangdogbe.user.service;
+package com.ssafy.seodangdogbe.word.service;
 
 import org.springframework.stereotype.Service;
 // MongoDB 접근을 위한 라이브러리를 임포트해야 합니다.

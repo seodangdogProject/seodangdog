@@ -2,10 +2,7 @@ package com.ssafy.seodangdogbe.news.domain;
 
 import com.ssafy.seodangdogbe.common.JsonConverter;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Converter;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 public class UserSummary {
     @Convert(converter = JsonConverter.class)
+    @Transient
     private String userSummaryContent;
 
     @Convert(converter = JsonConverter.class)
+    @Transient
     private List<String> userSummaryKeyword;
 }

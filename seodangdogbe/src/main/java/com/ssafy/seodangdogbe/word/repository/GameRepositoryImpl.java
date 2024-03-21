@@ -1,9 +1,9 @@
-package com.ssafy.seodangdogbe.user.repository;
+package com.ssafy.seodangdogbe.word.repository;
 
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.seodangdogbe.user.domain.QUserWord;
-import com.ssafy.seodangdogbe.user.domain.UserWord;
+import com.ssafy.seodangdogbe.word.domain.QUserWord;
+import com.ssafy.seodangdogbe.word.domain.UserWord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
