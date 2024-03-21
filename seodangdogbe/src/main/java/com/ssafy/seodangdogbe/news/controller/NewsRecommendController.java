@@ -5,11 +5,9 @@ import com.ssafy.seodangdogbe.news.dto.MostViewRecommendResponseDto;
 import com.ssafy.seodangdogbe.news.dto.OtherRecommendResponseDto;
 import com.ssafy.seodangdogbe.news.dto.UserRecommendResponseDto;
 import com.ssafy.seodangdogbe.news.service.NewsRecommendService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,22 +23,27 @@ public class NewsRecommendController {
     }
 
     @GetMapping("/user-recommend")
+    @Operation(description = "메인페이지 - 맞춤형 뉴스 추천")
     public List<UserRecommendResponseDto> getNewsRecommendations(int userSeq) {
         return newsRecommendService.getNewsRecommendations(userSeq);
     }
 
-    @GetMapping("/most-view")
-    public List<MostViewRecommendResponseDto> getMostViewNewsRecommendations(int userSeq) {
-        return newsRecommendService.getMostViewNewsRecommendations(userSeq);
-    }
-
-    @GetMapping("/most-summary")
-    public List<MostSummaryRecommendResponseDto> getMostSummaryNewsRecommendations(int userSeq) {
-        return newsRecommendService.getMostSummaryNewsRecommendations(userSeq);
-    }
-
     @GetMapping("/other-recommend")
-    public List<OtherRecommendResponseDto> getOtherNewsRecommendations(int userSeq) {
-        return newsRecommendService.getOtherNewsRecommendations(userSeq);
+    @Operation(description = "메인페이지 - 맞춤형 뉴스 추천")
+    public List<OtherRecommendResponseDto> getOtherNewsRecommendations() {
+        return newsRecommendService.getOtherNewsRecommendations();
+    }
+
+    @GetMapping("/most-view")
+    @Operation(description = "메인페이지 - 많이 본 뉴스 조회")
+    public List<MostViewRecommendResponseDto> getMostViewNewsRecommendations() {
+
+        return newsRecommendService.getMostViewNewsRecommendations();
+    }
+
+    @GetMapping("/most-solved")
+    @Operation(description = "메인페이지 - 많이 푼 뉴스 조회")
+    public List<MostSummaryRecommendResponseDto> getMostSummaryNewsRecommendations() {
+        return newsRecommendService.getMostSummaryNewsRecommendations();
     }
 }
