@@ -123,11 +123,14 @@ function Modal({
             <div className={styles.horizontal}></div>
           </div>
         </div>
-        <div className={styles.login_button_container}>
+        {/* <div className={styles.login_button_container}>
           <button onClick={registHandler} className={styles.login_button}>
             Sign up
           </button>
-        </div>
+        </div> */}
+        <Link href="/landing" className={styles.login_button_container}>
+          <button className={styles.login_button}>Sign up</button>
+        </Link>
         <div className={styles.footer}>
           select : {data.length}
           {/* {data
