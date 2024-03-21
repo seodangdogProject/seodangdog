@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = "https://j10e104.p.ssafy.io/api";
 /**
  * 토큰을 실어서 보낸다.
  * @param {string} path   -> EX) /news/id
