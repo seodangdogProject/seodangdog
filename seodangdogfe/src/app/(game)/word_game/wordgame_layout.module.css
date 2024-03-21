@@ -5,7 +5,7 @@
     max-width: 100%;
     height: 100vh;
     background-color: white;
-    font-family: 'NanumMyeongjo';
+    font-family: "NanumMyeongjo";
 }
 
 .content_cotainer {
@@ -19,17 +19,15 @@
 }
 
 .logo {
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 .word_count_box {
-    margin-top: 100px;
     border-radius: 30px;
     background-color: #fff;
-    width: 220px;
-    height: 110px;
+    padding: 20px;
     display: flex;
-    font-size: 50px;
+    font-size: 30px;
     justify-content: center; /* 수평 가운데 정렬 */
     align-items: center; /* 수직 가운데 정렬 */
     margin-bottom: 20px;
@@ -52,8 +50,8 @@
     background-color: rgba(146, 157, 255, 1);
     color: #fff;
     font-size: 50px;
-    width: 300px;
-    height: 130px;
+    width: 200px;
+    height: 50px;
     font-weight: bold;
     border: none;
     display: flex;
@@ -68,14 +66,14 @@
 }
 
 .footer {
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 .footer_text {
     /* position: absolute; */
     color: grey;
-    font-family: 'hunminjungum';
+    font-family: "hunminjungum";
     display: flex;
     text-align: left;
-    font-size: 30px;
+    font-size: 15px;
 }

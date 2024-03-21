@@ -57,12 +57,12 @@ const Section = (props: ISectionProps) => {
                         className={landingStyles.page_button}
                         src="/images/landing-main-image.png"
                         alt="My Image"
-                        width={500}
-                        height={281.25}
+                        width={300}
+                        height={200.25}
                         style={{
                             position: 'absolute',
                             marginTop: '40px',
-                            top: '170px',
+                            top: '70px',
                             left: '100px',
                         }}
                     />
@@ -70,49 +70,49 @@ const Section = (props: ISectionProps) => {
                         className={landingStyles.page_button}
                         src="/images/landing-main2-image.png"
                         alt="My Image"
-                        width={500}
-                        height={281.25}
+                        width={300}
+                        height={200.25}
                         style={{
                             position: 'absolute',
-                            top: '150px',
-                            left: '400px',
+                            top: '50px',
+                            left: '350px',
                         }}
                     />
                     <Image
                         className={landingStyles.page_button}
                         src="/images/landing-test-image.png"
                         alt="My Image"
-                        width={500}
-                        height={281.25}
+                        width={300}
+                        height={200.25}
                         style={{
                             position: 'absolute',
-                            top: '130px',
-                            left: '700px',
+                            top: '40px',
+                            left: '600px',
                         }}
                     />
                     <Image
                         className={landingStyles.page_button}
                         src="/images/landing-wordlist-image.png"
                         alt="My Image"
-                        width={500}
-                        height={281.25}
+                        width={300}
+                        height={200.25}
                         style={{
                             position: 'absolute',
-                            top: '150px',
-                            left: '1000px',
+                            top: '50px',
+                            left: '850px',
                         }}
                     />
                     <Image
                         className={landingStyles.page_button}
                         src="/images/landing-quiz-image.png"
                         alt="My Image"
-                        width={500}
-                        height={281.25}
+                        width={300}
+                        height={200.25}
                         style={{
                             position: 'absolute',
                             marginTop: '40px',
-                            top: '170px',
-                            left: '1300px',
+                            top: '70px',
+                            left: '1100px',
                         }}
                     />
                 </div>
