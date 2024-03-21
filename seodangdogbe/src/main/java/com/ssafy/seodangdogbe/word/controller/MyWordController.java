@@ -1,16 +1,11 @@
-package com.ssafy.seodangdogbe.user.controller;
+package com.ssafy.seodangdogbe.word.controller;
 
-import com.ssafy.seodangdogbe.user.dto.MyWordResponseDto;
-import com.ssafy.seodangdogbe.user.repository.MyWordRepository;
-import com.ssafy.seodangdogbe.user.service.MyWordService;
+import com.ssafy.seodangdogbe.word.dto.MyWordResponseDto;
+import com.ssafy.seodangdogbe.word.service.MyWordService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/myword")

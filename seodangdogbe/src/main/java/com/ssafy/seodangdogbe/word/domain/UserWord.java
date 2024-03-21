@@ -1,6 +1,7 @@
-package com.ssafy.seodangdogbe.user.domain;
+package com.ssafy.seodangdogbe.word.domain;
 
 import com.ssafy.seodangdogbe.common.BaseTimeEntity;
+import com.ssafy.seodangdogbe.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

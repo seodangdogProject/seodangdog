@@ -1,5 +1,7 @@
 package com.ssafy.seodangdogbe.news.domain;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.seodangdogbe.common.BaseTimeEntity;
 import com.ssafy.seodangdogbe.user.domain.User;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -56,5 +58,7 @@ public class UserNews extends BaseTimeEntity {
         this.user = user;
         this.news = news;
     }
+
+
 }
 

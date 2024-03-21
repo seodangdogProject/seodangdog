@@ -1,4 +1,4 @@
-package com.ssafy.seodangdogbe.user.dto;
+package com.ssafy.seodangdogbe.word.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
