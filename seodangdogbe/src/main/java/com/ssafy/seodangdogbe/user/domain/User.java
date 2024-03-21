@@ -60,6 +60,8 @@ public class User extends BaseTimeEntity {
 
     private String role;
 
+    private String nickname;
+
     // 함수
     public List<String> getRoleList(){
         if(this.role.length() > 0){
