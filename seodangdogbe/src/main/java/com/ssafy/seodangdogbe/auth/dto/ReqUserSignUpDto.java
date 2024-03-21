@@ -21,7 +21,7 @@ public class ReqUserSignUpDto {
         return User.builder()
                 .userId(userId)
                 .password(password)
-                .role("User")
+                .role("USER")
                 .build();
     }
 }

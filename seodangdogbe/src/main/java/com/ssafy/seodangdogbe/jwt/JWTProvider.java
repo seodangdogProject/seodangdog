@@ -49,7 +49,7 @@ public class JWTProvider {
         Date accessTokenExpireTime = new Date(System.currentTimeMillis()+ 86400000L * 30); // 지금 시간 + 24 * 30 => 30일
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim("user", authorities)
+                .claim("USER", authorities)
                 .setExpiration(accessTokenExpireTime)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -74,12 +74,12 @@ public class JWTProvider {
 
         // 토근 복호화
         Claims claims = parseClaims(accessToken);
-        if (claims.get("user") == null) {
+        if (claims.get("USER") == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
         // 클레임에서 권한 정보 가져오기
-        Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("user").toString().split(","))
+        Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("USER").toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
