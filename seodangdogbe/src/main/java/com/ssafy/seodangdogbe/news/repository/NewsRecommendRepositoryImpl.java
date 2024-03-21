@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class NewsRecommendRepositoryImpl implements com.ssafy.seodangdogbe.news.repository.NewsRecommendRepositoryCustom {
+public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
     private final QNews qNews = QNews.news;
