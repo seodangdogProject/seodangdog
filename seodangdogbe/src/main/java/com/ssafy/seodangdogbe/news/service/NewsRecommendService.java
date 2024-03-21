@@ -51,24 +51,11 @@ public class NewsRecommendService {
         }
     }
 
-//    public List<OtherRecommendResponseDto> getOtherNewsRecommendationsByNewsAccessId(List<String> newsAccessIds) {
-//        try {
-//            return newsRecommendRepository.findOtherNewsRecommendationsByNewsAccessId(newsAccessIds);
-//        } catch (Exception e) {
-//            throw new UnauthorizedException("미인증 사용자입니다.");
-//        }
-//    }
-    public Mono<List<OtherRecommendResponseDto>> getOtherNewsRecommendationsByNewsAccessId(List<String> newsAccessIds) {
-        // FastApiService를 통해 추천받은 뉴스 ID 목록을 가져온다.
-        return fastApiService.fetchRecommendations()
-                // Mono<List<CbfRecommendResponse>>에서 List<CbfRecommendResponse>로 변환
-                .flatMapMany(Flux::fromIterable)
-                // CbfRecommendResponse에서 id만 추출하여 List<String>으로 변환
-                .map(cbfRecommendResponse -> cbfRecommendResponse.getId())
-                .collectList()
-                // newsAccessIds 리스트를 사용하여 뉴스 정보를 조회
-                .flatMap(newsAccessIds ->
-                        Mono.just(newsRecommendRepository.findOtherNewsRecommendationsByNewsAccessId(newsAccessIds))
-                );
+    public List<OtherRecommendResponseDto> getOtherNewsRecommendations() {
+        try {
+            return newsRecommendRepository.findOtherNewsRecommendations();
+        } catch (Exception e) {
+            throw new UnauthorizedException("미인증 사용자입니다.");
+        }
     }
 }

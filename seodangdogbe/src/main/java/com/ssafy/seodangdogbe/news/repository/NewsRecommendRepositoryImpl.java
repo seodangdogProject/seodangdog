@@ -55,7 +55,7 @@ public class NewsRecommendRepositoryImpl implements com.ssafy.seodangdogbe.news.
 
     }
     @Override
-    public List<OtherRecommendResponseDto> findOtherNewsRecommendations(int userSeq) {
+    public List<OtherRecommendResponseDto> findOtherNewsRecommendations() {
 
         return queryFactory
                 .select(Projections.constructor(OtherRecommendResponseDto.class,
@@ -67,7 +67,6 @@ public class NewsRecommendRepositoryImpl implements com.ssafy.seodangdogbe.news.
                         qNews.keywordNewsList
                 ))
                 .from(qNews)
-                .where(qUser.user.userSeq.eq(userSeq))
                 .fetch();
     }
 

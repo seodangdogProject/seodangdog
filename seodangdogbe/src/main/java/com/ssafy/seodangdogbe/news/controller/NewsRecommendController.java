@@ -30,8 +30,8 @@ public class NewsRecommendController {
 
     @GetMapping("/other-recommend")
     @Operation(description = "메인페이지 - 맞춤형 뉴스 추천")
-    public List<OtherRecommendResponseDto> getOtherNewsRecommendations(int userSeq) {
-        return newsRecommendService.getOtherNewsRecommendations(userSeq);
+    public List<OtherRecommendResponseDto> getOtherNewsRecommendations() {
+        return newsRecommendService.getOtherNewsRecommendations();
     }
 
     @GetMapping("/most-view")
