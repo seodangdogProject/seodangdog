@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styled from "./LastNewsList.module.css";
 import classNames from "classnames/bind";
 function CardNews() {
@@ -50,7 +51,9 @@ export default function LastNewsList() {
                 <CardNews />
               </li>
             </ul> */}
-            <CardNews />
+            <Link style={{ color: "#000" }} href="/news/1">
+              <CardNews />
+            </Link>
             <CardNews />
             <CardNews />
           </div>
