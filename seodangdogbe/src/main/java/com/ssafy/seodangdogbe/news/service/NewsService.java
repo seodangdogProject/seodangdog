@@ -164,7 +164,7 @@ public class NewsService {
         // 뉴스읽기 경험치 증가
         UserExp userExp = user.getUserExp();
         int exp = userExp.getNewsExp();
-        userExp.setSummaryExp(exp + 1);
+        userExp.setNewsExp(exp + 1);
     }
 
     // 사용자-뉴스 기록(읽기/읽기+풀이) 조회
