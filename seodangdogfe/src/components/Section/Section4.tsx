@@ -46,8 +46,8 @@ const Section = (props: ISectionProps) => {
                 <Image
                     src="/images/landing-fourth.png"
                     alt="secondImage"
-                    width={909}
-                    height={511}
+                    width={600}
+                    height={400}
                 />
             </main>
         </div>
