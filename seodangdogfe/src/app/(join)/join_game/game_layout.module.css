@@ -1,78 +1,99 @@
 .stage_bg {
-  background: linear-gradient(rgba(0, 0, 0, 0) 77%, rgba(0, 0, 0, 0.5));
-  font-family: "hunminjungum";
+    background: linear-gradient(rgba(0, 0, 0, 0) 77%, rgba(0, 0, 0, 0.5));
+    font-family: "hambaknoon";
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    overflow: hidden;
+    background-image: url("../../../assets/landing-background-image.png");
+}
+
+.wordContainer {
+    width: 80%;
+    max-height: 70%;
+    padding: 20%;
+    position: relative;
+    overflow: hidden;
+    align-items: flex-start;
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    flex-shrink: 0; /* 요소의 축소를 방지하여 한 줄에 강제로 요소들을 표시 */
+}
+
+.wordBox {
+    position: relative;
+    flex-shrink: 0; /* 요소들이 줄어들지 않도록 설정 */
+    display: flex;
+    color: grey;
+    margin: 3%;
+    margin-top: 3%;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    box-sizing: border-box; /* 내부 여백과 테두리를 포함한 너비를 지정 */
+    font-size: 40px;
+}
+
+.clicked {
+    color: black; /* 예시로 클릭된 단어의 색상을 빨간색으로 변경 */
+    font-weight: bold; /* 예시로 클릭된 단어의 글씨를 굵게 변경 */
+    transition: color 0.5s ease; /* 색깔이 바뀌는 transition 효과 추가 */
 }
 
 .score {
-  font-size: 40px;
-  left: 20px;
-  top: 10px;
-  font-family: "Kdam Thmor Pro", sans-serif;
-  color: #fff;
+    font-size: 40px;
+    left: 20px;
+    top: 10px;
+    font-family: "Kdam Thmor Pro", sans-serif;
+    color: #fff;
 }
 
 .score .num {
-  font-size: 0.65em;
-  color: #ccc;
+    font-size: 0.65em;
+    color: #ccc;
 }
 
 .timer {
-  font-size: 85px;
-  top: unset;
-  bottom: 115px;
-  left: 15px;
-  display: flex;
+    font-size: 85px;
+    top: unset;
+    bottom: 115px;
+    left: 15px;
+    display: flex;
 }
 
 .timer .face {
-  overflow: hidden;
-  width: 65px;
-  height: 65px;
-  border-radius: 50%;
-  left: 10px;
-  top: 22px;
+    overflow: hidden;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    left: 10px;
+    top: 22px;
 }
 
 .timer .face .inner {
-  left: -10px;
-  top: -22px;
+    left: -10px;
+    top: -22px;
 }
 
 .replay {
-  font-size: 25px;
-  width: 200px;
-  left: 105px;
-  top: 35px;
-  font-family: "Kdam Thmor Pro", sans-serif;
-  color: #fff;
+    font-size: 25px;
+    width: 200px;
+    left: 105px;
+    top: 35px;
+    font-family: "Kdam Thmor Pro", sans-serif;
+    color: #fff;
 }
 
 .next_button_enable {
-  cursor: pointer;
-  pointer-events: auto;
+    cursor: pointer;
+    pointer-events: auto;
 }
 
 .next_button_block {
-  visibility: visible;
-  pointer-events: none;
+    visibility: visible;
+    pointer-events: none;
 }
 
 .mouse {
-  /* cursor: url('../../../assets/punch-icon.svg'), auto; */
-  /* cursor: url('../../../assets/closeModal-icon.svg'), auto; */
-}
-
-.custom-cursor {
-  /* cursor: url('../../../assets/punch-icon.svg'), auto; */
-}
-
-.pointer {
-  position: absolute;
-  background-color: rgb(108, 12, 31);
-  /* background-image: url('../../../assets/punch-icon.svg'); */
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  left: -15px;
-  top: -15px;
+    cursor: url("../../../assets/cursor.cur") 10 20, auto;
 }

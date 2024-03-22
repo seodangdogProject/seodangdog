@@ -24,8 +24,8 @@ export default function WordGame() {
         const fetchData = async () => {
             try {
                 //const data = await fetchWordList();
-                const data = [{ idx: 1, answer: "정답", mean: "뜻" }];
-                setWordList(data); // 여기서 setWordList에 전달되는 값이 올바른지 확인해야 합니다.
+                // const data = [{ idx: 1, answer: "정답", mean: "뜻" }];
+                // setWordList(data); // 여기서 setWordList에 전달되는 값이 올바른지 확인해야 합니다.
             } catch (error) {
                 console.error("Error fetching word list:", error);
             }
