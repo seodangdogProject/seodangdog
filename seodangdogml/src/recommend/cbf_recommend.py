@@ -1,23 +1,19 @@
-from pydantic import BaseModel
-from fastapi import APIRouter
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 import random
-
 import time
 
-import os
-import sys
-sys.path.append(os.path.abspath('src'))
-from mongo import getNews
+from pydantic import BaseModel
+from fastapi import APIRouter
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from repository.news_repository import getNews
 from create_dummy.make_user_data import make_keywordlist
 
 router = APIRouter()
 
 
-class Item(BaseModel):
-    message: str
+# class Item(BaseModel):
+#     message: str
 
 
 class News:
@@ -36,9 +32,9 @@ class NewsDto:
 news_data_objects = []
 allNews = getNews()
 for news in allNews:
-    id = news['_id']['$oid']
-    title = news['newsTitle']
-    news_data_objects.append(News(id, title))
+    news_id = news['_id']['$oid']
+    news_title = news['newsTitle']
+    news_data_objects.append(News(news_id, news_title))
 
 @router.get("/fast/cbf_recom")
 # def process_data(item: Item):
