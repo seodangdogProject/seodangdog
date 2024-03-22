@@ -1,7 +1,22 @@
+"use client";
+import { useEffect, useState } from "react";
 import styled from "./RankingNewsContainer.module.css";
 import classNames from "classnames/bind";
+import { privateFetch } from "@/utils/http-commons";
 export default function RankingNewsContainer() {
   const cx = classNames.bind(styled);
+  const [newsList, setNewsList] = useState<[]>();
+  useEffect(() => {
+    (async () => {
+      const res = await privateFetch("/main/most-view", "", "GET");
+      if (res.status !== 200) {
+        // 오류처리
+      }
+      const data = await res.json();
+      console.log(data);
+      setNewsList(data);
+    })();
+  }, []);
   return (
     <div className={styled.container}>
       <div className={styled.toggle__container}>
