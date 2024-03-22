@@ -1,81 +1,202 @@
-'use client';
+"use client";
 // WordGame.tsx
-import React, { useState, useEffect, useCallback } from 'react';
-import { useRecoilState, RecoilRoot } from 'recoil';
-import { gameWordListState, Item } from '../../../atoms/wordGame';
-import styles from './oneword_layout.module.css';
-import Lottie from 'lottie-react';
-import TimerIcon from '../../../assets/timer-icon.svg';
-import ProgressBar from '@ramonak/react-progress-bar';
-import GameIcon from '../../../assets/quiz-logo-icon.svg';
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useRecoilState, RecoilRoot } from "recoil";
+import { gameWordListState, Item } from "../../../atoms/wordGame";
+import styles from "./oneword_layout.module.css";
+import Lottie from "lottie-react";
+import TimerIcon from "../../../assets/timer-icon.svg";
+import ProgressBar from "@ramonak/react-progress-bar";
+import GameIcon from "../../../assets/quiz-logo-icon.svg";
 
 const OneWord: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [sec, setSec] = useState(0);
-    const [wordList, setWordList] = useRecoilState(gameWordListState);
-    const [testWord, setTestWord] = useState('김아림특화');
-    const [inputValues, setInputValues] = useState(
-        Array(testWord.length).fill('')
-    ); // 입력된 문자열을 추적하는 상태
-    // const [inputValues, setInputValues] = useState(
-    //     Array(wordList[currentIndex].answer.length).fill('')
-    // ); // 입력된 문자열을 추적하는 상태
+    const [sec, setSec] = useState<number>(0);
+    const [wordList] = useRecoilState(gameWordListState); // wordList
+    const [inputValues, setInputValues] = useState<string[]>([]); //
+    const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // 사용자 input 박스 체크
+    const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null); // 타이머 식별자 체크하기
+    const [answerSec, setAnswerSec] = useState<number>(0); // 타이머 2의 초
 
-    // 각 입력 요소에 대한 변경 핸들러
-    const handleChange = (index: number, value: string) => {
-        const newInputValues = [...inputValues]; // 이전 입력 값을 복사
-        newInputValues[index] = value; // 변경된 값으로 업데이트
-        setInputValues(newInputValues); // 변경된 입력 값을 상태에 저장
-
-        // 모든 input이 채워졌는지 확인하여 자동으로 단어를 변환=> 빈칸 처리가 너무 힘들어서 일단 보류... ㅜ.ㅜ
-        // if (newInputValues.every((input) => input !== '' && input !== ' ')) {
-        //     handleConvertWord();
-        //     console.log('검사하러가기');
-        // }
+    // 현재 문제의 정답을 가져오는 함수
+    const getCurrentAnswer = () => {
+        return wordList[currentIndex]?.answer || "";
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            console.log('검사하러가기');
+    const setAnswerLength = () => {
+        setInputValues(
+            Array.from({ length: getCurrentAnswer().length }, () => "")
+        );
+    };
+
+    // 각 입력 요소에 대한 변경 핸들러 (하나 치면 다음으로 자동 넘어가는거)
+    const handleInputChange = (index: number, value: string) => {
+        const newInputValues = [...inputValues];
+        newInputValues[index] = value;
+
+        // 만약 입력된 문자열이 최대 길이에 도달하면 다음 input 요소로 포커스 이동
+        if (value.length === 1 && index < inputValues.length - 1) {
+            inputRefs.current[index + 1]?.focus();
+        }
+
+        setInputValues(newInputValues);
+    };
+
+    // 입력 처리 함수
+    const handleKeyPress = (
+        index: number,
+        event: React.KeyboardEvent<HTMLInputElement>
+    ) => {
+        if (event.key === "Enter") {
+            console.log("검사하러가기");
             handleConvertWord();
+        } else if (
+            event.key === "Backspace" &&
+            index > 0 &&
+            inputValues[index] === ""
+        ) {
+            // 백스페이스 키 입력 처리
+            const newInputValues = [...inputValues];
+            newInputValues[index - 1] = ""; // 이전 input 요소에 포커스를 이동하고 값을 지움
+            inputRefs.current[index - 1]?.focus();
+            setInputValues(newInputValues);
         }
     };
 
     // 단어 변환 함수
     const handleConvertWord = () => {
-        const convertedWord = inputValues.join(''); // 배열에 있는 문자들을 결합하여 단어로 변환
-        console.log('Converted word:', convertedWord);
+        const convertedWord = inputValues.join(""); // 배열에 있는 문자들을 결합하여 단어로 변환
+        console.log("Converted word:", convertedWord);
+
+        // 현재 문제의 정답을 가져옵니다.
+        const currentAnswer = getCurrentAnswer();
+
+        // 변환된 단어가 현재 문제의 정답과 같은지 확인합니다.
+        if (convertedWord === currentAnswer) {
+            console.log("정답입니다!");
+
+            // 현재 문제가 마지막 문제가 아니라면 다음 문제로 넘어갑니다.
+            if (currentIndex < wordList.length - 1) {
+                setCurrentIndex((prevIndex) => prevIndex + 1);
+                setSec(0); // 타이머를 0으로 초기화합니다.
+            } else {
+                // 마지막 문제라면 모든 문제를 완료했음을 알립니다.
+                alert("모든 문제를 완료했습니다.");
+            }
+        }
     };
 
+    const check = useCallback(() => {
+        const convertedWord = inputValues.join(""); // 배열에 있는 문자들을 결합하여 단어로 변환
+        console.log("Converted word:", convertedWord);
+
+        // 현재 문제의 정답을 가져옵니다.
+        const currentAnswer = getCurrentAnswer();
+
+        return convertedWord === currentAnswer;
+    }, [inputValues, currentIndex]); // inputValues와 currentIndex에 의존성 추가
+
     useEffect(() => {
-        const interval_id = setInterval(() => {
-            setSec((sec) => {
-                const newcount = sec + 1;
-                console.log(newcount);
-                if (newcount == 11) {
-                    console.log('정지');
-                    clearInterval(interval_id);
-                    //alert('종료');
+        inputRefs.current[0]?.focus(); // 초기 렌더링 시 첫 번째 input 요소에 포커스 설정
+        setAnswerLength(); // 컴포넌트가 렌더링될 때마다 답의 길이에 따라 입력 박스 설정
+    }, [currentIndex, wordList]);
+
+    useEffect(() => {
+        // 타이머 1
+        const timer1 = setInterval(() => {
+            console.log("timer 1 재시작");
+            if (sec >= 10 && sec < 12) {
+                if (!check()) {
+                    const currentAnswer = getCurrentAnswer();
+                    if (inputValues.join("") !== currentAnswer) {
+                        setInputValues(currentAnswer.split(""));
+                    }
+                } else {
                 }
-                return newcount;
-            });
+                setSec((prevSec) => prevSec + 1);
+            } else if (sec < 12) {
+                setSec((prevSec) => prevSec + 1);
+            } else if (sec == 12) {
+                if (currentIndex == wordList.length - 1) {
+                    alert("모든 문제가 끝남");
+                    clearInterval(timer1);
+                } else {
+                    setCurrentIndex((prevIndex) =>
+                        prevIndex < wordList.length - 1
+                            ? prevIndex + 1
+                            : prevIndex
+                    );
+                    setSec(0);
+                }
+            }
         }, 1000);
 
-        // 이부분 뒤에 수정하기 (자동으로 넘기도록 -> 타이머 없애고 조건되면 자동으로 바뀌면서 타이머 재시동)
-        const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => {
-                if (prevIndex + 1 >= wordList.length) {
-                    clearInterval(interval); // 배열의 끝에 도달하면 interval을 멈춥니다.
-                }
-                return prevIndex + 1;
-            });
-        }, 5000);
-
         return () => {
-            clearInterval(interval_id);
-            clearInterval(interval);
+            clearInterval(timer1);
         };
-    }, [wordList.length]);
+    }, [sec]);
+
+    // useEffect(() => {
+    //     // 타이머 1
+    //     const timer1 = setInterval(() => {
+    //         console.log("timer 1 재시작");
+    //         if (sec >= 5) {
+    //             console.log("timer 1 중단");
+    //             clearInterval(timer1);
+    //             // 타이머 1이 종료되고 타이머 2 시작
+    //             if (!check()) {
+    //                 console.log("timer2 재시작");
+    //                 // 틀리면
+    //                 // timer2의 초는 0부터
+    //                 setAnswerSec(0);
+    //                 // 현재 답 보여주기
+    //                 const currentAnswer = getCurrentAnswer();
+    //                 if (inputValues.join("") !== currentAnswer) {
+    //                     setInputValues(currentAnswer.split(""));
+    //                 }
+    //                 // timer 2 시작
+    //                 const timer2 = setInterval(() => {
+    //                     addNum();
+    //                     if (answerSec >= 5) {
+    //                         clearInterval(timer2);
+    //                         // 타이머 2가 종료되고 다시 타이머 1 시작
+    //                         // 이때 다음 문제로 넘어가야됨
+    //                         if (currentIndex == wordList.length - 1) {
+    //                             alert("모든 문제가 끝남");
+    //                         }
+
+    //                         setCurrentIndex((prevIndex) =>
+    //                             prevIndex < wordList.length - 1
+    //                                 ? prevIndex + 1
+    //                                 : prevIndex
+    //                         );
+    //                         setSec(0);
+    //                         return 0;
+    //                     } else {
+    //                         addNum();
+    //                     }
+    //                 }, 1000);
+    //             } else {
+    //                 if (currentIndex == wordList.length - 1) {
+    //                     alert("모든 문제가 끝남");
+    //                 } else {
+    //                     setCurrentIndex((prevIndex) =>
+    //                         prevIndex < wordList.length - 1
+    //                             ? prevIndex + 1
+    //                             : prevIndex
+    //                     );
+    //                     setSec(0);
+    //                 }
+    //             }
+    //         } else {
+    //             setSec((prevSec) => prevSec + 1);
+    //         }
+    //     }, 1000);
+
+    //     return () => {
+    //         clearInterval(timer1);
+    //     };
+    // }, [sec, answerSec]);
 
     return (
         <>
@@ -85,24 +206,31 @@ const OneWord: React.FC = () => {
                         <GameIcon></GameIcon>
                     </div>
                     <div className={styles.count_container}>
-                        <span> 1</span>
+                        <span> {currentIndex + 1} </span>
                         <span> /</span>
-                        <span> 10</span>
+                        <span> {wordList.length}</span>
                     </div>
+
                     <div className={styles.meaning_container}>
-                        조선 왕조가 자신들의 역사를 편찬한 사서
+                        <div className={styles.language}>한글</div>
+                        <div className={styles.meaning_des}>
+                            {wordList[currentIndex]?.mean}
+                        </div>
                     </div>
                     <div className={styles.answer_conatiner}>
-                        {testWord.split('').map((char, index) => (
+                        {inputValues.map((value, index) => (
                             <div key={index} className={styles.characterBox}>
                                 <input
                                     type="text"
                                     maxLength={1}
-                                    value={inputValues[index]}
+                                    value={value}
                                     onChange={(e) =>
-                                        handleChange(index, e.target.value)
+                                        handleInputChange(index, e.target.value)
                                     }
-                                    onKeyDown={handleKeyDown}
+                                    onKeyDown={(e) => handleKeyPress(index, e)}
+                                    ref={(input) => {
+                                        inputRefs.current[index] = input;
+                                    }}
                                 />
                             </div>
                         ))}
@@ -116,49 +244,17 @@ const OneWord: React.FC = () => {
                                 className={styles.progress_container}
                                 style={{
                                     width: `${(sec / 10) * 100}%`,
-                                    transition: 'width 0.5s ease',
+                                    transition: "width 0.5s ease",
                                 }}
                             >
-                                {/* <div>{sec}</div> */}
+                                <div>{sec}</div>
+                                <div>{answerSec}</div>
                             </div>
                         </div>
-                        {/* <ProgressBar
-                            completed={sec}
-                            width="700px"
-                            height="40px"
-                            customLabel={`${sec}`}
-                            className={styles.progress_wrapper}
-                            barContainerClassName={styles.progress_container}
-                            completedClassName={styles.progress_barCompleted}
-                            labelClassName={styles.progress_label}
-                        /> */}
                     </div>
                 </div>
             </div>
-            <div>
-                {/* <h1>{wordList[currentIndex].idx}</h1>
-                <h1>{wordList[currentIndex].mean}</h1>
-                <h1>{wordList[currentIndex].answer}</h1> */}
-                {/* {wordList[currentIndex].answer.split('').map((char, index) => (
-                    <div key={index} className={styles.characterBox}>
-                        <input
-                            type="text"
-                            maxLength={1}
-                            value={inputValues[index]}
-                            onChange={(e) =>
-                                handleChange(index, e.target.value)
-                            }
-                        />
-                    </div>
-                ))} */}
-                <button
-                    onClick={() =>
-                        setCurrentIndex((prevIndex) => prevIndex + 1)
-                    }
-                >
-                    다음 단어
-                </button>
-            </div>
+            <div></div>
         </>
     );
 };
