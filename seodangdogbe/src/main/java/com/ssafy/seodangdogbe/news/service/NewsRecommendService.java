@@ -1,11 +1,10 @@
 package com.ssafy.seodangdogbe.news.service;
 
 import com.ssafy.seodangdogbe.exception.UnauthorizedException;
-import com.ssafy.seodangdogbe.news.dto.MostSummaryRecommendResponseDto;
-import com.ssafy.seodangdogbe.news.dto.MostViewRecommendResponseDto;
-import com.ssafy.seodangdogbe.news.dto.OtherRecommendResponseDto;
-import com.ssafy.seodangdogbe.news.dto.UserRecommendResponseDto;
+import com.ssafy.seodangdogbe.news.dto.*;
+import com.ssafy.seodangdogbe.news.repository.MypageRecentNewsRepositoryCustom;
 import com.ssafy.seodangdogbe.news.repository.NewsRecommendRepositoryCustom;
+import com.ssafy.seodangdogbe.news.repository.MypageRecentNewsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +21,8 @@ public class NewsRecommendService {
 
     @Autowired
     private NewsRecommendRepositoryCustom newsRecommendRepository;
+    @Autowired
+    private MypageRecentNewsRepositoryCustom mypageRecentNewsRepository;
 
     public List<UserRecommendResponseDto> getNewsRecommendations(int userSeq) {
         try {
@@ -50,6 +51,22 @@ public class NewsRecommendService {
     public List<OtherRecommendResponseDto> getOtherNewsRecommendations() {
         try {
             return newsRecommendRepository.findOtherNewsRecommendations();
+        } catch (Exception e) {
+            throw new UnauthorizedException("미인증 사용자입니다.");
+        }
+    }
+
+    public List<RecentSolvedDto> getRecentSolvedNews() {
+        try {
+            return mypageRecentNewsRepository.findRecentSolvedNews();
+        } catch (Exception e) {
+            throw new UnauthorizedException("미인증 사용자입니다.");
+        }
+    }
+
+    public List<RecentNotSolvedDto> getRecentNotSolvedNews() {
+        try {
+            return mypageRecentNewsRepository.findRecentNotSolvedNews();
         } catch (Exception e) {
             throw new UnauthorizedException("미인증 사용자입니다.");
         }

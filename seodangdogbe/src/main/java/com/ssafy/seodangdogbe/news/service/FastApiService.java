@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public class FastApiService {
     public Mono<List<CbfRecommendResponse>> fetchRecommendations() {
         return this.webClient.get().uri("/fast/cbf_recom")
                 .retrieve()
+                .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
+                clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
                 .bodyToMono(new ParameterizedTypeReference<List<CbfRecommendResponse>>() {});
     }
 

@@ -37,7 +37,6 @@ public class NewsRecommendController {
     @GetMapping("/most-view")
     @Operation(description = "메인페이지 - 많이 본 뉴스 조회")
     public List<MostViewRecommendResponseDto> getMostViewNewsRecommendations() {
-
         return newsRecommendService.getMostViewNewsRecommendations();
     }
 

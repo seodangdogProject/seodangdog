@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seodangdogbe.news.domain.News;
 import com.ssafy.seodangdogbe.news.domain.QKeywordNews;
 import com.ssafy.seodangdogbe.news.domain.QNews;
+import com.ssafy.seodangdogbe.news.domain.QUserNews;
 import com.ssafy.seodangdogbe.news.dto.*;
 import com.ssafy.seodangdogbe.user.domain.QUser;
 import com.ssafy.seodangdogbe.news.dto.MostViewRecommendResponseDto;
@@ -26,36 +27,36 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
     private final QNews qNews = QNews.news;
     private final QUser qUser = QUser.user;
     private final QKeywordNews qKeywordNews = QKeywordNews.keywordNews;
+
+    private final QUserNews qUserNews = QUserNews.userNews;
     @Override
     public List<UserRecommendResponseDto> findNewsRecommendations(int userSeq) {
+        List<String> recommendedNewsIds = fastApiService.fetchRecommendations().block().stream()
+                .map(CbfRecommendResponse::getId)
+                .collect(Collectors.toList());
 
-
-        List<News> keywordnews = queryFactory
-                .select(qKeywordNews.news)
-                .from(qKeywordNews)
+        List<News> newsList = queryFactory
+                .selectFrom(QNews.news)
+                .where(QNews.news.newsAccessId.in(recommendedNewsIds)
+                    .and(QUserNews.userNews.isSolved.eq(false)))
                 .fetch();
 
-        for (News news : keywordnews) {
-            List<String> newsKeywords = queryFactory
-                    .select(qKeywordNews.keyword.keyword)
-                    .from(qKeywordNews)
-                    .where(qKeywordNews.news.eq(news))
-                    .fetch();
-        }
+        List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
+            List<String> keywords = news.getKeywordNewsList().stream()
+                    .map(keywordNews -> keywordNews.getKeyword().getKeyword())
+                    .collect(Collectors.toList());
 
-        return queryFactory
-                .select(Projections.constructor(UserRecommendResponseDto.class,
-                        qNews.newsSeq,
-                        qNews.newsImgUrl,
-                        qNews.newsTitle,
-                        qNews.newsDescription,
-                        qNews.newsCreatedAt,
-                        qNews.keywordNewsList
-                ))
-                .from(qNews)
-                .where(qUser.user.userSeq.eq(userSeq))
-                .fetch();
+            return new NewsPreviewListDto(
+                    news.getNewsSeq(),
+                    news.getNewsImgUrl(),
+                    news.getNewsTitle(),
+                    news.getNewsDescription(),
+                    news.getNewsCreatedAt(),
+                    keywords
+            );
+        }).collect(Collectors.toList());
 
+        return List.of(new UserRecommendResponseDto(newsPreviewLists));
     }
     @Override
     public List<OtherRecommendResponseDto> findOtherNewsRecommendations() {
@@ -65,11 +66,11 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
 
         List<News> newsList = queryFactory
                 .selectFrom(QNews.news)
-                .where(QNews.news.newsAccessId.in(recommendedNewsIds)) // 추천된 ID 목록에 속하는 뉴스만 조회
+                .where(QNews.news.newsAccessId.in(recommendedNewsIds)
+                        .and(QUserNews.userNews.isSolved.eq(false)))
                 .fetch();
 
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
-            // KeywordNews 리스트에서 키워드만 추출하여 새 리스트로 생성
             List<String> keywords = news.getKeywordNewsList().stream()
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
@@ -97,9 +98,8 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .fetch();
 
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
-            // KeywordNews 리스트에서 키워드만 추출하여 새 리스트로 생성
             List<String> keywords = news.getKeywordNewsList().stream()
-                    .map(keywordNews -> keywordNews.getKeyword().getKeyword()) // KeywordNews 엔티티 구조에 따라 접근 방식 변경 가능
+                    .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
 
             return new NewsPreviewListDto(
@@ -124,7 +124,6 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .fetch();
 
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
-            // KeywordNews 리스트에서 키워드만 추출하여 새 리스트로 생성
             List<String> keywords = news.getKeywordNewsList().stream()
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword()) // KeywordNews 엔티티 구조에 따라 접근 방식 변경 가능
                     .collect(Collectors.toList());
