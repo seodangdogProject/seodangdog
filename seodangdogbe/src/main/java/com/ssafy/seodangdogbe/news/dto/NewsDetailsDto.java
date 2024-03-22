@@ -1,5 +1,6 @@
 package com.ssafy.seodangdogbe.news.dto;
 
+import com.ssafy.seodangdogbe.keyword.domain.Keyword;
 import com.ssafy.seodangdogbe.media.domain.Media;
 import com.ssafy.seodangdogbe.news.domain.MetaNews;
 import com.ssafy.seodangdogbe.news.domain.UserSummary;
@@ -18,7 +19,7 @@ public class NewsDetailsDto {
     @AllArgsConstructor
     @ToString
     public static class NewsDetailsResponseDto {
-        private Long newsSeq;   // newsSeq는 mysql에서의 pk
+//        private Long newsSeq;   // newsSeq는 mysql에서의 pk
 
         private String newsTitle;
         private List<String> newsSummary;
@@ -30,7 +31,10 @@ public class NewsDetailsDto {
 
         private Media media;
         private String newsUrl;
-    //    private List<Keyword> newsKeyword;
+
+        private List<List<String>> newsPos;
+        private List<String> newsKeyword;
+        private List<String> newsSummaryKeyword;
 
     //    private List<Quiz> newsQuiz;
 
@@ -53,6 +57,9 @@ public class NewsDetailsDto {
             this.newsMainText = metaNews.getNewsMainText();
             this.newsUrl = metaNews.getNewsUrl();
             this.media = metaNews.getMedia();
+            this.newsPos = metaNews.getNewsPos();
+            this.newsKeyword = metaNews.getNewsKeyword();
+            this.newsSummaryKeyword = metaNews.getNewsSummaryKeyword();
         }
 
     }

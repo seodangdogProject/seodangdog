@@ -35,7 +35,10 @@ public class MetaNews {
 
     private Media media;    // media code, name
 
-//    private List<Keyword> newsKeyword;
+    private List<List<String>> newsPos;    // newsWord, pos
+
+    private List<String> newsKeyword;
+    private List<String> newsSummaryKeyword;
 
 //    @ElementCollection
 //    private List<Quiz> newsQuiz;    // 퀴즈 1,2,3
