@@ -16,24 +16,18 @@ const OneWord: React.FC = () => {
     const [inputValues, setInputValues] = useState<string[]>([]); //
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // 사용자 input 박스 체크
     const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null); // 타이머 식별자 체크하기
-    const [showAnswer, setShowAnswer] = useState(false); // 답을 보여줄지 여부 상태 추가
+    const [answerSec, setAnswerSec] = useState<number>(0); // 타이머 2의 초
 
     // 현재 문제의 정답을 가져오는 함수
     const getCurrentAnswer = () => {
         return wordList[currentIndex]?.answer || "";
     };
 
-    // 입력 박스 개수 정하기
     const setAnswerLength = () => {
         setInputValues(
             Array.from({ length: getCurrentAnswer().length }, () => "")
         );
     };
-
-    useEffect(() => {
-        inputRefs.current[0]?.focus(); // 초기 렌더링 시 첫 번째 input 요소에 포커스 설정
-        setAnswerLength(); // 컴포넌트가 렌더링될 때마다 답의 길이에 따라 입력 박스 설정
-    }, [currentIndex, wordList]);
 
     // 각 입력 요소에 대한 변경 핸들러 (하나 치면 다음으로 자동 넘어가는거)
     const handleInputChange = (index: number, value: string) => {
@@ -92,52 +86,117 @@ const OneWord: React.FC = () => {
         }
     };
 
-    // // 타이머가 종료될 때 실행되는 함수
-    // const handleTimerEnd = () => {
-    //     const currentAnswer = getCurrentAnswer();
-    //     if (inputValues.join("") !== currentAnswer) {
-    //         setTimeout(() => {
-    //             setInputValues(currentAnswer.split(""));
-    //             setTimeout(() => {
-    //                 setCurrentIndex((prevIndex) =>
-    //                     prevIndex < wordList.length - 1
-    //                         ? prevIndex + 1
-    //                         : prevIndex
-    //                 );
-    //             }, 1000);
-    //         }, 5000);
-    //     } else {
-    //         setCurrentIndex((prevIndex) =>
-    //             prevIndex < wordList.length - 1 ? prevIndex + 1 : prevIndex
-    //         );
-    //     }
-    // };
+    const check = useCallback(() => {
+        const convertedWord = inputValues.join(""); // 배열에 있는 문자들을 결합하여 단어로 변환
+        console.log("Converted word:", convertedWord);
+
+        // 현재 문제의 정답을 가져옵니다.
+        const currentAnswer = getCurrentAnswer();
+
+        return convertedWord === currentAnswer;
+    }, [inputValues, currentIndex]); // inputValues와 currentIndex에 의존성 추가
 
     useEffect(() => {
-        if (timerId === null) {
-            const intervalId = setInterval(() => {
-                setSec((prevSec) => {
-                    const newCount = prevSec + 1;
-                    if (newCount >= 10) {
-                        clearInterval(intervalId); // Use intervalId here
-                        //handleTimerEnd();
-                        return 0;
-                    } else {
-                        return newCount;
-                    }
-                });
-            }, 1000);
+        inputRefs.current[0]?.focus(); // 초기 렌더링 시 첫 번째 input 요소에 포커스 설정
+        setAnswerLength(); // 컴포넌트가 렌더링될 때마다 답의 길이에 따라 입력 박스 설정
+    }, [currentIndex, wordList]);
 
-            setTimerId(intervalId);
-        }
+    useEffect(() => {
+        // 타이머 1
+        const timer1 = setInterval(() => {
+            console.log("timer 1 재시작");
+            if (sec >= 10 && sec < 12) {
+                if (!check()) {
+                    const currentAnswer = getCurrentAnswer();
+                    if (inputValues.join("") !== currentAnswer) {
+                        setInputValues(currentAnswer.split(""));
+                    }
+                } else {
+                }
+                setSec((prevSec) => prevSec + 1);
+            } else if (sec < 12) {
+                setSec((prevSec) => prevSec + 1);
+            } else if (sec == 12) {
+                if (currentIndex == wordList.length - 1) {
+                    alert("모든 문제가 끝남");
+                    clearInterval(timer1);
+                } else {
+                    setCurrentIndex((prevIndex) =>
+                        prevIndex < wordList.length - 1
+                            ? prevIndex + 1
+                            : prevIndex
+                    );
+                    setSec(0);
+                }
+            }
+        }, 1000);
 
         return () => {
-            if (timerId !== null) {
-                clearInterval(timerId); // Use timerId here
-                setTimerId(null);
-            }
+            clearInterval(timer1);
         };
-    }, [currentIndex, wordList, timerId]);
+    }, [sec]);
+
+    // useEffect(() => {
+    //     // 타이머 1
+    //     const timer1 = setInterval(() => {
+    //         console.log("timer 1 재시작");
+    //         if (sec >= 5) {
+    //             console.log("timer 1 중단");
+    //             clearInterval(timer1);
+    //             // 타이머 1이 종료되고 타이머 2 시작
+    //             if (!check()) {
+    //                 console.log("timer2 재시작");
+    //                 // 틀리면
+    //                 // timer2의 초는 0부터
+    //                 setAnswerSec(0);
+    //                 // 현재 답 보여주기
+    //                 const currentAnswer = getCurrentAnswer();
+    //                 if (inputValues.join("") !== currentAnswer) {
+    //                     setInputValues(currentAnswer.split(""));
+    //                 }
+    //                 // timer 2 시작
+    //                 const timer2 = setInterval(() => {
+    //                     addNum();
+    //                     if (answerSec >= 5) {
+    //                         clearInterval(timer2);
+    //                         // 타이머 2가 종료되고 다시 타이머 1 시작
+    //                         // 이때 다음 문제로 넘어가야됨
+    //                         if (currentIndex == wordList.length - 1) {
+    //                             alert("모든 문제가 끝남");
+    //                         }
+
+    //                         setCurrentIndex((prevIndex) =>
+    //                             prevIndex < wordList.length - 1
+    //                                 ? prevIndex + 1
+    //                                 : prevIndex
+    //                         );
+    //                         setSec(0);
+    //                         return 0;
+    //                     } else {
+    //                         addNum();
+    //                     }
+    //                 }, 1000);
+    //             } else {
+    //                 if (currentIndex == wordList.length - 1) {
+    //                     alert("모든 문제가 끝남");
+    //                 } else {
+    //                     setCurrentIndex((prevIndex) =>
+    //                         prevIndex < wordList.length - 1
+    //                             ? prevIndex + 1
+    //                             : prevIndex
+    //                     );
+    //                     setSec(0);
+    //                 }
+    //             }
+    //         } else {
+    //             setSec((prevSec) => prevSec + 1);
+    //         }
+    //     }, 1000);
+
+    //     return () => {
+    //         clearInterval(timer1);
+    //     };
+    // }, [sec, answerSec]);
 
     return (
         <>
@@ -189,6 +248,7 @@ const OneWord: React.FC = () => {
                                 }}
                             >
                                 <div>{sec}</div>
+                                <div>{answerSec}</div>
                             </div>
                         </div>
                     </div>
