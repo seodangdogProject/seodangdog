@@ -8,6 +8,8 @@ import Lottie from "lottie-react";
 import TimerIcon from "../../../assets/timer-icon.svg";
 import ProgressBar from "@ramonak/react-progress-bar";
 import GameIcon from "../../../assets/quiz-logo-icon.svg";
+import CorrectIcon from "../../../assets/correct-icon.svg";
+import UncorrectIcon from "../../../assets/uncorrect-icon.svg";
 
 const OneWord: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -15,8 +17,11 @@ const OneWord: React.FC = () => {
     const [wordList] = useRecoilState(gameWordListState); // wordList
     const [inputValues, setInputValues] = useState<string[]>([]); //
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // 사용자 input 박스 체크
-    const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null); // 타이머 식별자 체크하기
     const [answerSec, setAnswerSec] = useState<number>(0); // 타이머 2의 초
+    const [isAnswer, setIsAnswer] = useState<boolean>(false);
+    const [isUnCorrect, setIsUnCorrect] = useState<boolean>(false);
+    const [isCorrectIcon, setIsCorrectIcon] = useState<boolean>(false);
+    const [isUnCorrectIcon, setIsUnCorrectIcon] = useState<boolean>(false);
 
     // 현재 문제의 정답을 가져오는 함수
     const getCurrentAnswer = () => {
@@ -75,6 +80,12 @@ const OneWord: React.FC = () => {
         if (convertedWord === currentAnswer) {
             console.log("정답입니다!");
 
+            setIsCorrectIcon(true);
+            // 0.3초 후에 흔들림 효과를 제거
+            setTimeout(() => {
+                setIsCorrectIcon(false);
+            }, 300);
+
             // 현재 문제가 마지막 문제가 아니라면 다음 문제로 넘어갑니다.
             if (currentIndex < wordList.length - 1) {
                 setCurrentIndex((prevIndex) => prevIndex + 1);
@@ -83,6 +94,14 @@ const OneWord: React.FC = () => {
                 // 마지막 문제라면 모든 문제를 완료했음을 알립니다.
                 alert("모든 문제를 완료했습니다.");
             }
+        } else {
+            setIsUnCorrect(true);
+            console.log("shaking");
+
+            // 0.3초 후에 흔들림 효과를 제거
+            setTimeout(() => {
+                setIsUnCorrect(false);
+            }, 300);
         }
     };
 
@@ -105,18 +124,28 @@ const OneWord: React.FC = () => {
         // 타이머 1
         const timer1 = setInterval(() => {
             console.log("timer 1 재시작");
-            if (sec >= 10 && sec < 12) {
+            if (sec >= 10 && sec <= 11) {
+                setIsUnCorrectIcon(true);
+                // 0.3초 후에 흔들림 효과를 제거
+                setTimeout(() => {
+                    setIsUnCorrectIcon(false);
+                }, 300);
+                setSec((prevSec) => prevSec + 1);
+            } else if (sec >= 10 && sec < 13) {
+                // 답 보여주기 부분
                 if (!check()) {
                     const currentAnswer = getCurrentAnswer();
                     if (inputValues.join("") !== currentAnswer) {
                         setInputValues(currentAnswer.split(""));
                     }
+                    setIsAnswer(true);
                 } else {
                 }
                 setSec((prevSec) => prevSec + 1);
-            } else if (sec < 12) {
+            } else if (sec < 13) {
                 setSec((prevSec) => prevSec + 1);
-            } else if (sec == 12) {
+            } else if (sec == 13) {
+                setIsAnswer(false);
                 if (currentIndex == wordList.length - 1) {
                     alert("모든 문제가 끝남");
                     clearInterval(timer1);
@@ -136,72 +165,33 @@ const OneWord: React.FC = () => {
         };
     }, [sec]);
 
-    // useEffect(() => {
-    //     // 타이머 1
-    //     const timer1 = setInterval(() => {
-    //         console.log("timer 1 재시작");
-    //         if (sec >= 5) {
-    //             console.log("timer 1 중단");
-    //             clearInterval(timer1);
-    //             // 타이머 1이 종료되고 타이머 2 시작
-    //             if (!check()) {
-    //                 console.log("timer2 재시작");
-    //                 // 틀리면
-    //                 // timer2의 초는 0부터
-    //                 setAnswerSec(0);
-    //                 // 현재 답 보여주기
-    //                 const currentAnswer = getCurrentAnswer();
-    //                 if (inputValues.join("") !== currentAnswer) {
-    //                     setInputValues(currentAnswer.split(""));
-    //                 }
-    //                 // timer 2 시작
-    //                 const timer2 = setInterval(() => {
-    //                     addNum();
-    //                     if (answerSec >= 5) {
-    //                         clearInterval(timer2);
-    //                         // 타이머 2가 종료되고 다시 타이머 1 시작
-    //                         // 이때 다음 문제로 넘어가야됨
-    //                         if (currentIndex == wordList.length - 1) {
-    //                             alert("모든 문제가 끝남");
-    //                         }
-
-    //                         setCurrentIndex((prevIndex) =>
-    //                             prevIndex < wordList.length - 1
-    //                                 ? prevIndex + 1
-    //                                 : prevIndex
-    //                         );
-    //                         setSec(0);
-    //                         return 0;
-    //                     } else {
-    //                         addNum();
-    //                     }
-    //                 }, 1000);
-    //             } else {
-    //                 if (currentIndex == wordList.length - 1) {
-    //                     alert("모든 문제가 끝남");
-    //                 } else {
-    //                     setCurrentIndex((prevIndex) =>
-    //                         prevIndex < wordList.length - 1
-    //                             ? prevIndex + 1
-    //                             : prevIndex
-    //                     );
-    //                     setSec(0);
-    //                 }
-    //             }
-    //         } else {
-    //             setSec((prevSec) => prevSec + 1);
-    //         }
-    //     }, 1000);
-
-    //     return () => {
-    //         clearInterval(timer1);
-    //     };
-    // }, [sec, answerSec]);
-
     return (
         <>
             <div className={styles.container}>
                 <div className={styles.content_cotainer}>
+                    {isCorrectIcon && (
+                        <CorrectIcon
+                            style={{
+                                position: "fixed",
+                                top: "50%",
+                                left: "50%",
+                                marginLeft: "5%",
+                                transform: "translate(-50%, -50%)",
+                            }}
+                        ></CorrectIcon>
+                    )}
+                    {isUnCorrectIcon && (
+                        <UncorrectIcon
+                            style={{
+                                position: "fixed",
+                                top: "50%",
+                                left: "50%",
+                                marginLeft: "5%",
+                                transform: "translate(-50%, -50%)",
+                            }}
+                        ></UncorrectIcon>
+                    )}
+
                     <div className={styles.header_container}>
                         <GameIcon></GameIcon>
                     </div>
@@ -224,6 +214,9 @@ const OneWord: React.FC = () => {
                                     type="text"
                                     maxLength={1}
                                     value={value}
+                                    className={` ${
+                                        isUnCorrect ? styles.shaking : ""
+                                    }`}
                                     onChange={(e) =>
                                         handleInputChange(index, e.target.value)
                                     }
@@ -231,6 +224,10 @@ const OneWord: React.FC = () => {
                                     ref={(input) => {
                                         inputRefs.current[index] = input;
                                     }}
+                                    style={{
+                                        color: isAnswer ? "red" : "black",
+                                    }}
+                                    disabled={isAnswer}
                                 />
                             </div>
                         ))}
@@ -247,8 +244,8 @@ const OneWord: React.FC = () => {
                                     transition: "width 0.5s ease",
                                 }}
                             >
-                                <div>{sec}</div>
-                                <div>{answerSec}</div>
+                                {/* <div>{sec}</div>
+                                <div>{answerSec}</div> */}
                             </div>
                         </div>
                     </div>
