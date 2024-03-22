@@ -39,7 +39,7 @@ def morph_sep(news_data):
 
         pos_list_convtd = []
         for pos in pos_list:
-            pos_list_convtd.append(list(pos))
+            pos_list_convtd.append({"word" : pos[0], "pos" : pos[1]})
         news_data[i]["newsPos"] = pos_list_convtd
     return news_data
 
@@ -50,7 +50,7 @@ def saveNews():
     start_t = time.time()
     with open('news.json', 'r', encoding="utf8") as f:
         news_data = json.load(f)
-    news_data = news_data
+    news_data = news_data[:10]
 
     # 형태소 저장
     print("형태소 분리 및 저장 중...")
@@ -63,7 +63,7 @@ def saveNews():
     print("네이버 요약 키워드 작업 시작")
     news_data = keyword_generate(news_data, "newsSummary", "newsSummaryKeyword")
 
-    client["meta_news"].insert_many(news_data)
+    # client["meta_news"].insert_many(news_data)
     return {"message": str(len(news_data)) + " news saved!"}
 
 @router.get("/getNews")
