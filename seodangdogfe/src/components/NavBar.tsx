@@ -17,6 +17,7 @@ import DashboardIcon from "../assets/dashboard-icon.svg";
 import DictIcon from "../assets/dict-icon.svg";
 import GameIcon from "../assets/game-icon.svg";
 import LogoutIcon from "../assets/logout-icon.svg";
+import HottopicIcon from "../assets/hottopic-icon.svg";
 import { useEffect, useState } from "react";
 export default function NavBar() {
   const cx = classNames.bind(style);
@@ -43,6 +44,19 @@ export default function NavBar() {
                 <MainIcon />
               </div>
               <div>메인페이지</div>
+            </li>
+          </Link>
+          <Link href="/hottopic">
+            <li
+              className={cx("item", {
+                active: active === "hottopic",
+                hottopic: active === "hottopic",
+              })}
+            >
+              <div className={cx("hottopic")}>
+                <HottopicIcon />
+              </div>
+              <div>핫토픽</div>
             </li>
           </Link>
           <Link href="/dashboard">

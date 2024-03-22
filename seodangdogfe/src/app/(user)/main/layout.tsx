@@ -1,12 +1,7 @@
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <>
-            <h3>네브바</h3>
-            {children}
-        </>
-    );
+  return <>{children}</>;
 }
