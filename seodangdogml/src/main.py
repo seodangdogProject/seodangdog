@@ -12,6 +12,6 @@ def hello():
 
 
 app.include_router(cbf_router)
-# app.include_router(recommend_repo_router)
+app.include_router(recommend_repo_router)
 app.include_router(cf_router)
 app.include_router(news_repo_router)

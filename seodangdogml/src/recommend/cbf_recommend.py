@@ -54,7 +54,7 @@ def process_data():
 
     result = []
     for id, title, similarity in recommended_news:
-        result.append(NewsDto(id,title,similarity))
+        result.append(NewsDto(id,title,get_weight(similarity)))
     print(result)
     return result
 

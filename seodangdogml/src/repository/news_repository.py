@@ -59,7 +59,7 @@ def saveNews():
     # 키워드 추출 및 저장
     print("키워드 추출 및 시작")
     print("본문 키워드 작업 시작")
-    news_data = keyword_generate(news_data, "newsMainText", "newsKeyword")
+    news_data = keyword_generate(news_data, "newsMainTe xt", "newsKeyword")
     print("네이버 요약 키워드 작업 시작")
     news_data = keyword_generate(news_data, "newsSummary", "newsSummaryKeyword")
 
