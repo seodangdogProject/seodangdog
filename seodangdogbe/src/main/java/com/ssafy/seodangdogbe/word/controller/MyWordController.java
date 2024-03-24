@@ -20,8 +20,8 @@ public class MyWordController {
     // 단어 조회 기능
     @Operation(description = "단어장 - 단어 조회")
     @GetMapping
-    public ResponseEntity<MyWordResponseDto> getWords(@RequestParam int userSeq) {
-        MyWordResponseDto wordList = myWordService.findAllUserWords(userSeq);
+    public ResponseEntity<MyWordResponseDto> getWords() {
+        MyWordResponseDto wordList = myWordService.findAllUserWords();
         return ResponseEntity.ok(wordList);
     }
 
