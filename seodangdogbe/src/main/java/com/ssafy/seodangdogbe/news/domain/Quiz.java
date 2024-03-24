@@ -14,7 +14,6 @@ public class Quiz {
     private String example;
     
     // 문제 내용
-    @ElementCollection
     private List<String> content;
 
     // 정답

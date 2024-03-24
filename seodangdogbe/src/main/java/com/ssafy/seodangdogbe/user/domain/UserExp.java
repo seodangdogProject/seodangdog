@@ -1,5 +1,6 @@
 package com.ssafy.seodangdogbe.user.domain;
 
+import com.ssafy.seodangdogbe.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserExp {
+public class UserExp extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userExpSeq;

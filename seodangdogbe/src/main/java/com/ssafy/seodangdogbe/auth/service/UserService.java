@@ -62,4 +62,10 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
         return user.getUserSeq();
     }
+
+    // 회원 seq로 회원 조회
+    public User getUserByUserSeq(int userSeq){
+        return userRepository.findByUserSeq(userSeq)
+                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
+    }
 }
