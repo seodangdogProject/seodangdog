@@ -1,5 +1,6 @@
 package com.ssafy.seodangdogbe.user.domain;
 
+import com.ssafy.seodangdogbe.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +8,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class UserBadge {
+public class UserBadge extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userBadgeSeq;

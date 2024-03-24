@@ -1,18 +1,17 @@
 package com.ssafy.seodangdogbe.news.domain;
 
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class newsWords {
+public class NewsPos {
     @Transient
-    private String newsWord;
+    private String word;
+
     @Transient
     private String pos;
 }

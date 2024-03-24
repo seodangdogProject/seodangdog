@@ -1,12 +1,10 @@
 package com.ssafy.seodangdogbe.news.domain;
 
 import com.ssafy.seodangdogbe.common.JsonConverter;
-import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
 import java.util.List;
 
