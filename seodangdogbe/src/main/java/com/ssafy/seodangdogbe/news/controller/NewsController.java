@@ -90,8 +90,6 @@ public class NewsController {
             } else {    // 이미 스크랩되어있는 상태라면
                 System.out.println("이미 스크랩 된 상태입니다.");
                 return ResponseEntity.ok().body(new MsgResponseDto("이미 스크랩 되어있는 단어입니다."));
-                
-                // ** 중복저장안되게하기
             }
         }
         // 없다면 사용자단어 테이블에 저장
