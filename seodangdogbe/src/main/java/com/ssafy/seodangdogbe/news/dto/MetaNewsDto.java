@@ -2,23 +2,24 @@ package com.ssafy.seodangdogbe.news.dto;
 
 import com.ssafy.seodangdogbe.media.domain.Media;
 import com.ssafy.seodangdogbe.news.domain.MetaNews;
+import com.ssafy.seodangdogbe.news.domain.NewsPos;
 import com.ssafy.seodangdogbe.news.domain.UserSummary;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 // mongodb MetaNews 관련 dto
-public class NewsDetailsDto {
+public class MetaNewsDto {
 
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     @ToString
-    public static class NewsDetailsResponseDto {
-        private Long newsSeq;   // newsSeq는 mysql에서의 pk
+    public static class MetaNewsResponseDto {
+//        private Long newsSeq;   // newsSeq는 mysql에서의 pk
 
         private String newsTitle;
         private List<String> newsSummary;
@@ -30,7 +31,10 @@ public class NewsDetailsDto {
 
         private Media media;
         private String newsUrl;
-    //    private List<Keyword> newsKeyword;
+
+        private List<NewsPos> newsPos;
+        private Map<String, Double> newsKeyword;
+        private Map<String, Double> newsSummaryKeyword;
 
     //    private List<Quiz> newsQuiz;
 
@@ -44,7 +48,7 @@ public class NewsDetailsDto {
         @Setter
         private UserSummary userSummary;
 
-        public NewsDetailsResponseDto(MetaNews metaNews) {
+        public MetaNewsResponseDto(MetaNews metaNews) {
             this.newsTitle = metaNews.getNewsTitle();
             this.newsSummary = metaNews.getNewsSummary();
             this.newsCreatedAt = LocalDateTime.parse(metaNews.getNewsCreatedAt(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));  // String to LocalDateTime
@@ -53,6 +57,9 @@ public class NewsDetailsDto {
             this.newsMainText = metaNews.getNewsMainText();
             this.newsUrl = metaNews.getNewsUrl();
             this.media = metaNews.getMedia();
+            this.newsPos = metaNews.getNewsPos();
+            this.newsKeyword = metaNews.getNewsKeyword();
+            this.newsSummaryKeyword = metaNews.getNewsSummaryKeyword();
         }
 
     }

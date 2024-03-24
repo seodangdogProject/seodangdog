@@ -1,8 +1,7 @@
 package com.ssafy.seodangdogbe.news.service;
 
 import com.ssafy.seodangdogbe.auth.repository.UserRepository;
-import com.ssafy.seodangdogbe.common.MsgResponseDto;
-import com.ssafy.seodangdogbe.news.repository.NewsDetailsRepository;
+import com.ssafy.seodangdogbe.news.repository.MetaNewsRepository;
 import com.ssafy.seodangdogbe.news.repository.NewsRepository;
 import com.ssafy.seodangdogbe.news.repository.UserNewsRepository;
 import com.ssafy.seodangdogbe.news.domain.MetaNews;
@@ -11,16 +10,13 @@ import com.ssafy.seodangdogbe.news.domain.UserNews;
 import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.domain.UserExp;
 import jakarta.transaction.Transactional;
-import jdk.jshell.spi.ExecutionControl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import static com.ssafy.seodangdogbe.news.dto.NewsDetailsDto.*;
+import static com.ssafy.seodangdogbe.news.dto.MetaNewsDto.*;
 import static com.ssafy.seodangdogbe.news.dto.NewsDto.*;
 import static com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 
@@ -29,9 +25,8 @@ import static com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 @RequiredArgsConstructor
 public class NewsService {
     public final UserRepository userRepository;
-
     public final NewsRepository newsRepository;
-    public final NewsDetailsRepository newsDetailsRepository;
+    public final MetaNewsRepository metaNewsRepository;
     public final UserNewsRepository userNewsRepository;
 
     // mysql뉴스 조회
@@ -46,24 +41,24 @@ public class NewsService {
     }
 
     // meta뉴스 조회
-    public NewsDetailsResponseDto getNewsDetails(String id){
-        Optional<MetaNews> findMetaNews = newsDetailsRepository.findById(id);
+    public MetaNewsResponseDto getNewsDetails(String id){
+        Optional<MetaNews> findMetaNews = metaNewsRepository.findById(id);
 
         if (findMetaNews.isPresent()){
-            return new NewsDetailsResponseDto(findMetaNews.get());
+            return new MetaNewsResponseDto(findMetaNews.get());
         }
         System.out.println("findMetaNews(mongodb) is Empty");
         return null;
     }
 
     // newsSeq로 -> meta뉴스까지 조회
-    public NewsDetailsResponseDto getNewsDetailsByNewsSeq(Long newsSeq){
+    public MetaNewsResponseDto getNewsDetailsByNewsSeq(Long newsSeq){
         Optional<News> findNews = newsRepository.findByNewsSeq(newsSeq);
         if (findNews.isPresent()) {
-            Optional<MetaNews> findMetaNews = newsDetailsRepository.findById(findNews.get().getNewsAccessId());
+            Optional<MetaNews> findMetaNews = metaNewsRepository.findById(findNews.get().getNewsAccessId());
             if (findMetaNews.isPresent()) {
                 System.out.println(findMetaNews.get().getId());
-                return new NewsDetailsResponseDto(findMetaNews.get());
+                return new MetaNewsResponseDto(findMetaNews.get());
             }
             System.out.println("뉴스 원본 데이터 없음.");
             return null;
@@ -110,6 +105,11 @@ public class NewsService {
         // 뉴스 시퀀스, 정답 리스트, 요약(요약 키워드)
         Long newsSeq = dto.getNewsSeq();
 
+        News news = newsRepository.findById(newsSeq).orElseThrow(() -> new NullPointerException());
+        // 뉴스 자체에 풀이 횟수 증가
+        int count = news.getCountSolve();
+        news.setCountSolve(count + 1);
+
         UserNews findUserNews = userNewsRepository.findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq);
 
         // 찾은 user news의 풀이 내역 업데이트 & 풀이여부 True 변경
@@ -154,14 +154,19 @@ public class NewsService {
         }
     }
 
-    // 사용자-뉴스 테이블 저장
+    // 사용자-뉴스 테이블 저장(최초조회)
     public void setUserNewsInit(int userSeq, Long newsSeq) {
+        // ** 유저나 뉴스가 없는 경우에 대해 예외처리 => .orElseThrow() 사용
         User user = userRepository.findById(userSeq).get();
         News news = newsRepository.findByNewsSeq(newsSeq).get();
 
         UserNews initUserNews = new UserNews(user, news);
         userNewsRepository.save(initUserNews);
-        
+
+        // 뉴스 자체에 조회수 추가
+        int count = news.getCountView();
+        news.setCountView(count + 1);
+
         // 뉴스읽기 경험치 증가
         UserExp userExp = user.getUserExp();
         int exp = userExp.getNewsExp();

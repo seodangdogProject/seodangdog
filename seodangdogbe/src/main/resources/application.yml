@@ -23,6 +23,7 @@ spring:
       authentication-database: admin  # 사용자 인증에 사용되는 데이터베이스
       username: dogsoedang
       password: sssdangorg56
+      auto-index-creation: true
     redis:
       host: j10e104.p.ssafy.io
       port: 6379

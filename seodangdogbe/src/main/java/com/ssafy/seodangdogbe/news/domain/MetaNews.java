@@ -12,11 +12,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Document(collection = "meta_news") //mongodb collection명 (meta_news)
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class MetaNews {
 
     @Id
@@ -28,30 +30,19 @@ public class MetaNews {
 
     private String newsReporter;
     private String newsImgUrl;
-    private String newsMainText;    // 형태소 별로 나누어서 저장해놓기로 했지 않나?
+    private String newsMainText;    // 뉴스 본문
 
     @Field("news_url")
     private String newsUrl;
 
     private Media media;    // media code, name
 
-//    private List<Keyword> newsKeyword;
+    // ** org.springframework.beans.BeanInstantiationException: Failed to instantiate [java.util.List]: Specified class is an interface
+    private List<NewsPos> newsPos;    // word, pos
+    private Map<String, Double> newsKeyword;
+    private Map<String, Double> newsSummaryKeyword;
 
-//    @ElementCollection
-//    private List<Quiz> newsQuiz;    // 퀴즈 1,2,3
+    @ElementCollection
+    private List<Quiz> newsQuiz = new ArrayList<>();    // 퀴즈 1,2,3
 
-    @Override
-    public String toString() {
-        return "MetaNews{" +
-                "id='" + id + '\'' +
-                ", newsTitle='" + newsTitle + '\'' +
-                ", newsSummary=" + newsSummary +
-                ", newsCreatedAt='" + newsCreatedAt + '\'' +
-                ", newsReporter='" + newsReporter + '\'' +
-                ", newsImgUrl='" + newsImgUrl + '\'' +
-                ", newsMainText='" + newsMainText + '\'' +
-                ", newsUrl='" + newsUrl + '\'' +
-                ", media=" + media +
-                '}';
-    }
 }

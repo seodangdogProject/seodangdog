@@ -27,7 +27,7 @@ public class MyWordController {
 
     //단어 삭제 기능
     @Operation(description = "단어장 - 단어 삭제")
-    @PatchMapping("/{wordSeq}")
+//    @PatchMapping("/{wordSeq}")
     public ResponseEntity<?> deleteWord(@PathVariable Long wordSeq) {
         boolean isDeleted = myWordService.deleteWord(wordSeq);
         if (isDeleted) {
