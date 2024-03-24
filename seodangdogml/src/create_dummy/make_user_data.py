@@ -47,6 +47,7 @@ def make_keywordlist(user_id):
     u_cols = ['user_id', 'keyword', 'weight']
     users_df = pd.DataFrame(users, columns=u_cols)
 
+
     selected_rows = users_df[users_df['user_id'] == user_id]
     keyword_weight_dict = selected_rows.set_index('keyword')['weight'].to_dict()
 

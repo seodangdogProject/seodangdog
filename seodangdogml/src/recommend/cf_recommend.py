@@ -6,7 +6,7 @@ import os
 import sys
 
 # sys.path.append(os.path.abspath('src'))
-from .cbf_recommend import news_data_objects
+
 from .cbf_recommend import make_user_news_df
 
 router = APIRouter()
