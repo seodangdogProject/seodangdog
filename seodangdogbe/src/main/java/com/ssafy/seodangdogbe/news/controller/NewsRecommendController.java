@@ -1,5 +1,6 @@
 package com.ssafy.seodangdogbe.news.controller;
 
+import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.news.dto.MostSummaryRecommendResponseDto;
 import com.ssafy.seodangdogbe.news.dto.MostViewRecommendResponseDto;
 import com.ssafy.seodangdogbe.news.dto.OtherRecommendResponseDto;
@@ -16,16 +17,18 @@ import java.util.List;
 public class NewsRecommendController {
 
     private final NewsRecommendService newsRecommendService;
+    private final UserService userService;
 
     @Autowired
-    public NewsRecommendController(NewsRecommendService newsRecommendService) {
+    public NewsRecommendController(NewsRecommendService newsRecommendService, UserService userService) {
         this.newsRecommendService = newsRecommendService;
+        this.userService = userService;
     }
 
     @GetMapping("/user-recommend")
     @Operation(description = "메인페이지 - 맞춤형 뉴스 추천")
-    public List<UserRecommendResponseDto> getNewsRecommendations(int userSeq) {
-        return newsRecommendService.getNewsRecommendations(userSeq);
+    public List<UserRecommendResponseDto> getNewsRecommendations() {
+        return newsRecommendService.getNewsRecommendations();
     }
 
     @GetMapping("/other-recommend")

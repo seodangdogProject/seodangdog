@@ -59,7 +59,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
         return List.of(new UserRecommendResponseDto(newsPreviewLists));
     }
     @Override
-    public List<OtherRecommendResponseDto> findOtherNewsRecommendations() {
+    public List<OtherRecommendResponseDto> findOtherNewsRecommendations(int userSeq) {
         List<String> recommendedNewsIds = fastApiService.fetchRecommendations().block().stream()
                 .map(CbfRecommendResponse::getId)
                 .collect(Collectors.toList());
@@ -90,7 +90,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
 
 
     @Override
-    public List<MostSummaryRecommendResponseDto> findMostSummaryNewsRecommendations() {
+    public List<MostSummaryRecommendResponseDto> findMostSummaryNewsRecommendations(int userSeq) {
         List<News> newsList = queryFactory
                 .selectFrom(QNews.news)
                 .orderBy(QNews.news.countSolve.desc())
@@ -116,16 +116,17 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
     }
 
     @Override
-    public List<MostViewRecommendResponseDto> findMostViewNewsRecommendations() {
+    public List<MostViewRecommendResponseDto> findMostViewNewsRecommendations(int userSeq) {
         List<News> newsList = queryFactory
                 .selectFrom(QNews.news)
+//                .where(qUserNews.user.userSeq.eq(userSeq))
                 .orderBy(QNews.news.countView.desc())
                 .limit(10)
                 .fetch();
 
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
             List<String> keywords = news.getKeywordNewsList().stream()
-                    .map(keywordNews -> keywordNews.getKeyword().getKeyword()) // KeywordNews 엔티티 구조에 따라 접근 방식 변경 가능
+                    .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
 
             return new NewsPreviewListDto(
