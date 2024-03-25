@@ -2,23 +2,28 @@ package com.ssafy.seodangdogbe.user.dto;
 
 import com.ssafy.seodangdogbe.news.dto.NewsPreviewListDto;
 import com.ssafy.seodangdogbe.user.domain.UserExp;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MypageResponseDto {
     private String nickname;
     private String userId;
 
+    private UserAbilityDto ability;
+
     private String wordcloudImgUrl;
 
     private List<String> userBadgeList;
-
     private String badgeImgUrl;
-
-    private UserAbilityDto ability;
 
     private List<LocalDateTime> strictDateList;
 
