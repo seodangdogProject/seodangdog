@@ -1,6 +1,7 @@
 # 외부 라이브러리 import
 from bson import json_util
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 from fastapi import APIRouter
 from konlpy.tag import Okt
 import os
@@ -54,6 +55,7 @@ def save_news():
     start_t = time.time()
     with open('news.json', 'r', encoding="utf8") as f:
         news_data = json.load(f)
+    # news_data = news_data[:10]
 
     # 형태소 저장
     print("형태소 분리 및 저장 중...")
@@ -86,15 +88,13 @@ def findNews(limit):
 
 @router.get("/mysql_save")
 def mysql_save():
-
     # 뉴스 가져오기
     news_data = getNewsAll()
 
     keyword_list = set()     # 키워드 저장을 위한 set()
 
     # 뉴스 저장
-    sql = (
-        f"insert into news (count_solve, count_view, news_access_id, news_created_at, news_description, news_img_url, news_title, media_code, created_at, modified_at) values ")
+    sql = f"insert into news (count_solve, count_view, news_access_id, news_created_at, news_description, news_img_url, news_title, media_code, created_at, modified_at) values "
 
     for news in news_data:
         splited = news["newsMainText"].split("\n\n")
@@ -117,7 +117,7 @@ def mysql_save():
     mysqlDB.commit()
 
     # 전체 키워드 저장
-    sql = (f"insert into keyword (keyword) values ")
+    sql = f"insert into keyword (keyword) values "
     for word in keyword_list:
         sql += f"(\"{word}\"),\n"
     sql = sql[:-2] + ";"
@@ -136,16 +136,13 @@ def save_keyword_news():
 
     sql = f"insert into keyword_news (keyword, news_seq) values "
     for mysql_news in cursor:
-        print(mysql_news[1])
         # id로 몽고의 keyword 가져오기
         mongo_news = mongoDB.meta_news.find_one({'_id': ObjectId(mysql_news[1])})
         keyword_list = mongo_news["newsKeyword"].keys()
         for keyword in keyword_list:
-            sql += f"(\"{keyword}\", {mysql_news[1]}),\n"
-        break
+            sql += f"(\"{keyword}\", \"{mysql_news[0]}\"),\n"
 
 
     sql = sql[:-2] + ";"
-    print(sql)
     cursor.execute(sql)
     mysqlDB.commit()
