@@ -8,8 +8,10 @@ from sklearn.utils import shuffle
 import pickle
 import os
 import time
-
+import asyncio
+from asyncio import Lock
 router = APIRouter()
+
 
 class NEW_MF():
     def __init__(self, ratings, hyper_params):
@@ -210,8 +212,23 @@ class NEW_MF():
         return self.b + self.b_u[:, np.newaxis] + self.b_d[np.newaxis, :] + self.P.dot(self.Q.T)
 
 
-@router.get('/fast/mf/train')
-def train_mf_model():
+training_lock = Lock()
+@router.get('/fast/mf_recom/train')
+async def user_register_train():
+    if training_lock.locked():
+        return {"message": "이미 모델 학습이 진행 중입니다."}
+    # 모델 학습 중으로 Lock 획득
+    async with training_lock:
+        # train_mf_model 함수를 백그라운드에서 실행
+        update_task = asyncio.create_task(train_mf_model())
+
+        # 학습 시작 메시지 반환
+        return {"message": "모델 학습이 시작되었습니다."}
+
+
+
+async def train_mf_model():
+
     start_time = time.time()
 
     # 아마 커넥션 두개 써서 안되는듯 레이팅은 비동기로 하는데 이건 동기니까
@@ -246,7 +263,6 @@ def train_mf_model():
     test_set = mf.set_test(ratings_test)
     result = mf.test()
     print("학습완료")
-    print(ratings['user_id'][20])
     # 학습을 통해 최적의 K값 찾기 start
     # results = []
     # index = []
@@ -275,11 +291,8 @@ def train_mf_model():
 
 
     base_src = './recommend'
-    # print(os.listdir(base_src))
     model_name = 'mf_online.pkl'
     save_path = os.path.join(base_src, model_name)
     with open(save_path, 'wb') as f:
         pickle.dump(mf, f)
-    print(mf.index_user_id)
-    print()
-    print(mf.user_id_index)
+    training_lock.release()

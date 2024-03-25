@@ -12,7 +12,7 @@ from sklearn.utils import shuffle
 from repository.recommend_repository import async_update_ratings
 from repository.recommend_repository import async_insert_ratings
 from recommend.mf_train import train_mf_model
-
+import asyncio
 import pickle
 
 router = APIRouter()
@@ -21,11 +21,6 @@ router = APIRouter()
 news = select_all_news()
 news = pd.DataFrame(news)
 news = news.set_index('news_id')
-
-# news = news.drop_duplicates(subset=['news_id'], keep='first')
-# 뉴스데이터 로드 end
-
-# 뉴스 아이디로 제목 찾기
 
 
 class MfNewsDto:
@@ -61,7 +56,7 @@ def recommend_news(user_id, mf_model, top_n=5):
     return recommended_news
 
 
-@router.get('/fast/mf_test/{user_id}')
+@router.get('/fast/mf_recom/{user_id}')
 async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
     print("mf_recommend")
     base_src = './recommend'
@@ -81,7 +76,6 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
         # print(recommendations)
         print("Recommendations for user", user_id)
         for i, news in enumerate(recommendations, 1):
-            print(type(news))
             print(f"{i}. {news.news_title} (NEWS SEQ: {news.news_seq}, {news.news_similarity})")
         return recommendations
     else:
@@ -93,7 +87,8 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
         # print("mf insert")
         # insert_rating_data = [[56662,35,111]]
         # background_tasks.add_task(async_insert_ratings, insert_rating_data)
-        train_mf_model()
+        update_task = asyncio.create_task(train_mf_model())
+
         return recommended_news
 
 
@@ -103,6 +98,10 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
 #     (mf.user_id_index[2], mf.item_id_index['J'], 9),
 #     (mf.user_id_index[3], mf.item_id_index['J'], 9)
 #     ]
+
+router.post('/fast/mf_recom/update')
+def reflection_mf():
+    pass
 
 def online_learning(model, news_data, weight):
   weights = []
