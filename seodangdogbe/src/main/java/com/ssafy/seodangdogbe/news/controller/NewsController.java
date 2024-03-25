@@ -4,9 +4,12 @@ import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.common.MsgResponseDto;
 import com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 import com.ssafy.seodangdogbe.news.service.NewsService;
+import com.ssafy.seodangdogbe.word.dto.KorApiDto;
 import com.ssafy.seodangdogbe.word.dto.UserWordDto;
+import com.ssafy.seodangdogbe.word.dto.WordDto;
 import com.ssafy.seodangdogbe.word.dto.WordDto.WordRequestDto;
 import com.ssafy.seodangdogbe.word.service.UserWordService;
+import com.ssafy.seodangdogbe.word.service.WordService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,12 +25,13 @@ public class NewsController {
 
     public final NewsService newsService;
     public final UserService userService;
+    public final WordService wordService;
     public final UserWordService userWordServcie;
 
     @Operation(description = "newsSeq(mysql pk)로 mongodb에 있는 뉴스 본문 조회")
     @GetMapping("/{newsSeq}")
     public MetaNewsResponseDto getNewsDetails(@PathVariable(name = "newsSeq") Long newsSeq){
-        // ** 로그인한 사용자 jwt에서 userSeq를 가져오기
+        // 로그인한 사용자 jwt에서 userSeq를 가져오기
         int userSeq = userService.getUserSeq();
 
         MetaNewsResponseDto metaNewsResponseDto = newsService.getNewsDetailsByNewsSeq(newsSeq);
@@ -49,7 +53,6 @@ public class NewsController {
     @Operation(description = "사용자 읽기기록 저장")
     @PatchMapping("/read")
     public ResponseEntity<MsgResponseDto> setReadRecord(@RequestBody UserNewsReadRequestDto dto){
-        // ** 로그인한 사용자 jwt에서 userSeq를 가져오기
         int userSeq = userService.getUserSeq();
 
         if (newsService.setUserNewsRead(userSeq, dto))
@@ -61,7 +64,6 @@ public class NewsController {
     @Operation(description = "사용자 풀이기록 저장")
     @PatchMapping("/solve")
     public ResponseEntity<MsgResponseDto> setSolveRecord(@RequestBody UserNewsSolveRequestDto dto){
-        // ** 로그인한 사용자 jwt에서 userSeq를 가져오기
         int userSeq = userService.getUserSeq();
 
         if (newsService.setUserNewsSolve(userSeq, dto))
@@ -72,11 +74,20 @@ public class NewsController {
 
     @Operation(description = "사용자 단어 스크랩 (단어장에 단어 저장)")
     @PostMapping("/word")
-    public ResponseEntity<MsgResponseDto> setUserWord(@RequestBody WordRequestDto wordDto){
+    public ResponseEntity<MsgResponseDto> setUserWord(@RequestBody WordRequestDto wordDto) throws Exception {
         int userSeq = userService.getUserSeq();
         String word = wordDto.getWord();
-        // ** 단어가 mongodb에 들어와있는지 확인하고, 없다면 api 호출해서 넣어주어야 함
-        
+        // ** 단어가 mongodb에 들어와있는지 확인하고, 없다면 api 호출해서 넣어주어야 함 -> 이렇게 접근할 일 없음
+        if (!wordService.isExistWord(word)){
+            // 표준국어대사전 API(사전검색 api만 사용) 호출 및 결과 값 받아오기
+            KorApiDto.KorApiSearchDto korApiSearchDto = wordService.callStDictSearchApi(word);
+
+            // 결과 값 DB에 저장
+            WordDto.MetaWordDto metaWordDto = new WordDto.MetaWordDto(korApiSearchDto);
+            wordService.saveMetaWordToMongodb(metaWordDto);
+        }
+
+
         // 사용자단어 테이블에 이미 있는지 체크
         UserWordDto userWordDto = userWordServcie.findUserWord(userSeq, word);
 
@@ -92,6 +103,7 @@ public class NewsController {
                 return ResponseEntity.ok().body(new MsgResponseDto("이미 스크랩 되어있는 단어입니다."));
             }
         }
+
         // 없다면 사용자단어 테이블에 저장
         if (userWordServcie.setUserWord(userSeq, word) != null){
             return ResponseEntity.ok().body(new MsgResponseDto("단어 스크랩 성공"));
