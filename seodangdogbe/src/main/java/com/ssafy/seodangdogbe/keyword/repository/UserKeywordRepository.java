@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public interface UserKeywordRepository extends JpaRepository<UserKeyword, Long> {
+public interface UserKeywordRepository extends JpaRepository<UserKeyword, Long>, UserKeywordRepositoryCustom {
 
     Optional<UserKeyword> findByKeyword(Keyword keyword);
 
