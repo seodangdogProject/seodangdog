@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface BadgeRepository extends JpaRepository<Badge, Integer> {
     @Override
     Optional<Badge> findById(Integer badgeSeq);
+
+
 }

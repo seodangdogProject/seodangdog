@@ -22,10 +22,11 @@ public class MypageResponseDto {
 
     private String wordcloudImgUrl;
 
-    private List<String> userBadgeList;
+    private List<String> userBadgeNameList;
     private String badgeImgUrl;
 
-    private List<LocalDateTime> strictDateList;
+//    private List<LocalDateTime> strictDateList;
+    private List<Boolean> streakList;
 
     private NewsPreviewListDto recentViewNews;
     private NewsPreviewListDto recentSolvedNews;

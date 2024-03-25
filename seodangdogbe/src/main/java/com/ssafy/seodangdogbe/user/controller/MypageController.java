@@ -30,11 +30,11 @@ public class MypageController {
 
         resultDto.setBadgeImgUrl(mypageService.getBadgeImgUrl(user));
 
-//        private List<String> userBadgeList;
-//        private String badgeImgUrl;
-//
-//        private List<LocalDateTime> strictDateList;
-//
+        resultDto.setUserBadgeNameList(mypageService.getUserBadgeList(user));
+
+        resultDto.setStreakList(mypageService.getSolvedDateRecord(user));
+
+
 //        private NewsPreviewListDto recentViewNews;
 //        private NewsPreviewListDto recentSolvedNews;
 
