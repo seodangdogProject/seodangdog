@@ -8,6 +8,6 @@ import com.ssafy.seodangdogbe.news.dto.RecentSolvedDto;
 import java.util.List;
 
 public interface MypageRecentNewsRepositoryCustom {
-    List<RecentSolvedDto> findRecentSolvedNews();
-    List<RecentNotSolvedDto> findRecentNotSolvedNews();
+    List<RecentSolvedDto> findRecentSolvedNews(int userSeq);
+    List<RecentNotSolvedDto> findRecentNotSolvedNews(int userSeq);
 }

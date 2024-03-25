@@ -23,16 +23,16 @@ public class GameController {
     //단어 게임 활성화 기능
     @Operation(description = "단어 게임 - 저장된 단어 10개 이상 시 활성화")
     @GetMapping("/activate")
-    public ResponseEntity<GameActivatedResponseDto> checkGameActivation(@RequestParam int userSeq) {
-        GameActivatedResponseDto response = gameService.checkGameActivation(userSeq);
+    public ResponseEntity<GameActivatedResponseDto> checkGameActivation() {
+        GameActivatedResponseDto response = gameService.checkGameActivation();
         return ResponseEntity.ok(response);
     }
 
     //단어 게임 - 10개 단어 추출 기능
     @Operation(description = "단어 게임 - 단어 10개 랜덤 추출")
     @GetMapping("/get-problems")
-    public ResponseEntity<GameGetProblemResponseDto> getProblems(@RequestParam int userSeq) {
-        GameGetProblemResponseDto response = gameService.getProblems(userSeq);
+    public ResponseEntity<GameGetProblemResponseDto> getProblems() {
+        GameGetProblemResponseDto response = gameService.getProblems();
         return ResponseEntity.ok(response);
     }
 
