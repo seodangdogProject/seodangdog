@@ -1,21 +1,30 @@
-'use client';
+"use client";
 // WordGame.tsx
-import React, { useState, useEffect, useCallback } from 'react';
-import styles from './gameresult_layout.module.css';
-import { useRecoilState, RecoilRoot } from 'recoil';
+import React, { useState, useEffect, useCallback } from "react";
+import styles from "./gameresult_layout.module.css";
+import { useRecoilState, RecoilRoot, useSetRecoilState } from "recoil";
+import { useRouter } from "next/navigation";
+import NextButton from "../../../assets/nextButton-icon.svg";
 import {
+    gameWordListState,
     correctWordListState,
     unCorrectWordListState,
     Item,
-} from '../../../atoms/wordGame';
+} from "../../../atoms/wordGame";
 
-import NextButton from '../../../assets/nextButton-icon.svg';
 const WordResult: React.FC = () => {
-    const [correctWordList, setCorrectWordList] =
-        useRecoilState(correctWordListState);
-    const [unCorrectWordList, setUnCorrectWordList] = useRecoilState(
-        unCorrectWordListState
-    );
+    const router = useRouter();
+    const setCorrectWordList = useSetRecoilState(correctWordListState);
+    const setUnCorrectWordList = useSetRecoilState(unCorrectWordListState);
+    const [correctWordList] = useRecoilState(correctWordListState);
+    const [unCorrectWordList] = useRecoilState(unCorrectWordListState);
+
+    const handleClick = () => {
+        console.log("다음으로");
+        setCorrectWordList([]);
+        setUnCorrectWordList([]);
+        router.push("/word_game");
+    };
 
     return (
         <>
@@ -26,8 +35,14 @@ const WordResult: React.FC = () => {
                         <div className={styles.score}></div>
                         <div className={styles.left_container}>
                             {correctWordList.map((item, index) => (
-                                <div key={item.idx} className={styles.wordBox}>
-                                    {item.answer}
+                                <div
+                                    key={item.wordSeq}
+                                    className={styles.wordBox}
+                                    style={{
+                                        border: "1px solid blue",
+                                    }}
+                                >
+                                    {item.word}
                                 </div>
                             ))}
                         </div>
@@ -42,8 +57,14 @@ const WordResult: React.FC = () => {
                         </div>
                         <div className={styles.right_container}>
                             {unCorrectWordList.map((item, index) => (
-                                <div key={item.idx} className={styles.wordBox}>
-                                    {item.answer}
+                                <div
+                                    key={item.wordSeq}
+                                    className={styles.wordBox}
+                                    style={{
+                                        border: "1px solid red",
+                                    }}
+                                >
+                                    {item.word}
                                 </div>
                             ))}
                         </div>
@@ -52,7 +73,7 @@ const WordResult: React.FC = () => {
                         <div className={styles.des_text}>
                             맞힌 단어는 단어장에서 삭제됩니다
                         </div>
-                        <NextButton></NextButton>
+                        <NextButton onClick={handleClick} />
                     </div>
                 </div>
             </div>

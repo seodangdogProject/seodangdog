@@ -1,38 +1,63 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { useRecoilState, RecoilRoot } from "recoil";
 import styles from "./wordgame_layout.module.css";
 import GameLogo from "../../../assets/wordgame-logo-icon.svg";
 import { gameWordListState, Item } from "../../../atoms/wordGame";
 import Link from "next/link";
+import { privateFetch } from "@/utils/http-commons";
 
 export default function WordGame() {
-    const router = useRouter();
     const [isAvailable, setIsAvailable] = useState<boolean>(true); // api 요청으로 받아오기
     const [count, setCount] = useState<number>(0); // api 요청으로 받아오기
     const [wordList, setWordList] = useRecoilState(gameWordListState);
 
-    // async function fetchWordList(): Promise<Item[]> {
-    //     // 데이터를 받아오는 비동기 작업을 수행합니다. 예를 들어, API 호출을 수행합니다.
-    //     const response = await fetch('https://api.example.com/word-list');
-    //     const data = await response.json();
-    //     return data.wordList; // 데이터에서 원하는 형태로 추출하여 반환합니다.
-    // }
-
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                //const data = await fetchWordList();
-                // const data = [{ idx: 1, answer: "정답", mean: "뜻" }];
-                // setWordList(data); // 여기서 setWordList에 전달되는 값이 올바른지 확인해야 합니다.
-            } catch (error) {
-                console.error("Error fetching word list:", error);
+        // 데이터 받아오는 함수 START
+        (async () => {
+            const res = await privateFetch(
+                "/game/activate",
+                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODcxNX0.6iCO_VO6jdC-fvfceiQtN6kyFqInb74AUBC-I4ZUYkg",
+                "GET"
+            );
+            if (res.status === 200) {
+                const data = await res.json();
+                console.log(data);
+                setIsAvailable(data.activated);
+                setCount(data.wordCount);
+            } else {
+                console.log("error 발생");
             }
-        };
+        })();
+        (async () => {
+            const res = await privateFetch(
+                "/game/get-problems",
+                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODcxNX0.6iCO_VO6jdC-fvfceiQtN6kyFqInb74AUBC-I4ZUYkg",
+                "GET"
+            );
+            if (res.status === 200) {
+                const data = await res.json();
+                console.log(data);
+                setWordList(data.wordList);
+            } else {
+                console.log("error 발생");
+            }
+        })();
+    }, []);
 
-        fetchData();
-    }, [setWordList]);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             //const data = await fetchWordList();
+    //             // const data = [{ idx: 1, answer: "정답", mean: "뜻" }];
+    //             // setWordList(data); // 여기서 setWordList에 전달되는 값이 올바른지 확인해야 합니다.
+    //         } catch (error) {
+    //             console.error("Error fetching word list:", error);
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, [setWordList]);
 
     return (
         <>

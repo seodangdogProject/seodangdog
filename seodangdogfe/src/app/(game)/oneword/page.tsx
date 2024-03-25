@@ -1,19 +1,28 @@
 "use client";
 // WordGame.tsx
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useRecoilState, RecoilRoot } from "recoil";
-import { gameWordListState, Item } from "../../../atoms/wordGame";
+import { useRecoilState, RecoilRoot, useSetRecoilState } from "recoil";
+import { useRouter } from "next/navigation";
+
+import {
+    gameWordListState,
+    correctWordListState,
+    unCorrectWordListState,
+    Item,
+} from "../../../atoms/wordGame";
 import styles from "./oneword_layout.module.css";
-import Lottie from "lottie-react";
 import TimerIcon from "../../../assets/timer-icon.svg";
 import GameIcon from "../../../assets/quiz-logo-icon.svg";
 import CorrectIcon from "../../../assets/correct-icon.svg";
 import UncorrectIcon from "../../../assets/uncorrect-icon.svg";
 
 const OneWord: React.FC = () => {
+    const router = useRouter();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [sec, setSec] = useState<number>(0);
     const [wordList] = useRecoilState(gameWordListState); // wordList
+    const [correctWordList] = useRecoilState(correctWordListState); // wordList
+    const [unCorrectWordList] = useRecoilState(unCorrectWordListState); // wordList
     const [inputValues, setInputValues] = useState<string[]>([]); //
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // 사용자 input 박스 체크
     const [answerSec, setAnswerSec] = useState<number>(0); // 타이머 2의 초
@@ -21,10 +30,29 @@ const OneWord: React.FC = () => {
     const [isUnCorrect, setIsUnCorrect] = useState<boolean>(false);
     const [isCorrectIcon, setIsCorrectIcon] = useState<boolean>(false);
     const [isUnCorrectIcon, setIsUnCorrectIcon] = useState<boolean>(false);
+    const setCorrectWordList = useSetRecoilState(correctWordListState);
+    const setUnCorrectWordList = useSetRecoilState(unCorrectWordListState);
+
+    // 단어장에 추가하기
+    const addItemToList = useCallback(
+        (flag: boolean, itemToAdd: Item): void => {
+            if (flag) {
+                setCorrectWordList([...correctWordList, itemToAdd]);
+            } else {
+                setUnCorrectWordList([...unCorrectWordList, itemToAdd]);
+            }
+        },
+        [
+            setCorrectWordList,
+            setUnCorrectWordList,
+            correctWordList,
+            unCorrectWordList,
+        ]
+    );
 
     // 현재 문제의 정답을 가져오는 함수
     const getCurrentAnswer = () => {
-        return wordList[currentIndex]?.answer || "";
+        return wordList[currentIndex]?.word || "";
     };
 
     const setAnswerLength = () => {
@@ -81,11 +109,11 @@ const OneWord: React.FC = () => {
             console.log("정답입니다!");
 
             setIsCorrectIcon(true);
-            // 0.3초 후에 흔들림 효과를 제거
             setTimeout(() => {
                 setIsCorrectIcon(false);
             }, 300);
-
+            addItemToList(true, wordList[currentIndex]);
+            console.log(correctWordList);
             // 현재 문제가 마지막 문제가 아니라면 다음 문제로 넘어갑니다.
             if (currentIndex < wordList.length - 1) {
                 setCurrentIndex((prevIndex) => prevIndex + 1);
@@ -93,6 +121,7 @@ const OneWord: React.FC = () => {
             } else {
                 // 마지막 문제라면 모든 문제를 완료했음을 알립니다.
                 alert("모든 문제를 완료했습니다.");
+                router.push("/game_result");
             }
         } else {
             setIsUnCorrect(true);
@@ -126,14 +155,17 @@ const OneWord: React.FC = () => {
             console.log("timer 1 재시작");
             if (sec >= 10 && sec <= 11) {
                 setIsUnCorrectIcon(true);
-                // 0.3초 후에 흔들림 효과를 제거
                 setTimeout(() => {
                     setIsUnCorrectIcon(false);
                 }, 300);
+
                 setSec((prevSec) => prevSec + 1);
             } else if (sec >= 10 && sec < 13) {
                 // 답 보여주기 부분
                 if (!check()) {
+                    addItemToList(false, wordList[currentIndex]);
+                    console.log(wordList[currentIndex]);
+                    console.log("unCorrectWordList : ", unCorrectWordList);
                     const currentAnswer = getCurrentAnswer();
                     if (inputValues.join("") !== currentAnswer) {
                         setInputValues(currentAnswer.split(""));
@@ -149,6 +181,7 @@ const OneWord: React.FC = () => {
                 if (currentIndex == wordList.length - 1) {
                     alert("모든 문제가 끝남");
                     clearInterval(timer1);
+                    router.push("/game_result");
                 } else {
                     setCurrentIndex((prevIndex) =>
                         prevIndex < wordList.length - 1
@@ -200,10 +233,26 @@ const OneWord: React.FC = () => {
                         <span> /</span>
                         <span> {wordList.length}</span>
                     </div>
-
+                    <div className={styles.language}>한글</div>
                     <div className={styles.meaning_container}>
-                        <div className={styles.language}>한글</div>
-                        <div className={styles.meaning_des}>
+                        <div
+                            className={styles.meaning_des}
+                            style={{
+                                fontSize: (() => {
+                                    if (
+                                        wordList[currentIndex]?.mean.length < 12
+                                    ) {
+                                        return "40px";
+                                    } else if (
+                                        wordList[currentIndex]?.mean.length < 24
+                                    ) {
+                                        return "30px";
+                                    } else {
+                                        return "20px";
+                                    }
+                                })(),
+                            }}
+                        >
                             {wordList[currentIndex]?.mean}
                         </div>
                     </div>
