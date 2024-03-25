@@ -129,17 +129,35 @@ def select_all_user():
 
 
 # 몽고디비의 뉴스아이디를 mysql-news테이블의 뉴스시퀀스로 변환(디비에 왔다갔다하지말고 그냥 서버 메모리에 올릴까요)
-def news_id_seq(news_id):
+# def news_id_seq(news_id):
+#     connection = mysql_create_session()
+#     try:
+#         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
+#         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+#             # 파라미터를 사용한 쿼리 실행
+#             sql = "select news_seq from news where news_access_id=%s"
+#             cursor.execute(sql, news_id)
+#             result = cursor.fetchone()
+#             result = result['news_seq']
+#             # print(result)
+#             return result
+#     except Exception as e:
+#         print(f"Error occurred: {e}")
+#         connection.rollback()
+#         return False
+#     finally:
+#         # 연결 종료
+#         connection.close()
+
+def select_news_id_seq():
     connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # 파라미터를 사용한 쿼리 실행
-            sql = "select news_seq from news where news_access_id=%s"
-            cursor.execute(sql, news_id)
-            result = cursor.fetchone()
-            result = result['news_seq']
-            # print(result)
+            sql = "select news_seq, news_access_id news_id from news"
+            cursor.execute(sql)
+            result = cursor.fetchall()
             return result
     except Exception as e:
         print(f"Error occurred: {e}")
@@ -148,8 +166,6 @@ def news_id_seq(news_id):
     finally:
         # 연결 종료
         connection.close()
-
-
 # 테스트를 위해 뽑아온 키워드들을 모든 사용자에게 부여한다.
 @router.get('/fast/insert_all_user_keyword')
 def insert_all_user_keyword():
