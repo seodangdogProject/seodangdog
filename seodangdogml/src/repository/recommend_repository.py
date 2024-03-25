@@ -241,7 +241,19 @@ def select_ratings(news_seq, user_seq):
         # connection.close()
         pass
 
-
+async def async_select_ratings(news_seq, user_seq):
+    try:
+        async with aiomysql.create_pool(host=db_config['host'], port=db_config['port'], user=db_config['user'],
+                                        password=db_config['password'], db=db_config['database']) as pool:
+            async with pool.acquire() as conn:
+                async with conn.cursor() as cursor:
+                    sql = "select * from ratings where news_seq = %s AND user_seq = %s"
+                    await cursor.execute(sql, (news_seq, user_seq))
+                    result = await cursor.fetchone()
+                    return result
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return False
 # 뉴스와 유저가 rating에 없을 경우 삽입
 # 추천받은 뉴스를 rating 테이블에 저장한다. MF추천을 받을때 사용한다.
 def insert_ratings(rating_data):
@@ -264,7 +276,7 @@ def insert_ratings(rating_data):
 async def async_insert_ratings(rating_data):
     try:
         async with aiomysql.create_pool(host=db_config['host'], port=db_config['port'], user=db_config['user'],
-                                        password=db_config['password'], db=db_config['database']) as pool:
+                                        password=db_config['password'], db=db_config['database'], autocommit=True) as pool:
             async with pool.acquire() as conn:
                 async with conn.cursor() as cursor:
                     sql = "INSERT INTO ratings (news_seq, user_seq, rating) VALUES (%s, %s, %s)"
@@ -273,8 +285,6 @@ async def async_insert_ratings(rating_data):
     except Exception as e:
         print(f"Error occurred: {e}")
         return False
-
-
 
 # # 뉴스와 유저가 rating에 있을 경우 업데이트
 def update_ratings(rating_data):
@@ -294,7 +304,7 @@ def update_ratings(rating_data):
 async def async_update_ratings(rating_data):
     try:
         async with aiomysql.create_pool(host=db_config['host'], port=db_config['port'], user=db_config['user'],
-                                        password=db_config['password'], db=db_config['database']) as pool:
+                                        password=db_config['password'], db=db_config['database'], autocommit=True) as pool:
             async with pool.acquire() as conn:
                 async with conn.cursor() as cursor:
                     sql = "UPDATE ratings SET rating = %s WHERE news_seq = %s AND user_seq = %s"
@@ -303,7 +313,6 @@ async def async_update_ratings(rating_data):
     except Exception as e:
         print(f"Error occurred: {e}")
         return False
-
 
 # cbf추천을 위해 몽고디비에서 데이터를 들고온다. 뉴스제목, 아이디, 키워드를 들고온다
 def get_news_title_keyword():

@@ -9,7 +9,8 @@ from recommend.cbf_recommend import cbf_recommend
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
-
+from repository.recommend_repository import async_update_ratings
+from repository.recommend_repository import async_insert_ratings
 
 import pickle
 
@@ -60,7 +61,8 @@ def recommend_news(user_id, mf_model, top_n=5):
 
 
 @router.get('/fast/mf_test/{user_id}')
-async def mf_recommend(user_id: int):
+async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
+    print("mf_recommend")
     base_src = './recommend'
     # print(os.listdir(base_src))
     model_name = 'mf_online.pkl'
@@ -68,6 +70,7 @@ async def mf_recommend(user_id: int):
     with open(save_path, 'rb') as f:
         mf = pickle.load(f)
 
+    print(mf.user_id_index)
     # 만약 아이디가 없으면 cbf로 추천후 mf 다시 훈련
     # 만약 아이디가 있으면 mf로 추천후 온라인학습
     # cbf와 mf의 유사도가 ...
@@ -82,9 +85,14 @@ async def mf_recommend(user_id: int):
     else:
         # 방금회원가입했으면(mf 모델에 학습되어 있지 않으면) 추천되지 않는 cbf를 추천하고 mf를 다시 학습시킨다
         print('User not found -> cbf reommend')
-        background_tasks = BackgroundTasks()
+        # background_tasks = BackgroundTasks()
         recommended_news = await cbf_recommend(background_tasks, user_id, False)
-        return recommended_news
+
+        # print("mf insert")
+        # insert_rating_data = [[56662,35,111]]
+        # background_tasks.add_task(async_insert_ratings, insert_rating_data)
+
+        return []
 
 
 

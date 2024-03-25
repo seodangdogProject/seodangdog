@@ -9,7 +9,7 @@ import json
 import pymysql
 import time
 # 사용자 라이브러리 import
-sys.path.append(os.path.abspath('src'))
+# sys.path.append(os.path.abspath('src'))
 from preprocessing.keyword_generate import keyword_generate
 
 

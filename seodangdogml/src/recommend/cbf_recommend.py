@@ -22,6 +22,8 @@ import aiomysql
 
 import numpy as np
 
+from repository.recommend_repository import async_select_ratings
+
 router = APIRouter()
 
 
@@ -78,8 +80,8 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
     keyword_weights = {data['keyword']: data['weight'] for data in user_keyword}
     user_keyword_list = list(keyword_weights.keys())  # 키들을 배열 형태로 반환
 
-    check = dict(sorted(keyword_weights.items(), key=lambda x: x[1]))
-    print(check)
+    # check = dict(sorted(keyword_weights.items(), key=lambda x: x[1]))
+    # print(check)
 
     start_time = time.time()
 
@@ -90,10 +92,7 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
     print(f"유사도 분석 시간: {execution_time} 초")
 
     result = []
-    insert_rating_data = []
-    update_rating_data = []
     for news in recommended_news:
-        # print(news)
         news_id = news[0]
         news_seq = news_id_seq(news_id)
         news_title = news[1]
@@ -101,7 +100,26 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
 
         result.append(NewsDto(news_id, news_seq, news_title, news_similarity))
 
-        if select_ratings(news_seq, user_seq) is None:
+    update_task = asyncio.create_task(update_rating(recommended_news, user_seq))
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"추천완료시간: {execution_time} 초")
+
+    return result
+
+# 추천이되면 mysql의 rating에 삽입한다. 시간이 걸리기때문에 backgroundtask로 비동기로 수행
+async def update_rating(recommended_news, user_seq):
+    start_time = time.time()
+    insert_rating_data = []
+    update_rating_data = []
+    for news in recommended_news:
+        news_id = news[0]
+        news_seq = news_id_seq(news_id)
+        news_title = news[1]
+        news_similarity = format_weight(news[2])
+
+        info = await async_select_ratings(news_seq, user_seq)
+        if info is None:
             temp = [news_seq, user_seq, news_similarity]
             insert_rating_data.append(temp)
         else:
@@ -110,23 +128,14 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
 
     if len(insert_rating_data) > 0:
         print("insert_rating...")
-        print(insert_rating_data)
-        # insert_ratings(insert_rating_data)
-        # asyncio.create_task(async_insert_ratings(insert_rating_data))
-        background_tasks.add_task(async_insert_ratings, insert_rating_data)
-
+        await async_insert_ratings(insert_rating_data)
     if len(update_rating_data) > 0:
         print("update_rating...")
-        print(update_rating_data)
-        # update_ratings(update_rating_data)
-        # asyncio.create_task(async_update_ratings(update_rating_data))
-        background_tasks.add_task(async_update_ratings, update_rating_data)
+        await async_update_ratings(update_rating_data)
 
     end_time = time.time()
     execution_time = end_time - start_time
-    print(f"데이터베이스 연산 시간: {execution_time} 초")
-
-    return result
+    print(f"cbf - 데이터업데이트완료: {execution_time} 초")
 
 
 async def recommend_news(news_data, user_keywords, keyword_weights, flag):
