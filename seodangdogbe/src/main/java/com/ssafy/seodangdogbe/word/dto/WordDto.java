@@ -47,17 +47,6 @@ public class WordDto {
             }
         }
 
-//        public static class WordDetailsDto {
-//            private String definition;
-//            private List<WordCommDto> comms;
-//        }
-
-//        public static class WordCommDto {
-//            private String type;
-//            private String word;
-//            private String link;
-//        }
-
         // 표준국어대사전 api 결과를 db에 저장하는 용도의 dto
         public MetaWordDto(KorApiSearchDto korApiSearchDto){
             KorApiSearchDto.ChannelDto dto = korApiSearchDto.getChannel();
