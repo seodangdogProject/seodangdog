@@ -26,12 +26,12 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
     private final QUserNews qUserNews = QUserNews.userNews;
 
     @Override
-    public List<RecentSolvedDto> findRecentSolvedNews() {
+    public List<RecentSolvedDto> findRecentSolvedNews(int userSeq) {
         List<News> newsList = queryFactory
                 .select(QNews.news)
                 .from(QNews.news)
                 .join(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq))
-                .where(QUserNews.userNews.isSolved.eq(false))
+                .where(QUserNews.userNews.isSolved.eq(true))
                 .orderBy(QNews.news.createdAt.desc())
                 .limit(50)
                 .fetch();
@@ -55,12 +55,12 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
     }
 
     @Override
-    public List<RecentNotSolvedDto> findRecentNotSolvedNews() {
+    public List<RecentNotSolvedDto> findRecentNotSolvedNews(int userSeq) {
         List<News> newsList = queryFactory
                 .select(QNews.news)
                 .from(QNews.news)
                 .join(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq))
-                .where(QUserNews.userNews.isSolved.eq(true))
+                .where(QUserNews.userNews.isSolved.eq(false))
                 .orderBy(QNews.news.createdAt.desc())
                 .limit(50)
                 .fetch();

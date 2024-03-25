@@ -1,5 +1,6 @@
 package com.ssafy.seodangdogbe.news.service;
 
+import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.exception.UnauthorizedException;
 import com.ssafy.seodangdogbe.news.dto.*;
 import com.ssafy.seodangdogbe.news.repository.MypageRecentNewsRepositoryCustom;
@@ -24,8 +25,12 @@ public class NewsRecommendService {
     @Autowired
     private MypageRecentNewsRepositoryCustom mypageRecentNewsRepository;
 
-    public List<UserRecommendResponseDto> getNewsRecommendations(int userSeq) {
+    @Autowired
+    private UserService userService;
+
+    public List<UserRecommendResponseDto> getNewsRecommendations() {
         try {
+            int userSeq = userService.getUserSeq();
             return newsRecommendRepository.findNewsRecommendations(userSeq);
         } catch (Exception e) {
             throw new UnauthorizedException("미인증 사용자입니다.");
@@ -34,7 +39,8 @@ public class NewsRecommendService {
 
     public List<MostViewRecommendResponseDto> getMostViewNewsRecommendations() {
         try {
-            return newsRecommendRepository.findMostViewNewsRecommendations();
+            int userSeq = userService.getUserSeq();
+            return newsRecommendRepository.findMostViewNewsRecommendations(userSeq);
         } catch (Exception e) {
             throw new UnauthorizedException("미인증 사용자입니다.");
         }
@@ -42,7 +48,8 @@ public class NewsRecommendService {
 
     public List<MostSummaryRecommendResponseDto> getMostSummaryNewsRecommendations() {
         try {
-            return newsRecommendRepository.findMostSummaryNewsRecommendations();
+            int userSeq = userService.getUserSeq();
+            return newsRecommendRepository.findMostSummaryNewsRecommendations(userSeq);
         } catch (Exception e) {
             throw new UnauthorizedException("미인증 사용자입니다.");
         }
@@ -50,7 +57,8 @@ public class NewsRecommendService {
 
     public List<OtherRecommendResponseDto> getOtherNewsRecommendations() {
         try {
-            return newsRecommendRepository.findOtherNewsRecommendations();
+            int userSeq = userService.getUserSeq();
+            return newsRecommendRepository.findOtherNewsRecommendations(userSeq);
         } catch (Exception e) {
             throw new UnauthorizedException("미인증 사용자입니다.");
         }
@@ -58,7 +66,8 @@ public class NewsRecommendService {
 
     public List<RecentSolvedDto> getRecentSolvedNews() {
         try {
-            return mypageRecentNewsRepository.findRecentSolvedNews();
+            int userSeq = userService.getUserSeq();
+            return mypageRecentNewsRepository.findRecentSolvedNews(userSeq);
         } catch (Exception e) {
             throw new UnauthorizedException("미인증 사용자입니다.");
         }
@@ -66,7 +75,8 @@ public class NewsRecommendService {
 
     public List<RecentNotSolvedDto> getRecentNotSolvedNews() {
         try {
-            return mypageRecentNewsRepository.findRecentNotSolvedNews();
+            int userSeq = userService.getUserSeq();
+            return mypageRecentNewsRepository.findRecentNotSolvedNews(userSeq);
         } catch (Exception e) {
             throw new UnauthorizedException("미인증 사용자입니다.");
         }
