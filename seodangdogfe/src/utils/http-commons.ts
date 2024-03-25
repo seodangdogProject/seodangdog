@@ -13,13 +13,24 @@ async function privateFetch(
   method: string,
   body: object | null = null
 ): Promise<any> {
+  if (body === null) {
+    console.log(token);
+    const res = await fetch(BASE_URL + path, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+    return res;
+  }
   const res = await fetch(BASE_URL + path, {
     method,
     headers: {
       "Content-Type": "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODcxNX0.6iCO_VO6jdC-fvfceiQtN6kyFqInb74AUBC-I4ZUYkg",
+      Authorization: token,
     },
+    body: JSON.stringify(body),
   });
   return res;
 }
@@ -31,14 +42,23 @@ async function privateFetch(
 async function publicFetch(
   path: string,
   method: string,
-  ibody: object | null = null
+  body: object | null = null
 ): Promise<any> {
+  if (body === null) {
+    const res = await fetch(BASE_URL + path, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return res;
+  }
   const res = await fetch(BASE_URL + path, {
     method,
     headers: {
       "Content-Type": "application/json",
     },
-    body: ibody ? JSON.stringify(ibody) : null,
+    body: JSON.stringify(body),
   });
   return res;
 }
