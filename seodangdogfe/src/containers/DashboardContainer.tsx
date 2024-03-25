@@ -3,12 +3,11 @@ import classNames from "classnames/bind";
 import RecentNewsPreview from "@/components/dashboard/RecentNewsPreview";
 import UserCard from "@/components/dashboard/UserCard";
 import Strict from "@/components/strict/strict";
+import Chart from "@/components/chart/chart";
 function Info() {
     return <></>;
 }
-function Chart() {
-    return <></>;
-}
+
 // function RecentPreview() {
 //   return <></>;
 // }
@@ -36,7 +35,7 @@ export default function DashboardContainer() {
                             <div
                                 className={cx("streak", ["box-shodow-custom"])}
                             >
-                                {/* <Strict></Strict> */}
+                                <Strict></Strict>
                             </div>
                         </div>
                         <div
@@ -60,7 +59,6 @@ export default function DashboardContainer() {
                                     {/* 여기에 워드클라우드 컴포넌트 */}
                                 </div>
                             </div>
-                            <Chart />
                         </div>
                     </div>
                     {/* 두 번째 */}
@@ -85,7 +83,7 @@ export default function DashboardContainer() {
                         >
                             <div className={styled.title}>능력치</div>.
                             <div className={cx("state", ["box-shodow-custom"])}>
-                                {/* 능력치 컴포넌트 들어감 */}
+                                <Chart />
                             </div>
                             <State />
                         </div>

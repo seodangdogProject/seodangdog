@@ -1,7 +1,8 @@
 export type saved_word = {
-    idx: number;
+    wordSeq: number;
     word: string;
-    mean: string[];
+    mean1: string;
+    mean2: string;
 };
 
 // 사용자 경험치 - type 당 exp 값

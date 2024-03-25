@@ -1,38 +1,61 @@
-'use client';
+"use client";
 // WordGame.tsx
 import React, {
     useState,
     useEffect,
     useCallback,
     startTransition,
-} from 'react';
+} from "react";
 import {
     useRecoilState,
     RecoilRoot,
     useRecoilCallback,
     useRecoilValue,
-} from 'recoil';
-import styles from './wordlist_layout.module.css';
+    useSetRecoilState,
+} from "recoil";
+import styles from "./wordlist_layout.module.css";
 import {
     koWordListState,
     engWordListState,
     Item,
-} from '../../../atoms/wordListRecoil';
-import SearchIcon from '../../../assets/search-icon.svg';
-import WordDetailModal from '../../../components/wordComponent/wordDetailModal';
+} from "../../../atoms/wordListRecoil";
+import SearchIcon from "../../../assets/search-icon.svg";
+import WordDetailModal from "../../../components/wordComponent/wordDetailModal";
+import { privateFetch } from "@/utils/http-commons";
 
 const OneWord: React.FC = () => {
     const engWordList = useRecoilValue(engWordListState);
     const koWordList = useRecoilValue(koWordListState);
-    const [language, setLanguage] = useState('ko');
+    const [language, setLanguage] = useState("ko");
     const [engColor, setEngColor] = useState(styles.unselected_toggle_item);
     const [koColor, setKoColor] = useState(styles.selected_toggle_item);
-    const [wordList, setWordList] = useState(koWordList);
+    const [wordList, setWordList] = useState<Item[]>(koWordList);
     const [isOpenModal, setOpenModal] = useState<boolean>(false);
     const [clickedWord, setClickedWord] = useState<Item | null>(null);
+    const setKoWordList = useSetRecoilState(koWordListState);
+    const setEngWordList = useSetRecoilState(engWordListState);
 
     useEffect(() => {
-        if (language === 'ko') {
+        // 데이터 받아오는 함수 START
+        (async () => {
+            const res = await privateFetch(
+                "/myword",
+                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODcxNX0.6iCO_VO6jdC-fvfceiQtN6kyFqInb74AUBC-I4ZUYkg",
+                "GET"
+            );
+            if (res.status === 200) {
+                const data = await res.json();
+                console.log(data);
+                setKoWordList(data.wordList);
+                // 영어, 한글 따로 넣기
+            } else {
+                console.log("error 발생");
+            }
+        })();
+    }, []);
+
+    useEffect(() => {
+        if (language === "ko") {
             setWordList(koWordList);
         } else {
             setWordList(engWordList);
@@ -50,16 +73,16 @@ const OneWord: React.FC = () => {
     };
 
     const handleToggleKo = () => {
-        console.log('한글로 변경 버튼');
-        setLanguage('ko');
+        console.log("한글로 변경 버튼");
+        setLanguage("ko");
         setEngColor(styles.unselected_toggle_item);
         setKoColor(styles.selected_toggle_item);
         // setWordList(koWordList);
     };
 
     const handleToggleEng = () => {
-        console.log('영어로 변경 버튼');
-        setLanguage('eng');
+        console.log("영어로 변경 버튼");
+        setLanguage("eng");
         setEngColor(styles.selected_toggle_item);
         setKoColor(styles.unselected_toggle_item);
         // setWordList(engWordList);
@@ -97,17 +120,20 @@ const OneWord: React.FC = () => {
                     <div className={styles.background_container}>
                         {wordList.map((item, index) => (
                             <div
-                                key={item.idx}
+                                key={item.wordSeq}
                                 className={styles.wordBox}
                                 onClick={() => handleOpenModal(item)}
                             >
                                 <div className={styles.word}>{item.word}</div>
                                 <div className={styles.mean_box}>
-                                    {item.mean.map((mean, idx) => (
-                                        <div key={idx} className={styles.mean}>
-                                            {mean}
+                                    <div className={styles.mean}>
+                                        1. {item.mean1}
+                                    </div>
+                                    {item.mean2 != null && (
+                                        <div className={styles.mean}>
+                                            2. {item.mean2}
                                         </div>
-                                    ))}
+                                    )}
                                 </div>
                             </div>
                         ))}

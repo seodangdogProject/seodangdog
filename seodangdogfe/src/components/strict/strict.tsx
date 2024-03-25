@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-
+import style from "./strict_style.module.css";
 // 예시로 사용할 날짜 데이터 배열
 const exampleDates = [
     "2024-03-01",
@@ -30,32 +30,59 @@ export default function GrassChart() {
         setActivityMap(newActivityMap);
     };
 
-    // 페이지 로드 시 활동 상태 업데이트
     useEffect(() => {
         updateActivityMap(exampleDates);
     }, []);
+
     const recentDates: Date[] = [];
     const today = new Date();
-    for (let i = 0; i < 30; i++) {
-        const date = new Date(today);
-        date.setDate(today.getDate() - i);
-        recentDates.unshift(date); // 최신 날짜부터 추가
+
+    // Calculate start date as the previous Saturday of the current week
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() + (6 - today.getDay())); // Set to Saturday of the current week
+
+    // Generate recent dates for the past 11 weeks including the current week
+    for (let i = 0; i < 7 * 11; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() - i);
+        recentDates.unshift(date); // Add dates starting from the past Saturday
     }
 
     const getDaysOfWeek = (dates: Date[], dayOfWeek: number) => {
-        const daysOfWeek: Date[] = [];
-        dates.forEach((date) => {
-            if (date.getDay() === dayOfWeek) {
-                daysOfWeek.push(date);
-            }
-        });
-        return daysOfWeek;
+        return dates.filter((date) => date.getDay() === dayOfWeek);
     };
-
     return (
         <div style={{ display: "flex" }}>
             {/* 날짜별 활동 표시 */}
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            {/* 요일 표시 */}
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                }}
+            >
+                {weekDays.map((day) => (
+                    <div
+                        key={day}
+                        className={style.weekName}
+                        style={{
+                            width: "40px",
+                            height: "25px",
+                            display: "flex",
+                            margin: "2px",
+
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontSize: "12px",
+                        }}
+                    >
+                        {day}
+                    </div>
+                ))}
+            </div>
+
+            <div style={{}} className={style.strictContainer}>
                 {weekDays.map((day, index) => (
                     <div key={index} style={{ display: "flex" }}>
                         {getDaysOfWeek(recentDates, index).map(
@@ -67,15 +94,11 @@ export default function GrassChart() {
                                 return (
                                     <div
                                         key={dateIndex}
+                                        className={style.strictElement}
                                         style={{
-                                            width: "40px",
-                                            height: "40px",
                                             backgroundColor: isActive
-                                                ? "green"
-                                                : "grey",
-                                            border: "1px solid black",
-                                            margin: "2px",
-                                            position: "relative",
+                                                ? "#37b328"
+                                                : "#E2E2E2",
                                         }}
                                         onMouseEnter={() =>
                                             setHoveredDate(dateString)
@@ -88,8 +111,10 @@ export default function GrassChart() {
                                             <div
                                                 style={{
                                                     position: "absolute",
+                                                    display: "flex",
                                                     top: "-25px",
                                                     left: "50%",
+                                                    width: "60px",
                                                     transform:
                                                         "translateX(-50%)",
                                                     backgroundColor: "white",
@@ -97,41 +122,29 @@ export default function GrassChart() {
                                                     borderRadius: "4px",
                                                     boxShadow:
                                                         "0 2px 4px rgba(0, 0, 0, 0.2)",
+                                                    color:
+                                                        today.getMonth() ==
+                                                            date.getMonth() &&
+                                                        today.getDate() ==
+                                                            date.getDate()
+                                                            ? "red"
+                                                            : "black",
                                                 }}
                                             >
-                                                {`${date.getFullYear()}-${
+                                                {/* {today.getMonth() ==
+                                                    date.getMonth() &&
+                                                    today.getDate() ==
+                                                        date.getDate() &&
+                                                    "오늘"} */}
+                                                {`${
                                                     date.getMonth() + 1
-                                                }-${date.getDate()}`}
+                                                }월${date.getDate()}일`}
                                             </div>
                                         )}
                                     </div>
                                 );
                             }
                         )}
-                    </div>
-                ))}
-            </div>
-            {/* 요일 표시 */}
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                }}
-            >
-                {weekDays.map((day) => (
-                    <div
-                        key={day}
-                        style={{
-                            width: "40px",
-                            height: "20px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            fontSize: "12px",
-                        }}
-                    >
-                        {day}
                     </div>
                 ))}
             </div>
