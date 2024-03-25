@@ -1,11 +1,14 @@
-import React, { PropsWithChildren, useState } from "react";
+"use client";
+import { publicFetch } from "@/utils/http-commons";
 import Link from "next/link";
+import React, { PropsWithChildren, useRef, useState } from "react";
 import styled from "styled-components";
-import styles from "./modal.module.css";
-import OpenPassword from "../../assets/openPassword-icon.svg";
-import ClosePassword from "../../assets/closePassword-icon.svg";
 import CloseModal from "../../assets/closeModal-icon.svg";
+import ClosePassword from "../../assets/closePassword-icon.svg";
 import LoginLogo from "../../assets/loginLogo-icon.svg";
+import OpenPassword from "../../assets/openPassword-icon.svg";
+import styles from "./modal.module.css";
+import { redirect, useRouter } from "next/navigation";
 
 const Backdrop = styled.div`
   width: 100vw;
@@ -25,14 +28,38 @@ function Modal({
   onClickToggleModal,
   children,
 }: PropsWithChildren<ModalDefaultType>) {
+  const router = useRouter();
   let [inputType, setInputType] = useState("password");
   let [closeVisible, setCloseVisibleVisible] = useState(true);
   let [openVisible, setOpenVisibleVisible] = useState(false);
+
+  // 보낼 로그인 데이터 엘리먼트
+  const userIdEl = useRef<HTMLInputElement>(null);
+  const passwordEl = useRef<HTMLInputElement>(null);
 
   function passwordToggle() {
     setInputType(inputType === "text" ? "password" : "text");
     setCloseVisibleVisible(closeVisible === true ? false : true);
     setOpenVisibleVisible(openVisible === true ? false : true);
+  }
+
+  // 로그인 처리 함수
+  async function loginHandler(): Promise<JSON> {
+    const body = {
+      userId: userIdEl.current?.value,
+      password: passwordEl.current?.value,
+    };
+
+    const res = await publicFetch("/login", "POST", body);
+    if (res.status !== 200) {
+      alert("로그인에 실패했습니다.");
+      return res;
+    }
+    const { accessToken, refreshToken } = await res.json();
+    window.localStorage.setItem("accessToken", accessToken);
+    window.localStorage.setItem("refreshToken", refreshToken);
+    router.replace("/main");
+    return res;
   }
 
   return (
@@ -63,6 +90,7 @@ function Modal({
               id="username"
               name="inputId"
               placeholder="아이디"
+              ref={userIdEl}
             />
             <div className={styles.horizontal}></div>
           </div>
@@ -74,6 +102,7 @@ function Modal({
                 id="username"
                 name="inputPassword"
                 placeholder="비밀번호"
+                ref={passwordEl}
               />
               <div className={styles.pass_button} onClick={passwordToggle}>
                 {closeVisible && <ClosePassword />}
@@ -83,12 +112,14 @@ function Modal({
             <div className={styles.horizontal}></div>
           </div>
         </div>
-        {/* <div className={styles.login_button_container}>
+        <div className={styles.login_button_container}>
+          <button onClick={loginHandler} className={styles.login_button}>
+            LOGIN
+          </button>
+        </div>
+        {/* <Link className={styles.login_button_container} href="/main">
           <button className={styles.login_button}>LOGIN</button>
-        </div> */}
-        <Link className={styles.login_button_container} href="/main">
-          <button className={styles.login_button}>LOGIN</button>
-        </Link>
+        </Link> */}
         <div className={styles.footer}>
           <div
             style={{
