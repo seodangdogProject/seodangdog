@@ -34,14 +34,14 @@ public class MetaWord {
     private List<WordItem> wordItemList = new ArrayList<>();
 
     public MetaWord(String word, String wordLang, int total, List<WordItem> wordItemList) {
-        this.word = word;
+        this.word = word.replaceAll("-", "");
         this.wordLang = wordLang;
         this.total = total;
         this.wordItemList = wordItemList;
     }
 
     public MetaWord(MetaWordDto dto){
-        this.word = dto.getWord();
+        this.word = dto.getWord().replaceAll("-", "");
         this.wordLang = dto.getWordLang();
         this.total = dto.getTotal();
         for (WordItemDto item : dto.getItems()){

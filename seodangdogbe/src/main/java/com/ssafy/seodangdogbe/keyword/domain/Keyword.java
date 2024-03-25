@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Keyword {
-
     @Id
     @Column(length = 20)
     private String keyword;

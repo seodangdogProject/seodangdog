@@ -75,7 +75,6 @@ public class NewsService {
         Optional<User> user = userRepository.findById(userSeq);
         if (user.isPresent()){
             UserExp userExp = user.get().getUserExp();
-
         }
     }
 
@@ -85,7 +84,8 @@ public class NewsService {
     public boolean setUserNewsRead(int userSeq, UserNewsReadRequestDto dto){
         // 뉴스 시퀀스, 형광펜 리스트, 단어 리스트
         Long newsSeq = dto.getNewsSeq();
-        UserNews findUserNews = userNewsRepository.findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq);
+        UserNews findUserNews = userNewsRepository.findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq)
+                .orElseThrow(() -> new NullPointerException("사용자뉴스가 존재하지 않습니다."));
 
         // 출력
         System.out.println(findUserNews.getUser().getUserId() + " & " + findUserNews.getNews().getNewsSeq());
@@ -105,12 +105,13 @@ public class NewsService {
         // 뉴스 시퀀스, 정답 리스트, 요약(요약 키워드)
         Long newsSeq = dto.getNewsSeq();
 
-        News news = newsRepository.findById(newsSeq).orElseThrow(() -> new NullPointerException());
+        News news = newsRepository.findById(newsSeq).orElseThrow(() -> new NullPointerException("뉴스시퀀스가 존재하지 않습니다."));
         // 뉴스 자체에 풀이 횟수 증가
         int count = news.getCountSolve();
         news.setCountSolve(count + 1);
 
-        UserNews findUserNews = userNewsRepository.findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq);
+        UserNews findUserNews = userNewsRepository.findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq)
+                .orElseThrow(() -> new NullPointerException("사용자뉴스가 존재하지 않습니다."));
 
         // 찾은 user news의 풀이 내역 업데이트 & 풀이여부 True 변경
         findUserNews.setSolved(true);
@@ -118,7 +119,7 @@ public class NewsService {
         findUserNews.setUserSummary(dto.getUserSummary());
 
         // ** 채점 -> 더 효율적인 방법으로 바꾸기
-        User user = userRepository.findById(userSeq).orElseThrow(() -> new NullPointerException());
+        User user = userRepository.findById(userSeq).orElseThrow(NullPointerException::new);
         UserExp userExp = user.getUserExp();
         List<Boolean> correctList = dto.getCorrectList();
         
@@ -145,7 +146,8 @@ public class NewsService {
 
     // 사용자-뉴스 테이블 존재 여부 판단(최초접근 여부 판단)
     public boolean getUserNewsExist(int userSeq, Long newsSeq) {
-        UserNews findUserNews = userNewsRepository.findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq);
+        UserNews findUserNews = userNewsRepository.findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq)
+                .orElseThrow(() -> new NullPointerException("사용자뉴스가 존재하지 않습니다."));
         if (findUserNews != null){
             return true;
         } else {
@@ -175,7 +177,8 @@ public class NewsService {
 
     // 사용자-뉴스 기록(읽기/읽기+풀이) 조회
     public UserNewsResponseDto getReadOrSolveRecord(int userSeq, Long newsSeq) {
-        UserNews findUserNews = userNewsRepository.findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq);
+        UserNews findUserNews = userNewsRepository.findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq)
+                .orElseThrow(() -> new NullPointerException("사용자뉴스가 존재하지 않습니다."));
         UserNewsResponseDto dto = new UserNewsResponseDto(findUserNews.getHighlightList(), findUserNews.getWordList());
         if (findUserNews.isSolved()) {
             dto.setUserAnswers(findUserNews.getUserAnswerList());
