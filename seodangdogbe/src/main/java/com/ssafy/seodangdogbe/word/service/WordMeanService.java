@@ -1,14 +1,30 @@
 package com.ssafy.seodangdogbe.word.service;
 
+import com.ssafy.seodangdogbe.word.domain.MetaWord;
+import com.ssafy.seodangdogbe.word.dto.WordDto;
+import com.ssafy.seodangdogbe.word.repository.MetaWordRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-// MongoDB 접근을 위한 라이브러리를 임포트해야 합니다.
+import java.util.Optional;
 
 @Service
 public class WordMeanService {
+    private final MetaWordRepository metaWordRepository;
 
-    public String findMeanByWord(String word) {
-        // MongoDB 접근 로직 구현
-        // 실제로는 MongoDB에서 단어에 해당하는 뜻을 조회하여 반환해야 합니다.
-        return "단어의 뜻";
+    @Autowired
+    public WordMeanService(MetaWordRepository metaWordRepository) {
+        this.metaWordRepository = metaWordRepository;
+    }
+
+    public WordDto.MetaWordDto findMeanByWord(String word) {
+        Optional<MetaWord> metaWordOpt = metaWordRepository.findByWord(word);
+        if (metaWordOpt.isPresent()) {
+            MetaWord metaWord = metaWordOpt.get();
+            return new WordDto.MetaWordDto(metaWord);
+        } else {
+            return null; // 또는 적절한 예외 처리를 해주는 것이 좋습니다.
+        }
     }
 }
+
+
