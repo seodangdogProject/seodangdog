@@ -14,8 +14,6 @@ public class MyWordRepositoryImpl implements MyWordRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
 
-
-    // MyWordRepositoryImpl 구현체
     @Override
     public List<UserWord> findAllUserWords(int userSeq) {
         QUserWord qUserWord = QUserWord.userWord;
