@@ -22,10 +22,6 @@ public class KeywordController {
     public void getKeywords(@RequestBody List<String> keywords){
         int userSeq = userService.getUserSeq();
         User user = userService.getUserByUserSeq(userSeq);
-
-//        List<Keyword> keywords = new ArrayList<>();
-//        List<String> keywords = new ArrayList<>();
-
         keywordService.addKeywordListWeight(user, keywords, 1.28);
     }
 

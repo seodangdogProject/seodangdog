@@ -59,7 +59,9 @@ public class MyWordService {
             // 단어의 소유자가 현재 인증된 사용자인지 확인합니다.
             if (userWord.getUser().getUserSeq() == userSeq) {
                 // 소유자가 맞으면 단어를 삭제합니다.
-                myWordRepository.deleteById(wordSeq);
+//                myWordRepository.deleteById(wordSeq);
+                userWord.setIsDelete(true);
+                myWordRepository.save(userWord);
                 return true; // 삭제 성공
             } else {
                 // 소유자가 아니면 삭제하지 않습니다.

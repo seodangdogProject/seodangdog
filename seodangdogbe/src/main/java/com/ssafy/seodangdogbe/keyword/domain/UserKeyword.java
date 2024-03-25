@@ -25,17 +25,20 @@ public class UserKeyword {
     private Keyword keyword;
 
     private Double weight;
+<<<<<<< HEAD
+=======
 
-    public UserKeyword(User user, Keyword keyword, double weight) {
-        this.user = user;
-        this.keyword = keyword;
-        this.weight = weight;
-    }
+//    public UserKeyword(User user, Keyword keyword, double weight) {
+//        this.user = user;
+//        this.keyword = keyword;
+//        this.weight = weight;
+//    }
 
     public UserKeyword(User user, String keyword, double weight) {
         this.user = user;
-        this.keyword.setKeyword(keyword);
+        this.keyword = new Keyword(keyword);
         this.weight = weight;
     }
 
+>>>>>>> b9748078bc414d7eaec128448ff0bd130a17308e
 }

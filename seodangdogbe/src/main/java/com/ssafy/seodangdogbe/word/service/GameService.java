@@ -30,7 +30,7 @@ public class GameService {
         this.wordMeanService = wordMeanService;
         this.userService = userService;
     }
-
+    private final Map<Integer, List<Long>> activeGameWords = new ConcurrentHashMap<>();
     public GameActivatedResponseDto checkGameActivation() {
         int userSeq = userService.getUserSeq();
         long wordCount = gameRepository.countUserWords(userSeq);
@@ -65,13 +65,10 @@ public class GameService {
 
     @Transactional
     public void deleteWords(GameResultRequestDto requestDto) {
-        // requestDto에서 userSeq와 wordList를 추출합니다.
         int userSeq = userService.getUserSeq();
-        List<Long> wordSeqs = requestDto.getWordList().stream()
-                .map(GameResultRequestDto.WordInfo::getWordSeq)
-                .collect(Collectors.toList());
+        List<Long> wordSeqs = requestDto.getWordSeq();
 
-        // deleteWordsBySeqsAndUserSeq 메서드를 사용하여, 해당 사용자의 단어만 삭제합니다.
+        // 데이터베이스에서 해당 단어들의 isDelete 상태를 true로 업데이트
         gameRepository.deleteWordsBySeqsAndUserSeq(wordSeqs, userSeq);
     }
 

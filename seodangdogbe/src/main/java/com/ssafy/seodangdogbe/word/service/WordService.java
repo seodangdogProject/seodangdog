@@ -101,7 +101,8 @@ public class WordService {
 
     public boolean setDelete(int userSeq, String word) {
         Optional<UserWord> findUserWord = userWordRepository.findByUserUserSeqAndWord(userSeq, word);
-        findUserWord.ifPresent(userWord -> userWord.setDelete(true));
+        findUserWord.ifPresent(userWord -> userWord.setIsDelete(true));
         return true;
     }
+
 }
