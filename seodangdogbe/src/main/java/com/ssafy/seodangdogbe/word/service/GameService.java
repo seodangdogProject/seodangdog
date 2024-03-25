@@ -5,6 +5,7 @@ import com.ssafy.seodangdogbe.word.domain.UserWord;
 import com.ssafy.seodangdogbe.word.dto.GameActivatedResponseDto;
 import com.ssafy.seodangdogbe.word.dto.GameGetProblemResponseDto;
 import com.ssafy.seodangdogbe.word.dto.GameResultRequestDto;
+import com.ssafy.seodangdogbe.word.dto.WordDto;
 import com.ssafy.seodangdogbe.word.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,10 +36,10 @@ public class GameService {
         long wordCount = gameRepository.countUserWords(userSeq);
         if (wordCount < 10) {
             // 게임 비활성화: 단어 개수가 부족하여 GameActivatedResponseDto에 isActivated를 false로 설정
-            return new GameActivatedResponseDto(false);
+            return new GameActivatedResponseDto(false, wordCount);
         }
         // 단어 개수가 10개 이상일 경우, 게임을 활성화합니다.
-        return new GameActivatedResponseDto(true);
+        return new GameActivatedResponseDto(true, wordCount);
     }
 
 
@@ -46,11 +47,17 @@ public class GameService {
         int userSeq = userService.getUserSeq();
         List<UserWord> randomWords = gameRepository.findRandomWordsByUserSeq(userSeq, 10);
         List<GameGetProblemResponseDto.WordInfo> wordInfos = randomWords.stream()
-                .map(word -> new GameGetProblemResponseDto.WordInfo(
-                        word.getWordSeq(),
-                        word.getWord(),
-                        wordMeanService.findMeanByWord(word.getWord()) // MongoDB에서 단어의 뜻 조회
-                ))
+                .map(word -> {
+                    WordDto.MetaWordDto metaWordDto = wordMeanService.findMeanByWord(word.getWord()); // 올바른 타입으로 처리
+                    String definition = metaWordDto != null && !metaWordDto.getItems().isEmpty()
+                            ? metaWordDto.getItems().get(0).getDefinition() // 첫 번째 뜻을 사용
+                            : "뜻을 찾을 수 없음"; // 뜻이 없는 경우의 기본값 처리
+                    return new GameGetProblemResponseDto.WordInfo(
+                            word.getWordSeq(),
+                            word.getWord(),
+                            definition
+                    );
+                })
                 .collect(Collectors.toList());
 
         return new GameGetProblemResponseDto(wordInfos);

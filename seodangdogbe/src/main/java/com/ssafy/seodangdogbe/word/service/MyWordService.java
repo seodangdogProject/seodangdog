@@ -3,6 +3,7 @@ package com.ssafy.seodangdogbe.word.service;
 import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.word.domain.UserWord;
 import com.ssafy.seodangdogbe.word.dto.MyWordResponseDto;
+import com.ssafy.seodangdogbe.word.dto.WordDto;
 import com.ssafy.seodangdogbe.word.repository.MyWordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,15 +30,27 @@ public class MyWordService {
         int userSeq = userService.getUserSeq();
         List<UserWord> userWords = myWordRepository.findAllUserWords(userSeq);
         List<MyWordResponseDto.WordInfo> wordInfos = userWords.stream()
-                .map(word -> new MyWordResponseDto.WordInfo(
-                        word.getWordSeq(),
-                        word.getWord(),
-                        wordMeanService.findMeanByWord(word.getWord()) // MongoDB에서 단어의 뜻 조회
-                ))
+                .map(word -> {
+                    WordDto.MetaWordDto metaWordDto = wordMeanService.findMeanByWord(word.getWord());
+                    String mean1 = null, mean2 = null;
+                    if (metaWordDto != null && !metaWordDto.getItems().isEmpty()) {
+                        mean1 = metaWordDto.getItems().get(0).getDefinition(); // 첫 번째 뜻
+                        if (metaWordDto.getItems().size() > 1) {
+                            mean2 = metaWordDto.getItems().get(1).getDefinition(); // 두 번째 뜻
+                        }
+                    }
+                    return new MyWordResponseDto.WordInfo(
+                            word.getWordSeq(),
+                            word.getWord(),
+                            mean1, // 첫 번째 뜻
+                            mean2  // 두 번째 뜻, 없으면 null
+                    );
+                })
                 .collect(Collectors.toList());
 
         return new MyWordResponseDto(wordInfos);
     }
+
 
     // 단어 삭제 메서드
     public boolean deleteWord(Long wordSeq) {

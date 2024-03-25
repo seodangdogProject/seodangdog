@@ -13,7 +13,8 @@ public class MyWordResponseDto {
     public static class WordInfo {
         private long wordSeq;
         private String word;
-        private String mean;
+        private String mean1;
+        private String mean2;
     }
 
 }
