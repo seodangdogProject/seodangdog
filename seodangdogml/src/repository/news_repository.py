@@ -4,14 +4,20 @@ from bson.objectid import ObjectId
 from pymongo import MongoClient
 from fastapi import APIRouter
 from konlpy.tag import Okt
+from PIL import Image
 import os
 import sys
 import json
-import pymysql
 import time
+import io
+import pymysql
+import boto3
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 # 사용자 라이브러리 import
 sys.path.append(os.path.abspath('src'))
 from preprocessing.keyword_generate import keyword_generate
+import settings
 
 router = APIRouter()
 
@@ -150,3 +156,56 @@ def save_keyword_news():
     cursor.execute(sql)
     mysqlDB.commit()
     mysqlDB.close()
+
+@router.get("/get_wordcloud/{user_seq}")
+def get_wordcloud(user_seq):
+
+    news_data = findNews(1)
+    words = news_data[0]["newsKeyword"]
+
+    wc = WordCloud(font_path=settings.WC_FONT_PATH, width=800, height=400, background_color="white")
+    cloud = wc.generate_from_frequencies(words)
+
+    session = boto3.Session(
+        aws_access_key_id=settings.S3_ACCESS_KEY,
+        aws_secret_access_key=settings.S3_SECRET_KEY,
+    )
+
+    # Save tweet list to an s3 bucket
+    FILE_NAME = f"wordcloud/{user_seq}/wordcloud.png"
+    s3 = session.resource('s3')
+    object = s3.Object(settings.S3_BUCKET_NAME, FILE_NAME)
+
+    image_byte = image_to_byte_array(cloud.to_image())
+    object.put(Body=image_byte)
+
+    image_url = f'https://{settings.S3_BUCKET_NAME}.s3.{settings.S3_LOCATION}.amazonaws.com/{FILE_NAME}'
+
+    return image_url
+
+def image_to_byte_array(image: Image, format: str = 'png'):
+    result = io.BytesIO()
+    image.save(result, format=format)
+    result = result.getvalue()
+
+    return result
+
+
+@router.get("/upload_badge_img/{file_name}")
+def get_wordcloud(file_name):
+    client_s3 = boto3.client(
+        's3',
+        aws_access_key_id=settings.S3_ACCESS_KEY,
+        aws_secret_access_key=settings.S3_SECRET_KEY
+    )
+    try:
+        client_s3.upload_file(
+            f"C:\\Users\\SSAFY\\Pictures\\badge\\{file_name}",
+            'seodangdog-s3',
+            f"badges/{file_name}",
+            ExtraArgs={'ContentType': 'image/jpeg'}
+        )
+    # except ClientError as e:
+    #     print(f'Credential error => {e}')
+    except Exception as e:
+        print(f"Another error => {e}")
