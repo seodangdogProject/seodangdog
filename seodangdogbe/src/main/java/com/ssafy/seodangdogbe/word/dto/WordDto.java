@@ -47,24 +47,13 @@ public class WordDto {
             }
         }
 
-//        public static class WordDetailsDto {
-//            private String definition;
-//            private List<WordCommDto> comms;
-//        }
-
-//        public static class WordCommDto {
-//            private String type;
-//            private String word;
-//            private String link;
-//        }
-
         // 표준국어대사전 api 결과를 db에 저장하는 용도의 dto
         public MetaWordDto(KorApiSearchDto korApiSearchDto){
             KorApiSearchDto.ChannelDto dto = korApiSearchDto.getChannel();
 
             this.wordLang = "kor";
             this.total = dto.getTotal();
-            this.word = dto.getItem().getFirst().getWord(); //첫번째로 가져온 item의 단어를 대표 단어로 저장
+            this.word = dto.getItem().get(0).getWord(); //첫번째로 가져온 item의 단어를 대표 단어로 저장
 
             List<KorApiSearchDto.ItemDto> items = dto.getItem();
             for (KorApiSearchDto.ItemDto item : items){

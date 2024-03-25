@@ -1,27 +1,18 @@
 package com.ssafy.seodangdogbe.word.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
-import com.ssafy.seodangdogbe.common.JsonConverter;
 import com.ssafy.seodangdogbe.common.MsgResponseDto;
-import com.ssafy.seodangdogbe.word.domain.MetaWord;
-import com.ssafy.seodangdogbe.word.domain.WordItem;
 import com.ssafy.seodangdogbe.word.service.WordService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.List;
-
 import static com.ssafy.seodangdogbe.word.dto.KorApiDto.*;
 import static com.ssafy.seodangdogbe.word.dto.WordDto.*;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class WordController {
 
@@ -29,7 +20,7 @@ public class WordController {
     public final WordService wordService;
 
     @Operation(description = "단어의 뜻을 가져온다 (순서: mongodb 탐색 -> api 호출)")
-    @GetMapping("/api/news/word/{word}")
+    @GetMapping("/news/word/{word}")
     public MetaWordDto getWord(@PathVariable("word") String word) throws Exception {
         if (wordService.isKor(word)){   // 한글 단어일 경우
             // mongodb에 있는 단어인지 탐색
@@ -56,7 +47,7 @@ public class WordController {
     }
 
     @Operation(description = "사용자단어 테이블에서 단어를 삭제한다.")
-    @PatchMapping("/api/myword/{word}")  // or word
+    @PatchMapping("/myword/{word}")  // or word
     public ResponseEntity<MsgResponseDto> removeUserWord(@PathVariable("word") String word){
         int userSeq = userService.getUserSeq();
         if (wordService.setDelete(userSeq, word))
