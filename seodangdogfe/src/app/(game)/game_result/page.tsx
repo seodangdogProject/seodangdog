@@ -11,6 +11,7 @@ import {
     unCorrectWordListState,
     Item,
 } from "../../../atoms/wordGame";
+import { privateFetch } from "@/utils/http-commons";
 
 const WordResult: React.FC = () => {
     const router = useRouter();
@@ -18,11 +19,31 @@ const WordResult: React.FC = () => {
     const setUnCorrectWordList = useSetRecoilState(unCorrectWordListState);
     const [correctWordList] = useRecoilState(correctWordListState);
     const [unCorrectWordList] = useRecoilState(unCorrectWordListState);
-
+    const reqData = {
+        wordSeq: unCorrectWordList.map((item) => item.wordSeq),
+    };
     const handleClick = () => {
         console.log("다음으로");
+
+        (async () => {
+            console.log(reqData);
+            const res = await privateFetch(
+                "/game/result",
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODUzNn0.VYk5mAWj8_aq955JRzbgKcSetCVPM5js5vAjPYhYgHg",
+                "PATCH",
+                reqData
+            );
+            if (res.status === 200) {
+                const data = await res.json();
+                console.log(data);
+            } else {
+                console.log("error 발생");
+            }
+        })();
+
         setCorrectWordList([]);
         setUnCorrectWordList([]);
+
         router.push("/word_game");
     };
 

@@ -17,7 +17,7 @@ export default function WordGame() {
         (async () => {
             const res = await privateFetch(
                 "/game/activate",
-                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODcxNX0.6iCO_VO6jdC-fvfceiQtN6kyFqInb74AUBC-I4ZUYkg",
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODUzNn0.VYk5mAWj8_aq955JRzbgKcSetCVPM5js5vAjPYhYgHg",
                 "GET"
             );
             if (res.status === 200) {
@@ -32,7 +32,7 @@ export default function WordGame() {
         (async () => {
             const res = await privateFetch(
                 "/game/get-problems",
-                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODcxNX0.6iCO_VO6jdC-fvfceiQtN6kyFqInb74AUBC-I4ZUYkg",
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODUzNn0.VYk5mAWj8_aq955JRzbgKcSetCVPM5js5vAjPYhYgHg",
                 "GET"
             );
             if (res.status === 200) {
