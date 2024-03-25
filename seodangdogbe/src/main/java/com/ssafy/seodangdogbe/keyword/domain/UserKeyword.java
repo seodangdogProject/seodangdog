@@ -4,11 +4,13 @@ import com.ssafy.seodangdogbe.keyword.domain.Keyword;
 import com.ssafy.seodangdogbe.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class UserKeyword {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,5 +24,18 @@ public class UserKeyword {
     @JoinColumn(name = "keyword")
     private Keyword keyword;
 
-    private Long weight;
+    private Double weight;
+
+    public UserKeyword(User user, Keyword keyword, double weight) {
+        this.user = user;
+        this.keyword = keyword;
+        this.weight = weight;
+    }
+
+    public UserKeyword(User user, String keyword, double weight) {
+        this.user = user;
+        this.keyword.setKeyword(keyword);
+        this.weight = weight;
+    }
+
 }

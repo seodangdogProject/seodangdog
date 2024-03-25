@@ -19,5 +19,5 @@ public class Ratings extends BaseTimeEntity {
     @JoinColumn(name = "user_seq")
     private User user;
 
-    private int rating = 1;
+    private Double rating = 0.01;
 }
