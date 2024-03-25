@@ -1,6 +1,6 @@
-import React from 'react';
-import commonStyles from './Section_common.module.css';
-import Image from 'next/image';
+import React from "react";
+import commonStyles from "./Section_common.module.css";
+import Image from "next/image";
 
 interface ISectionProps {
     pageNum: number;
@@ -14,25 +14,25 @@ const Section = (props: ISectionProps) => {
                 props.pageRefs.current[props.pageNum] = element!;
             }}
             style={{
-                width: '100vw',
-                height: '100vh',
-                overflowX: 'hidden',
+                width: "100vw",
+                height: "100vh",
+                overflowX: "hidden",
             }}
         >
             <main className={commonStyles.main}>
                 <div
                     className={commonStyles.description}
                     style={{
-                        marginRight: '20px',
+                        marginRight: "20px",
                     }}
                 >
                     <div
                         className={commonStyles.title}
-                        style={{ fontSize: '60px' }}
+                        style={{ fontSize: "60px" }}
                     >
                         다시 보고 싶은
                         <br />
-                        <span style={{ color: 'rgba(151, 88, 255, 1)' }}>
+                        <span style={{ color: "rgba(151, 88, 255, 1)" }}>
                             단어를 저장
                         </span>
                         할 수 있습니다
@@ -44,7 +44,7 @@ const Section = (props: ISectionProps) => {
                     </div>
                 </div>
                 <Image
-                    src="/images/landing-fourth.png"
+                    src="/images/landing-fourth.webp"
                     alt="secondImage"
                     width={600}
                     height={400}

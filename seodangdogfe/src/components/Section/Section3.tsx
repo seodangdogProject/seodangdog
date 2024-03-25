@@ -1,6 +1,6 @@
-import React from 'react';
-import commonStyles from './Section_common.module.css';
-import Image from 'next/image';
+import React from "react";
+import commonStyles from "./Section_common.module.css";
+import Image from "next/image";
 
 interface ISectionProps {
     pageNum: number;
@@ -14,28 +14,28 @@ const Section = (props: ISectionProps) => {
                 props.pageRefs.current[props.pageNum] = element!;
             }}
             style={{
-                width: '100vw',
-                height: '100vh',
-                overflowX: 'hidden',
+                width: "100vw",
+                height: "100vh",
+                overflowX: "hidden",
             }}
         >
             <main className={commonStyles.main}>
                 <Image
-                    src="/images/landing-third.png"
+                    src="/images/landing-third.webp"
                     alt="thirdImage"
                     width={600}
                     height={400}
                     style={{
-                        marginRight: '40px',
+                        marginRight: "40px",
                     }}
                 />
                 <div className={commonStyles.description}>
                     <div className={commonStyles.title}>
                         뉴스의 내용으로
-                        <br />{' '}
-                        <span style={{ color: 'rgba(151, 88, 255, 1)' }}>
+                        <br />{" "}
+                        <span style={{ color: "rgba(151, 88, 255, 1)" }}>
                             문제를 제공
-                        </span>{' '}
+                        </span>{" "}
                         합니다
                     </div>
                     <div className={commonStyles.content}>

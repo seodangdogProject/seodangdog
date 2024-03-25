@@ -1,8 +1,8 @@
-import React, { useState, useCallback } from 'react';
-import Image from 'next/image';
-import landingStyles from './Section1.module.css';
-import LoginModal from '../landingComponent/loginModal';
-import LogoIcon from '../../assets/landing-logo-icon.svg';
+import React, { useState, useCallback } from "react";
+import Image from "next/image";
+import landingStyles from "./Section1.module.css";
+import LoginModal from "../landingComponent/loginModal";
+import LogoIcon from "../../assets/landing-logo-icon.svg";
 
 interface ISectionProps {
     pageNum: number;
@@ -23,9 +23,9 @@ const Section = (props: ISectionProps) => {
                 props.pageRefs.current[props.pageNum] = element!;
             }}
             style={{
-                width: '100vw',
-                height: '100vh',
-                overflowX: 'hidden',
+                width: "100vw",
+                height: "100vh",
+                overflowX: "hidden",
             }}
         >
             <main className={landingStyles.main}>
@@ -37,7 +37,7 @@ const Section = (props: ISectionProps) => {
                 <div className={landingStyles.center_container}>
                     <LogoIcon
                         style={{
-                            marginBottom: '30px',
+                            marginBottom: "30px",
                         }}
                     />
                     <p className={landingStyles.description}>
@@ -55,64 +55,64 @@ const Section = (props: ISectionProps) => {
                 <div className={landingStyles.bottom_news}>
                     <Image
                         className={landingStyles.page_button}
-                        src="/images/landing-main-image.png"
+                        src="/images/landing-main-image.webp"
                         alt="My Image"
                         width={300}
                         height={200.25}
                         style={{
-                            position: 'absolute',
-                            marginTop: '40px',
-                            top: '70px',
-                            left: '100px',
+                            position: "absolute",
+                            marginTop: "40px",
+                            top: "70px",
+                            left: "100px",
                         }}
                     />
                     <Image
                         className={landingStyles.page_button}
-                        src="/images/landing-main2-image.png"
+                        src="/images/landing-main2-image.webp"
                         alt="My Image"
                         width={300}
                         height={200.25}
                         style={{
-                            position: 'absolute',
-                            top: '50px',
-                            left: '350px',
+                            position: "absolute",
+                            top: "50px",
+                            left: "350px",
                         }}
                     />
                     <Image
                         className={landingStyles.page_button}
-                        src="/images/landing-test-image.png"
+                        src="/images/landing-test-image.webp"
                         alt="My Image"
                         width={300}
                         height={200.25}
                         style={{
-                            position: 'absolute',
-                            top: '40px',
-                            left: '600px',
+                            position: "absolute",
+                            top: "40px",
+                            left: "600px",
                         }}
                     />
                     <Image
                         className={landingStyles.page_button}
-                        src="/images/landing-wordlist-image.png"
+                        src="/images/landing-wordlist-image.webp"
                         alt="My Image"
                         width={300}
                         height={200.25}
                         style={{
-                            position: 'absolute',
-                            top: '50px',
-                            left: '850px',
+                            position: "absolute",
+                            top: "50px",
+                            left: "850px",
                         }}
                     />
                     <Image
                         className={landingStyles.page_button}
-                        src="/images/landing-quiz-image.png"
+                        src="/images/landing-quiz-image.webp"
                         alt="My Image"
                         width={300}
                         height={200.25}
                         style={{
-                            position: 'absolute',
-                            marginTop: '40px',
-                            top: '70px',
-                            left: '1100px',
+                            position: "absolute",
+                            marginTop: "40px",
+                            top: "70px",
+                            left: "1100px",
                         }}
                     />
                 </div>

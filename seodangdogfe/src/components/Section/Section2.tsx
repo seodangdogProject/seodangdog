@@ -1,6 +1,7 @@
-import React from 'react';
-import commonStyles from './Section_common.module.css';
-import Image from 'next/image';
+import React from "react";
+import commonStyles from "./Section_common.module.css";
+import Image from "next/image";
+import Typewriter from "typewriter-effect";
 
 interface ISectionProps {
     pageNum: number;
@@ -14,23 +15,29 @@ const Section = (props: ISectionProps) => {
                 props.pageRefs.current[props.pageNum] = element!;
             }}
             style={{
-                width: '100vw',
-                height: '100vh',
-                overflowX: 'hidden',
+                width: "100vw",
+                height: "100vh",
+                overflowX: "hidden",
             }}
         >
             <main className={commonStyles.main}>
                 <div
                     className={commonStyles.description}
                     style={{
-                        marginRight: '40px',
+                        marginRight: "40px",
                     }}
                 >
+                    <Typewriter
+                        options={{
+                            strings: ["여러분이", "관심 있어할"],
+                            autoStart: true,
+                        }}
+                    />
                     <div className={commonStyles.title}>
-                        여러분이{' '}
-                        <span style={{ color: 'rgba(151, 88, 255, 1)' }}>
+                        여러분이{" "}
+                        <span style={{ color: "rgba(151, 88, 255, 1)" }}>
                             관심 있어할
-                        </span>{' '}
+                        </span>{" "}
                         <br />
                         뉴스를 추천해드립니다
                     </div>
@@ -40,7 +47,7 @@ const Section = (props: ISectionProps) => {
                     </div>
                 </div>
                 <Image
-                    src="/images/landing-second.png"
+                    src="/images/landing-second.webp"
                     alt="secondImage"
                     width={600}
                     height={400}

@@ -32,12 +32,17 @@
     align-items: center; /* 수직 가운데 정렬 */
     box-sizing: border-box; /* 내부 여백과 테두리를 포함한 너비를 지정 */
     font-size: 40px;
+    border: 3px solid #848484;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: white;
 }
 
 .clicked {
-    color: black; /* 예시로 클릭된 단어의 색상을 빨간색으로 변경 */
+    color: #210b61; /* 예시로 클릭된 단어의 색상을 빨간색으로 변경 */
     font-weight: bold; /* 예시로 클릭된 단어의 글씨를 굵게 변경 */
     transition: color 0.5s ease; /* 색깔이 바뀌는 transition 효과 추가 */
+    border: 3px solid #8258fa;
 }
 
 .score {
