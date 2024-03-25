@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "./RankingNewsContainer.module.css";
 import classNames from "classnames/bind";
 import { privateFetch } from "@/utils/http-commons";
@@ -9,6 +9,8 @@ export default function RankingNewsContainer() {
   const cx = classNames.bind(styled);
   const [newsList, setNewsList] = useState<any[]>([]);
   const [category, setCategory] = useState<string>("most-view");
+  const mostViewEl = useRef<HTMLDivElement>(null);
+  const mostSolvedEl = useRef<HTMLDivElement>(null);
   const router = useRouter();
   useEffect(() => {
     const token = localStorage.getItem("accessToken") || "";
@@ -22,7 +24,17 @@ export default function RankingNewsContainer() {
       console.log(data[0].newsPreviewList);
       setNewsList(data[0].newsPreviewList);
     })();
-  }, []);
+  }, [category]);
+
+  // method
+  function toggle(category: string) {
+    setCategory(category);
+    mostViewEl.current?.classList.toggle(cx("active"));
+    mostSolvedEl.current?.classList.toggle(cx("active"));
+    // if (category === "most-view") {
+    // } else {
+    // }
+  }
   if (newsList.length === 0) {
     <Loading />;
   } else {
@@ -31,8 +43,20 @@ export default function RankingNewsContainer() {
         <div className={styled.container}>
           <div className={styled.toggle__container}>
             <div className={cx("toggle")}>
-              <div className={cx("toggle__item", "active")}>많이 본 뉴스</div>
-              <div className={cx("toggle__item")}>많이 푼 뉴스</div>
+              <div
+                ref={mostViewEl}
+                onClick={() => toggle("most-view")}
+                className={cx("toggle__item", "active")}
+              >
+                많이 본 뉴스
+              </div>
+              <div
+                ref={mostSolvedEl}
+                onClick={() => toggle("most-solved")}
+                className={cx("toggle__item")}
+              >
+                많이 푼 뉴스
+              </div>
             </div>
           </div>
           <div className={cx("section", ["box-shodow-custom"])}>
