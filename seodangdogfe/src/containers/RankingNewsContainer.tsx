@@ -45,25 +45,25 @@ export default function RankingNewsContainer() {
                 <div className={cx("second")}>
                   <img src={newsList[1].newsImgUrl} alt="" />
                   <div className={cx("info")}>
-                    <div className={cx("title")}>
-                      [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-                    </div>
+                    <div className={cx("title")}>{newsList[1].newsTitle}</div>
                     <div className={cx("description")}>
-                      NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
+                      {newsList[1].newsDescription}
                     </div>
-                    <div className={cx("date")}>2024.03.06. 오전 11:37</div>
+                    <div className={cx("date")}>
+                      {newsList[1].newsCreatedAt}
+                    </div>
                   </div>
                 </div>
                 <div className={cx("third")}>
                   <img src={newsList[2].newsImgUrl} alt="" />
                   <div className={cx("info")}>
-                    <div className={cx("title")}>
-                      [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-                    </div>
+                    <div className={cx("title")}>{newsList[2].newsTitle}</div>
                     <div className={cx("description")}>
-                      NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
+                      {newsList[2].newsDescription}
                     </div>
-                    <div className={cx("date")}>2024.03.06. 오전 11:37</div>
+                    <div className={cx("date")}>
+                      {newsList[2].newsCreatedAt}
+                    </div>
                   </div>
                 </div>
               </div>
