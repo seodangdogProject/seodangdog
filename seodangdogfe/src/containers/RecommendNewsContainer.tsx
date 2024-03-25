@@ -1,7 +1,18 @@
+"use client";
+import { useEffect } from "react";
 import styled from "./RecommendNewsContainer.module.css";
 import classNames from "classnames/bind";
+import { privateFetch } from "../utils/http-commons";
 export default function RecommendNewsContainer() {
   const cx = classNames.bind(styled);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken") || "";
+    (async () => {
+      const res = await privateFetch("/main/user-recommend", token, "GET");
+      console.log(await res.json());
+    })();
+  }, []);
   return (
     <>
       <div className={styled.container}>

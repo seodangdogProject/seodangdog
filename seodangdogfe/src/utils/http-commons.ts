@@ -10,15 +10,27 @@ const BASE_URL = "https://j10e104.p.ssafy.io/api";
 async function privateFetch(
   path: string,
   token: string,
-  method: string
+  method: string,
+  body: object | null = null
 ): Promise<any> {
+  if (body === null) {
+    console.log(token);
+    const res = await fetch(BASE_URL + path, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+    return res;
+  }
   const res = await fetch(BASE_URL + path, {
     method,
     headers: {
       "Content-Type": "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODcxNX0.6iCO_VO6jdC-fvfceiQtN6kyFqInb74AUBC-I4ZUYkg",
+      Authorization: token,
     },
+    body: JSON.stringify(body),
   });
   return res;
 }
@@ -27,8 +39,27 @@ async function privateFetch(
  * @param {string} method  -> METHOD
  * @returns  -> json 객체 반환
  */
-async function publicFetch(path: string, method: string): Promise<any> {
-  const res = await fetch(BASE_URL + path);
+async function publicFetch(
+  path: string,
+  method: string,
+  body: object | null = null
+): Promise<any> {
+  if (body === null) {
+    const res = await fetch(BASE_URL + path, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return res;
+  }
+  const res = await fetch(BASE_URL + path, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
   return res;
 }
 
