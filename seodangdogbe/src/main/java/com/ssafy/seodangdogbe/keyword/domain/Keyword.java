@@ -12,6 +12,10 @@ public class Keyword {
     @Column(length = 20)
     private String keyword;
 
+    public Keyword(String newsKeyword) {
+        this.keyword = newsKeyword;
+    }
+
     @Override
     public String toString() {
         return "Keyword{" +
