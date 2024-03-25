@@ -53,7 +53,6 @@ def recommend_news(user_id, mf_model, top_n=5):
     # print("all_recommend_count ", len(predicted_ratings))
     # 상위 top_n개의 영화를 추천 목록에 추가
     recommended_news = []
-    print(predicted_ratings)
     for i in range(min(top_n, len(predicted_ratings))):
         news_seq = predicted_ratings[i][0]
         news_title = get_news_title(news_seq)

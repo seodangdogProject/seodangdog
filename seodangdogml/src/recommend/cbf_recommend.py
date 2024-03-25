@@ -107,6 +107,7 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
 
     return result
 
+
 # 추천이되면 mysql의 rating에 삽입한다. 시간이 걸리기때문에 backgroundtask로 비동기로 수행
 async def update_rating(recommended_news, user_seq):
     start_time = time.time()
@@ -118,7 +119,7 @@ async def update_rating(recommended_news, user_seq):
         news_title = news[1]
         news_similarity = format_weight(news[2])
 
-        info = await async_select_ratings(news_seq, user_seq)
+        info = select_ratings(news_seq, user_seq)
         if info is None:
             temp = [news_seq, user_seq, news_similarity]
             insert_rating_data.append(temp)
@@ -128,12 +129,12 @@ async def update_rating(recommended_news, user_seq):
 
     if len(insert_rating_data) > 0:
         print("insert_rating...")
-        print(insert_rating_data)
-        await async_insert_ratings(insert_rating_data)
+        # print(insert_rating_data)
+        insert_ratings(insert_rating_data)
     if len(update_rating_data) > 0:
         print("update_rating...")
-        print(update_rating_data)
-        await async_update_ratings(update_rating_data)
+        # print(update_rating_data)
+        update_ratings(update_rating_data)
 
     end_time = time.time()
     execution_time = end_time - start_time
