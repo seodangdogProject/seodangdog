@@ -6,19 +6,12 @@ import os
 import sys
 
 # sys.path.append(os.path.abspath('src'))
-from .content_base_recommend import news_data_objects
-from .content_base_recommend import make_user_news_df
+
+from .cbf_recommend import make_user_news_df
 
 router = APIRouter()
 
-# 뉴스 데이터프레임
-news = {'news_id': [news.id for news in news_data_objects],
-        'title': [news.title for news in news_data_objects]}
-news_df = pd.DataFrame(news)
 
-# 일치률 데이터프레임
-ratings = make_user_news_df()
-ratings_df = pd.DataFrame(ratings)
 
 
 # 데이터셋 만들기# 사용자 기반 이기 때문에 모든 데이터와 user_id를 데이터셋으로 한다

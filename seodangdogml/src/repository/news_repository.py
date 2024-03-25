@@ -1,7 +1,6 @@
 # 외부 라이브러리 import
 from bson import json_util
 from pymongo import MongoClient
-from bson.objectid import ObjectId
 from fastapi import APIRouter
 from konlpy.tag import Okt
 import os
@@ -10,7 +9,7 @@ import json
 import pymysql
 import time
 # 사용자 라이브러리 import
-sys.path.append(os.path.abspath('src'))
+# sys.path.append(os.path.abspath('src'))
 from preprocessing.keyword_generate import keyword_generate
 
 
@@ -24,11 +23,7 @@ username="dogsoedang"
 password="sssdangorg56"
 uri = f"mongodb://{username}:{password}@j10e104.p.ssafy.io:{port}/{host}?authSource=admin"
 dbname = 'seodangdog'
-mongoDB = MongoClient(uri)[dbname]
-
-# MySql
-mysqlDB = pymysql.connect(host='seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com', port=3306, user='seodangdog', passwd='dogseodang0311', db='seodangdog', charset='utf8')
-cursor = mysqlDB.cursor()
+client = MongoClient(uri)[dbname]
 
 def morph_sep(news_data):
     ### 형태소 분리
@@ -64,7 +59,7 @@ def save_news():
     # 키워드 추출 및 저장
     print("키워드 추출 및 시작")
     print("본문 키워드 작업 시작")
-    news_data = keyword_generate(news_data, "newsMainText", "newsKeyword")
+    news_data = keyword_generate(news_data, "newsMainTe xt", "newsKeyword")
     print("네이버 요약 키워드 작업 시작")
     news_data = keyword_generate(news_data, "newsSummary", "newsSummaryKeyword")
 
@@ -91,10 +86,11 @@ def mysql_save():
     # 뉴스 가져오기
     news_data = getNewsAll()
 
-    keyword_list = set()     # 키워드 저장을 위한 set()
-
-    # 뉴스 저장
-    sql = f"insert into news (count_solve, count_view, news_access_id, news_created_at, news_description, news_img_url, news_title, media_code, created_at, modified_at) values "
+    db = pymysql.connect(host='seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com', port=3306, user='seodangdog', passwd='dogseodang0311', db='seodangdog', charset='utf8')
+    #
+    cursor = db.cursor()
+    sql = (
+        f"insert into news (count_solve, count_view, news_access_id, news_created_at, news_description, news_img_url, news_title, media_code, created_at, modified_at) values ")
 
     for news in news_data:
         splited = news["newsMainText"].split("\n\n")

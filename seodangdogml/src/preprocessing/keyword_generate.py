@@ -89,14 +89,9 @@ def keyword_generate(news_data, targetCol, resultCol):
     # 뉴스 데이터에 키워드 저장
     print("뉴스 데이터에 키워드 저장...")
     for i in range(len(news_data)):
-        news_data[i][resultCol] = {}
-        keyword_list = df.loc[i].sort_values(ascending=False).index
-        keyword_values = df.loc[i].sort_values(ascending=False)
         if targetCol == "newsSummary":
-            for keyword_cnt in range(1,6):
-                news_data[i][resultCol][keyword_list[keyword_cnt]] = keyword_values.iloc[keyword_cnt]
+            news_data[i][resultCol] = list(df.loc[i].sort_values(ascending=False)[1:6].index)
         else:
-            for keyword_cnt in range(1,21):
-                news_data[i][resultCol][keyword_list[keyword_cnt]] = keyword_values.iloc[keyword_cnt]
+            news_data[i][resultCol] = list(df.loc[i].sort_values(ascending=False)[1:21].index)
 
     return news_data
