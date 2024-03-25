@@ -1,5 +1,6 @@
 # 외부 라이브러리 import
 from bson import json_util
+from bson.objectid import ObjectId
 from pymongo import MongoClient
 from fastapi import APIRouter
 from konlpy.tag import Okt
@@ -9,12 +10,10 @@ import json
 import pymysql
 import time
 # 사용자 라이브러리 import
-# sys.path.append(os.path.abspath('src'))
+sys.path.append(os.path.abspath('src'))
 from preprocessing.keyword_generate import keyword_generate
 
-
 router = APIRouter()
-
 
 # MongoDB
 host="seodangdog"
@@ -23,7 +22,7 @@ username="dogsoedang"
 password="sssdangorg56"
 uri = f"mongodb://{username}:{password}@j10e104.p.ssafy.io:{port}/{host}?authSource=admin"
 dbname = 'seodangdog'
-client = MongoClient(uri)[dbname]
+mongoDB = MongoClient(uri)[dbname]
 
 def morph_sep(news_data):
     ### 형태소 분리
@@ -86,12 +85,14 @@ def mysql_save():
     # 뉴스 가져오기
     news_data = getNewsAll()
 
-    db = pymysql.connect(host='seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com', port=3306, user='seodangdog', passwd='dogseodang0311', db='seodangdog', charset='utf8')
+    mysqlDB = pymysql.connect(host='seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com', port=3306, user='seodangdog', passwd='dogseodang0311', db='seodangdog', charset='utf8')
     #
-    cursor = db.cursor()
+    cursor = mysqlDB.cursor()
+
     sql = (
         f"insert into news (count_solve, count_view, news_access_id, news_created_at, news_description, news_img_url, news_title, media_code, created_at, modified_at) values ")
 
+    keyword_list = set()
     for news in news_data:
         splited = news["newsMainText"].split("\n\n")
         mainText = ""
@@ -119,6 +120,7 @@ def mysql_save():
     sql = sql[:-2] + ";"
     result = cursor.execute(sql)
     mysqlDB.commit()
+    mysqlDB.close()
 
     # 뉴스별 키워드 저장
     save_keyword_news()
@@ -126,6 +128,11 @@ def mysql_save():
 
 @router.get("/keywordNewsSave")
 def save_keyword_news():
+    mysqlDB = pymysql.connect(host='seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com', port=3306,
+                              user='seodangdog', passwd='dogseodang0311', db='seodangdog', charset='utf8')
+    #
+    cursor = mysqlDB.cursor()
+
     # mysql에 저장된 뉴스의 seq, oid 조회
     sql = (f"select news_seq, news_access_id from news;")
     cursor.execute(sql)
@@ -142,3 +149,4 @@ def save_keyword_news():
     sql = sql[:-2] + ";"
     cursor.execute(sql)
     mysqlDB.commit()
+    mysqlDB.close()
