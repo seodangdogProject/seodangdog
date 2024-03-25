@@ -10,7 +10,8 @@ const BASE_URL = "https://j10e104.p.ssafy.io/api";
 async function privateFetch(
   path: string,
   token: string,
-  method: string
+  method: string,
+  body: object | null = null
 ): Promise<any> {
   const res = await fetch(BASE_URL + path, {
     method,
@@ -27,8 +28,18 @@ async function privateFetch(
  * @param {string} method  -> METHOD
  * @returns  -> json 객체 반환
  */
-async function publicFetch(path: string, method: string): Promise<any> {
-  const res = await fetch(BASE_URL + path);
+async function publicFetch(
+  path: string,
+  method: string,
+  ibody: object | null = null
+): Promise<any> {
+  const res = await fetch(BASE_URL + path, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: ibody ? JSON.stringify(ibody) : null,
+  });
   return res;
 }
 
