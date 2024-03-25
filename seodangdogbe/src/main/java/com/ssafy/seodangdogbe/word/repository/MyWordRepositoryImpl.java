@@ -20,7 +20,8 @@ public class MyWordRepositoryImpl implements MyWordRepositoryCustom {
         return queryFactory
                 .select(qUserWord)
                 .from(qUserWord)
-                .where(qUserWord.user.userSeq.eq(userSeq))
+                .where(qUserWord.user.userSeq.eq(userSeq)
+                    .and(qUserWord.isDelete.eq(false)))
                 .fetch();
 
 
