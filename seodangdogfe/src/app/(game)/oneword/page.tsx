@@ -6,7 +6,6 @@ import { gameWordListState, Item } from "../../../atoms/wordGame";
 import styles from "./oneword_layout.module.css";
 import Lottie from "lottie-react";
 import TimerIcon from "../../../assets/timer-icon.svg";
-import ProgressBar from "@ramonak/react-progress-bar";
 import GameIcon from "../../../assets/quiz-logo-icon.svg";
 import CorrectIcon from "../../../assets/correct-icon.svg";
 import UncorrectIcon from "../../../assets/uncorrect-icon.svg";
@@ -38,12 +37,6 @@ const OneWord: React.FC = () => {
     const handleInputChange = (index: number, value: string) => {
         const newInputValues = [...inputValues];
         newInputValues[index] = value;
-
-        // 만약 입력된 문자열이 최대 길이에 도달하면 다음 input 요소로 포커스 이동
-        if (value.length === 1 && index < inputValues.length - 1) {
-            inputRefs.current[index + 1]?.focus();
-        }
-
         setInputValues(newInputValues);
     };
 
@@ -65,6 +58,13 @@ const OneWord: React.FC = () => {
             newInputValues[index - 1] = ""; // 이전 input 요소에 포커스를 이동하고 값을 지움
             inputRefs.current[index - 1]?.focus();
             setInputValues(newInputValues);
+        } else if (
+            event.key == " " &&
+            index >= 0 &&
+            index < inputValues.length - 1
+        ) {
+            event.preventDefault();
+            inputRefs.current[index + 1]?.focus();
         }
     };
 
