@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QKeywordNews is a Querydsl query type for KeywordNews
+ * QRatings is a Querydsl query type for Ratings
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QKeywordNews extends EntityPathBase<KeywordNews> {
+public class QRatings extends EntityPathBase<Ratings> {
 
-    private static final long serialVersionUID = 1795052626L;
+    private static final long serialVersionUID = -578010772L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QKeywordNews keywordNews = new QKeywordNews("keywordNews");
+    public static final QRatings ratings = new QRatings("ratings");
 
     public final com.ssafy.seodangdogbe.common.QBaseTimeEntity _super = new com.ssafy.seodangdogbe.common.QBaseTimeEntity(this);
 
@@ -30,35 +30,37 @@ public class QKeywordNews extends EntityPathBase<KeywordNews> {
     //inherited
     public final BooleanPath isDelete = _super.isDelete;
 
-    public final com.ssafy.seodangdogbe.keyword.domain.QKeyword keyword;
-
-    public final NumberPath<Long> keywordNewsSeq = createNumber("keywordNewsSeq", Long.class);
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
     public final QNews news;
 
-    public QKeywordNews(String variable) {
-        this(KeywordNews.class, forVariable(variable), INITS);
+    public final NumberPath<Integer> rating = createNumber("rating", Integer.class);
+
+    public final NumberPath<Long> ratingSeq = createNumber("ratingSeq", Long.class);
+
+    public final com.ssafy.seodangdogbe.user.domain.QUser user;
+
+    public QRatings(String variable) {
+        this(Ratings.class, forVariable(variable), INITS);
     }
 
-    public QKeywordNews(Path<? extends KeywordNews> path) {
+    public QRatings(Path<? extends Ratings> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QKeywordNews(PathMetadata metadata) {
+    public QRatings(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QKeywordNews(PathMetadata metadata, PathInits inits) {
-        this(KeywordNews.class, metadata, inits);
+    public QRatings(PathMetadata metadata, PathInits inits) {
+        this(Ratings.class, metadata, inits);
     }
 
-    public QKeywordNews(Class<? extends KeywordNews> type, PathMetadata metadata, PathInits inits) {
+    public QRatings(Class<? extends Ratings> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.keyword = inits.isInitialized("keyword") ? new com.ssafy.seodangdogbe.keyword.domain.QKeyword(forProperty("keyword")) : null;
         this.news = inits.isInitialized("news") ? new QNews(forProperty("news"), inits.get("news")) : null;
+        this.user = inits.isInitialized("user") ? new com.ssafy.seodangdogbe.user.domain.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

@@ -35,6 +35,8 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
+    public final StringPath nickname = createString("nickname");
+
     public final StringPath password = createString("password");
 
     public final StringPath role = createString("role");
@@ -53,7 +55,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final NumberPath<Integer> userSeq = createNumber("userSeq", Integer.class);
 
-    public final ListPath<UserWord, QUserWord> userWords = this.<UserWord, QUserWord>createList("userWords", UserWord.class, QUserWord.class, PathInits.DIRECT2);
+    public final ListPath<com.ssafy.seodangdogbe.word.domain.UserWord, com.ssafy.seodangdogbe.word.domain.QUserWord> userWords = this.<com.ssafy.seodangdogbe.word.domain.UserWord, com.ssafy.seodangdogbe.word.domain.QUserWord>createList("userWords", com.ssafy.seodangdogbe.word.domain.UserWord.class, com.ssafy.seodangdogbe.word.domain.QUserWord.class, PathInits.DIRECT2);
 
     public QUser(String variable) {
         this(User.class, forVariable(variable), INITS);

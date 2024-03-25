@@ -1,4 +1,4 @@
-package com.ssafy.seodangdogbe.user.domain;
+package com.ssafy.seodangdogbe.word.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,13 +16,24 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QUserWord extends EntityPathBase<UserWord> {
 
-    private static final long serialVersionUID = 478009911L;
+    private static final long serialVersionUID = 1194743670L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QUserWord userWord = new QUserWord("userWord");
 
-    public final QUser user;
+    public final com.ssafy.seodangdogbe.common.QBaseTimeEntity _super = new com.ssafy.seodangdogbe.common.QBaseTimeEntity(this);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
+    //inherited
+    public final BooleanPath isDelete = _super.isDelete;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
+
+    public final com.ssafy.seodangdogbe.user.domain.QUser user;
 
     public final StringPath word = createString("word");
 
@@ -46,7 +57,7 @@ public class QUserWord extends EntityPathBase<UserWord> {
 
     public QUserWord(Class<? extends UserWord> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.ssafy.seodangdogbe.user.domain.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

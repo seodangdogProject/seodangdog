@@ -64,7 +64,7 @@ public class WordDto {
 
             this.wordLang = "kor";
             this.total = dto.getTotal();
-            this.word = dto.getItem().getFirst().getWord(); //첫번째로 가져온 item의 단어를 대표 단어로 저장
+            this.word = dto.getItem().get(0).getWord(); //첫번째로 가져온 item의 단어를 대표 단어로 저장
 
             List<KorApiSearchDto.ItemDto> items = dto.getItem();
             for (KorApiSearchDto.ItemDto item : items){

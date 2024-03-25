@@ -19,9 +19,20 @@ public class QUserExp extends EntityPathBase<UserExp> {
 
     public static final QUserExp userExp = new QUserExp("userExp");
 
+    public final com.ssafy.seodangdogbe.common.QBaseTimeEntity _super = new com.ssafy.seodangdogbe.common.QBaseTimeEntity(this);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
     public final NumberPath<Integer> inferenceExp = createNumber("inferenceExp", Integer.class);
 
+    //inherited
+    public final BooleanPath isDelete = _super.isDelete;
+
     public final NumberPath<Integer> judgementExp = createNumber("judgementExp", Integer.class);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
     public final NumberPath<Integer> newsExp = createNumber("newsExp", Integer.class);
 

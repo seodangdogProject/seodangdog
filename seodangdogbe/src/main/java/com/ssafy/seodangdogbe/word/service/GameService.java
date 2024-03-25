@@ -35,10 +35,10 @@ public class GameService {
         long wordCount = gameRepository.countUserWords(userSeq);
         if (wordCount < 10) {
             // 게임 비활성화: 단어 개수가 부족하여 GameActivatedResponseDto에 isActivated를 false로 설정
-            return new GameActivatedResponseDto(false);
+            return new GameActivatedResponseDto(false, wordCount);
         }
         // 단어 개수가 10개 이상일 경우, 게임을 활성화합니다.
-        return new GameActivatedResponseDto(true);
+        return new GameActivatedResponseDto(true, wordCount);
     }
 
 
