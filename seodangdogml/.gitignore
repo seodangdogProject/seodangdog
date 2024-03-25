@@ -177,3 +177,6 @@ pyrightconfig.json
 
 # news.json
 src/crawling/news.json
+
+# settings
+src/my_settings.py
