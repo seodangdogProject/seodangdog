@@ -35,10 +35,11 @@ public class UserWordService {
     }
 
     // 사용자단어 테이블에 삭제된 단어를 update
-    public boolean updateUserWordExist(int userSeq, String word){
+    public boolean updateUserWordExist(int userSeq, String word) {
         Optional<UserWord> findUserWord = userWordRepository.findByUserUserSeqAndWord(userSeq, word);
-        findUserWord.ifPresent(userWord -> userWord.setDelete(false));
+        findUserWord.ifPresent(userWord -> userWord.setIsDelete(false));
         System.out.println("사용자 단어 복구 성공");
         return true;
     }
+
 }

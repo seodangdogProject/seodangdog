@@ -22,5 +22,5 @@ public class UserKeyword {
     @JoinColumn(name = "keyword")
     private Keyword keyword;
 
-    private Long weight;
+    private Double weight;
 }

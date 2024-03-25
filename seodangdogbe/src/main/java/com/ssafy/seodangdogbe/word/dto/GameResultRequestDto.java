@@ -8,14 +8,8 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class GameResultRequestDto {
-    private List<WordInfo> wordList;
+    private List<Long> wordSeq;
 
-    @Data
-    @AllArgsConstructor
-    public static class WordInfo {
-        private Long wordSeq;
-        private String word;
-
-    }
 }

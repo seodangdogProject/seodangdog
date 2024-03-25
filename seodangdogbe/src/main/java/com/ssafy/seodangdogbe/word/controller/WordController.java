@@ -47,7 +47,7 @@ public class WordController {
     }
 
     @Operation(description = "사용자단어 테이블에서 단어를 삭제한다.")
-    @PatchMapping("/myword/{word}")  // or word
+//    @PatchMapping("/myword/{word}")  // or word
     public ResponseEntity<MsgResponseDto> removeUserWord(@PathVariable("word") String word){
         int userSeq = userService.getUserSeq();
         if (wordService.setDelete(userSeq, word))
@@ -55,6 +55,8 @@ public class WordController {
         else
             return ResponseEntity.badRequest().body(new MsgResponseDto("단어 삭제에 실패했습니다."));
     }
+
+
 
 
 }

@@ -29,4 +29,5 @@ public class UserWord extends BaseTimeEntity {
         this.user = user;
         this.word = word;
     }
+
 }

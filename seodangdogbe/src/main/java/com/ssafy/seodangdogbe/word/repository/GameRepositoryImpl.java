@@ -21,7 +21,8 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
         return queryFactory
                 .select(qUserWord.count())
                 .from(qUserWord)
-                .where(qUserWord.user.userSeq.eq(userSeq))
+                .where(qUserWord.user.userSeq.eq(userSeq)
+                    .and(qUserWord.isDelete.eq(false)))
                 .fetchOne();
     }
 
@@ -30,7 +31,8 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
         QUserWord qUserWord = QUserWord.userWord;
         return queryFactory
                 .selectFrom(qUserWord)
-                .where(qUserWord.user.userSeq.eq(userSeq))
+                .where(qUserWord.user.userSeq.eq(userSeq)
+                    .and(qUserWord.isDelete.eq(false)))
                 .orderBy(Expressions.numberTemplate(Double.class, "function('RAND')").asc())
                 .limit(limit)
                 .fetch();
@@ -40,7 +42,8 @@ public class GameRepositoryImpl implements GameRepositoryCustom {
     public void deleteWordsBySeqsAndUserSeq(List<Long> wordSeqs, int userSeq) {
         QUserWord qUserWord = QUserWord.userWord;
         queryFactory
-                .delete(qUserWord)
+                .update(qUserWord)
+                .set(qUserWord.isDelete, true)
                 .where(qUserWord.wordSeq.in(wordSeqs)
                         .and(qUserWord.user.userSeq.eq(userSeq)))
                 .execute();

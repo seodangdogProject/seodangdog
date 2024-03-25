@@ -33,4 +33,7 @@ public abstract class BaseTimeEntity {
     private boolean isDelete;
 //    @Builder.Default
 //    private boolean isDelete = false;
+    public void setIsDelete(boolean isDelete) {
+        this.isDelete = isDelete;
+    }
 }
