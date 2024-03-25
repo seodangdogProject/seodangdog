@@ -1,11 +1,11 @@
-package com.ssafy.seodangdogbe.repository;
+package com.ssafy.seodangdogbe.keyword.repository;
 
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
-import com.ssafy.seodangdogbe.keyword.repository.UserKeywordRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserKeywordRepository extends JpaRepository<UserKeyword, Long>, UserKeywordRepositoryCustom {
+import java.util.List;
 
+public interface UserKeywordRepository extends JpaRepository<UserKeyword, Long> {
+
+    List<UserKeyword> findAllByUserUserSeq(int userSeq);
 }

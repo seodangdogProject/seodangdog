@@ -9,12 +9,17 @@ import java.util.List;
 @Getter
 @Embeddable
 public class Quiz {
+    // 문제 번호
+    private String quizNo;
+
+    // 지시문
+    private String statement;
     
     // 문제
-    private String example;
-    
-    // 문제 내용
-    private List<String> content;
+    private List<String> description;
+
+    // 선택지
+    private List<String> options;
 
     // 정답
     private int answer;

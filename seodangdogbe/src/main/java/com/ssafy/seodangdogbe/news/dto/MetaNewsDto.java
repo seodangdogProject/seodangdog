@@ -3,6 +3,7 @@ package com.ssafy.seodangdogbe.news.dto;
 import com.ssafy.seodangdogbe.media.domain.Media;
 import com.ssafy.seodangdogbe.news.domain.MetaNews;
 import com.ssafy.seodangdogbe.news.domain.NewsPos;
+import com.ssafy.seodangdogbe.news.domain.Quiz;
 import com.ssafy.seodangdogbe.news.domain.UserSummary;
 import lombok.*;
 
@@ -36,7 +37,7 @@ public class MetaNewsDto {
         private Map<String, Double> newsKeyword;
         private Map<String, Double> newsSummaryKeyword;
 
-    //    private List<Quiz> newsQuiz;
+        private List<Quiz> newsQuiz;
 
         // 뉴스 풀이 기록
         @Setter
