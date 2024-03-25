@@ -10,7 +10,6 @@ export const withAuth = (Component) => (props) => {
 
   /* 권한 분기 */
   useEffect(() => {
-    console.log(localStorage.getItem("accessToken"));
     if (!localStorage.getItem("accessToken")) {
       router.replace("/landing");
     } else {

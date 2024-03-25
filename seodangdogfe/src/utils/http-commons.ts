@@ -14,7 +14,6 @@ async function privateFetch(
   body: object | null = null
 ): Promise<any> {
   if (body === null) {
-    console.log(token);
     const res = await fetch(BASE_URL + path, {
       method,
       headers: {
