@@ -10,7 +10,7 @@ import time
 import os
 import sys
 sys.path.append(os.path.abspath('src'))
-from mongo import getNews
+from mongo import getNews, getNewsAll
 from create_dummy.make_user_data import make_keywordlist
 
 router = APIRouter()
@@ -21,9 +21,10 @@ class Item(BaseModel):
 
 
 class News:
-    def __init__(self, id, title):
+    def __init__(self, id, title, keyword_list):
         self.id = id
         self.title = title
+        self.keyword_list = keyword_list
 
 
 class NewsDto:
@@ -34,19 +35,19 @@ class NewsDto:
 
 
 news_data_objects = []
-allNews = getNews()
+allNews = getNewsAll()
 for news in allNews:
     id = news['_id']['$oid']
     title = news['newsTitle']
-    news_data_objects.append(News(id, title))
+    keyword_list = list(news['newsKeyword'].keys())[:5]
+    news_data_objects.append(News(id, title, keyword_list))
 
 @router.get("/fast/cbf_recom")
-# def process_data(item: Item):
-def process_data():
-    # keyword_weights = {"北 해킹 의혹": 16.0, "대법원": 1.1, "EU": 1.3, "애플": 2.0}
-    keyword_weights = make_keywordlist(50)
+def process_data(item: Item):
+    keyword_weights = {"北 해킹 의혹": 16.0, "대법원": 1.1, "EU": 1.3, "애플": 2.0}
+    # keyword_weights = make_keywordlist(50)
     user_keywords = list(keyword_weights.keys())  # 키들을 배열 형태로 반환
-    print(keyword_weights)
+    # print(keyword_weights)
 
     start_time = time.time()
 
@@ -59,19 +60,19 @@ def process_data():
     result = []
     for id, title, similarity in recommended_news:
         result.append(NewsDto(id,title,similarity))
-    print(result)
+    # print(result)
     return result
 
 
 def recommend_news(news_data_objects, user_keywords, keyword_weights):
 
     # 뉴스 데이터프레임 생성
-    df_news = pd.DataFrame([[news.title] for news in news_data_objects], columns=['title'])
+    df_news = pd.DataFrame([[" ".join(news.keyword_list)] for news in news_data_objects], columns=["keyword"])
     # TF-IDF 변환기 생성
     tfidf_vectorizer = TfidfVectorizer()
 
-    # 뉴스 제목과 본문을 합쳐서 벡터화
-    corpus = df_news['title']
+    # 뉴스 키워드를 벡터화
+    corpus = df_news['keyword']
     news_vectors = tfidf_vectorizer.fit_transform(corpus)
 
     # 벡터화된 데이터를 데이터프레임에 추가
