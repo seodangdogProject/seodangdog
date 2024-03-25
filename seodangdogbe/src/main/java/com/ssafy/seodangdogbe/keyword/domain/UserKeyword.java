@@ -28,15 +28,15 @@ public class UserKeyword {
 <<<<<<< HEAD
 =======
 
-    public UserKeyword(User user, Keyword keyword, double weight) {
-        this.user = user;
-        this.keyword = keyword;
-        this.weight = weight;
-    }
+//    public UserKeyword(User user, Keyword keyword, double weight) {
+//        this.user = user;
+//        this.keyword = keyword;
+//        this.weight = weight;
+//    }
 
     public UserKeyword(User user, String keyword, double weight) {
         this.user = user;
-        this.keyword.setKeyword(keyword);
+        this.keyword = new Keyword(keyword);
         this.weight = weight;
     }
 

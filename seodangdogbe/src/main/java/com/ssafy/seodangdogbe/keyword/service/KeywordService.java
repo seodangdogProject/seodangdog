@@ -25,21 +25,7 @@ public class KeywordService {
 
     // 클릭 시 해당 뉴스 키워드 증가
     public void addKeywordListWeight(User user, List<String> newsKeywordList, double weight){
-        List<UserKeyword> userKeywordList = userKeywordRepository.findAllByUser(user);
-
-        for (UserKeyword userKeyword : userKeywordList) {
-            UserKeyword keyword = userKeywordRepository.findByUserAndKeyword(user, userKeyword.getKeyword()).get();
-            double curWeight = keyword.getWeight();
-            keyword.setWeight(curWeight + weight);
-        }
-
-        for (String newsKeyword : newsKeywordList) {
-            if (!userKeywordList.contains(new Keyword(newsKeyword))){
-                userKeywordRepository.save(new UserKeyword(user, newsKeyword, weight));
-            }
-        }
-
-
+        userKeywordRepository.incrementKeywordWeight(user, newsKeywordList, weight);
     }
 
 }

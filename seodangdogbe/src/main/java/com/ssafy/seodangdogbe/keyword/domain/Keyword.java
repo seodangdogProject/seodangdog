@@ -1,20 +1,16 @@
 package com.ssafy.seodangdogbe.keyword.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
 public class Keyword {
     @Id
     @Column(length = 20)
     private String keyword;
-
-    public Keyword(String newsKeyword) {
-        this.keyword = newsKeyword;
-    }
 
     @Override
     public String toString() {
