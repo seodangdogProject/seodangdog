@@ -2,12 +2,12 @@ from repository.recommend_repository import select_all_ratings
 from repository.recommend_repository import select_all_news
 from fastapi import APIRouter
 import pandas as pd
-import os
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 import pickle
 import os
+import time
 
 router = APIRouter()
 
@@ -212,7 +212,9 @@ class NEW_MF():
 
 @router.get('/fast/mf/train')
 def train_mf_model():
+    start_time = time.time()
 
+    # 아마 커넥션 두개 써서 안되는듯 레이팅은 비동기로 하는데 이건 동기니까
     ratings = select_all_ratings()
     ratings = pd.DataFrame(ratings)
 
@@ -244,6 +246,7 @@ def train_mf_model():
     test_set = mf.set_test(ratings_test)
     result = mf.test()
     print("학습완료")
+    print(ratings['user_id'][20])
     # 학습을 통해 최적의 K값 찾기 start
     # results = []
     # index = []
@@ -265,6 +268,11 @@ def train_mf_model():
 
     # result = mf.test()
     # 학습을 통해 최적의 K값 찾기 end
+        
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"mf 훈련시간: {execution_time} 초")
+
 
     base_src = './recommend'
     # print(os.listdir(base_src))

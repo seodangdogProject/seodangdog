@@ -76,7 +76,7 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
     print('cbf_recommend start')
 
     user_keyword = select_user_keyword(user_seq)
-    print(user_keyword)
+    # print(user_keyword)
     keyword_weights = {data['keyword']: data['weight'] for data in user_keyword}
     user_keyword_list = list(keyword_weights.keys())  # 키들을 배열 형태로 반환
 
@@ -128,9 +128,11 @@ async def update_rating(recommended_news, user_seq):
 
     if len(insert_rating_data) > 0:
         print("insert_rating...")
+        print(insert_rating_data)
         await async_insert_ratings(insert_rating_data)
     if len(update_rating_data) > 0:
         print("update_rating...")
+        print(update_rating_data)
         await async_update_ratings(update_rating_data)
 
     end_time = time.time()

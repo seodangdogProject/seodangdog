@@ -11,6 +11,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 from repository.recommend_repository import async_update_ratings
 from repository.recommend_repository import async_insert_ratings
+from recommend.mf_train import train_mf_model
 
 import pickle
 
@@ -52,6 +53,7 @@ def recommend_news(user_id, mf_model, top_n=5):
     # print("all_recommend_count ", len(predicted_ratings))
     # 상위 top_n개의 영화를 추천 목록에 추가
     recommended_news = []
+    print(predicted_ratings)
     for i in range(min(top_n, len(predicted_ratings))):
         news_seq = predicted_ratings[i][0]
         news_title = get_news_title(news_seq)
@@ -70,7 +72,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
     with open(save_path, 'rb') as f:
         mf = pickle.load(f)
 
-    print(mf.user_id_index)
+    # print(mf.user_id_index)
     # 만약 아이디가 없으면 cbf로 추천후 mf 다시 훈련
     # 만약 아이디가 있으면 mf로 추천후 온라인학습
     # cbf와 mf의 유사도가 ...
@@ -80,6 +82,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
         # print(recommendations)
         print("Recommendations for user", user_id)
         for i, news in enumerate(recommendations, 1):
+            print(type(news))
             print(f"{i}. {news.news_title} (NEWS SEQ: {news.news_seq}, {news.news_similarity})")
         return recommendations
     else:
@@ -91,8 +94,8 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
         # print("mf insert")
         # insert_rating_data = [[56662,35,111]]
         # background_tasks.add_task(async_insert_ratings, insert_rating_data)
-
-        return []
+        train_mf_model()
+        return recommended_news
 
 
 
