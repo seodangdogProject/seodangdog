@@ -124,7 +124,8 @@ def mf_update(datas: List[UpdateData]):
     for data in datas:
         user_index = mf.user_id_index[data.user_seq]
         news_index = mf.item_id_index[data.news_seq]
-        rating = data.similarity
+        rating = data.similarity * 5
         weight = data.weight
         user_news_weight = (user_index, news_index, rating)
         online_learning(mf,user_news_weight, weight)
+# 온라인데이터도 저장해야한다. (csv, 테이블?)
