@@ -16,8 +16,10 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 # 사용자 라이브러리 import
 sys.path.append(os.path.abspath('src'))
-from preprocessing.keyword_generate import keyword_generate
-import settings
+from src.preprocessing.keyword_generate import keyword_generate
+# from src.gpt_connect.gpt_connection import question_generate
+# 설정 파일
+# import settings
 
 router = APIRouter()
 
@@ -67,6 +69,9 @@ def save_news():
     news_data = keyword_generate(news_data, "newsMainTe xt", "newsKeyword")
     print("네이버 요약 키워드 작업 시작")
     news_data = keyword_generate(news_data, "newsSummary", "newsSummaryKeyword")
+
+    # GPT 문제 저장
+
 
     mongoDB["meta_news"].insert_many(news_data)
     return {"message": str(len(news_data)) + " news saved!"}
