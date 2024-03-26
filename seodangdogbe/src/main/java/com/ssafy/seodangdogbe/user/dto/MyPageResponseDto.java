@@ -13,13 +13,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MypageResponseDto {
+public class MyPageResponseDto {
     private String nickname;
     private String userId;
 
     private UserAbilityDto ability;
 
-    private String wordcloudImgUrl;
+    private String wordCloudImgUrl;
 
     private List<String> userBadgeNameList;
     private String badgeImgUrl;
