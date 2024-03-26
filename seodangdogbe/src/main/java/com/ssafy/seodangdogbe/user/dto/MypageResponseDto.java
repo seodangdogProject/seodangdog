@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -34,13 +33,14 @@ public class MypageResponseDto {
     //newsSeq, newsImgUrl, newsTitle, newsDescription, newsCreatedAt, newsKeyword;
 
     @Getter
+    @Setter
     @NoArgsConstructor
     public static class UserAbilityDto {
-        private int wordAbility;        // 어휘 / 푼 뉴스 수
-        private int inferenceAbility;   // 추론 / 푼 뉴스 수
-        private int judgementAbility;   // 판단 / 푼 뉴스 수
-        private int summaryAbility;     // 푼 뉴스 / 본 뉴스
-        private int constantAbility;    // ** 스트릭 날짜 수 / 가입일자로부터 현재까지
+        private float wordAbility;        // 어휘 / 푼 뉴스 수
+        private float inferenceAbility;   // 추론 / 푼 뉴스 수
+        private float judgementAbility;   // 판단 / 푼 뉴스 수
+        private float summaryAbility;     // 푼 뉴스 / 본 뉴스
+        private float constantAbility;    // ** 스트릭 날짜 수 / 가입일자로부터 현재까지
 
         /*
             newExp: 본 뉴스 수
@@ -51,10 +51,10 @@ public class MypageResponseDto {
          */
 
         public UserAbilityDto(UserExp userExp){
-            this.wordAbility = userExp.getWordExp() / userExp.getSummaryExp();
-            this.inferenceAbility = userExp.getInferenceExp() / userExp.getSummaryExp();
-            this.judgementAbility = userExp.getJudgementExp() / userExp.getSummaryExp();
-            this.summaryAbility = userExp.getSummaryExp() / userExp.getNewsExp();
+            this.wordAbility = (float) userExp.getWordExp() / userExp.getSummaryExp();
+            this.inferenceAbility = (float) userExp.getInferenceExp() / userExp.getSummaryExp();
+            this.judgementAbility = (float) userExp.getJudgementExp() / userExp.getSummaryExp();
+            this.summaryAbility = (float) userExp.getSummaryExp() / userExp.getNewsExp();
 //            this.constantAbility = ;
         }
     }

@@ -28,5 +28,9 @@ public class NewsPreviewListDto {
         this.newsKeyword = news.getKeywordNewsList().stream()
                 .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                 .collect(Collectors.toList());
+//        List<String> keywords = news.getKeywordNewsList().stream()
+//                .map(keywordNews -> keywordNews.getKeyword().getKeyword())
+//                .collect(Collectors.toList());
+
     }
 }
