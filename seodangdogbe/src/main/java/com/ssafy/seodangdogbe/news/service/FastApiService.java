@@ -1,5 +1,7 @@
 package com.ssafy.seodangdogbe.news.service;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ssafy.seodangdogbe.auth.service.UserService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -13,14 +15,19 @@ import java.util.List;
 @Service
 public class FastApiService {
     private final WebClient webClient;
+    private final UserService userService;
 
     @Autowired
-    public FastApiService(WebClient webClient) {
+    public FastApiService(WebClient webClient, UserService userService) {
+
         this.webClient = webClient;
+        this.userService = userService;
     }
 
     public Mono<List<CbfRecommendResponse>> fetchRecommendations() {
-        return this.webClient.get().uri("/fast/cbf_recom")
+        int userSeq = userService.getUserSeq();
+        return this.webClient.get()
+                .uri("/fast/cbf_recom/{userSeq}", userSeq)
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
                 clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
@@ -29,8 +36,17 @@ public class FastApiService {
 
     @Data
     public class CbfRecommendResponse {
+        @JsonProperty("news_id")
         private String id;
+
+        @JsonProperty("news_seq")
+        private Long newsSeq;
+
+        @JsonProperty("news_title")
         private String title;
+
+        @JsonProperty("news_similarity")
         private Double similarity;
+
     }
 }
