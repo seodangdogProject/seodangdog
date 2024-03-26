@@ -171,7 +171,7 @@ def get_wordcloud(user_seq):
     if len(sql_result) == 0:
         return HTTPException(status_code=204, detail="Keywords not found")
 
-    wc = WordCloud(font_path=settings.WC_FONT_PATH, width=800, height=400, background_color="white")
+    wc = WordCloud(font_path=settings.WC_FONT_PATH, width=800, height=400, background_color="white", colormap="Set1_r")
     cloud = wc.generate_from_frequencies(dict(sql_result))
 
     session = boto3.Session(
