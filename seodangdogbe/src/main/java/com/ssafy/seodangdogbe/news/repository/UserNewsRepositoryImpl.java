@@ -18,16 +18,31 @@ public class UserNewsRepositoryImpl implements UserNewsRepositoryCustom{
 
     private final QUserNews qUserNews = QUserNews.userNews;
     public List<LocalDateTime> findSolvedUserNews(User user, LocalDateTime start, LocalDateTime end){
-        List<LocalDateTime> solvedDateList = queryFactory.selectDistinct(qUserNews.modifiedAt)
+        List<LocalDateTime> solvedDateList = queryFactory.select(qUserNews.modifiedAt)  // 안겹치게 하려면 Distinct 붙이기
                 .from(qUserNews)
                 .where(qUserNews.user.eq(user),
                         qUserNews.isSolved.eq(true),
-                        qUserNews.isDelete.eq(false),
                         qUserNews.modifiedAt.between(start, end))
                 .orderBy(qUserNews.modifiedAt.asc())
                 .fetch();
 
         return solvedDateList;
+    }
+
+    public UserNews findRecentViewUserNews(User user){
+        return queryFactory.selectFrom(qUserNews)
+                .where(qUserNews.user.eq(user),
+                        qUserNews.isSolved.eq(false))
+                .orderBy(qUserNews.modifiedAt.desc())
+                .fetchOne();
+    }
+
+    public UserNews findRecentSolvedUserNews(User user){
+        return queryFactory.selectFrom(qUserNews)
+                .where(qUserNews.user.eq(user),
+                        qUserNews.isSolved.eq(true))
+                .orderBy(qUserNews.modifiedAt.desc())
+                .fetchOne();
     }
 
 }

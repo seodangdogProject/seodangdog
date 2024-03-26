@@ -34,11 +34,10 @@ public class MypageController {
 
         resultDto.setStreakList(mypageService.getSolvedDateRecord(user));
 
+        resultDto.setRecentViewNews(mypageService.getRecentViewNews(user));
+        resultDto.setRecentSolvedNews(mypageService.getRecentSolvedNews(user));
 
-//        private NewsPreviewListDto recentViewNews;
-//        private NewsPreviewListDto recentSolvedNews;
-
-        return null;
+        return resultDto;
     }
 
 }

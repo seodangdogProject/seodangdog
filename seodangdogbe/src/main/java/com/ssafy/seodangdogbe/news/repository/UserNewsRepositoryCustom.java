@@ -10,4 +10,6 @@ import java.util.Locale;
 public interface UserNewsRepositoryCustom {
     List<LocalDateTime> findSolvedUserNews(User user, LocalDateTime start, LocalDateTime end);
 
+    UserNews findRecentViewUserNews(User user);
+    UserNews findRecentSolvedUserNews(User user);
 }

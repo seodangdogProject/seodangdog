@@ -26,7 +26,7 @@ public class MypageResponseDto {
     private String badgeImgUrl;
 
 //    private List<LocalDateTime> strictDateList;
-    private List<Boolean> streakList;
+    private List<Integer> streakList;
 
     private NewsPreviewListDto recentViewNews;
     private NewsPreviewListDto recentSolvedNews;
