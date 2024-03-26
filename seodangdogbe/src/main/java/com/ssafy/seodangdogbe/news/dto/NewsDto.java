@@ -24,7 +24,7 @@ public class NewsDto {
         private String newsDescription;
         private LocalDateTime newsCreatedAt;    // 뉴스 published Date
 
-        // news url은 필요 없는지?
+        // ** news url은 필요 없는지?
 
         public NewsResponseDto(News news){
             this.newsSeq = news.getNewsSeq();

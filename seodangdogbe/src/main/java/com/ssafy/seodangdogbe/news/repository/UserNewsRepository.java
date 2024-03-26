@@ -11,4 +11,5 @@ public interface UserNewsRepository extends JpaRepository<UserNews, Long> {
 
     Optional<UserNews> findByUserUserSeqAndNewsNewsSeq(int userSeq, Long newsSeq);
 
+    void findByUserUserSeq();
 }
