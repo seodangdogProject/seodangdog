@@ -81,7 +81,7 @@ def train_mf_model():
     save_path = os.path.join(base_src, model_name)
     with open(save_path, 'wb') as f:
         pickle.dump(mf, f)
-    print(R_temp[56636])
+    # print(R_temp[56636])
 
 # 변수로 넘어온 user_seq, news_seq는 인덱스(0부터)로 변환해서 학습을 시켜야한다.
 def online_learning(mf, user_news_weight, weight):

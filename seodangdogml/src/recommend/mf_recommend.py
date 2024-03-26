@@ -74,13 +74,6 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
     start_time = time.time()
     print("mf_recommend")
 
-    base_src = './recommend'
-    # print(os.listdir(base_src))
-    model_name = 'mf_online.pkl'
-    save_path = os.path.join(base_src, model_name)
-    with open(save_path, 'rb') as f:
-        mf = pickle.load(f)
-
     if user_id in mf.user_id_index:
         top_n = 10
         recommendations = recommend_news(user_id, mf, top_n)
