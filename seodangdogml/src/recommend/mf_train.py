@@ -23,7 +23,6 @@ def multiprocessing_train():
 
 def train_mf_model():
 
-    # 아마 커넥션 두개 써서 안되는듯 레이팅은 비동기로 하는데 이건 동기니까
     ratings = select_all_ratings()
     ratings = pd.DataFrame(ratings)
 
@@ -82,7 +81,11 @@ def train_mf_model():
     save_path = os.path.join(base_src, model_name)
     with open(save_path, 'wb') as f:
         pickle.dump(mf, f)
+    print(R_temp[56636])
 
+# 변수로 넘어온 user_seq, news_seq는 인덱스(0부터)로 변환해서 학습을 시켜야한다.
+def online_learning(mf, user_news_weight, weight):
+    mf.online_learning(user_news_weight, weight)
 
 class NEW_MF():
     def __init__(self, ratings, hyper_params):
@@ -255,9 +258,9 @@ class NEW_MF():
     ### 가중치 없는 온라인 학습 end###
 
     ### 가중치 있는 온라인 학습 start###
-    def online_learning(self, new_samples, new_weight):
-        for sample, weight in zip(new_samples, new_weight):
-            self.online_sgd(sample, weight)
+    def online_learning(self, new_sample, new_weight):
+        # new_sample에는 유저, 뉴스, 점수 new_weight는 중요도
+        self.online_sgd(new_sample, new_weight)
 
     def online_sgd(self, new_sample, new_weight):
         i, j, r = new_sample

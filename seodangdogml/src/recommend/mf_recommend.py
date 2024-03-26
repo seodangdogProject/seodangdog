@@ -1,3 +1,5 @@
+from typing import List
+
 from repository.recommend_repository import select_all_ratings
 from repository.recommend_repository import select_all_news
 from fastapi import APIRouter
@@ -7,9 +9,11 @@ import os
 from recommend.cbf_recommend import format_weight
 from recommend.cbf_recommend import cbf_recommend
 from recommend.mf_train import multiprocessing_train
+from recommend.mf_train import online_learning
 import asyncio
 import pickle
 import time
+from pydantic import BaseModel
 
 router = APIRouter()
 
@@ -18,12 +22,24 @@ news = select_all_news()
 news = pd.DataFrame(news)
 news = news.set_index('news_id')
 
-
 class MfNewsDto:
     def __init__(self, news_seq, news_title, news_similarity):
         self.news_seq = news_seq
         self.news_title = news_title
         self.news_similarity = news_similarity
+
+
+def load_mf():
+    base_src = './recommend'
+    model_name = 'mf_online.pkl'
+    save_path = os.path.join(base_src, model_name)
+    with open(save_path, 'rb') as f:
+        model = pickle.load(f)
+    return model
+
+
+mf = load_mf()
+
 
 def get_news_title(news_id):
     return news.loc[news_id]['title']
@@ -47,8 +63,9 @@ def recommend_news(user_id, mf_model, top_n=5):
     for i in range(min(top_n, len(predicted_ratings))):
         news_seq = predicted_ratings[i][0]
         news_title = get_news_title(news_seq)
-        news_similarity = format_weight(predicted_ratings[i][1])
-        recommended_news.append(MfNewsDto(news_seq, news_title,news_similarity))
+        # news_similarity = format_weight(predicted_ratings[i][1])
+        news_similarity = predicted_ratings[i][1]
+        recommended_news.append(MfNewsDto(news_seq, news_title, news_similarity))
     return recommended_news
 
 
@@ -67,7 +84,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
     if user_id in mf.user_id_index:
         top_n = 10
         recommendations = recommend_news(user_id, mf, top_n)
-        
+
         # 추천목록화인 start
         # print(recommendations)
         # print("Recommendations for user", user_id)
@@ -78,7 +95,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
         end_time = time.time()
         execution_time = end_time - start_time
         print(f"mf 추천: {execution_time} 초")
-        
+
         return recommendations
     else:
         # 방금회원가입했으면(mf 모델에 학습되어 있지 않으면) 추천되지 않는 cbf를 추천하고 mf를 다시 학습시킨다
@@ -102,13 +119,19 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
 #     (mf.user_id_index[2], mf.item_id_index['J'], 9),
 #     (mf.user_id_index[3], mf.item_id_index['J'], 9)
 #     ]
+class UpdateData(BaseModel):
+    user_seq: int
+    news_seq: int
+    similarity: float
+    weight: float
 
-router.post('/fast/mf_recom/update')
-def reflection_mf():
-    pass
 
-def online_learning(model, news_data, weight):
-  weights = []
-  for i in range(len(news_data)):
-    weights.append(weight)
-  model.online_learning(news_data,weights)
+@router.post('/fast/mf_recom/update')
+def mf_update(datas: List[UpdateData]):
+    for data in datas:
+        user_index = mf.user_id_index[data.user_seq]
+        news_index = mf.item_id_index[data.news_seq]
+        rating = data.similarity
+        weight = data.weight
+        user_news_weight = (user_index, news_index, rating)
+        online_learning(mf,user_news_weight, weight)
