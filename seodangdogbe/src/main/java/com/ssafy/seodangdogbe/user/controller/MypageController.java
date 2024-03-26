@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 import static com.ssafy.seodangdogbe.user.dto.MypageResponseDto.*;
 
 @RestController
@@ -26,19 +29,27 @@ public class MypageController {
 
         resultDto.setUserId(user.getUserId());
         resultDto.setNickname(user.getNickname());
+
+        // ability
         resultDto.setAbility(new UserAbilityDto(user.getUserExp()));
+        // ability constant
+        int attendanceCount = mypageService.getAttendanceCount(user);
+        LocalDateTime joinDate = user.getCreatedAt();
+        long duringDate = ChronoUnit.DAYS.between(joinDate, LocalDateTime.now());
+        resultDto.getAbility().setConstantAbility((float) attendanceCount / duringDate);
 
+        // badge
         resultDto.setBadgeImgUrl(mypageService.getBadgeImgUrl(user));
-
         resultDto.setUserBadgeNameList(mypageService.getUserBadgeList(user));
 
+        // streak
         resultDto.setStreakList(mypageService.getSolvedDateRecord(user));
 
+        resultDto.setRecentViewNews(mypageService.getRecentViewNews(user));
+        resultDto.setRecentSolvedNews(mypageService.getRecentSolvedNews(user));
 
-//        private NewsPreviewListDto recentViewNews;
-//        private NewsPreviewListDto recentSolvedNews;
 
-        return null;
+        return resultDto;
     }
 
 }
