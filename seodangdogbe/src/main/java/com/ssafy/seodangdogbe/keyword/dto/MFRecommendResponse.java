@@ -8,6 +8,5 @@ import lombok.Data;
 public class MFRecommendResponse {
     int userSeq;
     Long newsSeq;
-    double similarity;
     double weight;
 }

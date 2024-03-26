@@ -51,13 +51,13 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
             if (!exists) { // 존재하지않음 -> 안봄
                 notSeenNewsSeq.add(news.getNewSeq());
-                mfRecommendResponseList.add(new MFRecommendResponse(user.getUserSeq(), news.getNewSeq(), news.getSimilarity(), highWeight));
+                mfRecommendResponseList.add(new MFRecommendResponse(user.getUserSeq(), news.getNewSeq(),  highWeight));
                 for(String str : news.getKeyword()) {
                     notSeenNewsKeyword.add(str);
                 }
             }else { // 존재함 -> 봄
                 seeNewsSeq.add(news.getNewSeq());
-                mfRecommendResponseList.add(new MFRecommendResponse(user.getUserSeq(), news.getNewSeq(), news.getSimilarity(), rowWeight));
+                mfRecommendResponseList.add(new MFRecommendResponse(user.getUserSeq(), news.getNewSeq(), rowWeight));
                 for(String str : news.getKeyword()) {
                     seenNewsKeyword.add(str);
                 }
