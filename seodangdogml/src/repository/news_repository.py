@@ -2,7 +2,7 @@
 from bson import json_util
 from bson.objectid import ObjectId
 from pymongo import MongoClient
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from konlpy.tag import Okt
 from PIL import Image
 import os
@@ -157,21 +157,28 @@ def save_keyword_news():
     mysqlDB.commit()
     mysqlDB.close()
 
-@router.get("/get_wordcloud/{user_seq}")
+@router.get("/fast/mypages/wordclouds/{user_seq}")
 def get_wordcloud(user_seq):
     mysqlDB = pymysql.connect(host='seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com', port=3306,
                               user='seodangdog', passwd='dogseodang0311', db='seodangdog', charset='utf8')
     #
     cursor = mysqlDB.cursor()
 
-    # sql = "select "
+    sql = f"select keyword, weight from user_keyword where user_seq = %s order by weight desc;"
+    result_cnt = cursor.execute(sql, user_seq)
+    sql_result = cursor.fetchall()
+
+    if len(sql_result) == 0:
+        return HTTPException(status_code=204, detail="Keywords not found")
 
     wc = WordCloud(font_path=settings.WC_FONT_PATH, width=800, height=400, background_color="white")
-    cloud = wc.generate_from_frequencies()
+    cloud = wc.generate_from_frequencies(dict(sql_result))
 
     session = boto3.Session(
-        aws_access_key_id=settings.S3_ACCESS_KEY,
-        aws_secret_access_key=settings.S3_SECRET_KEY,
+        # aws_access_key_id=settings.S3_ACCESS_KEY,
+        # aws_secret_access_key=settings.S3_SECRET_KEY,
+        aws_access_key_id="AKIAYS2NT7VYZUUQXEU6",
+        aws_secret_access_key="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",
     )
 
     # Save tweet list to an s3 bucket
@@ -208,7 +215,5 @@ def upload_badge_img(file_name):
             f"badges/{file_name}",
             ExtraArgs={'ContentType': 'image/jpeg'}
         )
-    # except ClientError as e:
-    #     print(f'Credential error => {e}')
     except Exception as e:
         print(f"Another error => {e}")
