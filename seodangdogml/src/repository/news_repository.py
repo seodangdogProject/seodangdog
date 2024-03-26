@@ -159,12 +159,15 @@ def save_keyword_news():
 
 @router.get("/get_wordcloud/{user_seq}")
 def get_wordcloud(user_seq):
+    mysqlDB = pymysql.connect(host='seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com', port=3306,
+                              user='seodangdog', passwd='dogseodang0311', db='seodangdog', charset='utf8')
+    #
+    cursor = mysqlDB.cursor()
 
-    news_data = findNews(1)
-    words = news_data[0]["newsKeyword"]
+    # sql = "select "
 
     wc = WordCloud(font_path=settings.WC_FONT_PATH, width=800, height=400, background_color="white")
-    cloud = wc.generate_from_frequencies(words)
+    cloud = wc.generate_from_frequencies()
 
     session = boto3.Session(
         aws_access_key_id=settings.S3_ACCESS_KEY,
@@ -192,7 +195,7 @@ def image_to_byte_array(image: Image, format: str = 'png'):
 
 
 @router.get("/upload_badge_img/{file_name}")
-def get_wordcloud(file_name):
+def upload_badge_img(file_name):
     client_s3 = boto3.client(
         's3',
         aws_access_key_id=settings.S3_ACCESS_KEY,
