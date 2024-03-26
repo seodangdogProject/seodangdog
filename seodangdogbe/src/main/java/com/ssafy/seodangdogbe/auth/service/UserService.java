@@ -68,4 +68,11 @@ public class UserService {
         return userRepository.findByUserSeq(userSeq)
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
     }
+
+    public User getUserByUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
+    }
 }

@@ -7,6 +7,8 @@ import com.ssafy.seodangdogbe.news.domain.UserNews;
 import com.ssafy.seodangdogbe.word.domain.UserWord;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +30,8 @@ public class User extends BaseTimeEntity {
     private UserExp userExp = new UserExp();
 
     // 사용자 대표 뱃지
-    // 1:1 아닌거 아닌가?
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "badge_seq")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "badge_seq", columnDefinition = "int default 1")
     private Badge badge;
 
     @Column(length = 15, unique = true)
