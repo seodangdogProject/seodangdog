@@ -1,16 +1,87 @@
 from repository.recommend_repository import select_all_ratings
-from repository.recommend_repository import select_all_news
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 import pickle
 import os
 import time
-import asyncio
-from asyncio import Lock
+import multiprocessing
+
 router = APIRouter()
+
+@router.get('/fast/mf_recom/train')
+def user_register_train():
+    multiprocessing_train()
+
+
+def multiprocessing_train():
+    process = multiprocessing.Process(target=train_mf_model)
+    process.start()
+
+    return {"message": "Training started in the background."}
+
+def train_mf_model():
+
+    # 아마 커넥션 두개 써서 안되는듯 레이팅은 비동기로 하는데 이건 동기니까
+    ratings = select_all_ratings()
+    ratings = pd.DataFrame(ratings)
+
+    # 중복제거(디비의 무결성이 보장되면 필요없음)
+    ratings = ratings.drop_duplicates(subset=['user_id', 'news_id'])
+
+    TRAIN_SIZE = 0.75
+    # (사용자 - 영화 - 평점)
+    # 데이터를 섞는다. 데이터의 순서를 무작위로 변경하여 모델이 특정 순서에 의존하지 않도록 한다.
+    # random_state 매개변수를 사용하여 재현 가능한 결과를 얻을 수 있도록 설정
+    ratings = shuffle(ratings, random_state=2021)
+
+    # 전체 데이터에서 훈련 세트의 크기를 결정하는 기준을 설정
+    cutoff = int(TRAIN_SIZE * len(ratings))
+    ratings_train = ratings.iloc[:cutoff]
+    ratings_test = ratings.iloc[cutoff:]
+
+    R_temp = ratings.pivot(index='user_id', columns='news_id', values='rating').fillna(0)
+
+    hyper_params = {
+        'K': 5,
+        'alpha': 0.001,
+        'beta': 0.02,
+        'iterations': 3900,
+        'verbose': False
+    }
+
+    mf = NEW_MF(R_temp, hyper_params)
+    test_set = mf.set_test(ratings_test)
+    result = mf.test()
+    print("학습완료")
+    # 학습을 통해 최적의 K값 찾기 start
+    # results = []
+    # index = []
+
+    # R_temp = ratings.pivot(index = 'user_id', columns = 'news_id', values = 'rating').fillna(0)
+
+    # for K in range (1,261,10):
+    #   print(f'K : {K}')
+    #   hyper_params = {
+    #     'K' : K,
+    #     'alpha' : 0.001,
+    #     'beta' : 0.02,
+    #     'iterations' : 300,
+    #     'verbose' : True
+    #   }
+    #   mf = NEW_MF(R_temp, hyper_params)
+
+    # test_set = mf.set_test(ratings_test)
+
+    # result = mf.test()
+    # 학습을 통해 최적의 K값 찾기 end
+
+    base_src = './recommend'
+    model_name = 'mf_online.pkl'
+    save_path = os.path.join(base_src, model_name)
+    with open(save_path, 'wb') as f:
+        pickle.dump(mf, f)
 
 
 class NEW_MF():
@@ -210,89 +281,3 @@ class NEW_MF():
 
     def full_prediction(self):
         return self.b + self.b_u[:, np.newaxis] + self.b_d[np.newaxis, :] + self.P.dot(self.Q.T)
-
-
-training_lock = Lock()
-@router.get('/fast/mf_recom/train')
-async def user_register_train():
-    if training_lock.locked():
-        return {"message": "이미 모델 학습이 진행 중입니다."}
-    # 모델 학습 중으로 Lock 획득
-    async with training_lock:
-        # train_mf_model 함수를 백그라운드에서 실행
-        update_task = asyncio.create_task(train_mf_model())
-
-        # 학습 시작 메시지 반환
-        return {"message": "모델 학습이 시작되었습니다."}
-
-
-
-async def train_mf_model():
-
-    start_time = time.time()
-
-    # 아마 커넥션 두개 써서 안되는듯 레이팅은 비동기로 하는데 이건 동기니까
-    ratings = select_all_ratings()
-    ratings = pd.DataFrame(ratings)
-
-    # 중복제거(디비의 무결성이 보장되면 필요없음)
-    ratings = ratings.drop_duplicates(subset=['user_id', 'news_id'])
-
-    TRAIN_SIZE = 0.75
-    # (사용자 - 영화 - 평점)
-    # 데이터를 섞는다. 데이터의 순서를 무작위로 변경하여 모델이 특정 순서에 의존하지 않도록 한다.
-    # random_state 매개변수를 사용하여 재현 가능한 결과를 얻을 수 있도록 설정
-    ratings = shuffle(ratings, random_state=2021)
-
-    # 전체 데이터에서 훈련 세트의 크기를 결정하는 기준을 설정
-    cutoff = int(TRAIN_SIZE * len(ratings))
-    ratings_train = ratings.iloc[:cutoff]
-    ratings_test = ratings.iloc[cutoff:]
-
-    R_temp = ratings.pivot(index='user_id', columns='news_id', values='rating').fillna(0)
-
-    hyper_params = {
-        'K': 5,
-        'alpha': 0.001,
-        'beta': 0.02,
-        'iterations': 3900,
-        'verbose': True
-    }
-
-    mf = NEW_MF(R_temp, hyper_params)
-    test_set = mf.set_test(ratings_test)
-    result = mf.test()
-    print("학습완료")
-    # 학습을 통해 최적의 K값 찾기 start
-    # results = []
-    # index = []
-
-    # R_temp = ratings.pivot(index = 'user_id', columns = 'news_id', values = 'rating').fillna(0)
-
-    # for K in range (1,261,10):
-    #   print(f'K : {K}')
-    #   hyper_params = {
-    #     'K' : K,
-    #     'alpha' : 0.001,
-    #     'beta' : 0.02,
-    #     'iterations' : 300,
-    #     'verbose' : True
-    #   }
-    #   mf = NEW_MF(R_temp, hyper_params)
-
-    # test_set = mf.set_test(ratings_test)
-
-    # result = mf.test()
-    # 학습을 통해 최적의 K값 찾기 end
-        
-    end_time = time.time()
-    execution_time = end_time - start_time
-    print(f"mf 훈련시간: {execution_time} 초")
-
-
-    base_src = './recommend'
-    model_name = 'mf_online.pkl'
-    save_path = os.path.join(base_src, model_name)
-    with open(save_path, 'wb') as f:
-        pickle.dump(mf, f)
-    training_lock.release()

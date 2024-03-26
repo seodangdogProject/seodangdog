@@ -117,7 +117,7 @@ def select_all_user():
             # 파라미터를 사용한 쿼리 실행
             sql = "select user_seq, user_id, nickname from user"
             cursor.execute(sql)
-            result = cursor.fetchall();
+            result = cursor.fetchall()
             return result
     except Exception as e:
         print(f"Error occurred: {e}")
@@ -341,6 +341,7 @@ async def async_update_ratings(rating_data):
     except Exception as e:
         print(f"Error occurred: {e}")
         return False
+
 
 # cbf추천을 위해 몽고디비에서 데이터를 들고온다. 뉴스제목, 아이디, 키워드를 들고온다
 def get_news_title_keyword():
