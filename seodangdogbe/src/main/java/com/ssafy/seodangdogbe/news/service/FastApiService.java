@@ -2,6 +2,8 @@ package com.ssafy.seodangdogbe.news.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.seodangdogbe.auth.service.UserService;
+import com.ssafy.seodangdogbe.keyword.dto.MFRecommendResponse;
+import com.ssafy.seodangdogbe.user.domain.User;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -32,6 +34,17 @@ public class FastApiService {
                 .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
                 clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
                 .bodyToMono(new ParameterizedTypeReference<List<CbfRecommendResponse>>() {});
+    }
+
+    public void updateWeigth(User user, List<MFRecommendResponse> mfRecommendResponseList) {
+        this.webClient.post()
+                .uri("/fast/mf_recom/update")
+                .bodyValue(mfRecommendResponseList)
+                .retrieve()
+                .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
+                        clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
+                .bodyToMono(String.class)// 응답값이 뭔지는 왜 안알ㄹ줬노... -> 일단 string
+                .block(); // 동기적 처리로 일단 냅두기
     }
 
     @Data
