@@ -9,7 +9,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from repository.news_repository import getNews
 from create_dummy.make_user_data import make_keywordlist
 from repository.recommend_repository import select_user_keyword
-from repository.recommend_repository import news_id_seq
+from repository.recommend_repository import select_news_id_seq
 from repository.recommend_repository import get_news_title_keyword
 from repository.recommend_repository import select_ratings
 from repository.recommend_repository import update_ratings
@@ -44,12 +44,12 @@ class NewsDto:
         self.news_title = news_title
         self.news_similarity = news_similarity
 
-news_data=[]
 
 def renewal_news_data():
     # 현재는 100개의 뉴스에 대해서만 들고온다 -> 추천되는건 rating테이블에 넣는데 너무 많으면 추천이 잘되는지 확인불가
-    result = get_news_title_keyword()
-    for doc in result:
+    data = get_news_title_keyword()
+    result = []
+    for doc in data:
         news_id= str(doc['_id'])
         news_title = doc.get('newsTitle')
         news_keyword=doc.get('newsKeyword')
@@ -59,15 +59,18 @@ def renewal_news_data():
             "news_title": news_title,
             "keyword_str": keyword_str
         }
-        news_data.append(temp)
+        result.append(temp)
+    return result
+
+def get_news_seq():
+    data = select_news_id_seq()
+    result = {entry['news_id']: entry['news_seq'] for entry in data}
+    return result
 
 
-renewal_news_data()
+news_data = renewal_news_data()
 df_news = pd.DataFrame([[news['keyword_str']] for news in news_data], columns=['keyword_str'])
-# df_news = pd.DataFrame([[news['news_title']] for news in news_data], columns=['news_title'])
-# print(df_news)
-# for news in news_data:
-#     print(news)
+news_id_seq = get_news_seq()
 
 
 # BackgroundTasks의 의존성주입
@@ -76,7 +79,7 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
     print('cbf_recommend start')
 
     user_keyword = select_user_keyword(user_seq)
-    print(user_keyword)
+    # print(user_keyword)
     keyword_weights = {data['keyword']: data['weight'] for data in user_keyword}
     user_keyword_list = list(keyword_weights.keys())  # 키들을 배열 형태로 반환
 
@@ -94,7 +97,7 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
     result = []
     for news in recommended_news:
         news_id = news[0]
-        news_seq = news_id_seq(news_id)
+        news_seq = news_id_seq[news_id]
         news_title = news[1]
         news_similarity = format_weight(news[2])
 
@@ -107,6 +110,7 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
 
     return result
 
+
 # 추천이되면 mysql의 rating에 삽입한다. 시간이 걸리기때문에 backgroundtask로 비동기로 수행
 async def update_rating(recommended_news, user_seq):
     start_time = time.time()
@@ -114,11 +118,11 @@ async def update_rating(recommended_news, user_seq):
     update_rating_data = []
     for news in recommended_news:
         news_id = news[0]
-        news_seq = news_id_seq(news_id)
+        news_seq = news_id_seq[news_id]
         news_title = news[1]
         news_similarity = format_weight(news[2])
 
-        info = await async_select_ratings(news_seq, user_seq)
+        info = select_ratings(news_seq, user_seq)
         if info is None:
             temp = [news_seq, user_seq, news_similarity]
             insert_rating_data.append(temp)
@@ -128,10 +132,12 @@ async def update_rating(recommended_news, user_seq):
 
     if len(insert_rating_data) > 0:
         print("insert_rating...")
-        await async_insert_ratings(insert_rating_data)
+        # print(insert_rating_data)
+        insert_ratings(insert_rating_data)
     if len(update_rating_data) > 0:
         print("update_rating...")
-        await async_update_ratings(update_rating_data)
+        # print(update_rating_data)
+        update_ratings(update_rating_data)
 
     end_time = time.time()
     execution_time = end_time - start_time

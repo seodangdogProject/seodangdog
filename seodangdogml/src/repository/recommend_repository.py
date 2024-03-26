@@ -33,7 +33,11 @@ db_config = {
 # cursorclass=pymysql.cursors.DictCursor,)
 
 
-connection = pymysql.connect(**db_config)
+# DB와 접근하는 conn, cur 객체 생성 후 반환
+def mysql_create_session():
+    connection = pymysql.connect(host=db_config['host'], user=db_config['user'], password=db_config['password'], db=db_config['database'], charset="utf8", port=db_config['port'])
+    return connection
+
 
 # MongoDB
 host = "seodangdog"
@@ -44,10 +48,10 @@ uri = f"mongodb://{username}:{password}@j10e104.p.ssafy.io:{port}/{host}?authSou
 dbname = 'seodangdog'
 client = MongoClient(uri)[dbname]
 
-# @router.get('zzz')
 
 # @router.get('/fast/test/{user_seq}')
 def find_user(user_seq):
+    connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -64,8 +68,7 @@ def find_user(user_seq):
         return False
     finally:
         # 연결 종료
-        # connection.close()
-        pass
+        connection.close()
 
 
 # 테스트를 위해 임의의 사용자의 정보를 만든다.
@@ -87,6 +90,7 @@ def insert_user():
 
 # 테스트를 위해 임의의 유저를 mysql에 삽입
 def insert_one_user(user_id, nickname, password):
+    connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -101,19 +105,19 @@ def insert_one_user(user_id, nickname, password):
         return False
     finally:
         # 연결 종료
-        # connection.close()
-        pass
+        connection.close()
 
 
 # mysql의 모든 유저정보를 가져온다.
 def select_all_user():
+    connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # 파라미터를 사용한 쿼리 실행
             sql = "select user_seq, user_id, nickname from user"
             cursor.execute(sql)
-            result = cursor.fetchall();
+            result = cursor.fetchall()
             return result
     except Exception as e:
         print(f"Error occurred: {e}")
@@ -121,21 +125,39 @@ def select_all_user():
         return False
     finally:
         # 연결 종료
-        # connection.close()
-        pass
+        connection.close()
 
 
 # 몽고디비의 뉴스아이디를 mysql-news테이블의 뉴스시퀀스로 변환(디비에 왔다갔다하지말고 그냥 서버 메모리에 올릴까요)
-def news_id_seq(news_id):
+# def news_id_seq(news_id):
+#     connection = mysql_create_session()
+#     try:
+#         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
+#         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+#             # 파라미터를 사용한 쿼리 실행
+#             sql = "select news_seq from news where news_access_id=%s"
+#             cursor.execute(sql, news_id)
+#             result = cursor.fetchone()
+#             result = result['news_seq']
+#             # print(result)
+#             return result
+#     except Exception as e:
+#         print(f"Error occurred: {e}")
+#         connection.rollback()
+#         return False
+#     finally:
+#         # 연결 종료
+#         connection.close()
+
+def select_news_id_seq():
+    connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # 파라미터를 사용한 쿼리 실행
-            sql = "select news_seq from news where news_access_id=%s"
-            cursor.execute(sql, news_id)
-            result = cursor.fetchone()
-            result = result['news_seq']
-            # print(result)
+            sql = "select news_seq, news_access_id news_id from news"
+            cursor.execute(sql)
+            result = cursor.fetchall()
             return result
     except Exception as e:
         print(f"Error occurred: {e}")
@@ -143,10 +165,7 @@ def news_id_seq(news_id):
         return False
     finally:
         # 연결 종료
-        # connection.close()
-        pass
-
-
+        connection.close()
 # 테스트를 위해 뽑아온 키워드들을 모든 사용자에게 부여한다.
 @router.get('/fast/insert_all_user_keyword')
 def insert_all_user_keyword():
@@ -185,6 +204,7 @@ def pick_keyword(limit):
 
 # 테스트를위해 사용자 키워드를 디비에 넣는함수
 def insert_one_user_keyword(user_seq, keyword, weight):
+    connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -199,13 +219,13 @@ def insert_one_user_keyword(user_seq, keyword, weight):
         return False
     finally:
         # 연결 종료
-        # connection.close()
-        pass
+        connection.close()
 
 
 # 컨텐츠 기반추천을 할때 가중치를 가진 키워드와 유사한 키워드가 있는 뉴스추천을 진행한다.
 @router.get('/fast/select_user_keyword/{user_seq}')
 def select_user_keyword(user_seq):
+    connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -220,12 +240,12 @@ def select_user_keyword(user_seq):
         return False
     finally:
         # 연결 종료
-        # connection.close()
-        pass
+        connection.close()
 
 
 # 뉴스와 유저가 rating에 있는지 판단
 def select_ratings(news_seq, user_seq):
+    connection = mysql_create_session()
     try:
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             sql = "select * from ratings where news_seq = %s AND user_seq = %s"
@@ -238,8 +258,8 @@ def select_ratings(news_seq, user_seq):
         return False
     finally:
         # 연결 종료
-        # connection.close()
-        pass
+        connection.close()
+
 
 async def async_select_ratings(news_seq, user_seq):
     try:
@@ -256,7 +276,10 @@ async def async_select_ratings(news_seq, user_seq):
         return False
 # 뉴스와 유저가 rating에 없을 경우 삽입
 # 추천받은 뉴스를 rating 테이블에 저장한다. MF추천을 받을때 사용한다.
+
+
 def insert_ratings(rating_data):
+    connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -271,8 +294,9 @@ def insert_ratings(rating_data):
         return False
     finally:
         # 연결 종료
-        # connection.close()
-        pass
+        connection.close()
+
+
 async def async_insert_ratings(rating_data):
     try:
         async with aiomysql.create_pool(host=db_config['host'], port=db_config['port'], user=db_config['user'],
@@ -286,8 +310,10 @@ async def async_insert_ratings(rating_data):
         print(f"Error occurred: {e}")
         return False
 
+
 # # 뉴스와 유저가 rating에 있을 경우 업데이트
 def update_ratings(rating_data):
+    connection = mysql_create_session()
     try:
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # rating_data는 (news_seq, user_seq, rating) 튜플의 리스트여야 합니다.
@@ -300,7 +326,9 @@ def update_ratings(rating_data):
         connection.rollback()
         return False
     finally:
-        pass
+        connection = mysql_create_session()
+
+
 async def async_update_ratings(rating_data):
     try:
         async with aiomysql.create_pool(host=db_config['host'], port=db_config['port'], user=db_config['user'],
@@ -314,6 +342,7 @@ async def async_update_ratings(rating_data):
         print(f"Error occurred: {e}")
         return False
 
+
 # cbf추천을 위해 몽고디비에서 데이터를 들고온다. 뉴스제목, 아이디, 키워드를 들고온다
 def get_news_title_keyword():
     response = client.meta_news.find({}, {"_id": 1, "newsTitle": 1, "newsKeyword": 1}).limit(100)
@@ -325,6 +354,7 @@ def get_news_title_keyword():
 
 
 def select_all_ratings():
+    connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -339,12 +369,12 @@ def select_all_ratings():
         return False
     finally:
         # 연결 종료
-        # connection.close()
-        pass
+        connection.close()
 
 
 # 추천을 위해
 def select_all_news():
+    connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -359,7 +389,4 @@ def select_all_news():
         return False
     finally:
         # 연결 종료
-        # connection.close()
-        pass
-
-
+        connection.close()
