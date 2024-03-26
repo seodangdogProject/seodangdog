@@ -5,9 +5,12 @@ import com.ssafy.seodangdogbe.user.domain.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 
 public interface UserNewsRepositoryCustom {
-    List<LocalDateTime> findSolvedUserNews(User user, LocalDateTime start, LocalDateTime end);
+    List<LocalDateTime> findSolvedDateList(User user, LocalDateTime start, LocalDateTime end);
 
+    Integer countSolvedDate(User user);
+
+    UserNews findRecentViewUserNews(User user);
+    UserNews findRecentSolvedUserNews(User user);
 }
