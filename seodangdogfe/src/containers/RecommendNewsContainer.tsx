@@ -3,12 +3,16 @@ import { useEffect, useRef, useState } from "react";
 import styled from "./RecommendNewsContainer.module.css";
 import classNames from "classnames/bind";
 import { privateFetch } from "../utils/http-commons";
+import { useRouter } from "next/navigation";
 export default function RecommendNewsContainer() {
   const cx = classNames.bind(styled);
 
   const [category, setCategory] = useState<string>("user-recommend");
+  const [newsList, setNewsList] = useState<any[]>([]);
   const userRecommendEl = useRef<HTMLDivElement>(null);
   const otherRecommendEl = useRef<HTMLDivElement>(null);
+
+  const router = useRouter();
 
   // method
   function toggle(inputCategory: string): void {
@@ -23,7 +27,13 @@ export default function RecommendNewsContainer() {
     (async () => {
       try {
         const res = await privateFetch("/main/" + category, "GET");
-        console.log(await res.json());
+        const data = (await res.json())[0].newsPreviewList;
+        console.log(data);
+        let subArrays = [];
+        for (let i = 0; data; i += 3) {
+          subArrays.push(data.slice(i, i + 3));
+        }
+        setNewsList(subArrays);
       } catch (error) {
         console.error(error);
       }
@@ -52,6 +62,27 @@ export default function RecommendNewsContainer() {
         </div>
         <div className={cx("section", ["box-shodow-custom"])}>
           <ul className={cx("line")}>
+            {newsList.map((subGroup, index) => (
+              <li key={index} className={cx("item-container")}>
+                {subGroup.map((item: any, idx: number) => (
+                  <div
+                    onClick={() => router.push("news" + item.newsSeq)}
+                    key={item.newsSeq}
+                    className={cx("line-item")}
+                  >
+                    <img src={item.newsImgUrl} alt="" />
+                    <div className={cx("title")}>{item.newsTitle}</div>
+                    <div className={cx("description")}>
+                      {item.newsDescription}
+                    </div>
+                    <div className={cx("date")}>
+                      조회수 {item.countView} • {item.newsCreatedAt}
+                    </div>
+                  </div>
+                ))}
+              </li>
+            ))}
+
             <li className={cx("item-container")}>
               <div className={cx("line-item")}>
                 <img
@@ -66,7 +97,9 @@ export default function RecommendNewsContainer() {
                   경험을 선보인다. △전기차 충전 △공간 및 신기술 △지속가능성
                   등을...
                 </div>
-                <div className={cx("date")}>조회수 123 • 6개월전</div>
+                <div className={cx("date")}>
+                  조회수 123 • 2024.03.18 오후 06:49분
+                </div>
               </div>
               <div className={cx("line-item")}>
                 <img

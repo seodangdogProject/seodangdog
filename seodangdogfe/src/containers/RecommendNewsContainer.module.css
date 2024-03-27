@@ -81,6 +81,7 @@
 }
 .line-item {
   width: 30%;
+  cursor: pointer;
 }
 .item-container img {
   display: block;
