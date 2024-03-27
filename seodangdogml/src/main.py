@@ -23,7 +23,7 @@ back_scheduler = BackgroundScheduler(timezone='Asia/Seoul')
 
 # @back_scheduler.scheduled_job('cron', daily="1/1", id='test')
 
-@back_scheduler.scheduled_job('cron', minute="15", hour="3", id='test')
+@back_scheduler.scheduled_job('cron', minute="20", hour="3", id='test')
 def scheduled_job():
     # test()
     print("지금은 !!!!")
