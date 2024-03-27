@@ -226,7 +226,8 @@ def crawling_main():
 def test():
     from selenium.webdriver.chrome.service import Service
     print(os.getcwd())
-    service = Service(executable_path="/usr/bin/chromedriver")
+    service = Service(executable_path="resource/chromedriver")
+    # service = Service(executable_path="resource\\chromedriver.exe")
     options = webdriver.ChromeOptions()
     # options.add_experimental_option("detach", True) # 크롤링 중인 창 닫지 않고 유지
     options.add_argument("headless")
