@@ -4,6 +4,7 @@ import styled from "./RecommendNewsContainer.module.css";
 import classNames from "classnames/bind";
 import { privateFetch } from "../utils/http-commons";
 import { useRouter } from "next/navigation";
+import changeDateFormat from "@/utils/changeDateFormat";
 export default function RecommendNewsContainer() {
   const cx = classNames.bind(styled);
 
@@ -76,7 +77,8 @@ export default function RecommendNewsContainer() {
                       {item.newsDescription}
                     </div>
                     <div className={cx("date")}>
-                      조회수 {item.countView} • {item.newsCreatedAt}
+                      조회수 {item.countView} •{" "}
+                      {changeDateFormat(item.newsCreatedAt)}
                     </div>
                   </div>
                 ))}
