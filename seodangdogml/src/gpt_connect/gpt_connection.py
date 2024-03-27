@@ -1,10 +1,12 @@
 import os
 from openai import OpenAI
+from repository.news_repository import findNews
 import json
+import settings
 
-from src.mongo import findNews
+
 def gpt_req(news_text, prompt, json_format):
-    client = OpenAI(api_key = "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")
+    client = OpenAI(api_key = settings.GPT_API_KEY)
 
     # 사용 모델을 설정합니다. chat GPT는 gpt-3.5-turbo를 사용합니다.
     MODEL = "gpt-3.5-turbo"
@@ -27,13 +29,13 @@ def gpt_req(news_text, prompt, json_format):
     # print(response)
     return response.choices[0].message.content
 
-def save_question_test():
+def question_generate(news_data):
 
-    prompt_base = "문제의 난이도는 성인 기준으로도 조금 어려워. 문제와 정답, 정답의 해석을 다음 json 포맷으로 응답해줘.\n\n"
+    prompt_base = "문제는 어려운 난이도야. 문제와 정답, 정답의 해석을 다음 json 포맷으로 응답해줘.\n\n"
 
-    prompt_word = "기사에서 나온 어려운 어휘의 뜻을 맞추는 사지선다 문제를 만들어줘. " + prompt_base
-    prompt_judge = "기사의 사실로 사지선다 문제를 만들어줘. 네 개의 선택지 중 하나는 뉴스 기사의 내용과 맞지 않아." + prompt_base
-    prompt_churon = "아래 기사를 읽고 현우, 철수, 영희, 지훈이 서로 대화를 하는데 틀린 사실을 말하는 한 명을 고르는 문제를 만들어줘. 현우, 철수, 영희, 지훈은 서로에게 말하는 어체로 말해줘." + prompt_base
+    prompt_word = "기사에서 나온 어려운 어휘 중에서 사전에 등재된 어휘의 뜻을 맞추는 사지선다 문제를 만들어줘. " + prompt_base
+    prompt_judge = "기사의 내용으로 사지선다 문제를 만들어줘. 네 개의 선택지 중 하나는 뉴스 기사의 내용과 맞지 않아." + prompt_base
+    prompt_churon = "아래 기사를 읽고 현우, 철수, 영희, 지훈이 서로 대화를 하는데 틀린 사실을 말하는 한 명을 고르는 문제를 만들어줘." + prompt_base
 
     json_format_word = '''{
     "question": {
@@ -83,7 +85,8 @@ def save_question_test():
         }'''
 
     question_list = []
-    news_data = findNews(3)
+    news_data = findNews(10)
+
     for news in news_data:
         news_text = news["newsTitle"] + "\n\n" + news["newsMainText"]
 
@@ -92,9 +95,10 @@ def save_question_test():
         news_quiz.append(json.loads(gpt_req(news_text, prompt_judge, json_format_judge)))
         news_quiz.append(json.loads(gpt_req(news_text, prompt_churon, json_format_churon)))
 
+        news["newsQuiz"] = news_quiz
         question_list.append(news_quiz)
 
     with open('question_list.json', 'w', encoding="utf8") as f:
         json.dump(question_list, f, indent=4, ensure_ascii=False)
 
-save_question_test()
+    return news_data
