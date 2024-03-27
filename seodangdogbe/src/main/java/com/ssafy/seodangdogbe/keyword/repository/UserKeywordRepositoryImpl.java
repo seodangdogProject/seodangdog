@@ -10,12 +10,14 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,7 +81,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
                 .execute();
 
         // fastApi로 전송
-        fastApiService.updateWeigth(user, mfRecommendResponseList);
+        fastApiService.updateWeigth(mfRecommendResponseList);
 
     }
 
@@ -121,13 +123,20 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
                 "VALUES (?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql,
-                list,
-                list.size(),
-                (PreparedStatement ps, UserKeyword userKeyword) -> {
-                    ps.setInt(1, userKeyword.getUser().getUserSeq());
-                    ps.setString(2, userKeyword.getKeyword().getKeyword());
-                    ps.setDouble(3, userKeyword.getWeight());
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement sql, int i) throws SQLException {
+                        sql.setInt(1, list.get(i).getUser().getUserSeq());
+                        sql.setString(2, list.get(i).getKeyword().getKeyword());
+                        sql.setDouble(3, list.get(i).getWeight());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return list.size();
+                    }
                 });
     }
+
 
 }

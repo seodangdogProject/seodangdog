@@ -36,7 +36,7 @@ public class FastApiService {
                 .bodyToMono(new ParameterizedTypeReference<List<CbfRecommendResponse>>() {});
     }
 
-    public void updateWeigth(User user, List<MFRecommendResponse> mfRecommendResponseList) {
+    public void updateWeigth(List<MFRecommendResponse> mfRecommendResponseList) {
         this.webClient.post()
                 .uri("/fast/mf_recom/update")
                 .bodyValue(mfRecommendResponseList)
