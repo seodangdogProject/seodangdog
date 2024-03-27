@@ -3,7 +3,9 @@ package com.ssafy.seodangdogbe.word.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seodangdogbe.word.domain.QUserWord;
 import com.ssafy.seodangdogbe.word.domain.UserWord;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyWordRepositoryImpl implements MyWordRepositoryCustom {
     private final JPAQueryFactory queryFactory;
-
 
     @Override
     public List<UserWord> findAllUserWords(int userSeq) {
@@ -26,14 +27,14 @@ public class MyWordRepositoryImpl implements MyWordRepositoryCustom {
     }
 
     @Override
-    public UserWord findUserWordByUserSeqAndWord(int userSeq, String word) {
+    public List<UserWord> findUserWordsByUserSeqAndWord(int userSeq, String word) {
         QUserWord qUserWord = QUserWord.userWord;
         return queryFactory
                 .selectFrom(qUserWord)
                 .where(qUserWord.user.userSeq.eq(userSeq)
-                        .and(qUserWord.word.eq(word))
+                        .and(qUserWord.word.like("%" + word + "%"))
                         .and(qUserWord.isDelete.eq(false)))
-                .fetchOne();
+                .fetch();
     }
 }
 
