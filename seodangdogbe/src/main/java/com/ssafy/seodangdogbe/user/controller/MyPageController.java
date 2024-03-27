@@ -29,7 +29,7 @@ public class MyPageController {
     @GetMapping
     public MyPageResponseDto getMyPage(){
         MyPageResponseDto resultDto = new MyPageResponseDto();
-        User user = userService.getUserByUserId();
+        User user = userService.getUser();
 
         resultDto.setUserId(user.getUserId());
         resultDto.setNickname(user.getNickname());
