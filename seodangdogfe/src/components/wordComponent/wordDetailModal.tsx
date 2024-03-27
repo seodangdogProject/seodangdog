@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren, useState, useEffect } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 import styles from "./modal.module.css";
@@ -7,6 +7,7 @@ import ClosePassword from "../../assets/closePassword-icon.svg";
 import CloseModal from "../../assets/closeModal-icon.svg";
 import LoginLogo from "../../assets/loginLogo-icon.svg";
 import { saved_word } from "@/atoms/type";
+import { privateFetch } from "@/utils/http-commons";
 
 const Backdrop = styled.div`
     width: 100vw;
@@ -21,6 +22,20 @@ interface ModalProps {
     clickedWord: saved_word | null;
 }
 
+type meanitem = {
+    subNo: number;
+    pos: string;
+    definition: string;
+    link: string;
+};
+
+type word = {
+    word: string;
+    wordLang: string;
+    total: number;
+    items: meanitem[];
+};
+
 function Modal({
     isOpen,
     onClose,
@@ -29,24 +44,53 @@ function Modal({
     let [inputType, setInputType] = useState("password");
     let [closeVisible, setCloseVisibleVisible] = useState(true);
     let [openVisible, setOpenVisibleVisible] = useState(false);
+    const [word, setWord] = useState<word>();
 
-    function passwordToggle() {
-        setInputType(inputType === "text" ? "password" : "text");
-        setCloseVisibleVisible(closeVisible === true ? false : true);
-        setOpenVisibleVisible(openVisible === true ? false : true);
-    }
-
+    useEffect(() => {
+        // 데이터 받아오는 함수 START
+        (async () => {
+            const res = await privateFetch(
+                "/news/word/" + clickedWord?.word,
+                "GET"
+            );
+            if (res.status === 200) {
+                const data = await res.json();
+                console.log(data);
+                setWord(data);
+            } else {
+                console.log("error 발생");
+            }
+        })();
+    }, []);
     return (
         <>
             <div className={styles.modal_container}>
                 <div className={styles.title}>{clickedWord?.word}</div>
-                {/* <div className={styles.mean_container}>
-                    {clickedWord?.mean.map((mean, idx) => (
-                        <div key={idx} className={styles.mean}>
-                            {mean}
-                        </div>
+                <div className={styles.mean_container}>
+                    {word?.items?.map((mean, idx) => (
+                        <>
+                            <div key={idx} className={styles.mean}>
+                                <span
+                                    className={styles.meanIndex}
+                                    style={{
+                                        cursor: "pointer",
+                                        fontWeight: "bold",
+                                    }}
+                                    onClick={() => window.open(mean.link)}
+                                    title="뜻 보러 가기" // hover 시 표시될 메시지
+                                >
+                                    <span className={styles.meanIndexNumber}>
+                                        {idx + 1}
+                                    </span>
+                                </span>
+                                <span>
+                                    [{mean.pos}] {mean.definition}{" "}
+                                </span>
+                            </div>
+                            <div className={styles.horizontal}></div>
+                        </>
                     ))}
-                </div> */}
+                </div>
             </div>
             <Backdrop
                 onClick={(e: React.MouseEvent) => {

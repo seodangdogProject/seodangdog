@@ -64,7 +64,7 @@
     border-top-right-radius: 20px; /* 윗변을 동그랗게 설정 */
     color: black;
     font-weight: bold;
-    font-family: 'NanumMyeongjo';
+    font-family: "NanumMyeongjo";
     display: flex;
     justify-content: center; /* 수평 가운데 정렬 */
     align-items: center; /* 수직 가운데 정렬 */
@@ -80,7 +80,7 @@
 }
 .wordBox {
     background-color: white;
-    font-family: 'NanumMyeongjo';
+    font-family: "NanumMyeongjo";
     border-radius: 5px;
     padding: 10px;
     padding-top: 20px;
@@ -122,4 +122,9 @@
     margin-right: 20px;
     border: none;
     outline: none;
+}
+
+.titleContainer {
+    display: flex;
+    justify-content: space-between;
 }
