@@ -1,24 +1,28 @@
 package com.ssafy.seodangdogbe.word.controller;
 
+import com.ssafy.seodangdogbe.auth.service.UserService;
+import com.ssafy.seodangdogbe.common.MsgResponseDto;
+import com.ssafy.seodangdogbe.user.domain.User;
+import com.ssafy.seodangdogbe.user.service.UserBadgeService;
 import com.ssafy.seodangdogbe.word.dto.GameActivatedResponseDto;
 import com.ssafy.seodangdogbe.word.dto.GameGetProblemResponseDto;
 import com.ssafy.seodangdogbe.word.dto.GameResultRequestDto;
 import com.ssafy.seodangdogbe.word.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/game")
+@RequiredArgsConstructor
 public class GameController {
 
-    private final GameService gameService;
-
-    @Autowired
-    public GameController(GameService gameService) {
-        this.gameService = gameService;
-    }
+    public final UserService userService;
+    public final GameService gameService;
+    public final UserBadgeService userBadgeService;
 
     //단어 게임 활성화 기능
     @Operation(description = "단어 게임 - 저장된 단어 10개 이상 시 활성화")
@@ -39,8 +43,18 @@ public class GameController {
     //단어 게임 후 삭제 기능
     @Operation(description = "단어 게임 - 게임 종료 후 단어장에서 단어 삭제")
     @PatchMapping("/result")
-    public ResponseEntity<Void> processGameResult(@RequestBody GameResultRequestDto requestDto) {
-        gameService.deleteWords(requestDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<MsgResponseDto> processGameResult(@RequestBody GameResultRequestDto requestDto) {
+        int userSeq = userService.getUserSeq();
+        User user = userService.getUserByUserSeq(userSeq);
+
+//        gameService.deleteWords(requestDto);
+        gameService.deleteWords(userSeq, requestDto);
+
+        String alterMsg = userBadgeService.checkNewBadge(user); // 뱃지 획득체크
+        if (alterMsg != null){
+            return ResponseEntity.ok().body(new MsgResponseDto("단어 삭제 성공", alterMsg));
+        }
+        
+        return ResponseEntity.ok().body(new MsgResponseDto("단어 삭제 성공"));
     }
 }

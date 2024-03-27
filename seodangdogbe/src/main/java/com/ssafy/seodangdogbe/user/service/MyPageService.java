@@ -6,7 +6,6 @@ import com.ssafy.seodangdogbe.news.dto.NewsPreviewListDto;
 import com.ssafy.seodangdogbe.news.repository.UserNewsRepository;
 import com.ssafy.seodangdogbe.news.repository.UserNewsRepositoryCustom;
 import com.ssafy.seodangdogbe.user.domain.User;
-import com.ssafy.seodangdogbe.user.domain.UserBadge;
 import com.ssafy.seodangdogbe.user.repository.BadgeRepository;
 import com.ssafy.seodangdogbe.user.repository.UserBadgeRepository;
 import jakarta.transaction.Transactional;
@@ -15,14 +14,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MypageService {
+public class MyPageService {
     public final UserRepository userRepository;
     public final BadgeRepository badgeRepository;
     public final UserBadgeRepository userBadgeRepository;
@@ -30,23 +28,12 @@ public class MypageService {
     public final UserNewsRepository userNewsRepository;
     public final UserNewsRepositoryCustom userNewsRepositoryCustom;
 
-    public String getBadgeImgUrl(User user){
-        return user.getBadge().getBadgeImgUrl();
-    }
-
-    public List<String> getUserBadgeList(User user) {
-        List<String> badges = new ArrayList<>();
-        List<UserBadge> findBadges = userBadgeRepository.findAllByUser(user);
-        for (UserBadge findBadge : findBadges){
-            badges.add(findBadge.getBadge().getBadgeName());
-        }
-        return badges;
-    }
-
+    // 출석일 수 조회
     public Integer getAttendanceCount(User user){
          return userNewsRepositoryCustom.countSolvedDate(user);
     }
 
+    // 뉴스를 푼 날짜 목록 조회
     public List<Integer> getSolvedDateRecord(User user) {
         LocalDateTime current = LocalDateTime.now();
         LocalDateTime start = current.minusDays(100);
@@ -65,11 +52,13 @@ public class MypageService {
         return Arrays.stream(streaks).toList();
     }
 
+    // 사용자가 가장 최근에 본 뉴스 조회
     public NewsPreviewListDto getRecentViewNews(User user){
         UserNews findRecentViewNews = userNewsRepositoryCustom.findRecentViewUserNews(user);
         return new NewsPreviewListDto(findRecentViewNews.getNews());
     }
 
+    // 사용자가 가장 최근에 푼 뉴스 조회
     public NewsPreviewListDto getRecentSolvedNews(User user){
         UserNews findRecentSolvedNews = userNewsRepositoryCustom.findRecentSolvedUserNews(user);
         return new NewsPreviewListDto(findRecentSolvedNews.getNews());
