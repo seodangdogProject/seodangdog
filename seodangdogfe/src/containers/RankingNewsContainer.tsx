@@ -27,13 +27,11 @@ export default function RankingNewsContainer() {
   }, [category]);
 
   // method
-  function toggle(category: string) {
-    setCategory(category);
+  function toggle(inputCategory: string): void {
+    if (inputCategory === category) return;
+    setCategory(inputCategory);
     mostViewEl.current?.classList.toggle(cx("active"));
     mostSolvedEl.current?.classList.toggle(cx("active"));
-    // if (category === "most-view") {
-    // } else {
-    // }
   }
   function goNewsDetail(path: string) {
     router.push("/news/" + path);

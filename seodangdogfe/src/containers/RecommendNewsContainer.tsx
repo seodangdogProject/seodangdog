@@ -1,25 +1,53 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "./RecommendNewsContainer.module.css";
 import classNames from "classnames/bind";
 import { privateFetch } from "../utils/http-commons";
 export default function RecommendNewsContainer() {
   const cx = classNames.bind(styled);
 
+  const [category, setCategory] = useState<string>("user-recommend");
+  const userRecommendEl = useRef<HTMLDivElement>(null);
+  const otherRecommendEl = useRef<HTMLDivElement>(null);
+
+  // method
+  function toggle(inputCategory: string): void {
+    if (category === inputCategory) return;
+    setCategory((prev) => inputCategory);
+    userRecommendEl.current?.classList.toggle(cx("active"));
+    otherRecommendEl.current?.classList.toggle(cx("active"));
+  }
+
   useEffect(() => {
     const token = localStorage.getItem("accessToken") || "";
     (async () => {
-      const res = await privateFetch("/main/user-recommend", "GET");
-      // console.log(await res.json());
+      try {
+        const res = await privateFetch("/main/" + category, "GET");
+        console.log(await res.json());
+      } catch (error) {
+        console.error(error);
+      }
     })();
-  }, []);
+  }, [category]);
   return (
     <>
       <div className={styled.container}>
         <div className={styled.toggle__container}>
           <div className={cx("toggle")}>
-            <div className={cx("toggle__item", "active")}>내 취향 뉴스</div>
-            <div className={cx("toggle__item")}>다른 사람 뉴스</div>
+            <div
+              onClick={() => toggle("user-recommend")}
+              ref={userRecommendEl}
+              className={cx("toggle__item", "active")}
+            >
+              내 취향 뉴스
+            </div>
+            <div
+              onClick={() => toggle("other-recommend")}
+              ref={otherRecommendEl}
+              className={cx("toggle__item")}
+            >
+              다른 사람 뉴스
+            </div>
           </div>
         </div>
         <div className={cx("section", ["box-shodow-custom"])}>

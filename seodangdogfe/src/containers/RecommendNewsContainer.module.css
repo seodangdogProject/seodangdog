@@ -35,6 +35,7 @@
   font-family: "hambaknoon";
   font-size: 1.6rem;
   font-weight: bold;
+  cursor: pointer;
 }
 .toggle .toggle__item:first-child {
   border-top-left-radius: 15px;
