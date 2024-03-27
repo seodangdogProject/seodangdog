@@ -63,21 +63,25 @@ def get_news_title(news_id):
 
 
 def recommend_news(user_seq, mf_model, top_n=5):
-    # 해당 사용자가 평가하지 않은 영화들의 예측 평점을 계산
-    predicted_ratings = []
-
+    predicted_ratings = [] # 사용자가 풀지 않은 뉴스만 저장
+    predicted_ratings_solved=[] # 사용자가 본 뉴스 저장
     solved_news = select_news_solved(user_seq)
 
     for item_id in mf_model.item_id_index.keys():
+        predicted_rating = mf_model.get_one_prediction(user_seq, item_id)
+
         if item_id not in [sn['news_seq'] for sn in solved_news]:
-            predicted_rating = mf_model.get_one_prediction(user_seq, item_id)
             predicted_ratings.append((item_id, predicted_rating))
         else:
-            print("else", item_id)
-
+            predicted_ratings_solved.append((item_id, predicted_rating))
+            print("solved ", item_id)
 
     # 예측 평점을 기준으로 내림차순 정렬
     predicted_ratings.sort(key=lambda x: x[1], reverse=True)
+    predicted_ratings_solved.sort(key=lambda x: x[1], reverse=True)
+
+    predicted_ratings = predicted_ratings+predicted_ratings_solved
+
     # print(predicted_ratings)
     # print("all_recommend_count ", len(predicted_ratings))
     # 상위 top_n개의 영화를 추천 목록에 추가

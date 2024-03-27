@@ -14,6 +14,7 @@ from repository.recommend_repository import get_news_title_keyword
 from repository.recommend_repository import select_ratings
 from repository.recommend_repository import update_ratings
 from repository.recommend_repository import insert_ratings
+from repository.recommend_repository import select_news_solved
 from repository.recommend_repository import async_update_ratings
 from repository.recommend_repository import async_insert_ratings
 from fastapi import BackgroundTasks
@@ -88,7 +89,7 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
 
     start_time = time.time()
 
-    recommended_news = await recommend_news(news_data, user_keyword_list, keyword_weights,flag)
+    recommended_news = await recommend_news(user_seq, news_data, user_keyword_list, keyword_weights,flag)
 
     end_time = time.time()
     execution_time = end_time - start_time
@@ -118,7 +119,7 @@ async def update_rating(recommended_news, user_seq):
     insert_rating_data = []
     update_rating_data = []
     for news in recommended_news:
-        print(news)
+        # print(news)
         news_id = news[0]
         news_seq = news_id_seq[news_id]
         news_title = news[1]
@@ -146,11 +147,9 @@ async def update_rating(recommended_news, user_seq):
     print(f"cbf - 데이터업데이트완료: {execution_time} 초")
 
 
-async def recommend_news(news_data, user_keywords, keyword_weights, flag):
-
+async def recommend_news(user_seq, news_data, user_keywords, keyword_weights, flag):
     # 뉴스 데이터프레임 생성
     # df_news = pd.DataFrame([[news.title] for news in news_data], columns=['title'])
-    # TF-IDF 변환기 생성
     tfidf_vectorizer = TfidfVectorizer()
 
     # 뉴스키워드를 합친것을 벡터화
@@ -175,17 +174,32 @@ async def recommend_news(news_data, user_keywords, keyword_weights, flag):
 
     # 유사도가 높은 순으로 뉴스 추천
     recommendation_indices = similarities.argsort()[0][::-1]
+    # print(recommendation_indices)
+
+    # 사용자가 푼 뉴스 가져오기
+    solved_news = select_news_solved(user_seq)  # 사용자가 이미 푼 뉴스를 가져옴
+
+    # 사용자가 이미 푼 뉴스를 제외하고 추천 리스트에 추가
+    filtered_recommendations = []
+    solved_recommendations = []
+    for i in recommendation_indices:
+        if news_data[i]['news_id'] not in [sn['news_seq'] for sn in solved_news]:
+            filtered_recommendations.append((news_data[i]['news_id'], news_data[i]['news_title'], similarities[0][i]))
+        else:
+            solved_recommendations.append((news_data[i]['news_id'], news_data[i]['news_title'], similarities[0][i]))
+
+    recommended_news = filtered_recommendations + solved_recommendations
 
     if flag:
-        top_10_recommended_news = [(news_data[i]['news_id'], news_data[i]['news_title'], similarities[0][i]) for i in recommendation_indices[:10]]
+        top_10_recommended_news = recommended_news[:10]
         return top_10_recommended_news
     else:
-        top_20_recommendations = recommendation_indices[:20]
+        top_20_recommendations = recommended_news[:20]
         if len(top_20_recommendations) >= 10:
-            next_10_recommendations = [(news_data[i]['news_id'], news_data[i]['news_title'], similarities[0][i]) for i in top_20_recommendations[10:]]
+            next_10_recommendations = top_20_recommendations[10:]
             return next_10_recommendations
         else:
-            top_10_recommended_news = [(news_data[i]['news_id'], news_data[i]['news_title'], similarities[0][i]) for i in recommendation_indices[:10]]
+            top_10_recommended_news = recommended_news[:10]
             return top_10_recommended_news
 
 
