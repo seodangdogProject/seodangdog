@@ -5,6 +5,7 @@ import com.ssafy.seodangdogbe.common.MsgResponseDto;
 import com.ssafy.seodangdogbe.word.service.WordService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class WordController {
 
     @Operation(description = "단어의 뜻을 가져온다 (순서: mongodb 탐색 -> api 호출)")
     @GetMapping("/news/word/{word}")
-    public MetaWordDto getWord(@PathVariable("word") String word) throws Exception {
+    public ResponseEntity<MetaWordDto> getWord(@PathVariable("word") String word) throws Exception {
 
         // mongodb에 있는 단어인지 탐색
         // ** api 호출해도 단어가 없을 경우 or 예외처리 해주기?!
@@ -34,7 +35,7 @@ public class WordController {
                     MetaWordDto metaWordDto = new MetaWordDto(korApiSearchDto);
                     wordService.saveMetaWordToMongodb(metaWordDto);
 
-                    return metaWordDto;
+                    return ResponseEntity.ok().body(metaWordDto);
                 }
                 // ** 표준국어대사전에 없는 단어일 경우 -> 백과사전 api 호출
             }
@@ -42,23 +43,23 @@ public class WordController {
             // ** 백과사전 api 검색
             EncycApiDto encycApiDto = wordService.callNEncycSearchApi(word);
 
-            System.out.println("********* total : "+encycApiDto.getTotal());
-            System.out.println("*********"+encycApiDto.getItems().get(0).getTitle());
-
             String wordLang;
-            if (wordService.isEng(word))
+            if (wordService.isEng(word)){
                 wordLang = "eng";
-            else    // ** 아예 db에 넣지말고 반환하지말기
+
+                MetaWordDto metaWordDto = new MetaWordDto(word, encycApiDto, wordLang);
+                wordService.saveMetaWordToMongodb(metaWordDto);
+
+                return ResponseEntity.ok().body(metaWordDto);
+            } else {    // ** 아예 db에 넣지말고 반환하지말기
                 wordLang = "other";
 
-            MetaWordDto metaWordDto = new MetaWordDto(word, encycApiDto, wordLang);
-            wordService.saveMetaWordToMongodb(metaWordDto);
-
-            return metaWordDto;
+                throw new RuntimeException("단어를 검색할 수 없습니다.");
+            }
         }
 
         // mongodb에 있는 경우
-        return wordService.findMetaWord(word);
+        return ResponseEntity.ok().body(wordService.findMetaWord(word));
     }
 
     @Operation(description = "사용자단어 테이블에서 단어를 삭제한다.")
@@ -70,8 +71,5 @@ public class WordController {
         else
             return ResponseEntity.badRequest().body(new MsgResponseDto("단어 삭제에 실패했습니다."));
     }
-
-
-
 
 }

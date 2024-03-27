@@ -28,7 +28,7 @@ public class NewsController {
     public final NewsService newsService;
     public final UserService userService;
     public final WordService wordService;
-    public final UserWordService userWordServcie;
+    public final UserWordService userWordService;
     public final UserBadgeService userBadgeService;
 
     @Operation(description = "newsSeq(mysql pk)로 mongodb에 있는 뉴스 본문 조회")
@@ -103,14 +103,14 @@ public class NewsController {
 
 
         // 사용자단어 테이블에 이미 있는지 체크
-        UserWordDto userWordDto = userWordServcie.findUserWord(userSeq, word);
+        UserWordDto userWordDto = userWordService.findUserWord(userSeq, word);
 
         // 있다면 삭제여부 체크 후 저장
         if (userWordDto != null){
             System.out.println("사용자단어 테이블에 이미 있는 단어입니다.");
             if (userWordDto.isDelete()) {    // 삭제되었다면
                 System.out.println("삭제된 단어입니다.");
-                userWordServcie.updateUserWordExist(userSeq, word);
+                userWordService.updateUserWordExist(userSeq, word);
                 return ResponseEntity.ok().body(new MsgResponseDto("단어 스크랩 성공"));
             } else {    // 이미 스크랩되어있는 상태라면
                 System.out.println("이미 스크랩 된 상태입니다.");
@@ -119,7 +119,7 @@ public class NewsController {
         }
 
         // 없다면 사용자단어 테이블에 저장
-        if (userWordServcie.setUserWord(user, word) != null){
+        if (userWordService.setUserWord(user, word) != null){
             return ResponseEntity.ok().body(new MsgResponseDto("단어 스크랩 성공"));
         } else {
             return ResponseEntity.badRequest().body(new MsgResponseDto("단어 스크랩 실패"));

@@ -79,7 +79,7 @@ public class WordDto {
             List<EncycApiDto.ItemDto> items = dto.getItems();
             int idx = 1;
             for (EncycApiDto.ItemDto item : items){
-                this.items.add(new WordItemDto(item, idx));
+                this.items.add(new WordItemDto(item, idx++));
             }
         }
 

@@ -13,5 +13,5 @@ import java.util.Map;
 @Embeddable
 public class Question {
     private String questionText;
-    private Map<Integer, String> choices;
+    private Map<String, String> choices;
 }
