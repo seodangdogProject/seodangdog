@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.ssafy.seodangdogbe.news.service.FastApiService;
 import com.ssafy.seodangdogbe.news.service.FastApiService.CbfRecommendResponse;
+import com.ssafy.seodangdogbe.news.service.FastApiService.MfRecommendResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +66,8 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
     }
     @Override
     public List<OtherRecommendResponseDto> findOtherNewsRecommendations(int userSeq) {
-        List<Long> recommendedNewsSeqs = fastApiService.fetchRecommendations().block().stream()
-                .map(CbfRecommendResponse::getNewsSeq)
+        List<Long> recommendedNewsSeqs = fastApiService.fetchMfRecommendations().block().stream()
+                .map(MfRecommendResponse::getNewsSeq)
                 .collect(Collectors.toList());
 
         List<News> newsList = queryFactory

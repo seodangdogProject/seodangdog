@@ -30,8 +30,18 @@ public class FastApiService {
                 .uri("/fast/cbf_recom/{userSeq}", userSeq)
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
-                clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
+                        clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
                 .bodyToMono(new ParameterizedTypeReference<List<CbfRecommendResponse>>() {});
+    }
+
+    public Mono<List<MfRecommendResponse>> fetchMfRecommendations() {
+        int userSeq = userService.getUserSeq();
+        return this.webClient.get()
+                .uri("/fast/mf_recom/{userSeq}", userSeq)
+                .retrieve()
+                .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
+                        clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
+                .bodyToMono(new ParameterizedTypeReference<List<MfRecommendResponse>>() {});
     }
 
     @Data
@@ -48,5 +58,18 @@ public class FastApiService {
         @JsonProperty("news_similarity")
         private Double similarity;
 
+    }
+
+    @Data
+    public class MfRecommendResponse {
+
+        @JsonProperty("news_seq")
+        private Long newsSeq;
+
+        @JsonProperty("news_title")
+        private String title;
+
+        @JsonProperty("news_similarity")
+        private Double similarity;
     }
 }
