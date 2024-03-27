@@ -15,7 +15,7 @@ export default function RankingNewsContainer() {
   useEffect(() => {
     const token = localStorage.getItem("accessToken") || "";
     (async () => {
-      const res = await privateFetch("/main/" + category, token, "GET");
+      const res = await privateFetch("/main/" + category, "GET");
       if (res.status !== 200) {
         // 오류처리
         router.replace("/landing");
@@ -34,6 +34,9 @@ export default function RankingNewsContainer() {
     // if (category === "most-view") {
     // } else {
     // }
+  }
+  function goNewsDetail(path: string) {
+    router.push("/news/" + path);
   }
   if (newsList.length === 0) {
     <Loading />;
@@ -62,11 +65,17 @@ export default function RankingNewsContainer() {
           <div className={cx("section", ["box-shodow-custom"])}>
             {/* top3 섹션 START */}
             <div className={cx("top3")}>
-              <div className={cx("first")}>
+              <div
+                onClick={() => goNewsDetail(newsList[0].newsSeq)}
+                className={cx("first")}
+              >
                 <img src={newsList[0].newsImgUrl} alt="" />
               </div>
               <div className={cx("second-third-container")}>
-                <div className={cx("second")}>
+                <div
+                  onClick={() => goNewsDetail(newsList[1].newsSeq)}
+                  className={cx("second")}
+                >
                   <img src={newsList[1].newsImgUrl} alt="" />
                   <div className={cx("info")}>
                     <div className={cx("title")}>{newsList[1].newsTitle}</div>
@@ -78,7 +87,10 @@ export default function RankingNewsContainer() {
                     </div>
                   </div>
                 </div>
-                <div className={cx("third")}>
+                <div
+                  onClick={() => goNewsDetail(newsList[2].newsSeq)}
+                  className={cx("third")}
+                >
                   <img src={newsList[2].newsImgUrl} alt="" />
                   <div className={cx("info")}>
                     <div className={cx("title")}>{newsList[2].newsTitle}</div>
@@ -97,7 +109,11 @@ export default function RankingNewsContainer() {
               {newsList.map((item, index) => {
                 if (index > 2) {
                   return (
-                    <li key={index} className={cx("other__item")}>
+                    <li
+                      onClick={() => goNewsDetail(item.newsSeq)}
+                      key={item.newsSeq}
+                      className={cx("other__item")}
+                    >
                       <img src={item.newsImgUrl} alt="" />
                       <div className={cx("info")}>
                         <div className={cx("title")}>{item.newsTitle}</div>

@@ -9,7 +9,7 @@ export default function RecommendNewsContainer() {
   useEffect(() => {
     const token = localStorage.getItem("accessToken") || "";
     (async () => {
-      const res = await privateFetch("/main/user-recommend", token, "GET");
+      const res = await privateFetch("/main/user-recommend", "GET");
       console.log(await res.json());
     })();
   }, []);
