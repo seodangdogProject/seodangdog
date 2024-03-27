@@ -13,6 +13,8 @@ public interface MetaWordRepository extends MongoRepository<MetaWord, String> {
 
     boolean existsByWord(String word);
 
-    @Query(value = "{'word': {$regex: '^?0', $options: 'i'}}")
-    List<MetaWord> findByWordSearch(String prefix);
+    @Query(value = "{'word': {$regex: ?0, $options: 'i'}}")
+    List<MetaWord> findByWordContaining(String text);
+
+
 }

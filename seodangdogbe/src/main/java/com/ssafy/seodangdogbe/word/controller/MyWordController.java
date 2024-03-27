@@ -49,21 +49,21 @@ public class MyWordController {
         }
     }
 
-    @Operation(description = "단어장 - 단어 검색")
-    @GetMapping("/search")
-    public ResponseEntity<MyWordResponseDto> searchWord(@RequestParam String word) {
-        MyWordResponseDto wordResult = myWordService.findWordInfo(word);
-        if(wordResult != null && !wordResult.getWordList().isEmpty()) {
-            return ResponseEntity.ok(wordResult);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    @Operation(description = "단어장 - 단어 검색")
+//    @GetMapping("/search")
+//    public ResponseEntity<MyWordResponseDto> searchWord(@RequestParam String word) {
+//        MyWordResponseDto wordResult = myWordService.findWordInfo(word);
+//        if(wordResult != null && !wordResult.getWordList().isEmpty()) {
+//            return ResponseEntity.ok(wordResult);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     @GetMapping("/search/prefix")
-    public ResponseEntity<List<WordDto.MetaWordDto>> getWordsByPrefix(@RequestParam String prefix) {
-        List<WordDto.MetaWordDto> words = myWordService.findWordSearch(prefix);
-        if (words.isEmpty()) {
+    public ResponseEntity<MyWordResponseDto> getWordsByPrefix(@RequestParam String prefix) {
+        MyWordResponseDto words = myWordService.findWordSearch(prefix);
+        if (words.getWordList().isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok(words);
