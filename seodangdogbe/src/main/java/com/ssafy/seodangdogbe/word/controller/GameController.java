@@ -44,11 +44,10 @@ public class GameController {
     @Operation(description = "단어 게임 - 게임 종료 후 단어장에서 단어 삭제")
     @PatchMapping("/result")
     public ResponseEntity<MsgResponseDto> processGameResult(@RequestBody GameResultRequestDto requestDto) {
-        int userSeq = userService.getUserSeq();
-        User user = userService.getUserByUserSeq(userSeq);
+        User user = userService.getUser();
 
 //        gameService.deleteWords(requestDto);
-        gameService.deleteWords(userSeq, requestDto);
+        gameService.deleteWords(user.getUserSeq(), requestDto);
 
         String alterMsg = userBadgeService.checkNewBadge(user); // 뱃지 획득체크
         if (alterMsg != null){

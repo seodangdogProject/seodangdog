@@ -28,8 +28,7 @@ public class UserWordService {
     }
 
     // 사용자단어 테이블에 userWord 저장
-    public UserWordDto setUserWord(int userSeq, String word) {
-        User user = userService.getUserByUserSeq(userSeq);
+    public UserWordDto setUserWord(User user, String word) {
         UserWord userWord = userWordRepository.save(new UserWord(user, word));
         return new UserWordDto(userWord);
     }

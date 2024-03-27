@@ -18,10 +18,11 @@ public class KeywordController {
     public final NewsService newsService;
     public final KeywordService keywordService;
 
+
     @GetMapping("/keyword")
     public void getKeywords(@RequestBody List<String> keywords){
-        int userSeq = userService.getUserSeq();
-        User user = userService.getUserByUserSeq(userSeq);
+        User user = userService.getUser();
+
         keywordService.addKeywordListWeight(user, keywords, 1.28);
     }
 

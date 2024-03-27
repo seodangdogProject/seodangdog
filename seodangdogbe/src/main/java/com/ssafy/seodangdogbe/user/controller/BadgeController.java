@@ -32,8 +32,7 @@ public class BadgeController {
     @Operation(description = "사용자 뱃지 목록 조회")
     @GetMapping("/user")
     public List<BadgeDto> getMyBadgeList(){
-        int userSeq = userService.getUserSeq();
-        User user = userService.getUserByUserSeq(userSeq);
+        User user = userService.getUser();
 
         return userBadgeService.getUserBadgeList(user);
     }
@@ -41,8 +40,7 @@ public class BadgeController {
     @Operation(description = "사용자 대표 뱃지 변경")
     @PatchMapping("/rep-badge")
     public ResponseEntity<MsgResponseDto> setRepresentBadge(@RequestParam int badgeSeq){
-        int userSeq = userService.getUserSeq();
-        User user = userService.getUserByUserSeq(userSeq);
+        User user = userService.getUser();
 
         if (userBadgeService.setRepresentBadge(user, badgeSeq)){
             return ResponseEntity.ok().body(new MsgResponseDto("대표 뱃지 변경에 성공"));
