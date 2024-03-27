@@ -21,14 +21,11 @@ from crawling.news_crawling import crawling_main, test
 back_scheduler = BackgroundScheduler(timezone='Asia/Seoul')
 
 
-# @back_scheduler.scheduled_job('cron', daily="1/1", id='test')
-
-@back_scheduler.scheduled_job('cron', minute="20", hour="3", id='test')
+@back_scheduler.scheduled_job('cron', minute="35", hour="3", id='crawling_cron')
 def scheduled_job():
-    # test()
-    print("지금은 !!!!")
-    print(time.localtime().tm_hour, "시!!!!")
-    print(time.localtime().tm_min, "분입니다!!!!!!")
+    print("띵동. 크론잡입니다. 예정된 시각은 오전 6시 정각이었습니다.")
+    print(f"현재 시각은 {(time.localtime().tm_hour+9)%24}시, {time.localtime().tm_min}분입니다.")
+    print("당신은 잘하고 있습니다. 그럼 다음에 뵙겠습니다.")
     # crawling_main()
     # save_news()
     # mysql_save()
@@ -55,7 +52,6 @@ def hello():
 @app.get("/fast/chrome_test")
 def chrome_test():
     test()
-    print("present : ", os.getcwd())
     return {"message": "chrome_test activated."}
 
 
