@@ -12,8 +12,7 @@ public class WebClientConfig {
     @Bean
     public WebClient webClient() {
         return WebClient.builder()
-                .baseUrl("http://j10e104.p.ssafy.io")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .baseUrl("https://j10e104.p.ssafy.io")
                 .build();
     }
 }
