@@ -2,12 +2,14 @@ package com.ssafy.seodangdogbe.news.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.seodangdogbe.auth.service.UserService;
+import com.ssafy.seodangdogbe.keyword.dto.loseWeightFastReqDto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -26,12 +28,29 @@ public class FastApiService {
 
     public Mono<List<CbfRecommendResponse>> fetchRecommendations() {
         int userSeq = userService.getUserSeq();
-        return this.webClient.get()
+
+        Mono<List<CbfRecommendResponse>> list =
+                this.webClient.get()
                 .uri("/fast/cbf_recom/{userSeq}", userSeq)
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
                         clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
-                .bodyToMono(new ParameterizedTypeReference<List<CbfRecommendResponse>>() {});
+                .bodyToFlux(CbfRecommendResponse.class)
+                        .collectList();
+
+        System.out.println(list.blockOptional().get());
+        return list;
+    }
+
+    public void updateWeigth(List<loseWeightFastReqDto> loseWeightFastReqDtoList) {
+        this.webClient.post()
+                .uri("/fast/mf_recom/update")
+                .bodyValue(loseWeightFastReqDtoList)
+                .retrieve()
+                .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
+                        clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
+                .bodyToMono(String.class)// 응답값이 뭔지는 왜 안알ㄹ줬노... -> 일단 string
+                .block(); // 동기적 처리로 일단 냅두기
     }
 
     public Mono<List<MfRecommendResponse>> fetchMfRecommendations() {
@@ -41,13 +60,17 @@ public class FastApiService {
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
                         clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
-                .bodyToMono(new ParameterizedTypeReference<List<MfRecommendResponse>>() {});
+                .bodyToMono(new ParameterizedTypeReference<List<MfRecommendResponse>>() {
+                });
     }
 
+
+
+
     @Data
-    public class CbfRecommendResponse {
-        @JsonProperty("news_id")
-        private String id;
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static public class MfRecommendResponse {
 
         @JsonProperty("news_seq")
         private Long newsSeq;
@@ -57,19 +80,20 @@ public class FastApiService {
 
         @JsonProperty("news_similarity")
         private Double similarity;
-
     }
 
     @Data
-    public class MfRecommendResponse {
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static public class CbfRecommendResponse {
+        private String news_id;
 
-        @JsonProperty("news_seq")
-        private Long newsSeq;
+        private Long news_seq;
 
-        @JsonProperty("news_title")
-        private String title;
+        private String news_title;
 
-        @JsonProperty("news_similarity")
-        private Double similarity;
+        private Double news_similarity;
     }
 }
+
+

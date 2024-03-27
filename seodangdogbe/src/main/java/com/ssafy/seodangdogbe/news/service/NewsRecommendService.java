@@ -6,7 +6,9 @@ import com.ssafy.seodangdogbe.news.dto.*;
 import com.ssafy.seodangdogbe.news.repository.MypageRecentNewsRepositoryCustom;
 import com.ssafy.seodangdogbe.news.repository.NewsRecommendRepositoryCustom;
 import com.ssafy.seodangdogbe.news.repository.MypageRecentNewsRepository;
+import com.ssafy.seodangdogbe.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NewsRecommendService {
 
     @Autowired
@@ -29,12 +32,13 @@ public class NewsRecommendService {
     private UserService userService;
 
     public List<UserRecommendResponseDto> getNewsRecommendations() {
-        try {
-            int userSeq = userService.getUserSeq();
-            return newsRecommendRepository.findNewsRecommendations(userSeq);
-        } catch (Exception e) {
-            throw new UnauthorizedException("미인증 사용자입니다.");
-        }
+        User user = userService.getUser();
+        return newsRecommendRepository.findNewsRecommendations(user);
+//        try {
+//
+//        } catch (Exception e) {
+//            throw new UnauthorizedException("미인증 사용자입니다.");
+//        }
     }
 
     public List<MostViewRecommendResponseDto> getMostViewNewsRecommendations() {
@@ -60,6 +64,7 @@ public class NewsRecommendService {
             int userSeq = userService.getUserSeq();
             return newsRecommendRepository.findOtherNewsRecommendations(userSeq);
         } catch (Exception e) {
+            
             throw new UnauthorizedException("미인증 사용자입니다.");
         }
     }
