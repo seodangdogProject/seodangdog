@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import landingStyles from "./Section1.module.css";
 import LoginModal from "../landingComponent/loginModal";
@@ -8,6 +8,7 @@ interface ISectionProps {
     pageNum: number;
     window: Window;
     pageRefs: React.MutableRefObject<HTMLDivElement[]>;
+    status: boolean;
 }
 
 const Section = (props: ISectionProps) => {

@@ -1,6 +1,7 @@
 .container {
   width: 100%;
   height: 100%;
+  min-width: 1300px;
   background-color: var(--light-purple);
   flex-direction: column;
   display: flex;
@@ -35,6 +36,7 @@
   font-family: "hambaknoon";
   font-size: 1.6rem;
   font-weight: bold;
+  cursor: pointer;
 }
 .toggle .toggle__item:first-child {
   border-top-left-radius: 15px;
@@ -80,6 +82,7 @@
 }
 .line-item {
   width: 30%;
+  cursor: pointer;
 }
 .item-container img {
   display: block;

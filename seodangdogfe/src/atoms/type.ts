@@ -5,15 +5,36 @@ export type saved_word = {
     mean2: string;
 };
 
-// 사용자 경험치 - type 당 exp 값
 export type ability = {
-    word_exp: number; // 어휘 경험치
-    inference_exp: number; // 추론 경험치
-    judgement_exp: number; // 판단 경험치
-    summary_exp: number; // 요약 경험치 -> 푼 뉴스 / 본 뉴스
-    constant_exp: number; // 성실 경험치 -> 뉴스를 푼 날짜 수 / 가입 D+Day
+    wordAbility: number;
+    inferenceAbility: number;
+    judgementAbility: number;
+    summaryAbility: number;
+    constantAbility: number;
+};
+
+export type newsThumbnail = {
+    newsSeq: number;
+    newsImgUrl: string;
+    newsTitle: string;
+    newsDescription: string;
+    newsCreatedAt: string;
+    countView: number;
+    newsKeyword: string[];
 };
 
 export type IPageObj = {
     pageNum: number;
+};
+
+export type MyPageDto = {
+    nickname: string;
+    userId: string;
+    ability: ability;
+    wordcloudImageUrl: string;
+    userBadgeNewsList: string[];
+    badgeImgUrl: string;
+    streakList: number[];
+    recentViewNews: newsThumbnail;
+    recentSolvedNews: newsThumbnail;
 };

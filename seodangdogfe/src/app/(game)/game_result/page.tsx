@@ -29,8 +29,8 @@ const WordResult: React.FC = () => {
             console.log(reqData);
             const res = await privateFetch("/game/result", "PATCH", reqData);
             if (res.status === 200) {
-                const data = await res.json();
-                console.log(data);
+                // const data = await res.json();
+                console.log("delete ok");
             } else {
                 console.log("error 발생");
             }

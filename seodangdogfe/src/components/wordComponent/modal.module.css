@@ -6,7 +6,7 @@
 }
 
 .modal_content {
-    font-family: 'NanumMyeongjo';
+    font-family: "NanumMyeongjo";
     position: absolute;
     background-color: white;
     border-radius: 5px;
@@ -21,6 +21,7 @@
     position: fixed;
     flex-direction: column; /* 세로로 정렬 */
     justify-content: center;
+    justify-content: flex-start; /* title을 위로 정렬 */
     background-color: white;
     height: 40%;
     /* border: 1px solid red; */
@@ -30,18 +31,17 @@
 }
 
 .title {
-    font-family: 'NanumMyeongjo';
+    font-family: "NanumMyeongjo";
     font-weight: bold;
-    height: 30%;
     font-size: 45px;
     margin-left: 10px;
     margin-top: 10px;
+    position: absolute;
 }
 
 .mean_container {
-    font-family: 'NanumMyeongjo';
-    margin-top: 10px;
-    height: 60%;
+    font-family: "NanumMyeongjo";
+    margin-top: 10%;
     font-size: 20px;
     background-color: aliceblue;
     padding: 20px;
@@ -49,4 +49,17 @@
 
 .mean {
     margin: 10px;
+    line-height: 1.5rem;
+}
+
+.horizontal {
+    border-top: 1px solid #000; /* 가로선 스타일 및 두께 */
+    margin: 20px 0; /* 원하는 여백 설정 */
+}
+
+.meanIndex {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    padding: 0 8px;
 }

@@ -5,6 +5,7 @@ import classNames from "classnames/bind";
 import { privateFetch } from "@/utils/http-commons";
 import Loading from "../hoc/loading";
 import { useRouter } from "next/navigation";
+import changeDateFormat from "@/utils/changeDateFormat";
 export default function RankingNewsContainer() {
   const cx = classNames.bind(styled);
   const [newsList, setNewsList] = useState<any[]>([]);
@@ -20,20 +21,17 @@ export default function RankingNewsContainer() {
         // 오류처리
         router.replace("/landing");
       }
-      const data = await res.json();
-      console.log(data[0].newsPreviewList);
-      setNewsList(data[0].newsPreviewList);
+      const data = (await res.json())[0].newsPreviewList;
+      setNewsList(data);
     })();
   }, [category]);
 
   // method
-  function toggle(category: string) {
-    setCategory(category);
+  function toggle(inputCategory: string): void {
+    if (inputCategory === category) return;
+    setCategory(inputCategory);
     mostViewEl.current?.classList.toggle(cx("active"));
     mostSolvedEl.current?.classList.toggle(cx("active"));
-    // if (category === "most-view") {
-    // } else {
-    // }
   }
   function goNewsDetail(path: string) {
     router.push("/news/" + path);
@@ -83,7 +81,7 @@ export default function RankingNewsContainer() {
                       {newsList[1].newsDescription}
                     </div>
                     <div className={cx("date")}>
-                      {newsList[1].newsCreatedAt}
+                      {changeDateFormat(newsList[1].newsCreatedAt)}
                     </div>
                   </div>
                 </div>
@@ -98,7 +96,7 @@ export default function RankingNewsContainer() {
                       {newsList[2].newsDescription}
                     </div>
                     <div className={cx("date")}>
-                      {newsList[2].newsCreatedAt}
+                      {changeDateFormat(newsList[2].newsCreatedAt)}
                     </div>
                   </div>
                 </div>
@@ -120,7 +118,9 @@ export default function RankingNewsContainer() {
                         <div className={cx("description")}>
                           {item.newsDescription}
                         </div>
-                        <div className={cx("date")}>{item.newsCreatedAt}</div>
+                        <div className={cx("date")}>
+                          {changeDateFormat(item.newsCreatedAt)}
+                        </div>
                       </div>
                     </li>
                   );

@@ -120,7 +120,7 @@ const OneWord: React.FC = () => {
                 setSec(0); // 타이머를 0으로 초기화합니다.
             } else {
                 // 마지막 문제라면 모든 문제를 완료했음을 알립니다.
-                alert("모든 문제를 완료했습니다.");
+                // alert("모든 문제를 완료했습니다.");
                 router.push("/game_result");
             }
         } else {

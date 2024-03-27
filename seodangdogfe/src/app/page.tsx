@@ -1,107 +1,148 @@
-'use client';
-// 모달을 띄우는 파일
-import React, { useState, useCallback } from 'react';
-import Image from 'next/image';
-import styles from './page.module.css';
-import landingStyles from './land.module.css';
-import LoginModal from '../components/landingComponent/loginModal';
-import LogoIcon from '../assets/landing-logo-icon.svg';
-export default function Home() {
-    const [isOpenModal, setOpenModal] = useState<boolean>(false);
+"use client";
+import Head from "next/head";
+import Buttons from "@/components/Buttons";
+import Section1 from "@/components/Section/Section1";
+import Section2 from "@/components/Section/Section2";
+import Section3 from "@/components/Section/Section3";
+import Section4 from "@/components/Section/Section4";
+import Section5 from "@/components/Section/Section5";
+import { useEffect, useRef, useState } from "react";
 
-    const onClickToggleModal = useCallback(() => {
-        setOpenModal(!isOpenModal);
-    }, [isOpenModal]);
+export interface IPageObj {
+    pageNum: number;
+    bgColor: string;
+}
+
+const pageObjArray = [
+    { pageNum: 1 },
+    { pageNum: 2 },
+    { pageNum: 3 },
+    { pageNum: 4 },
+    { pageNum: 5 },
+];
+
+const Landing = () => {
+    const [windowObj, setWindowObj] = useState<Window>();
+    const [currentPageNum, setCurrentPageNum] = useState<number>(1);
+    const totalNum = pageObjArray.length;
+    const pageRefs = useRef<HTMLDivElement[]>([]);
+    const [status, setStatus] = useState<boolean[]>([
+        true,
+        false,
+        false,
+        false,
+        false,
+    ]);
+
+    useEffect(() => {
+        if (window !== undefined) {
+            setWindowObj(window);
+        }
+    }, []);
+
+    // 페이지 변경 함수
+    const handlePageChange = (event: Event) => {
+        let scroll = windowObj?.scrollY!;
+        for (let i = 1; i <= totalNum; i++) {
+            // 스크롤이 해당 섹션에 진입했는지 판단 && 해당 스크롤이 해당 섹션에 머물러 있는지
+            if (
+                scroll >
+                    pageRefs.current[i].offsetTop -
+                        windowObj!.outerHeight / 3 &&
+                scroll <
+                    pageRefs.current[i].offsetTop -
+                        windowObj!.outerHeight / 3 +
+                        pageRefs.current[i].offsetHeight
+            ) {
+                setCurrentPageNum(i);
+                setPageStatus(i);
+                break;
+            }
+        }
+    };
+
+    const setPageStatus = (i: number) => {
+        const newArr = [false, false, false, false, false];
+        for (let idx = 0; idx <= totalNum; idx++) {
+            if (i == idx + 1) newArr[idx] = true;
+        }
+
+        setStatus(newArr);
+    };
+
+    // 버튼 클릭
+    const handlePointClick = (pageNum: number) => {
+        windowObj?.scrollTo({
+            top: pageRefs.current[pageNum].offsetTop,
+            behavior: "smooth",
+        });
+    };
+
+    useEffect(() => {
+        windowObj?.addEventListener("scroll", handlePageChange);
+        return () => {
+            windowObj?.removeEventListener("scroll", handlePageChange);
+        };
+    }, [windowObj]);
 
     return (
-        <main className={landingStyles.main}>
-            {isOpenModal && (
-                <LoginModal
-                    onClickToggleModal={onClickToggleModal}
-                ></LoginModal>
-            )}
-            <div className={landingStyles.center_container}>
-                <LogoIcon
-                    style={{
-                        marginBottom: '30px',
-                    }}
+        <>
+            <main style={{ position: "relative", overflow: "hidden" }}>
+                <Section1
+                    key={1}
+                    pageNum={1}
+                    window={windowObj!}
+                    pageRefs={pageRefs}
+                    status={status[0]}
                 />
-                <p className={landingStyles.description}>
-                    뉴스 기사의 새로운 활용법
-                </p>
-                <div>
-                    <button
-                        className={landingStyles.rounded_button}
-                        onClick={onClickToggleModal}
-                    >
-                        시작 하기
-                    </button>
+                <Section2
+                    key={2}
+                    pageNum={2}
+                    window={windowObj!}
+                    pageRefs={pageRefs}
+                    status={status[1]}
+                />
+                <Section3
+                    key={3}
+                    pageNum={3}
+                    window={windowObj!}
+                    pageRefs={pageRefs}
+                    status={status[2]}
+                />
+                <Section4
+                    key={4}
+                    pageNum={4}
+                    window={windowObj!}
+                    pageRefs={pageRefs}
+                    status={status[3]}
+                />
+                <Section5
+                    key={5}
+                    pageNum={5}
+                    window={windowObj!}
+                    pageRefs={pageRefs}
+                    status={status[4]}
+                />
+                <div
+                    style={{
+                        position: "fixed", // fixed
+                        display: "flex", // flex
+                        flexDirection: "column", // flex-col
+                        gap: "1rem", // space-y-4
+                        top: "20rem", // top-96
+                        right: "2.5rem", // right-10
+                        zIndex: 999, // z-10
+                    }}
+                >
+                    <Buttons
+                        pageObjArray={pageObjArray}
+                        currentPageNum={currentPageNum}
+                        handlePointClick={handlePointClick}
+                    />
                 </div>
-            </div>
-            <div className={landingStyles.bottom_news}>
-                <Image
-                    className={landingStyles.page_button}
-                    src="/images/landing-main-image.png"
-                    alt="My Image"
-                    width={500}
-                    height={281.25}
-                    style={{
-                        position: 'absolute',
-                        marginTop: '40px',
-                        top: '170px',
-                        left: '100px',
-                    }}
-                />
-                <Image
-                    className={landingStyles.page_button}
-                    src="/images/landing-main2-image.png"
-                    alt="My Image"
-                    width={500}
-                    height={281.25}
-                    style={{
-                        position: 'absolute',
-                        top: '150px',
-                        left: '400px',
-                    }}
-                />
-                <Image
-                    className={landingStyles.page_button}
-                    src="/images/landing-test-image.png"
-                    alt="My Image"
-                    width={500}
-                    height={281.25}
-                    style={{
-                        position: 'absolute',
-                        top: '130px',
-                        left: '700px',
-                    }}
-                />
-                <Image
-                    className={landingStyles.page_button}
-                    src="/images/landing-wordlist-image.png"
-                    alt="My Image"
-                    width={500}
-                    height={281.25}
-                    style={{
-                        position: 'absolute',
-                        top: '150px',
-                        left: '1000px',
-                    }}
-                />
-                <Image
-                    className={landingStyles.page_button}
-                    src="/images/landing-quiz-image.png"
-                    alt="My Image"
-                    width={500}
-                    height={281.25}
-                    style={{
-                        position: 'absolute',
-                        marginTop: '40px',
-                        top: '170px',
-                        left: '1300px',
-                    }}
-                />
-            </div>
-        </main>
+            </main>
+        </>
     );
-}
+};
+
+export default Landing;

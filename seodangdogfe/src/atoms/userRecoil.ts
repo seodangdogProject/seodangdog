@@ -1,11 +1,16 @@
-import { atom } from 'recoil';
+import { atom } from "recoil";
+import { ability, newsThumbnail } from "@/atoms/type";
 
 export const userExp = atom({
-    key: 'userKeywords',
+    key: "userKeywords",
     default: [],
 });
 
 export const id = atom({
-    key: 'userIdState',
+    key: "userIdState",
     default: null,
+});
+
+export const mypageRecoil = atom({
+    key: "mypageRecoil",
 });

@@ -7,7 +7,9 @@ interface ISectionProps {
     pageNum: number;
     window: Window;
     pageRefs: React.MutableRefObject<HTMLDivElement[]>;
+    status: boolean;
 }
+
 const Section = (props: ISectionProps) => {
     return (
         <div
@@ -27,31 +29,40 @@ const Section = (props: ISectionProps) => {
                         marginRight: "40px",
                     }}
                 >
-                    <Typewriter
-                        options={{
-                            strings: ["여러분이", "관심 있어할"],
-                            autoStart: true,
-                        }}
-                    />
-                    <div className={commonStyles.title}>
-                        여러분이{" "}
-                        <span style={{ color: "rgba(151, 88, 255, 1)" }}>
-                            관심 있어할
-                        </span>{" "}
-                        <br />
-                        뉴스를 추천해드립니다
-                    </div>
-                    <div className={commonStyles.content}>
-                        키워드별 추천과 비슷한 사용자 추천으로 <br />
-                        폭넓은 추천을 제공합니다.
-                    </div>
+                    {props.status && (
+                        <Typewriter
+                            onInit={(typewriter) => {
+                                typewriter
+                                    .typeString(
+                                        "여러분이 <span style='color: #9758FF;'> 관심 있어할  </span> <br/>"
+                                    )
+                                    .pauseFor(1000)
+                                    .typeString("뉴스를 추천해드립니다")
+                                    .pauseFor(1000)
+                                    .start();
+                            }}
+                            options={{
+                                wrapperClassName: `${commonStyles.title}`, // 커스텀 클래스 추가
+                            }}
+                        />
+                    )}
+
+                    {props.status && (
+                        <div className={commonStyles.content}>
+                            키워드별 추천과 비슷한 사용자 추천으로 <br />
+                            폭넓은 추천을 제공합니다.
+                        </div>
+                    )}
                 </div>
-                <Image
-                    src="/images/landing-second.webp"
-                    alt="secondImage"
-                    width={600}
-                    height={400}
-                />
+                {props.status && (
+                    <Image
+                        src="/images/landing-second.webp"
+                        className={commonStyles.image}
+                        alt="secondImage"
+                        width={620}
+                        height={400}
+                    />
+                )}
             </main>
         </div>
     );
