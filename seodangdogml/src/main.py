@@ -19,9 +19,9 @@ from crawling.news_crawling import crawling_main, test
 back_scheduler = BackgroundScheduler(timezone='Asia/Seoul')
 
 
-@back_scheduler.scheduled_job('cron', daily="1/1", id='test')
+# @back_scheduler.scheduled_job('cron', daily="1/1", id='test')
 
-# @back_scheduler.scheduled_job('cron', minute="36", id='test')
+@back_scheduler.scheduled_job('cron', minute="36", id='test')
 def scheduled_job():
     crawling_main()
     save_news()
