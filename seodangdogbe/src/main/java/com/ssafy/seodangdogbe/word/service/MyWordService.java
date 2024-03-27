@@ -1,9 +1,11 @@
 package com.ssafy.seodangdogbe.word.service;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
+import com.ssafy.seodangdogbe.word.domain.MetaWord;
 import com.ssafy.seodangdogbe.word.domain.UserWord;
 import com.ssafy.seodangdogbe.word.dto.MyWordResponseDto;
 import com.ssafy.seodangdogbe.word.dto.WordDto;
+import com.ssafy.seodangdogbe.word.repository.MetaWordRepository;
 import com.ssafy.seodangdogbe.word.repository.MyWordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +16,14 @@ import java.util.stream.Collectors;
 @Service
 public class MyWordService {
     private final MyWordRepository myWordRepository;
+    private final MetaWordRepository metaWordRepository;
     private final WordMeanService wordMeanService;
     private UserService userService;
 
     @Autowired
-    public MyWordService(MyWordRepository myWordRepository,  WordMeanService wordMeanService, UserService userService) {
+    public MyWordService(MyWordRepository myWordRepository,  WordMeanService wordMeanService, UserService userService, MetaWordRepository metaWordRepository) {
         this.myWordRepository = myWordRepository;
+        this.metaWordRepository = metaWordRepository;
         this.wordMeanService = wordMeanService;
         this.userService = userService;
 
@@ -68,5 +72,18 @@ public class MyWordService {
                 return false; // 소유자 불일치
             }
         }).orElse(false); // 단어가 존재하지 않음
+    }
+
+    public WordDto.MetaWordDto searchWord(String word) {
+        return metaWordRepository.findByWord(word)
+                .map(WordDto.MetaWordDto::new)
+                .orElse(null);
+    }
+
+    public List<WordDto.MetaWordDto> findWordSearch(String prefix) {
+        List<MetaWord> words = metaWordRepository.findByWordSearch(prefix);
+        return words.stream()
+                .map(WordDto.MetaWordDto::new)
+                .collect(Collectors.toList());
     }
 }
