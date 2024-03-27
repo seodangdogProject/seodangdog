@@ -32,7 +32,7 @@ public class NewsRecommendService {
     public List<UserRecommendResponseDto> getNewsRecommendations() {
         try {
             int userSeq = userService.getUserSeq();
-            User user = userService.getUserByUserSeq(userSeq);
+            User user = userService.getUser();
             return newsRecommendRepository.findNewsRecommendations(user);
         } catch (Exception e) {
             throw new UnauthorizedException("미인증 사용자입니다.");

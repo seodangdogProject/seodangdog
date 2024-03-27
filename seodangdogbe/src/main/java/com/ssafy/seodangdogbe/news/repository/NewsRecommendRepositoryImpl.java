@@ -1,12 +1,6 @@
 package com.ssafy.seodangdogbe.news.repository;
 
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.seodangdogbe.auth.service.UserService;
-import com.ssafy.seodangdogbe.keyword.domain.Keyword;
-import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
-import com.ssafy.seodangdogbe.keyword.dto.MFRecommendResponse;
-import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshReqDto;
 import com.ssafy.seodangdogbe.news.domain.News;
 import com.ssafy.seodangdogbe.news.domain.QKeywordNews;
 import com.ssafy.seodangdogbe.news.domain.QNews;
@@ -15,10 +9,7 @@ import com.ssafy.seodangdogbe.news.dto.*;
 import com.ssafy.seodangdogbe.user.domain.QUser;
 import com.ssafy.seodangdogbe.news.dto.MostViewRecommendResponseDto;
 import com.ssafy.seodangdogbe.user.domain.User;
-import com.ssafy.seodangdogbe.word.repository.MyWordRepository;
-import com.ssafy.seodangdogbe.word.service.WordMeanService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -27,7 +18,6 @@ import com.ssafy.seodangdogbe.news.service.FastApiService.CbfRecommendResponse;
 import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.seodangdogbe.news.service.FastApiService.MfRecommendResponse;
 
-import java.security.Key;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,7 +25,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.ssafy.seodangdogbe.keyword.domain.QUserKeyword.userKeyword;
-import static com.ssafy.seodangdogbe.news.domain.QUserNews.userNews;
 
 @Repository
 @RequiredArgsConstructor

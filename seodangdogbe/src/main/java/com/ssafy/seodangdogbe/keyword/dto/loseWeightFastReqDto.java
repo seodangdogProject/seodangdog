@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MFRecommendResponse {
+public class loseWeightFastReqDto {
     int userSeq;
     Long newsSeq;
     double weight;
