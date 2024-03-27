@@ -27,12 +27,7 @@ const WordResult: React.FC = () => {
 
         (async () => {
             console.log(reqData);
-            const res = await privateFetch(
-                "/game/result",
-                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODUzNn0.VYk5mAWj8_aq955JRzbgKcSetCVPM5js5vAjPYhYgHg",
-                "PATCH",
-                reqData
-            );
+            const res = await privateFetch("/game/result", "PATCH", reqData);
             if (res.status === 200) {
                 const data = await res.json();
                 console.log(data);
