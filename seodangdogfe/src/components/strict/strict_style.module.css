@@ -1,23 +1,32 @@
 .strictContainer {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  height: 25px;
+  padding-top: 10px;
+  box-sizing: border-box;
 }
 .strictElement {
-    flex-direction: row-reverse;
-    border-radius: 10px;
-    width: 30px;
-    height: 25px;
-    margin: 2px;
-    position: relative;
+  flex-direction: row-reverse;
+  /* border-radius: 50%; */
+  width: 30px;
+  /* width: calc(25px / 7px); */
+  /* height: 25px; */
+  height: calc(25px / 7px);
+  height: 15px;
+  margin: 2px;
+  position: relative;
 }
 .weekName {
-    width: 40px;
-    height: 25px;
-    display: flex;
-    margin: 2px;
-    justify-content: center;
-    align-items: center;
-    font-size: 12px;
-    font-family: "pretendard";
-    font-weight: bold;
+  width: 40px;
+  height: 15px;
+  display: flex;
+  /* margin: 2px; */
+  margin: 2px 0px;
+  /* padding-top: 10px; */
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+  font-family: "pretendard";
+  font-weight: bold;
 }

@@ -1,15 +1,14 @@
 .container {
   width: 100%;
-  height: 220px;
-  margin-top: 20px;
+  height: 100%;
   position: relative;
   font-family: "hunminjungum";
-  padding: 20px 0 160px 160px;
   box-sizing: border-box;
+  padding: 20px 0 0 160px;
 }
 .king {
   left: 0;
-  bottom: 0;
+  top: 0;
   position: absolute;
   width: 150px;
   height: 100%;
@@ -22,39 +21,47 @@
 .king::before {
   content: "";
   position: absolute;
-  top: 62px;
-  right: -58px;
+  top: -16px;
+  right: -18px;
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 0 215px 102px 0; /* 삼각형 모양으로 잘리도록 설정 */
+  border-width: 2px 100px 97px 28px;
   border-color: transparent #fff transparent transparent; /* 삼각형의 색상 설정 */
   transform: rotate(90deg); /* 삼각형을 180도 회전하여 방향을 바꿈 */
 }
 .king img {
   position: absolute;
-  left: 40px;
-  top: 30px;
+  left: 65px;
+  top: 3px;
+  width: 55px;
 }
 
 .name {
-  margin-bottom: 60px;
-  font-size: 36px;
+  /* margin-bottom: 60px; */
+  /* font-size: 36px; */
+  font-size: 1.5rem;
+  padding-bottom: 5px;
+  box-sizing: border-box;
 }
 
 .email {
   font-size: 20px;
   color: #b7b5b5;
-  margin-bottom: 40px;
+  padding-bottom: 5px;
+  font-size: 0.8rem;
 }
 .hashtag {
+  padding-top: 5px;
+  box-sizing: border-box;
   display: flex;
-  gap: 42px;
   flex-wrap: wrap;
   width: 100%;
+  /* background-color: red; */
+  gap: 0.5rem;
 }
 .hashtag .item {
-  font-size: 20px;
+  font-size: 1rem;
   color: #d65757;
   font-weight: bold;
 }
