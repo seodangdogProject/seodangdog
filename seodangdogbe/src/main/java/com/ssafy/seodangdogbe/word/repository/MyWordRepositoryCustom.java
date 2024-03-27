@@ -7,6 +7,7 @@ import java.util.List;
 public interface MyWordRepositoryCustom {
 
     List<UserWord> findAllUserWords(int userSeq);
+    UserWord findUserWordByUserSeqAndWord(int userSeq, String word);
 
 
 }

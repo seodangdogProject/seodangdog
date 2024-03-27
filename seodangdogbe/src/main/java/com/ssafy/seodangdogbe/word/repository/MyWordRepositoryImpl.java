@@ -23,8 +23,17 @@ public class MyWordRepositoryImpl implements MyWordRepositoryCustom {
                 .where(qUserWord.user.userSeq.eq(userSeq)
                     .and(qUserWord.isDelete.eq(false)))
                 .fetch();
+    }
 
-
+    @Override
+    public UserWord findUserWordByUserSeqAndWord(int userSeq, String word) {
+        QUserWord qUserWord = QUserWord.userWord;
+        return queryFactory
+                .selectFrom(qUserWord)
+                .where(qUserWord.user.userSeq.eq(userSeq)
+                        .and(qUserWord.word.eq(word))
+                        .and(qUserWord.isDelete.eq(false)))
+                .fetchOne();
     }
 }
 
