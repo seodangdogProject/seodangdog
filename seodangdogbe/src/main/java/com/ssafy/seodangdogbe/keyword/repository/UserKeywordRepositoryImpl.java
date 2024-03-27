@@ -57,7 +57,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     @Transactional
     public void saveAll(List<UserKeyword> list) {
-        String sql = "INSERT INTO UserKeyword (user_seq, keyword, weight) " +
+        String sql = "INSERT INTO user_keyword (user_seq, keyword, weight) " +
                 "VALUES (?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql,
