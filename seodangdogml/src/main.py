@@ -22,11 +22,12 @@ back_scheduler = BackgroundScheduler(timezone='Asia/Seoul')
 
 # @back_scheduler.scheduled_job('cron', daily="1/1", id='test')
 
-@back_scheduler.scheduled_job('cron', minute="36", id='test')
+@back_scheduler.scheduled_job('cron', minute="0/1", id='test')
 def scheduled_job():
-    crawling_main()
-    save_news()
-    mysql_save()
+    test()
+    # crawling_main()
+    # save_news()
+    # mysql_save()
 
 
 @asynccontextmanager
@@ -35,8 +36,8 @@ async def lifespan(_: FastAPI):
     yield
 
 
-# app = FastAPI(lifespan=lifespan)
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
+# app = FastAPI()
 
 
 if __name__ == "__main__":
