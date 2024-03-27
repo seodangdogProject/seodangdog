@@ -24,7 +24,7 @@ public class UserKeyword {
     @JoinColumn(name = "keyword")
     private Keyword keyword;
 
-    private Double weight;
+    private Double weight = 3.0;
 
     public UserKeyword(User user, String keyword, double weight) {
         this.user = user;

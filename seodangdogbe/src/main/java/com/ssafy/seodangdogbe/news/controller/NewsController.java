@@ -5,9 +5,8 @@ import com.ssafy.seodangdogbe.common.MsgResponseDto;
 import com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 import com.ssafy.seodangdogbe.news.service.NewsService;
 import com.ssafy.seodangdogbe.user.domain.User;
-import com.ssafy.seodangdogbe.user.dto.BadgeDto;
 import com.ssafy.seodangdogbe.user.service.UserBadgeService;
-import com.ssafy.seodangdogbe.word.dto.KorApiDto;
+import com.ssafy.seodangdogbe.word.dto.WordApiDto;
 import com.ssafy.seodangdogbe.word.dto.UserWordDto;
 import com.ssafy.seodangdogbe.word.dto.WordDto;
 import com.ssafy.seodangdogbe.word.dto.WordDto.WordRequestDto;
@@ -18,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static com.ssafy.seodangdogbe.news.dto.MetaNewsDto.*;
 
@@ -95,9 +92,9 @@ public class NewsController {
 
         String word = wordDto.getWord();
         // ** 단어가 mongodb에 들어와있는지 확인하고, 없다면 api 호출해서 넣어주어야 함 -> 이렇게 접근할 일 없음
-        if (!wordService.isExistWord(word)){
+        if (!wordService.existWord(word)){
             // 표준국어대사전 API(사전검색 api만 사용) 호출 및 결과 값 받아오기
-            KorApiDto.KorApiSearchDto korApiSearchDto = wordService.callStDictSearchApi(word);
+            WordApiDto.KorApiSearchDto korApiSearchDto = wordService.callStDictSearchApi(word);
 
             // 결과 값 DB에 저장
             WordDto.MetaWordDto metaWordDto = new WordDto.MetaWordDto(korApiSearchDto);
