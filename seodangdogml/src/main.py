@@ -1,3 +1,4 @@
+import os
 import sched
 
 from fastapi import FastAPI
@@ -49,6 +50,7 @@ def hello():
 @app.get("/fast/chrome_test")
 def chrome_test():
     test()
+    print("present : ", os.getcwd())
     return {"message": "chrome_test activated."}
 
 
