@@ -58,6 +58,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsTitle(),
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
+                    news.getCountView(),
                     keywords
             );
         }).collect(Collectors.toList());
@@ -87,6 +88,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsTitle(),
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
+                    news.getCountView(),
                     keywords
             );
         }).collect(Collectors.toList());
@@ -114,6 +116,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsTitle(),
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
+                    news.getCountView(),
                     keywords
             );
         }).collect(Collectors.toList());
@@ -141,6 +144,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsTitle(),
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
+                    news.getCountView(),
                     keywords
             );
         }).collect(Collectors.toList());

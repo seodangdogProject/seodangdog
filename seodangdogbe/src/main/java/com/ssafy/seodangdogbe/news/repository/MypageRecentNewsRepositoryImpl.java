@@ -47,6 +47,7 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
                     news.getNewsTitle(),
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
+                    news.getCountView(),
                     keywords
             );
         }).collect(Collectors.toList());
@@ -76,6 +77,7 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
                     news.getNewsTitle(),
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
+                    news.getCountView(),
                     keywords
             );
         }).collect(Collectors.toList());
