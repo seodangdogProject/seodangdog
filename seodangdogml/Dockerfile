@@ -8,6 +8,7 @@ COPY ./requirements.txt /code/requirements.txt
 # 찬영 : 크롬을 설치한다.
 RUN apt-get update
 RUN apt-get -y install wget
+RUN mkdir /code/resource
 RUN wget --no-verbose -O /code/resource/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb
 RUN apt-get install -y /code/resource/chrome.deb
 
