@@ -70,7 +70,7 @@ public class GameService {
         List<Long> wordSeqs = requestDto.getWordSeq();
 
         // 사용자 단어게임 경험치 증가
-        User user = userService.getUserByUserSeq(userSeq);
+        User user = userService.getUser();
         int exp = user.getUserExp().getWordGameExp();
         user.getUserExp().setWordGameExp(exp + wordSeqs.size());
 

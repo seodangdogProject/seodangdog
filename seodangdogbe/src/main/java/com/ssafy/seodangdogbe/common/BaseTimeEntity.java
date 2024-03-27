@@ -27,7 +27,7 @@ public abstract class BaseTimeEntity {
     private LocalDateTime modifiedAt;
 
     @ColumnDefault("false")
-//    @Setter // isDelete 업데이트 추가(createdAt, modifiedAt은 자동 업데이트)
+    // isDelete 업데이트 추가(createdAt, modifiedAt은 자동 업데이트)
     private boolean isDelete;
 //    @Builder.Default
 //    private boolean isDelete = false;

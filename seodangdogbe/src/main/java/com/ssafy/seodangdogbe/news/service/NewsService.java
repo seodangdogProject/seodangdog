@@ -147,7 +147,7 @@ public class NewsService {
     // 사용자-뉴스 테이블 존재 여부 판단(최초접근 여부 판단)
     public boolean getUserNewsExist(int userSeq, Long newsSeq) {
         UserNews findUserNews = userNewsRepository.findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq)
-                .orElseThrow(() -> new NullPointerException("사용자뉴스가 존재하지 않습니다."));
+                .orElse(null);
         if (findUserNews != null){
             return true;
         } else {
