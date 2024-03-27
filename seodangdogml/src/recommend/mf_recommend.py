@@ -8,6 +8,11 @@ import pandas as pd
 import os
 from recommend.cbf_recommend import format_weight
 from recommend.cbf_recommend import cbf_recommend
+from recommend.cbf_recommend import news_id_seq
+from repository.recommend_repository import select_ratings
+from repository.recommend_repository import update_ratings
+from repository.recommend_repository import select_user_news_rating
+from repository.recommend_repository import insert_ratings
 from recommend.mf_train import multiprocessing_train
 from recommend.mf_train import online_learning
 import asyncio
@@ -21,6 +26,7 @@ router = APIRouter()
 news = select_all_news()
 news = pd.DataFrame(news)
 news = news.set_index('news_id')
+
 
 class MfNewsDto:
     def __init__(self, news_seq, news_title, news_similarity):
@@ -38,20 +44,29 @@ def load_mf():
     return model
 
 
+def save_mf(model):
+    base_src = './recommend'
+    model_name = 'mf_online.pkl'
+    save_path = os.path.join(base_src, model_name)
+    with open(save_path, 'wb') as f:
+        pickle.dump(model, f)
+
+
 mf = load_mf()
 
 
 def get_news_title(news_id):
+    print(news_id)
     return news.loc[news_id]['title']
 
 
-def recommend_news(user_id, mf_model, top_n=5):
+def recommend_news(user_seq, mf_model, top_n=5):
     # 해당 사용자가 평가하지 않은 영화들의 예측 평점을 계산
     predicted_ratings = []
 
     for item_id in mf_model.item_id_index.keys():
         if item_id not in mf_model.user_id_index.keys():
-            predicted_rating = mf_model.get_one_prediction(user_id, item_id)
+            predicted_rating = mf_model.get_one_prediction(user_seq, item_id)
             predicted_ratings.append((item_id, predicted_rating))
 
     # 예측 평점을 기준으로 내림차순 정렬
@@ -66,17 +81,18 @@ def recommend_news(user_id, mf_model, top_n=5):
         # news_similarity = format_weight(predicted_ratings[i][1])
         news_similarity = predicted_ratings[i][1]
         recommended_news.append(MfNewsDto(news_seq, news_title, news_similarity))
+
     return recommended_news
 
 
-@router.get('/fast/mf_recom/{user_id}')
-async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
+@router.get('/fast/mf_recom/{user_seq}')
+async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
     start_time = time.time()
     print("mf_recommend")
 
-    if user_id in mf.user_id_index:
+    if user_seq in mf.user_id_index:
         top_n = 10
-        recommendations = recommend_news(user_id, mf, top_n)
+        recommendations = recommend_news(user_seq, mf, top_n)
 
         # 추천목록화인 start
         # print(recommendations)
@@ -89,13 +105,16 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
         execution_time = end_time - start_time
         print(f"mf 추천: {execution_time} 초")
 
+        # rating에 없는걸 추천받으면 넣는다
+        insert_task = asyncio.create_task(insert_rating(recommendations, user_seq))
+
         return recommendations
     else:
         # 방금회원가입했으면(mf 모델에 학습되어 있지 않으면) 추천되지 않는 cbf를 추천하고 mf를 다시 학습시킨다
         print('User not found -> cbf reommend')
         # background_tasks = BackgroundTasks()
 
-        recommended_news = await cbf_recommend(background_tasks, user_id, False)
+        recommended_news = await cbf_recommend(background_tasks, user_seq, False)
 
         start_time = time.time()
         # update_task = asyncio.create_task(train_mf_model())
@@ -103,6 +122,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
 
         end_time = time.time()
         execution_time = end_time - start_time
+
         print(f"mf 훈련시간: {execution_time} 초")
         return recommended_news
 
@@ -115,17 +135,49 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_id: int):
 class UpdateData(BaseModel):
     user_seq: int
     news_seq: int
-    similarity: float
     weight: float
 
 
 @router.post('/fast/mf_recom/update')
-def mf_update(datas: List[UpdateData]):
-    for data in datas:
-        user_index = mf.user_id_index[data.user_seq]
-        news_index = mf.item_id_index[data.news_seq]
-        rating = data.similarity * 5
-        weight = data.weight
-        user_news_weight = (user_index, news_index, rating)
-        online_learning(mf,user_news_weight, weight)
-# 온라인데이터도 저장해야한다. (csv, 테이블?)
+async def mf_update(datas: List[UpdateData]):
+    # result = rating = select_user_news_rating(user_seq)
+    print('mf_update')
+    # for data in datas:
+    #     # print(mf.get_one_prediction(data.user_seq, data.news_seq))
+    #     user_seq = data.user_seq
+    #     news_seq = data.news_seq
+    #     rating = select_user_news_rating(user_seq, news_seq)
+    #     if rating is None:
+    #         continue
+    #     rating = rating['rating'] * 5
+    #     weight = data.weight
+    #     # user_news_weight = (user_index, news_index, rating)
+    #     online_learning(mf, user_seq, news_seq, rating, weight)
+    #     print(mf.get_one_prediction(user_seq, news_seq))
+    #
+    # # 온라인 학습후 업데이트된 모델 저장
+    # save_mf(mf)
+    return {'msg': 'update success'}
+
+
+async def insert_rating(recommended_news, user_seq):
+    start_time = time.time()
+    insert_rating_data = []
+    for news in recommended_news:
+        news_seq = news.news_seq
+        news_title = news.news_title
+        news_similarity = news.news_similarity
+        info = select_ratings(news_seq, user_seq)
+
+        if info is None:
+            temp = [news_seq, user_seq, news_similarity]
+            insert_rating_data.append(temp)
+
+    print('insert_rating_data', len(insert_rating_data))
+    if len(insert_rating_data) > 0:
+        print("MF insert_rating...")
+        insert_ratings(insert_rating_data)
+
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"MF - 데이터 업데이트완료: {execution_time} 초")

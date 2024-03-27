@@ -8,6 +8,7 @@ import os
 import time
 import multiprocessing
 
+
 router = APIRouter()
 
 @router.get('/fast/mf_recom/train')
@@ -19,7 +20,7 @@ def multiprocessing_train():
     process = multiprocessing.Process(target=train_mf_model)
     process.start()
 
-    return {"message": "Training started in the background."}
+    return {"msg": "Training started."}
 
 def train_mf_model():
 
@@ -76,16 +77,51 @@ def train_mf_model():
     # result = mf.test()
     # 학습을 통해 최적의 K값 찾기 end
 
+    save_mf(mf)
+
+
+def save_mf(model):
     base_src = './recommend'
     model_name = 'mf_online.pkl'
     save_path = os.path.join(base_src, model_name)
     with open(save_path, 'wb') as f:
-        pickle.dump(mf, f)
-    # print(R_temp[56636])
+        pickle.dump(model, f)
+
 
 # 변수로 넘어온 user_seq, news_seq는 인덱스(0부터)로 변환해서 학습을 시켜야한다.
-def online_learning(mf, user_news_weight, weight):
-    mf.online_learning(user_news_weight, weight)
+def online_learning(mf, user_id, item_id, rating, weight=1):
+
+    if user_id not in mf.user_id_index:
+        # 새로운 사용자인 경우, 사용자를 모델에 추가하고 초기화
+        mf.user_id_index[user_id] = mf.num_users
+        mf.index_user_id[mf.num_users] = user_id
+        mf.num_users += 1
+
+        # 새로운 사용자의 특성을 추가하기 위해 mf.P에 새로운 행을 추가
+        # np.random.normal() 함수를 사용하여 임의로 생성되며, 각 요소는 평균이 0이고 표준 편차가 1/mf.K 인 정규 분포를 따르는 난수
+        # 새로운 사용자의 초기 특성을 무작위로 설정
+
+        # np.random.normal() 함수는 정규 분포를 따르는 난수를 생성하는 함수(평균과 표준 편차가 인자)
+        ## scale=1./mf.K로 표준 편차를 설정 -> 1/mf.K를 표준 편차로 가지는 정규 분포를 따르는 난수
+        ### size=(1, mf.K) -> 1행, mf.K(잠재요인)열 형태의 난수를 생성
+        mf.P = np.vstack([mf.P, np.random.normal(scale=1./mf.K, size=(1, mf.K))])
+        mf.b_u = np.append(mf.b_u, 0)
+
+    if item_id not in mf.item_id_index:
+        # 새로운 아이템인 경우, 아이템을 모델에 추가하고 초기화
+        mf.item_id_index[item_id] = mf.num_items
+
+        print(mf.item_id_index[item_id])
+        mf.index_item_id[mf.num_items] = item_id
+        mf.num_items += 1
+        mf.Q = np.vstack([mf.Q, np.random.normal(scale=1./mf.K, size=(1, mf.K))])
+        mf.b_d = np.append(mf.b_d, 0)
+
+    # 사용자와 아이템을 모델에 추가한 후에는 모델을 업데이트
+    i = mf.user_id_index[user_id]
+    j = mf.item_id_index[item_id]
+    mf.online_sgd((i, j, rating), weight)
+
 
 class NEW_MF():
     def __init__(self, ratings, hyper_params):
@@ -97,7 +133,7 @@ class NEW_MF():
         self.alpha = hyper_params['alpha']  # 학습률
         self.beta = hyper_params['beta']  # 정규화개수
         self.iterations = hyper_params['iterations']  # SGD의 계산을 할 때의 반복 횟수
-        self.verbose = hyper_params['verbose']  # 학습과정을 중간에 출력할건지? 플래그 변수
+        self.verbose = hyper_params['verbose']  # 학습과정을 중/간에 출력할건지? 플래그 변수
 
         # movielens같은 경우는 데이터가 아주 잘 정리되어있고 연속된값이다.
         # 하지만 실제는 그렇지 않을 경우가 더 많을 것이다
@@ -278,7 +314,7 @@ class NEW_MF():
 
     # 유저아이디와 아이템 아이디로 예측치를 계산해서 돌려준다
     # -> 어떤 인덱스 값이 들어와도 자동으로 매핑되서 예측치계산
-    def get_one_prediction(self, user_id:int, item_id):
+    def get_one_prediction(self, user_id, item_id):
         return self.get_prediction(self.user_id_index[user_id],
                                    self.item_id_index[item_id])
 

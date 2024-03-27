@@ -99,7 +99,8 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
         news_id = news[0]
         news_seq = news_id_seq[news_id]
         news_title = news[1]
-        news_similarity = format_weight(news[2])
+        # news_similarity = format_weight(news[2])
+        news_similarity = news[2]
 
         result.append(NewsDto(news_id, news_seq, news_title, news_similarity))
 
@@ -117,11 +118,12 @@ async def update_rating(recommended_news, user_seq):
     insert_rating_data = []
     update_rating_data = []
     for news in recommended_news:
+        print(news)
         news_id = news[0]
         news_seq = news_id_seq[news_id]
         news_title = news[1]
-        news_similarity = format_weight(news[2])
-
+        # news_similarity = format_weight(news[2])
+        news_similarity = news[2]
         info = select_ratings(news_seq, user_seq)
         if info is None:
             temp = [news_seq, user_seq, news_similarity]

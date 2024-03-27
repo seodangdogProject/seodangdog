@@ -313,12 +313,13 @@ async def async_insert_ratings(rating_data):
 
 # # 뉴스와 유저가 rating에 있을 경우 업데이트
 def update_ratings(rating_data):
+    # cursor.executemany(sql, [(data[2], data[0], data[1]) for data in rating_data])
     connection = mysql_create_session()
     try:
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # rating_data는 (news_seq, user_seq, rating) 튜플의 리스트여야 합니다.
             sql = "UPDATE ratings SET rating = %s WHERE news_seq = %s AND user_seq = %s"
-            cursor.executemany(sql, [(data[2], data[0], data[1]) for data in rating_data])
+            cursor.executemany(sql, [(data[0], data[1], data[2]) for data in rating_data])
             connection.commit()
             return True
     except Exception as e:
@@ -326,7 +327,8 @@ def update_ratings(rating_data):
         connection.rollback()
         return False
     finally:
-        connection = mysql_create_session()
+        # 연결 종료
+        connection.close()
 
 
 async def async_update_ratings(rating_data):
@@ -373,6 +375,49 @@ def select_all_ratings():
 
 # 추천을 위해
 def select_all_news():
+    connection = mysql_create_session()
+    try:
+        # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            # 파라미터를 사용한 쿼리 실행
+            sql = "select news_seq news_id, news_title title from news"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            return result
+    except Exception as e:
+        print(f"Error occurred select_all_news: {e}")
+        connection.rollback()
+        return False
+    finally:
+        # 연결 종료
+        connection.close()
+
+
+
+# select rating from ratings where user_seq = ? AND news_seq = ?
+# 유사도 가져오기
+def select_user_news_rating(user_seq, news_seq):
+    connection = mysql_create_session()
+    try:
+        # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            # 파라미터를 사용한 쿼리 실행
+            sql = "select rating from ratings where user_seq = %s"
+            cursor.execute(sql,(user_seq))
+            result = cursor.fetchone()
+            return result
+    except Exception as e:
+        print(f"Error occurred select_all_news: {e}")
+        connection.rollback()
+        return False
+    finally:
+        # 연결 종료
+        connection.close()
+
+
+# select news_seq is_solved from user_news where user_seq=?
+# 사용자가 본뉴스를 거르고 추천하기위해 정보를 가져온다
+def select_news_solved():
     connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
