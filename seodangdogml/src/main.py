@@ -1,5 +1,6 @@
 import os
 import sched
+import time
 
 from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -22,9 +23,12 @@ back_scheduler = BackgroundScheduler(timezone='Asia/Seoul')
 
 # @back_scheduler.scheduled_job('cron', daily="1/1", id='test')
 
-@back_scheduler.scheduled_job('cron', minute="0/1", id='test')
+@back_scheduler.scheduled_job('cron', minute="20", hour="3", id='test')
 def scheduled_job():
-    test()
+    # test()
+    print("지금은 !!!!")
+    print(time.localtime().tm_hour, "시!!!!")
+    print(time.localtime().tm_min, "분입니다!!!!!!")
     # crawling_main()
     # save_news()
     # mysql_save()
