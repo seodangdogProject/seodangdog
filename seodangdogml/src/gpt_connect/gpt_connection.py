@@ -1,6 +1,6 @@
 import os
 from openai import OpenAI
-from repository.news_repository import findNews
+# from repository.news_repository import findNews
 import json
 import settings
 
@@ -85,7 +85,7 @@ def question_generate(news_data):
         }'''
 
     question_list = []
-    news_data = findNews(10)
+    # news_data = findNews(10)
 
     for news in news_data:
         news_text = news["newsTitle"] + "\n\n" + news["newsMainText"]
