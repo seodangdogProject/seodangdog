@@ -28,6 +28,13 @@ public class MyWordController {
         return ResponseEntity.ok(wordList);
     }
 
+    @Operation(description = "영어 단어장 - 단어 조회")
+    @GetMapping("/EngWord")
+    public ResponseEntity<MyWordResponseDto> getNonKoreanWords() {
+        MyWordResponseDto nonKoreanWordList = myWordService.findAllEngWords();
+        return ResponseEntity.ok(nonKoreanWordList);
+    }
+
     //단어 삭제 기능
     @Operation(description = "단어장 - 단어 삭제")
     @PatchMapping("/{wordSeq}")

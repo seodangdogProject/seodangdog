@@ -10,6 +10,7 @@ import com.ssafy.seodangdogbe.word.repository.MyWordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,27 +34,61 @@ public class MyWordService {
     public MyWordResponseDto findAllUserWords() {
         int userSeq = userService.getUserSeq();
         List<UserWord> userWords = myWordRepository.findAllUserWords(userSeq);
-        List<MyWordResponseDto.WordInfo> wordInfos = userWords.stream()
-                .map(word -> {
-                    WordDto.MetaWordDto metaWordDto = wordMeanService.findMeanByWord(word.getWord());
-                    String mean1 = null, mean2 = null;
-                    if (metaWordDto != null && !metaWordDto.getItems().isEmpty()) {
-                        mean1 = metaWordDto.getItems().get(0).getDefinition(); // 첫 번째 뜻
-                        if (metaWordDto.getItems().size() > 1) {
-                            mean2 = metaWordDto.getItems().get(1).getDefinition(); // 두 번째 뜻
-                        }
+        List<MyWordResponseDto.WordInfo> wordInfos = new ArrayList<>();
+
+        for (UserWord userWord : userWords) {
+            MetaWord metaWord = metaWordRepository.findByWord(userWord.getWord())
+                    .orElse(null);
+            if (metaWord != null && "kor".equals(metaWord.getWordLang())) {
+                WordDto.MetaWordDto metaWordDto = new WordDto.MetaWordDto(metaWord);
+                String mean1 = null, mean2 = null;
+                if (!metaWordDto.getItems().isEmpty()) {
+                    mean1 = metaWordDto.getItems().get(0).getDefinition(); // 첫 번째 뜻
+                    if (metaWordDto.getItems().size() > 1) {
+                        mean2 = metaWordDto.getItems().get(1).getDefinition(); // 두 번째 뜻
                     }
-                    return new MyWordResponseDto.WordInfo(
-                            word.getWordSeq(),
-                            word.getWord(),
-                            mean1, // 첫 번째 뜻
-                            mean2  // 두 번째 뜻, 없으면 null
-                    );
-                })
-                .collect(Collectors.toList());
+                }
+                wordInfos.add(new MyWordResponseDto.WordInfo(
+                        userWord.getWordSeq(),
+                        userWord.getWord(),
+                        mean1, // 첫 번째 뜻
+                        mean2  // 두 번째 뜻, 없으면 null
+                ));
+            }
+        }
 
         return new MyWordResponseDto(wordInfos);
     }
+    public MyWordResponseDto findAllEngWords() {
+        int userSeq = userService.getUserSeq();
+        List<UserWord> userWords = myWordRepository.findAllUserWords(userSeq);
+        List<MyWordResponseDto.WordInfo> wordInfos = new ArrayList<>();
+
+        for (UserWord userWord : userWords) {
+            MetaWord metaWord = metaWordRepository.findByWord(userWord.getWord())
+                    .orElse(null);
+            // 'kor'가 아닌 단어만 필터링
+            if (metaWord != null && "eng".equals(metaWord.getWordLang())) {
+                WordDto.MetaWordDto metaWordDto = new WordDto.MetaWordDto(metaWord);
+                String mean1 = null, mean2 = null;
+                if (!metaWordDto.getItems().isEmpty()) {
+                    mean1 = metaWordDto.getItems().get(0).getDefinition(); // 첫 번째 뜻
+                    if (metaWordDto.getItems().size() > 1) {
+                        mean2 = metaWordDto.getItems().get(1).getDefinition(); // 두 번째 뜻
+                    }
+                }
+                wordInfos.add(new MyWordResponseDto.WordInfo(
+                        userWord.getWordSeq(),
+                        userWord.getWord(),
+                        mean1, // 첫 번째 뜻
+                        mean2  // 두 번째 뜻, 없으면 null
+                ));
+            }
+        }
+
+        return new MyWordResponseDto(wordInfos);
+    }
+
 
 
     // 단어 삭제 메서드
