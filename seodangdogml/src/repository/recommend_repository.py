@@ -6,6 +6,7 @@ from pymongo import MongoClient
 import random
 import asyncio
 import aiomysql
+import settings
 
 import json
 from bson import json_util
@@ -15,38 +16,15 @@ from repository.news_repository import findNews
 
 router = APIRouter()
 
-# MySQL 연결 설정
-db_config = {
-    "host": 'seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com',
-    "port": 3306,
-    "user": 'seodangdog',
-    "password": 'dogseodang0311',
-    "database": 'seodangdog',
-    "charset": 'utf8'
-}
-
-# connection = pymysql.connect(host='seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com',
-#                              port=3306, user='seodangdog',
-#                              password='dogseodang0311',
-#                              database='seodangdog',
-#                              charset='utf8')
-# cursorclass=pymysql.cursors.DictCursor,)
-
 
 # DB와 접근하는 conn, cur 객체 생성 후 반환
 def mysql_create_session():
-    connection = pymysql.connect(host=db_config['host'], user=db_config['user'], password=db_config['password'], db=db_config['database'], charset="utf8", port=db_config['port'])
+    connection = pymysql.connect(host=settings.MYSQL["host"], port=settings.MYSQL["port"], user=settings.MYSQL["user"], passwd=settings.MYSQL["passwd"], db=settings.MYSQL["db"], charset=settings.MYSQL["charset"])
     return connection
 
 
 # MongoDB
-host = "seodangdog"
-port = "27017"
-username = "dogsoedang"
-password = "sssdangorg56"
-uri = f"mongodb://{username}:{password}@j10e104.p.ssafy.io:{port}/{host}?authSource=admin"
-dbname = 'seodangdog'
-client = MongoClient(uri)[dbname]
+client = MongoClient(settings.MONGO_URI)[settings.MONDGO_DBNAME]
 
 
 # @router.get('/fast/test/{user_seq}')
@@ -263,8 +241,10 @@ def select_ratings(news_seq, user_seq):
 
 async def async_select_ratings(news_seq, user_seq):
     try:
-        async with aiomysql.create_pool(host=db_config['host'], port=db_config['port'], user=db_config['user'],
-                                        password=db_config['password'], db=db_config['database']) as pool:
+        async with (aiomysql.create_pool(host=settings.MYSQL["host"], port=settings.MYSQL["port"],
+                                        user=settings.MYSQL["user"], passwd=settings.MYSQL["passwd"],
+                                        db=settings.MYSQL["db"], charset=settings.MYSQL["charset"])
+                    as pool):
             async with pool.acquire() as conn:
                 async with conn.cursor() as cursor:
                     sql = "select * from ratings where news_seq = %s AND user_seq = %s"
@@ -299,8 +279,10 @@ def insert_ratings(rating_data):
 
 async def async_insert_ratings(rating_data):
     try:
-        async with aiomysql.create_pool(host=db_config['host'], port=db_config['port'], user=db_config['user'],
-                                        password=db_config['password'], db=db_config['database'], autocommit=True) as pool:
+        async with (aiomysql.create_pool(host=settings.MYSQL["host"], port=settings.MYSQL["port"],
+                                        user=settings.MYSQL["user"], passwd=settings.MYSQL["passwd"],
+                                        db=settings.MYSQL["db"], charset=settings.MYSQL["charset"])
+                    as pool):
             async with pool.acquire() as conn:
                 async with conn.cursor() as cursor:
                     sql = "INSERT INTO ratings (news_seq, user_seq, rating) VALUES (%s, %s, %s)"
@@ -331,8 +313,10 @@ def update_ratings(rating_data):
 
 async def async_update_ratings(rating_data):
     try:
-        async with aiomysql.create_pool(host=db_config['host'], port=db_config['port'], user=db_config['user'],
-                                        password=db_config['password'], db=db_config['database'], autocommit=True) as pool:
+        async with (aiomysql.create_pool(host=settings.MYSQL["host"], port=settings.MYSQL["port"],
+                                        user=settings.MYSQL["user"], passwd=settings.MYSQL["passwd"],
+                                        db=settings.MYSQL["db"], charset=settings.MYSQL["charset"])
+                    as pool):
             async with pool.acquire() as conn:
                 async with conn.cursor() as cursor:
                     sql = "UPDATE ratings SET rating = %s WHERE news_seq = %s AND user_seq = %s"

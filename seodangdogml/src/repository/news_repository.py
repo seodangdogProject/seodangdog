@@ -16,21 +16,19 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 # 사용자 라이브러리 import
 sys.path.append(os.path.abspath('src'))
-from src.preprocessing.keyword_generate import keyword_generate
-# from src.gpt_connect.gpt_connection import question_generate
+from preprocessing.keyword_generate import keyword_generate
+from gpt_connect.gpt_connection import question_generate
 # 설정 파일
-# import settings
+import settings
 
 router = APIRouter()
 
 # MongoDB
-host="seodangdog"
-port="27017"
-username="dogsoedang"
-password="sssdangorg56"
-uri = f"mongodb://{username}:{password}@j10e104.p.ssafy.io:{port}/{host}?authSource=admin"
-dbname = 'seodangdog'
-mongoDB = MongoClient(uri)[dbname]
+
+mongoDB = MongoClient(settings.MONGO_URI)[settings.MONDGO_DBNAME]
+def mysql_create_session():
+    connection = pymysql.connect(host=settings.MYSQL["host"], port=settings.MYSQL["port"], user=settings.MYSQL["user"], passwd=settings.MYSQL["passwd"], db=settings.MYSQL["db"], charset=settings.MYSQL["charset"])
+    return connection
 
 def morph_sep(news_data):
     ### 형태소 분리
@@ -55,7 +53,7 @@ def morph_sep(news_data):
 def save_news():
     print("json 파일 불러오는 중...")
     start_t = time.time()
-    with open('news.json', 'r', encoding="utf8") as f:
+    with open('resource/news.json', 'r', encoding="utf8") as f:
         news_data = json.load(f)
     # news_data = news_data[:10]
 
@@ -66,7 +64,7 @@ def save_news():
     # 키워드 추출 및 저장
     print("키워드 추출 및 시작")
     print("본문 키워드 작업 시작")
-    news_data = keyword_generate(news_data, "newsMainTe xt", "newsKeyword")
+    news_data = keyword_generate(news_data, "newsMainText", "newsKeyword")
     print("네이버 요약 키워드 작업 시작")
     news_data = keyword_generate(news_data, "newsSummary", "newsSummaryKeyword")
 
@@ -96,7 +94,7 @@ def mysql_save():
     # 뉴스 가져오기
     news_data = getNewsAll()
 
-    mysqlDB = pymysql.connect(host='seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com', port=3306, user='seodangdog', passwd='dogseodang0311', db='seodangdog', charset='utf8')
+    mysqlDB = mysql_create_session()
     #
     cursor = mysqlDB.cursor()
 
@@ -122,7 +120,6 @@ def mysql_save():
         keyword_list.update(news['newsSummaryKeyword'])
     sql = sql[:-2] + ";"
     result = cursor.execute(sql)
-    mysqlDB.commit()
 
     # 전체 키워드 저장
     sql = f"insert into keyword (keyword) values "
@@ -130,18 +127,17 @@ def mysql_save():
         sql += f"(\"{word}\"),\n"
     sql = sql[:-2] + ";"
     result = cursor.execute(sql)
-    mysqlDB.commit()
-    mysqlDB.close()
 
     # 뉴스별 키워드 저장
     save_keyword_news()
+    mysqlDB.commit()
+    mysqlDB.close()
 
 
 @router.get("/keywordNewsSave")
-def save_keyword_news():
-    mysqlDB = pymysql.connect(host='seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com', port=3306,
-                              user='seodangdog', passwd='dogseodang0311', db='seodangdog', charset='utf8')
-    #
+def save_keyword_news(mysqlDB, ):
+
+    mysqlDB = mysql_create_session()
     cursor = mysqlDB.cursor()
 
     # mysql에 저장된 뉴스의 seq, oid 조회
@@ -159,14 +155,11 @@ def save_keyword_news():
 
     sql = sql[:-2] + ";"
     cursor.execute(sql)
-    mysqlDB.commit()
-    mysqlDB.close()
 
 @router.get("/fast/mypages/wordclouds/{user_seq}")
 def get_wordcloud(user_seq):
-    mysqlDB = pymysql.connect(host='seodangdog-mysql.cza82kskeqwa.ap-northeast-2.rds.amazonaws.com', port=3306,
-                              user='seodangdog', passwd='dogseodang0311', db='seodangdog', charset='utf8')
-    #
+
+    mysqlDB = mysql_create_session()
     cursor = mysqlDB.cursor()
 
     sql = f"select keyword, weight from user_keyword where user_seq = %s order by weight desc;"
@@ -180,10 +173,8 @@ def get_wordcloud(user_seq):
     cloud = wc.generate_from_frequencies(dict(sql_result))
 
     session = boto3.Session(
-        # aws_access_key_id=settings.S3_ACCESS_KEY,
-        # aws_secret_access_key=settings.S3_SECRET_KEY,
-        aws_access_key_id="AKIAYS2NT7VYZUUQXEU6",
-        aws_secret_access_key="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",
+        aws_access_key_id=settings.S3_ACCESS_KEY,
+        aws_secret_access_key=settings.S3_SECRET_KEY,
     )
 
     # Save tweet list to an s3 bucket

@@ -1,11 +1,12 @@
 import os
 from openai import OpenAI
-from src.repository.news_repository import findNews
+from repository.news_repository import findNews
 import json
+import settings
 
 
 def gpt_req(news_text, prompt, json_format):
-    client = OpenAI(api_key = "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")
+    client = OpenAI(api_key = settings.GPT_API_KEY)
 
     # 사용 모델을 설정합니다. chat GPT는 gpt-3.5-turbo를 사용합니다.
     MODEL = "gpt-3.5-turbo"
@@ -101,5 +102,3 @@ def question_generate(news_data):
         json.dump(question_list, f, indent=4, ensure_ascii=False)
 
     return news_data
-
-question_generate([])
