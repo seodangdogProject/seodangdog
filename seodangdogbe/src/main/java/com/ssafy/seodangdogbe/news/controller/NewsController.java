@@ -4,6 +4,9 @@ import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.common.MsgResponseDto;
 import com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 import com.ssafy.seodangdogbe.news.service.NewsService;
+import com.ssafy.seodangdogbe.user.domain.User;
+import com.ssafy.seodangdogbe.user.dto.BadgeDto;
+import com.ssafy.seodangdogbe.user.service.UserBadgeService;
 import com.ssafy.seodangdogbe.word.dto.KorApiDto;
 import com.ssafy.seodangdogbe.word.dto.UserWordDto;
 import com.ssafy.seodangdogbe.word.dto.WordDto;
@@ -16,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.ssafy.seodangdogbe.news.dto.MetaNewsDto.*;
 
 @RestController
@@ -27,6 +32,7 @@ public class NewsController {
     public final UserService userService;
     public final WordService wordService;
     public final UserWordService userWordServcie;
+    public final UserBadgeService userBadgeService;
 
     @Operation(description = "newsSeq(mysql pk)로 mongodb에 있는 뉴스 본문 조회")
     @GetMapping("/{newsSeq}")
@@ -54,9 +60,15 @@ public class NewsController {
     @PatchMapping("/read")
     public ResponseEntity<MsgResponseDto> setReadRecord(@RequestBody UserNewsReadRequestDto dto){
         int userSeq = userService.getUserSeq();
+        User user = userService.getUserByUserSeq(userSeq);
 
-        if (newsService.setUserNewsRead(userSeq, dto))
+        if (newsService.setUserNewsRead(userSeq, dto)) {
+            String alterMsg = userBadgeService.checkNewBadge(user); // 뱃지 획득체크
+            if (alterMsg != null){
+                return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("읽기기록 저장 성공", alterMsg));
+            }
             return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("읽기기록 저장 성공"));
+        }
         else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MsgResponseDto("읽기기록 저장 오류"));
     }
@@ -65,10 +77,15 @@ public class NewsController {
     @PatchMapping("/solve")
     public ResponseEntity<MsgResponseDto> setSolveRecord(@RequestBody UserNewsSolveRequestDto dto){
         int userSeq = userService.getUserSeq();
+        User user = userService.getUserByUserSeq(userSeq);
 
-        if (newsService.setUserNewsSolve(userSeq, dto))
+        if (newsService.setUserNewsSolve(userSeq, dto)) {
+            String alterMsg = userBadgeService.checkNewBadge(user); // 뱃지 획득체크
+            if (alterMsg != null){
+                return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("읽기기록 저장 성공", alterMsg));
+            }
             return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("풀이기록 저장 성공"));
-        else
+        } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MsgResponseDto("풀이기록 저장 실패"));
     }
 
