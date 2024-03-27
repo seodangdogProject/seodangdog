@@ -6,6 +6,7 @@ import com.ssafy.seodangdogbe.news.dto.*;
 import com.ssafy.seodangdogbe.news.repository.MypageRecentNewsRepositoryCustom;
 import com.ssafy.seodangdogbe.news.repository.NewsRecommendRepositoryCustom;
 import com.ssafy.seodangdogbe.news.repository.MypageRecentNewsRepository;
+import com.ssafy.seodangdogbe.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,8 @@ public class NewsRecommendService {
     public List<UserRecommendResponseDto> getNewsRecommendations() {
         try {
             int userSeq = userService.getUserSeq();
-            return newsRecommendRepository.findNewsRecommendations(userSeq);
+            User user = userService.getUser();
+            return newsRecommendRepository.findNewsRecommendations(user);
         } catch (Exception e) {
             throw new UnauthorizedException("미인증 사용자입니다.");
         }
