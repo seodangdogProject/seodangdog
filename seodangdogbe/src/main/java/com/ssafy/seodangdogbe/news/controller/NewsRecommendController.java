@@ -7,6 +7,7 @@ import com.ssafy.seodangdogbe.news.dto.OtherRecommendResponseDto;
 import com.ssafy.seodangdogbe.news.dto.UserRecommendResponseDto;
 import com.ssafy.seodangdogbe.news.service.NewsRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/main")
+@Slf4j
 public class NewsRecommendController {
 
     private final NewsRecommendService newsRecommendService;
@@ -28,6 +30,7 @@ public class NewsRecommendController {
     @GetMapping("/user-recommend")
     @Operation(description = "메인페이지 - 맞춤형 뉴스 추천")
     public List<UserRecommendResponseDto> getNewsRecommendations() {
+        log.info(" **** 맞춤 뉴스 추천 *** ");
         return newsRecommendService.getNewsRecommendations();
     }
 
