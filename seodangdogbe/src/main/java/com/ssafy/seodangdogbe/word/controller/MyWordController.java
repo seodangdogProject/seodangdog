@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -61,12 +62,15 @@ public class MyWordController {
 //    }
 
     @GetMapping("/search/prefix")
-    public ResponseEntity<MyWordResponseDto> getWordsByPrefix(@RequestParam String prefix) {
-        MyWordResponseDto words = myWordService.findWordSearch(prefix);
-        if (words.getWordList().isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(words);
+    public ResponseEntity<MyWordResponseDto> getWordsByPrefix(@RequestParam(value = "prefix", required = false) String prefix) {
+        if (prefix == null || prefix.trim().isEmpty()) {
+            MyWordResponseDto emptyResponse = new MyWordResponseDto(Collections.emptyList());
+            return ResponseEntity.ok(emptyResponse);
         }
+
+        MyWordResponseDto words = myWordService.findWordSearch(prefix);
+        return ResponseEntity.ok(words);
     }
+
+
 }
