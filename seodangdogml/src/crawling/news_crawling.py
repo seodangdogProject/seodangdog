@@ -224,6 +224,8 @@ def crawling_main():
     main_driver.quit()
 
 def test():
+    from selenium.webdriver.chrome.service import Service
+    service = Service(executable_path="resource/chromedriver")
     # service = Service(executable_path="resource\\chromedriver.exe")
     options = webdriver.ChromeOptions()
     # options.add_experimental_option("detach", True) # 크롤링 중인 창 닫지 않고 유지
@@ -231,7 +233,7 @@ def test():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    main_driver = webdriver.Chrome(executable_path="resource/chromedriver", options=options)
+    main_driver = webdriver.Chrome(service=service, options=options)
     # main_driver = webdriver.Chrome(options=options)
     print(main_driver)
     main_driver.get("https://www.naver.com/")
