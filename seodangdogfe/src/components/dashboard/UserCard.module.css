@@ -21,20 +21,20 @@
 .king::before {
   content: "";
   position: absolute;
-  top: -16px;
-  right: -18px;
+  top: -17px;
+  right: -15px;
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 2px 100px 97px 28px;
+  border-width: 0px 90px 92px 28px;
   border-color: transparent #fff transparent transparent; /* 삼각형의 색상 설정 */
   transform: rotate(90deg); /* 삼각형을 180도 회전하여 방향을 바꿈 */
 }
 .king img {
   position: absolute;
-  left: 65px;
+  left: 78px;
   top: 3px;
-  width: 55px;
+  width: 50px;
 }
 
 .name {
