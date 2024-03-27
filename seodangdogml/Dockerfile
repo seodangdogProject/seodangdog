@@ -5,8 +5,11 @@ WORKDIR /code
 # 현재 디렉토리의 모든 파일들을 컨테이너의 /app 디렉토리에 복사한다.
 COPY ./requirements.txt /code/requirements.txt
 
-# 찬영 : chromedriver를 컨테이너에 복사한다.
-# COPY /home/ubuntu/python /code/src/resource
+# 찬영 : 크롬을 설치한다.
+RUN apt-get update
+RUN apt-get -y install wget
+RUN wget --no-verbose -O /code/resource/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb
+RUN apt-get install -y /code/resource/chrome.deb
 
 # pip install 해주기 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt

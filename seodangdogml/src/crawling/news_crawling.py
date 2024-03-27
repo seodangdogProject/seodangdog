@@ -1,15 +1,11 @@
 #Part 1. 모듈 가져오기
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from dateutil.parser import parse
 from time import sleep
-import os
-import time
 import json
 
 def time_calculator(days):
@@ -224,19 +220,12 @@ def crawling_main():
     main_driver.quit()
 
 def test():
-    from selenium.webdriver.chrome.service import Service
     service = Service(executable_path="resource/chromedriver")
-    # service = Service(executable_path="resource\\chromedriver.exe")
     options = webdriver.ChromeOptions()
-    # options.add_experimental_option("detach", True) # 크롤링 중인 창 닫지 않고 유지
-    # options.add_argument("headless")
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     main_driver = webdriver.Chrome(service=service, options=options)
-    # main_driver = webdriver.Chrome(options=options)
-    print(main_driver)
     main_driver.get("https://www.naver.com/")
-    print(main_driver)
     main_driver.quit()
     print("selenium test closed.")
