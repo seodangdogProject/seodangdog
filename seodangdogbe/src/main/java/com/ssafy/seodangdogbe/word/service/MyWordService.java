@@ -67,7 +67,6 @@ public class MyWordService {
         for (UserWord userWord : userWords) {
             MetaWord metaWord = metaWordRepository.findByWord(userWord.getWord())
                     .orElse(null);
-            // 'kor'가 아닌 단어만 필터링
             if (metaWord != null && "eng".equals(metaWord.getWordLang())) {
                 WordDto.MetaWordDto metaWordDto = new WordDto.MetaWordDto(metaWord);
                 String mean1 = null, mean2 = null;
@@ -109,11 +108,35 @@ public class MyWordService {
         }).orElse(false); // 단어가 존재하지 않음
     }
 
-    public WordDto.MetaWordDto searchWord(String word) {
-        return metaWordRepository.findByWord(word)
-                .map(WordDto.MetaWordDto::new)
-                .orElse(null);
+    public MyWordResponseDto findWordInfo(String word) {
+        int userSeq = userService.getUserSeq();
+        // 특정 단어에 대한 UserWord 객체를 조회합니다.
+        UserWord userWord = myWordRepository.findUserWordByUserSeqAndWord(userSeq, word);
+        List<MyWordResponseDto.WordInfo> wordInfos = new ArrayList<>();
+
+        if (userWord != null) {
+            // MetaWord 객체를 조회합니다.
+            MetaWord metaWord = metaWordRepository.findByWord(word).orElse(null);
+            if (metaWord != null) {
+                String mean1 = null, mean2 = null;
+                if (!metaWord.getWordItemList().isEmpty()) {
+                    mean1 = metaWord.getWordItemList().get(0).getDefinition(); // 첫 번째 뜻
+                    if (metaWord.getWordItemList().size() > 1) {
+                        mean2 = metaWord.getWordItemList().get(1).getDefinition(); // 두 번째 뜻
+                    }
+                }
+                wordInfos.add(new MyWordResponseDto.WordInfo(
+                        userWord.getWordSeq(), // userWord에서 ID를 직접 사용합니다.
+                        metaWord.getWord(),
+                        mean1,
+                        mean2
+                ));
+            }
+        }
+
+        return new MyWordResponseDto(wordInfos);
     }
+
 
     public List<WordDto.MetaWordDto> findWordSearch(String prefix) {
         List<MetaWord> words = metaWordRepository.findByWordSearch(prefix);

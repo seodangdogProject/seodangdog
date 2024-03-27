@@ -49,10 +49,11 @@ public class MyWordController {
         }
     }
 
+    @Operation(description = "단어장 - 단어 검색")
     @GetMapping("/search")
-    public ResponseEntity<WordDto.MetaWordDto> searchWord(@RequestParam String word) {
-        WordDto.MetaWordDto wordResult = myWordService.searchWord(word);
-        if(wordResult != null) {
+    public ResponseEntity<MyWordResponseDto> searchWord(@RequestParam String word) {
+        MyWordResponseDto wordResult = myWordService.findWordInfo(word);
+        if(wordResult != null && !wordResult.getWordList().isEmpty()) {
             return ResponseEntity.ok(wordResult);
         } else {
             return ResponseEntity.notFound().build();
