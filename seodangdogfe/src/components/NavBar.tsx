@@ -3,7 +3,7 @@
 // next 모듈
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 // 외부 모듈
 import classNames from "classnames/bind";
@@ -22,10 +22,25 @@ import { useEffect, useState } from "react";
 export default function NavBar() {
   const cx = classNames.bind(style);
   const [active, setActive] = useState<string>("");
+  const [isLogout, setIsLogout] = useState<boolean>(false);
   const pathname: string = usePathname();
+  const router = useRouter();
   useEffect(() => {
     setActive(pathname.split("/")[1]);
   }, [pathname]);
+
+  useEffect(() => {
+    if (isLogout) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      router.replace("/");
+    }
+  }, [isLogout]);
+
+  // method
+  function handleLogout() {
+    setIsLogout(true);
+  }
 
   return (
     <>
@@ -97,7 +112,7 @@ export default function NavBar() {
           </Link>
         </ul>
         <div className={cx("logout")}>
-          <div className={cx("item", "logout_item")}>
+          <div onClick={handleLogout} className={cx("item", "logout_item")}>
             <div>
               <LogoutIcon />
             </div>
