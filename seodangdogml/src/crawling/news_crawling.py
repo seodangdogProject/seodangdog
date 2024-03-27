@@ -226,12 +226,12 @@ def crawling_main():
 def test():
     from selenium.webdriver.chrome.service import Service
     print(os.getcwd())
-    # service = Service(executable_path="src/resource/chromedriver_linux64/chromedriver.exe")
+    service = Service(executable_path="/usr/bin/chromedriver")
     options = webdriver.ChromeOptions()
     # options.add_experimental_option("detach", True) # 크롤링 중인 창 닫지 않고 유지
     options.add_argument("headless")
-    # main_driver = webdriver.Chrome(service=service, options=options)
-    main_driver = webdriver.Chrome(options=options)
+    main_driver = webdriver.Chrome(service=service, options=options)
+    # main_driver = webdriver.Chrome(options=options)
     print(main_driver)
     main_driver.get("https://www.naver.com/")
     print(main_driver)
