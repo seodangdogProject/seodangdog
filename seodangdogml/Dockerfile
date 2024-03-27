@@ -6,7 +6,7 @@ WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 
 # 찬영 : chromedriver를 컨테이너에 복사한다.
-# COPY /home/ubuntu/python/chromedriver /code/src/resource/chromedriver
+COPY /home/ubuntu/python /code/src/resource
 
 # pip install 해주기 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
