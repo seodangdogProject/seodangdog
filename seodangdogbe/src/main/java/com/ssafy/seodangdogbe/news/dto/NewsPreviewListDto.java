@@ -16,6 +16,7 @@ public class NewsPreviewListDto {
     private String newsTitle;
     private String newsDescription;
     private LocalDateTime newsCreatedAt;
+    private int countView;
     private List<String> newsKeyword;
 
     // News를 가져와서 미리보기 Dto로 변환
@@ -25,6 +26,7 @@ public class NewsPreviewListDto {
         this.newsTitle = news.getNewsTitle();
         this.newsDescription = news.getNewsDescription();
         this.newsCreatedAt = news.getNewsCreatedAt();
+        this.countView = news.getCountView();
         this.newsKeyword = news.getKeywordNewsList().stream()
                 .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                 .collect(Collectors.toList());
