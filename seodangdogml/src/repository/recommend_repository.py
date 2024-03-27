@@ -380,15 +380,15 @@ def select_all_news():
 
 # select rating from ratings where user_seq = ? AND news_seq = ?
 # 유사도 가져오기
-def select_user_news_rating(user_seq, news_seq):
+def select_user_news_rating(user_seq):
     connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # 파라미터를 사용한 쿼리 실행
-            sql = "select rating from ratings where user_seq = %s"
-            cursor.execute(sql,(user_seq))
-            result = cursor.fetchone()
+            sql = "select news_seq, rating from ratings where user_seq = %s"
+            cursor.execute(sql,user_seq)
+            result = cursor.fetchall()
             return result
     except Exception as e:
         print(f"Error occurred select_all_news: {e}")
@@ -399,16 +399,16 @@ def select_user_news_rating(user_seq, news_seq):
         connection.close()
 
 
-# select news_seq is_solved from user_news where user_seq=?
+# select news_seq is_solved from user_news where user_seq=? AND is_solved = False
 # 사용자가 본뉴스를 거르고 추천하기위해 정보를 가져온다
-def select_news_solved():
+def select_news_solved(user_seq):
     connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # 파라미터를 사용한 쿼리 실행
-            sql = "select news_seq news_id, news_title title from news"
-            cursor.execute(sql)
+            sql = "select news_seq, is_solved from user_news where user_seq=%s AND is_solved = True"
+            cursor.execute(sql, user_seq)
             result = cursor.fetchall()
             return result
     except Exception as e:
