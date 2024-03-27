@@ -1,43 +1,51 @@
 .container {
-  width: 1733px;
-  height: 1080px;
+  width: 100%;
+  height: 100%;
+  min-width: 1300px;
   background-color: #fff;
   box-sizing: border-box;
-  padding: 25px 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 /* layout */
 .dashboard {
-  width: 1660px;
-  height: 1027px;
+  width: 90%;
+  height: 90%;
 }
 
 .dashboard__top {
-  height: 588px;
+  width: 100%;
   display: flex;
   border-radius: 15px;
-  gap: 20px;
+  gap: 10px;
   margin-bottom: 26px;
 }
 
 .dashboard__top__first {
-  width: 736px;
+  height: 100%;
+  width: 45%;
   border-radius: 15px;
 }
 .dashboard__top__second {
-  width: 926px;
+  /* height: 100%; */
+  width: 55%;
   border-radius: 15px;
 }
 
 .dashboard__bottom {
-  height: 413px;
+  height: 40%;
   display: flex;
   gap: 37px;
 }
 
 .dashboard__bottom__first {
-  width: 1111px;
+  /* width: 1111px; */
   border-radius: 15px;
+  padding: 0 50px;
+  box-sizing: border-box;
 }
 .dashboard__bottom__second {
   width: 534px;
@@ -45,22 +53,25 @@
 }
 .padding-item {
   box-sizing: border-box;
-  padding: 21px 50px;
+  padding: 10px 50px;
 }
 
 .title {
   font-family: "hunminjungum";
-  font-size: 30px;
+  /* font-size: 30px; */
   font-weight: bold;
+  box-sizing: border-box;
+  padding-bottom: 10px;
 }
 
 .wordcloud {
   width: 100%;
-  height: 465px;
+  /* height: 465px; */
+  height: 90%;
   background-color: #d6e3f8;
   box-sizing: border-box;
   border-radius: 15px;
-  padding: 40px 25px;
+  padding: 15px 15px;
 }
 .boxshadow {
   width: 100%;
@@ -72,7 +83,7 @@
 
 .state {
   width: 100%;
-  height: 314px;
+  height: 85%;
   background-color: #d6e3f8;
   border-radius: 0;
   display: flex;
@@ -80,14 +91,17 @@
   align-items: center;
 }
 
-/* .user {
+.user {
   width: 100%;
-  height: 220px;
-  margin-top: 10px;
-} */
+  height: 40%;
+  /* margin-top: 10px; */
+}
 .streak {
+  margin-top: 20px;
   width: 100%;
-  height: 220px;
+  /* height: 100%; */
   background-color: white;
-  margin-top: 40px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  /* margin-top: 40px; */
 }

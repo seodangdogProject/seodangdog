@@ -11,7 +11,7 @@ export const withAuth = (Component) => (props) => {
   /* 권한 분기 */
   useEffect(() => {
     if (!localStorage.getItem("accessToken")) {
-      router.replace("/landing");
+      router.replace("/");
     } else {
       setIsLoading(false);
     }

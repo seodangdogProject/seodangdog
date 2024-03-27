@@ -1,18 +1,30 @@
 .container {
+  width: 100%;
+  height: 100%;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: space-between; */
 }
 .caption {
   font-family: "hunminjungum";
-  margin: 10px 0;
+  padding: 5px 0;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 0.9rem;
+}
+.last_seen_container,
+.last_solved_container {
+  height: 45%;
+  box-sizing: border-box;
 }
 .preview {
-  background-color: #d1c2f2;
-  height: 100px;
+  box-sizing: border-box;
+  /* height: 90%; */
+  height: 80%;
   border-radius: 15px;
   display: flex;
-  padding: 15px 20px;
+  padding: 10px 20px;
   position: relative;
+  background-color: #d1c2f2;
 }
 
 .preview img {
@@ -31,7 +43,7 @@
 }
 .title {
   font-weight: bold;
-  font-size: 19px;
+  font-size: 1.2rem;
 }
 .hashtag {
   display: flex;
@@ -41,6 +53,7 @@
   font-size: 14px;
   font-weight: bold;
   padding: 5px 14px;
+  box-sizing: border-box;
   border-radius: 20px;
   background-color: #ffda92;
   color: #4d4d4d;
@@ -52,6 +65,9 @@
   bottom: 5px;
   color: #525252;
   font-size: 13px;
+}
+.last_solved_container {
+  margin-top: 10px;
 }
 .last_solved_container .preview {
   background-color: #f1d1a8;

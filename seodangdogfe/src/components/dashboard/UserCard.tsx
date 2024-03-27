@@ -13,6 +13,7 @@ export default function UserCard() {
         <li className={styled.item}># 어휘왕</li>
         <li className={styled.item}># 추론왕</li>
         <li className={styled.item}># 단어왕</li>
+        <li className={styled.item}># 단어왕</li>
       </ul>
     </div>
   );
