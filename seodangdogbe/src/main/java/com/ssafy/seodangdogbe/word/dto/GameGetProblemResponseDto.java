@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor // 인자 없는 생성자
-@AllArgsConstructor // 모든 인자를 받는 생성자
+@NoArgsConstructor
+@AllArgsConstructor
 public class GameGetProblemResponseDto {
     private List<WordInfo> wordList;
 

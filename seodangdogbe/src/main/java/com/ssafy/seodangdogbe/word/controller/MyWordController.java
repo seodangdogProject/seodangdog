@@ -21,7 +21,6 @@ public class MyWordController {
         this.myWordService = myWordService;
     }
 
-    // 단어 조회 기능
     @Operation(description = "단어장 - 단어 조회")
     @GetMapping
     public ResponseEntity<MyWordResponseDto> getWords() {
@@ -36,7 +35,6 @@ public class MyWordController {
         return ResponseEntity.ok(nonKoreanWordList);
     }
 
-    //단어 삭제 기능
     @Operation(description = "단어장 - 단어 삭제")
     @PatchMapping("/{wordSeq}")
     public ResponseEntity<?> deleteWord(@PathVariable Long wordSeq) {

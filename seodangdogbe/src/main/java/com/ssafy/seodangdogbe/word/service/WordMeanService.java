@@ -22,7 +22,7 @@ public class WordMeanService {
             MetaWord metaWord = metaWordOpt.get();
             return new WordDto.MetaWordDto(metaWord);
         } else {
-            return null; // 또는 적절한 예외 처리를 해주는 것이 좋습니다.
+            return null;
         }
     }
 }

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class GameService {
 
     private final GameRepository gameRepository;
-    private final WordMeanService wordMeanService; // 예시로 추가된 서비스, MongoDB에서 뜻을 조회
+    private final WordMeanService wordMeanService;
     private UserService userService;
     @Autowired
     public GameService(GameRepository gameRepository, WordMeanService wordMeanService, UserService userService) {
@@ -49,7 +49,7 @@ public class GameService {
         List<UserWord> randomWords = gameRepository.findRandomWordsByUserSeq(userSeq, 10);
         List<GameGetProblemResponseDto.WordInfo> wordInfos = randomWords.stream()
                 .map(word -> {
-                    WordDto.MetaWordDto metaWordDto = wordMeanService.findMeanByWord(word.getWord()); // 올바른 타입으로 처리
+                    WordDto.MetaWordDto metaWordDto = wordMeanService.findMeanByWord(word.getWord());
                     String definition = metaWordDto != null && !metaWordDto.getItems().isEmpty()
                             ? metaWordDto.getItems().get(0).getDefinition() // 첫 번째 뜻을 사용
                             : "뜻을 찾을 수 없음"; // 뜻이 없는 경우의 기본값 처리

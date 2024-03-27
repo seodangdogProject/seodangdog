@@ -89,7 +89,6 @@ public class MyWordService {
     }
 
 
-
     // 단어 삭제 메서드
     public boolean deleteWord(Long wordSeq) {
         int userSeq = userService.getUserSeq();

@@ -34,56 +34,30 @@ public class NewsRecommendService {
     public List<UserRecommendResponseDto> getNewsRecommendations() {
         User user = userService.getUser();
         return newsRecommendRepository.findNewsRecommendations(user);
-//        try {
-//
-//        } catch (Exception e) {
-//            throw new UnauthorizedException("미인증 사용자입니다.");
-//        }
     }
 
     public List<MostViewRecommendResponseDto> getMostViewNewsRecommendations() {
-        try {
             int userSeq = userService.getUserSeq();
             return newsRecommendRepository.findMostViewNewsRecommendations(userSeq);
-        } catch (Exception e) {
-            throw new UnauthorizedException("미인증 사용자입니다.");
-        }
     }
 
     public List<MostSummaryRecommendResponseDto> getMostSummaryNewsRecommendations() {
-        try {
             int userSeq = userService.getUserSeq();
             return newsRecommendRepository.findMostSummaryNewsRecommendations(userSeq);
-        } catch (Exception e) {
-            throw new UnauthorizedException("미인증 사용자입니다.");
-        }
     }
 
     public List<OtherRecommendResponseDto> getOtherNewsRecommendations() {
-        try {
             int userSeq = userService.getUserSeq();
             return newsRecommendRepository.findOtherNewsRecommendations(userSeq);
-        } catch (Exception e) {
-            
-            throw new UnauthorizedException("미인증 사용자입니다.");
-        }
     }
 
     public List<RecentSolvedDto> getRecentSolvedNews() {
-        try {
             int userSeq = userService.getUserSeq();
             return mypageRecentNewsRepository.findRecentSolvedNews(userSeq);
-        } catch (Exception e) {
-            throw new UnauthorizedException("미인증 사용자입니다.");
-        }
     }
 
     public List<RecentNotSolvedDto> getRecentNotSolvedNews() {
-        try {
             int userSeq = userService.getUserSeq();
             return mypageRecentNewsRepository.findRecentNotSolvedNews(userSeq);
-        } catch (Exception e) {
-            throw new UnauthorizedException("미인증 사용자입니다.");
-        }
     }
 }
