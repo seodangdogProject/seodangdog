@@ -2,8 +2,10 @@ package com.ssafy.seodangdogbe.user.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.user.domain.User;
-import com.ssafy.seodangdogbe.user.dto.MypageResponseDto;
-import com.ssafy.seodangdogbe.user.service.MypageService;
+import com.ssafy.seodangdogbe.user.dto.MyPageResponseDto;
+import com.ssafy.seodangdogbe.user.service.MyPageService;
+import com.ssafy.seodangdogbe.user.service.UserBadgeService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,20 +14,22 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-import static com.ssafy.seodangdogbe.user.dto.MypageResponseDto.*;
+import static com.ssafy.seodangdogbe.user.dto.MyPageResponseDto.*;
 
 @RestController
 @RequestMapping("/api/mypages")
 @RequiredArgsConstructor
-public class MypageController {
+public class MyPageController {
 
     public final UserService userService;
-    public final MypageService mypageService;
+    public final MyPageService mypageService;
+    public final UserBadgeService userBadgeService;
 
+    @Operation(description = "마이페이지 조회")
     @GetMapping
-    public MypageResponseDto getMypage(){
-        MypageResponseDto resultDto = new MypageResponseDto();
-        User user = userService.getUserByUserId();
+    public MyPageResponseDto getMyPage(){
+        MyPageResponseDto resultDto = new MyPageResponseDto();
+        User user = userService.getUser();
 
         resultDto.setUserId(user.getUserId());
         resultDto.setNickname(user.getNickname());
@@ -39,8 +43,8 @@ public class MypageController {
         resultDto.getAbility().setConstantAbility((float) attendanceCount / duringDate);
 
         // badge
-        resultDto.setBadgeImgUrl(mypageService.getBadgeImgUrl(user));
-        resultDto.setUserBadgeNameList(mypageService.getUserBadgeList(user));
+        resultDto.setBadgeImgUrl(userBadgeService.getBadgeImgUrl(user));
+        resultDto.setUserBadgeList(userBadgeService.getUserBadgeList(user));
 
         // streak
         resultDto.setStreakList(mypageService.getSolvedDateRecord(user));

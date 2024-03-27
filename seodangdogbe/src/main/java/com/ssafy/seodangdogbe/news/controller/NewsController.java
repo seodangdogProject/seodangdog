@@ -4,6 +4,9 @@ import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.common.MsgResponseDto;
 import com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 import com.ssafy.seodangdogbe.news.service.NewsService;
+import com.ssafy.seodangdogbe.user.domain.User;
+import com.ssafy.seodangdogbe.user.dto.BadgeDto;
+import com.ssafy.seodangdogbe.user.service.UserBadgeService;
 import com.ssafy.seodangdogbe.word.dto.KorApiDto;
 import com.ssafy.seodangdogbe.word.dto.UserWordDto;
 import com.ssafy.seodangdogbe.word.dto.WordDto;
@@ -16,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.ssafy.seodangdogbe.news.dto.MetaNewsDto.*;
 
 @RestController
@@ -27,6 +32,7 @@ public class NewsController {
     public final UserService userService;
     public final WordService wordService;
     public final UserWordService userWordServcie;
+    public final UserBadgeService userBadgeService;
 
     @Operation(description = "newsSeq(mysql pk)로 mongodb에 있는 뉴스 본문 조회")
     @GetMapping("/{newsSeq}")
@@ -53,10 +59,15 @@ public class NewsController {
     @Operation(description = "사용자 읽기기록 저장")
     @PatchMapping("/read")
     public ResponseEntity<MsgResponseDto> setReadRecord(@RequestBody UserNewsReadRequestDto dto){
-        int userSeq = userService.getUserSeq();
+        User user = userService.getUser();
 
-        if (newsService.setUserNewsRead(userSeq, dto))
+        if (newsService.setUserNewsRead(user.getUserSeq(), dto)) {
+            String alterMsg = userBadgeService.checkNewBadge(user); // 뱃지 획득체크
+            if (alterMsg != null){
+                return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("읽기기록 저장 성공", alterMsg));
+            }
             return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("읽기기록 저장 성공"));
+        }
         else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MsgResponseDto("읽기기록 저장 오류"));
     }
@@ -64,11 +75,15 @@ public class NewsController {
     @Operation(description = "사용자 풀이기록 저장")
     @PatchMapping("/solve")
     public ResponseEntity<MsgResponseDto> setSolveRecord(@RequestBody UserNewsSolveRequestDto dto){
-        int userSeq = userService.getUserSeq();
+        User user = userService.getUser();
 
-        if (newsService.setUserNewsSolve(userSeq, dto))
+        if (newsService.setUserNewsSolve(user.getUserSeq(), dto)) {
+            String alterMsg = userBadgeService.checkNewBadge(user); // 뱃지 획득체크
+            if (alterMsg != null){
+                return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("읽기기록 저장 성공", alterMsg));
+            }
             return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("풀이기록 저장 성공"));
-        else
+        } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MsgResponseDto("풀이기록 저장 실패"));
     }
 
@@ -76,6 +91,8 @@ public class NewsController {
     @PostMapping("/word")
     public ResponseEntity<MsgResponseDto> setUserWord(@RequestBody WordRequestDto wordDto) throws Exception {
         int userSeq = userService.getUserSeq();
+        User user = userService.getUser();
+
         String word = wordDto.getWord();
         // ** 단어가 mongodb에 들어와있는지 확인하고, 없다면 api 호출해서 넣어주어야 함 -> 이렇게 접근할 일 없음
         if (!wordService.isExistWord(word)){
@@ -105,7 +122,7 @@ public class NewsController {
         }
 
         // 없다면 사용자단어 테이블에 저장
-        if (userWordServcie.setUserWord(userSeq, word) != null){
+        if (userWordServcie.setUserWord(user, word) != null){
             return ResponseEntity.ok().body(new MsgResponseDto("단어 스크랩 성공"));
         } else {
             return ResponseEntity.badRequest().body(new MsgResponseDto("단어 스크랩 실패"));

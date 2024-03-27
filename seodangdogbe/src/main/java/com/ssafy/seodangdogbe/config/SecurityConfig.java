@@ -62,8 +62,6 @@ public class SecurityConfig {
                 // 그 외 조인은 인증없이 접근 불가능하다
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/api/main/**").permitAll()
-                                .requestMatchers("/api/mypages/**").permitAll()
                                 .requestMatchers("/api/login", "/api/join").permitAll()
                                 .requestMatchers("/","/swagger-ui.html", "/v3/api-docs/**", "/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()
                                 .anyRequest().hasRole("USER")

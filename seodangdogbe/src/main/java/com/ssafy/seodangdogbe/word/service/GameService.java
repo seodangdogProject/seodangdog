@@ -1,6 +1,7 @@
 package com.ssafy.seodangdogbe.word.service;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
+import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.word.domain.UserWord;
 import com.ssafy.seodangdogbe.word.dto.GameActivatedResponseDto;
 import com.ssafy.seodangdogbe.word.dto.GameGetProblemResponseDto;
@@ -64,9 +65,14 @@ public class GameService {
     }
 
     @Transactional
-    public void deleteWords(GameResultRequestDto requestDto) {
-        int userSeq = userService.getUserSeq();
+    public void deleteWords(int userSeq, GameResultRequestDto requestDto) {
+//        int userSeq = userService.getUserSeq();
         List<Long> wordSeqs = requestDto.getWordSeq();
+
+        // 사용자 단어게임 경험치 증가
+        User user = userService.getUser();
+        int exp = user.getUserExp().getWordGameExp();
+        user.getUserExp().setWordGameExp(exp + wordSeqs.size());
 
         // 데이터베이스에서 해당 단어들의 isDelete 상태를 true로 업데이트
         gameRepository.deleteWordsBySeqsAndUserSeq(wordSeqs, userSeq);

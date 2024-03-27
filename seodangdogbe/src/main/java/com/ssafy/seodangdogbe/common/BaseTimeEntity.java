@@ -4,10 +4,8 @@ package com.ssafy.seodangdogbe.common;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -29,7 +27,7 @@ public abstract class BaseTimeEntity {
     private LocalDateTime modifiedAt;
 
     @ColumnDefault("false")
-//    @Setter // isDelete 업데이트 추가(createdAt, modifiedAt은 자동 업데이트)
+    // isDelete 업데이트 추가(createdAt, modifiedAt은 자동 업데이트)
     private boolean isDelete;
 //    @Builder.Default
 //    private boolean isDelete = false;
