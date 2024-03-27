@@ -21,7 +21,7 @@ public class MyPageResponseDto {
 
     private String wordCloudImgUrl;
 
-    private List<String> userBadgeNameList;
+    private List<BadgeDto> userBadgeList;
     private String badgeImgUrl;
 
 //    private List<LocalDateTime> strictDateList;

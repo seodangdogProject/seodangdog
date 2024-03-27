@@ -5,6 +5,7 @@ import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.dto.MyPageResponseDto;
 import com.ssafy.seodangdogbe.user.service.MyPageService;
 import com.ssafy.seodangdogbe.user.service.UserBadgeService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class MyPageController {
     public final MyPageService mypageService;
     public final UserBadgeService userBadgeService;
 
+    @Operation(description = "마이페이지 조회")
     @GetMapping
     public MyPageResponseDto getMyPage(){
         MyPageResponseDto resultDto = new MyPageResponseDto();
@@ -42,7 +44,7 @@ public class MyPageController {
 
         // badge
         resultDto.setBadgeImgUrl(userBadgeService.getBadgeImgUrl(user));
-        resultDto.setUserBadgeNameList(userBadgeService.getUserBadgeList(user));
+        resultDto.setUserBadgeList(userBadgeService.getUserBadgeList(user));
 
         // streak
         resultDto.setStreakList(mypageService.getSolvedDateRecord(user));
