@@ -8,6 +8,7 @@ interface ISectionProps {
     pageNum: number;
     window: Window;
     pageRefs: React.MutableRefObject<HTMLDivElement[]>;
+    status: boolean;
 }
 
 const Section = (props: ISectionProps) => {

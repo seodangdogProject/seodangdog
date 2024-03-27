@@ -6,7 +6,7 @@
     overflow: hidden;
     /* align-items: center; */
     height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
-    background-image: url('../../assets/landing-background-image-first.png');
+    background-image: url("../../assets/landing-background-image-first.png");
 }
 
 .rounded_button {
@@ -25,7 +25,7 @@
     padding-bottom: 10px;
     padding-left: 30px;
     padding-right: 30px;
-    font-family: 'hambaknoon';
+    font-family: "hambaknoon";
 }
 
 .description {
@@ -40,7 +40,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
-    font-family: 'hambaknoon';
+    font-family: "hambaknoon";
     margin-bottom: 20px;
 }
 
@@ -59,4 +59,19 @@
 
 .page_button:hover {
     transform: translateY(-10px); /* 호버될 때 위로 이동 */
+}
+
+.text-animated {
+    animation: slideInLeft 0.5s ease-in-out forwards 0s;
+}
+
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-30px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0px);
+        opacity: 1;
+    }
 }
