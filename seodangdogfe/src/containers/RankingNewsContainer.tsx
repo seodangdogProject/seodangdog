@@ -1,256 +1,135 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "./RankingNewsContainer.module.css";
 import classNames from "classnames/bind";
 import { privateFetch } from "@/utils/http-commons";
+import Loading from "../hoc/loading";
+import { useRouter } from "next/navigation";
 export default function RankingNewsContainer() {
   const cx = classNames.bind(styled);
-  const [newsList, setNewsList] = useState<[]>();
+  const [newsList, setNewsList] = useState<any[]>([]);
+  const [category, setCategory] = useState<string>("most-view");
+  const mostViewEl = useRef<HTMLDivElement>(null);
+  const mostSolvedEl = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   useEffect(() => {
+    const token = localStorage.getItem("accessToken") || "";
     (async () => {
-      const res = await privateFetch("/main/most-view", "", "GET");
+      const res = await privateFetch("/main/" + category, "GET");
       if (res.status !== 200) {
         // 오류처리
+        router.replace("/landing");
       }
       const data = await res.json();
-      console.log(data);
-      setNewsList(data);
+      console.log(data[0].newsPreviewList);
+      setNewsList(data[0].newsPreviewList);
     })();
-  }, []);
-  return (
-    <div className={styled.container}>
-      <div className={styled.toggle__container}>
-        <div className={cx("toggle")}>
-          <div className={cx("toggle__item", "active")}>많이 본 뉴스</div>
-          <div className={cx("toggle__item")}>많이 푼 뉴스</div>
-        </div>
-      </div>
-      <div className={cx("section", ["box-shodow-custom"])}>
-        {/* top3 섹션 START */}
-        <div className={cx("top3")}>
-          <div className={cx("first")}>
-            <img
-              src="https://thumb.mt.co.kr/06/2024/03/2024030610501730820_1.jpg/dims/optimize/"
-              alt=""
-            />
-          </div>
-          <div className={cx("second-third-container")}>
-            <div className={cx("second")}>
-              <img
-                src="https://orgthumb.mt.co.kr/06/2024/03/2024030608204758620_1.jpg"
-                alt=""
-              />
-              <div className={cx("info")}>
-                <div className={cx("title")}>
-                  [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-                </div>
-                <div className={cx("description")}>
-                  NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                </div>
-                <div className={cx("date")}>2024.03.06. 오전 11:37</div>
+  }, [category]);
+
+  // method
+  function toggle(category: string) {
+    setCategory(category);
+    mostViewEl.current?.classList.toggle(cx("active"));
+    mostSolvedEl.current?.classList.toggle(cx("active"));
+    // if (category === "most-view") {
+    // } else {
+    // }
+  }
+  function goNewsDetail(path: string) {
+    router.push("/news/" + path);
+  }
+  if (newsList.length === 0) {
+    <Loading />;
+  } else {
+    return (
+      <>
+        <div className={styled.container}>
+          <div className={styled.toggle__container}>
+            <div className={cx("toggle")}>
+              <div
+                ref={mostViewEl}
+                onClick={() => toggle("most-view")}
+                className={cx("toggle__item", "active")}
+              >
+                많이 본 뉴스
               </div>
-            </div>
-            <div className={cx("third")}>
-              <img
-                src="https://thumb.mt.co.kr/06/2024/03/2024030610501730820_1.jpg/dims/optimize/"
-                alt=""
-              />
-              <div className={cx("info")}>
-                <div className={cx("title")}>
-                  [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-                </div>
-                <div className={cx("description")}>
-                  NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                </div>
-                <div className={cx("date")}>2024.03.06. 오전 11:37</div>
+              <div
+                ref={mostSolvedEl}
+                onClick={() => toggle("most-solved")}
+                className={cx("toggle__item")}
+              >
+                많이 푼 뉴스
               </div>
             </div>
           </div>
+          <div className={cx("section", ["box-shodow-custom"])}>
+            {/* top3 섹션 START */}
+            <div className={cx("top3")}>
+              <div
+                onClick={() => goNewsDetail(newsList[0].newsSeq)}
+                className={cx("first")}
+              >
+                <img src={newsList[0].newsImgUrl} alt="" />
+              </div>
+              <div className={cx("second-third-container")}>
+                <div
+                  onClick={() => goNewsDetail(newsList[1].newsSeq)}
+                  className={cx("second")}
+                >
+                  <img src={newsList[1].newsImgUrl} alt="" />
+                  <div className={cx("info")}>
+                    <div className={cx("title")}>{newsList[1].newsTitle}</div>
+                    <div className={cx("description")}>
+                      {newsList[1].newsDescription}
+                    </div>
+                    <div className={cx("date")}>
+                      {newsList[1].newsCreatedAt}
+                    </div>
+                  </div>
+                </div>
+                <div
+                  onClick={() => goNewsDetail(newsList[2].newsSeq)}
+                  className={cx("third")}
+                >
+                  <img src={newsList[2].newsImgUrl} alt="" />
+                  <div className={cx("info")}>
+                    <div className={cx("title")}>{newsList[2].newsTitle}</div>
+                    <div className={cx("description")}>
+                      {newsList[2].newsDescription}
+                    </div>
+                    <div className={cx("date")}>
+                      {newsList[2].newsCreatedAt}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* top3 섹션 END */}
+            <ul className={cx("other")}>
+              {newsList.map((item, index) => {
+                if (index > 2) {
+                  return (
+                    <li
+                      onClick={() => goNewsDetail(item.newsSeq)}
+                      key={item.newsSeq}
+                      className={cx("other__item")}
+                    >
+                      <img src={item.newsImgUrl} alt="" />
+                      <div className={cx("info")}>
+                        <div className={cx("title")}>{item.newsTitle}</div>
+                        <div className={cx("description")}>
+                          {item.newsDescription}
+                        </div>
+                        <div className={cx("date")}>{item.newsCreatedAt}</div>
+                      </div>
+                    </li>
+                  );
+                }
+              })}
+            </ul>
+          </div>
         </div>
-        {/* top3 섹션 END */}
-        <ul className={cx("other")}>
-          <li className={cx("other__item")}>
-            <img
-              src="https://thumb.mt.co.kr/06/2024/03/2024030610501730820_1.jpg/dims/optimize/"
-              alt=""
-            />
-            <div className={cx("info")}>
-              <div className={cx("title")}>
-                [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-              </div>
-              <div className={cx("description")}>
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-              </div>
-              <div className={cx("date")}>2024.03.06. 오전 11:37</div>
-            </div>
-          </li>
-          <li className={cx("other__item")}>
-            <img
-              src="https://thumb.mt.co.kr/06/2024/03/2024030610501730820_1.jpg/dims/optimize/"
-              alt=""
-            />
-            <div className={cx("info")}>
-              <div className={cx("title")}>
-                [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-              </div>
-              <div className={cx("description")}>
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-              </div>
-              <div className={cx("date")}>2024.03.06. 오전 11:37</div>
-            </div>
-          </li>
-          <li className={cx("other__item")}>
-            <img
-              src="https://thumb.mt.co.kr/06/2024/03/2024030610501730820_1.jpg/dims/optimize/"
-              alt=""
-            />
-            <div className={cx("info")}>
-              <div className={cx("title")}>
-                [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-              </div>
-              <div className={cx("description")}>
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-              </div>
-              <div className={cx("date")}>2024.03.06. 오전 11:37</div>
-            </div>
-          </li>
-          <li className={cx("other__item")}>
-            <img
-              src="https://thumb.mt.co.kr/06/2024/03/2024030610501730820_1.jpg/dims/optimize/"
-              alt=""
-            />
-            <div className={cx("info")}>
-              <div className={cx("title")}>
-                [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-              </div>
-              <div className={cx("description")}>
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-              </div>
-              <div className={cx("date")}>2024.03.06. 오전 11:37</div>
-            </div>
-          </li>
-          <li className={cx("other__item")}>
-            <img
-              src="https://thumb.mt.co.kr/06/2024/03/2024030610501730820_1.jpg/dims/optimize/"
-              alt=""
-            />
-            <div className={cx("info")}>
-              <div className={cx("title")}>
-                [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-              </div>
-              <div className={cx("description")}>
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-              </div>
-              <div className={cx("date")}>2024.03.06. 오전 11:37</div>
-            </div>
-          </li>
-          <li className={cx("other__item")}>
-            <img
-              src="https://thumb.mt.co.kr/06/2024/03/2024030610501730820_1.jpg/dims/optimize/"
-              alt=""
-            />
-            <div className={cx("info")}>
-              <div className={cx("title")}>
-                [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-              </div>
-              <div className={cx("description")}>
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-              </div>
-              <div className={cx("date")}>2024.03.06. 오전 11:37</div>
-            </div>
-          </li>
-          <li className={cx("other__item")}>
-            <img
-              src="https://thumb.mt.co.kr/06/2024/03/2024030610501730820_1.jpg/dims/optimize/"
-              alt=""
-            />
-            <div className={cx("info")}>
-              <div className={cx("title")}>
-                [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-              </div>
-              <div className={cx("description")}>
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-              </div>
-              <div className={cx("date")}>2024.03.06. 오전 11:37</div>
-            </div>
-          </li>
-          <li className={cx("other__item")}>
-            <img
-              src="https://thumb.mt.co.kr/06/2024/03/2024030610501730820_1.jpg/dims/optimize/"
-              alt=""
-            />
-            <div className={cx("info")}>
-              <div className={cx("title")}>
-                [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-              </div>
-              <div className={cx("description")}>
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-              </div>
-              <div className={cx("date")}>2024.03.06. 오전 11:37</div>
-            </div>
-          </li>
-          <li className={cx("other__item")}>
-            <img
-              src="https://thumb.mt.co.kr/06/2024/03/2024030610501730820_1.jpg/dims/optimize/"
-              alt=""
-            />
-            <div className={cx("info")}>
-              <div className={cx("title")}>
-                [단독]NH농협은행 110억원 배임사고 발생…해당 직원 형사고발
-              </div>
-              <div className={cx("description")}>
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-                NH농협은행에서 110억원 규모의 업무상 배임이 발생했다.
-              </div>
-              <div className={cx("date")}>2024.03.06. 오전 11:37</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  );
+      </>
+    );
+  }
 }

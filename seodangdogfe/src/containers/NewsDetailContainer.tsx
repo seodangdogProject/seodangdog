@@ -15,11 +15,7 @@ export default function NewsDetailContainer() {
   useEffect(() => {
     // 데이터 받아오는 함수 START
     (async () => {
-      const res = await privateFetch(
-        "/news/16964",
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmltIiwiVVNFUiI6IlJPTEVfVVNFUiIsImV4cCI6MTcxMzU3ODcxNX0.6iCO_VO6jdC-fvfceiQtN6kyFqInb74AUBC-I4ZUYkg",
-        "GET"
-      );
+      const res = await privateFetch("/news/16964", "GET");
       if (res.status === 200) setData(await res.json());
       else {
         console.log("error 발생");

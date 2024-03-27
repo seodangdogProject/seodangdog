@@ -35,6 +35,7 @@
   font-family: "hambaknoon";
   font-size: 1.6rem;
   font-weight: bold;
+  cursor: pointer;
 }
 .toggle .toggle__item:first-child {
   border-top-left-radius: 15px;
@@ -69,6 +70,9 @@
 
 /* 컴포넌트 */
 /* 세부 */
+.top a {
+  color: #000;
+}
 .top3 {
   width: 100%;
   height: 250px;
@@ -78,6 +82,7 @@
   width: 45%;
   height: 100%;
   margin-right: 50px;
+  cursor: pointer;
 }
 .first img {
   width: 100%;
@@ -91,10 +96,12 @@
   flex-direction: column;
   justify-content: space-between;
 }
+
 .second,
 .third {
   height: 47%;
   display: flex;
+  cursor: pointer;
 }
 .info {
   /* display: flex; */
@@ -127,6 +134,8 @@
 }
 .second-third-container div img {
   height: 100%;
+  width: 30%;
+  object-fit: cover;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
 }
@@ -140,9 +149,10 @@
   display: flex;
   width: 100%;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 .other__item img {
-  min-width: 35%;
+  width: 35%;
   height: 150px;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
@@ -174,4 +184,15 @@
   position: absolute;
   right: 0;
   bottom: 10px;
+}
+
+.second-third-container .description {
+  display: -webkit-box;
+  word-wrap: break-word;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 20px;
+  line-height: 1rem;
 }

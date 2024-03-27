@@ -9,17 +9,15 @@ const BASE_URL = "https://j10e104.p.ssafy.io/api";
  */
 async function privateFetch(
   path: string,
-  token: string,
   method: string,
   body: object | null = null
 ): Promise<any> {
   if (body === null) {
-    console.log(token);
     const res = await fetch(BASE_URL + path, {
       method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: token,
+        Authorization: localStorage.getItem("accessToken") || "",
       },
     });
     return res;
@@ -28,7 +26,7 @@ async function privateFetch(
     method,
     headers: {
       "Content-Type": "application/json",
-      Authorization: token,
+      Authorization: localStorage.getItem("accessToken") || "",
     },
     body: JSON.stringify(body),
   });
