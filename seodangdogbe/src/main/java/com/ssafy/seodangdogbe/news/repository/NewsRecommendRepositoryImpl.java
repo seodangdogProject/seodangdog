@@ -119,10 +119,11 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .collect(Collectors.toList());
 
         List<News> newsList = queryFactory
-                .selectFrom(news)
-                .where(news.newsSeq.in(recommendedNewsSeqs)
-                        .and(userNews.isSolved.eq(false)))
-                .fetch();
+                .select(news)
+                .from(news)
+                .leftJoin(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq)).fetchJoin()
+                .where(news.newsSeq.in(recommendedNewsSeqs).and(userNews.isSolved.isNull().or(userNews.isSolved.eq(false)))
+                ).fetch();
 
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
             List<String> keywords = news.getKeywordNewsList().stream()
