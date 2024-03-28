@@ -68,7 +68,7 @@ export default function RecommendNewsContainer() {
               <li key={index} className={cx("item-container")}>
                 {subGroup.map((item: any, idx: number) => (
                   <div
-                    onClick={() => router.push("news" + item.newsSeq)}
+                    onClick={() => router.push("/news/" + item.newsSeq)}
                     key={item.newsSeq}
                     className={cx("line-item")}
                   >
