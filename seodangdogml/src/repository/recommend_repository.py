@@ -13,6 +13,7 @@ from bson import json_util
 from bson import ObjectId
 
 from repository.news_repository import findNews
+from repository.news_repository import getNewsAll
 
 router = APIRouter()
 
@@ -50,7 +51,7 @@ def find_user(user_seq):
 
 
 # 테스트를 위해 임의의 사용자의 정보를 만든다.
-@router.get('/fast/inset_user')
+# @router.get('/fast/inset_user')
 def insert_user():
     limit = 10
 
@@ -145,7 +146,7 @@ def select_news_id_seq():
         # 연결 종료
         connection.close()
 # 테스트를 위해 뽑아온 키워드들을 모든 사용자에게 부여한다.
-@router.get('/fast/insert_all_user_keyword')
+# @router.get('/fast/insert_all_user_keyword')
 def insert_all_user_keyword():
     print('start -  insert_all_user_keyword')
     limit = 30  # 유저당 넣을 키워드 수
@@ -162,9 +163,16 @@ def insert_all_user_keyword():
 
 # 테스트를 위해 100개의 뉴스에 대하서만 키워드를 가져온다
 def get_keyword_top100news():
-    top_news = findNews(100)
+    # top_news = findNews(100)
+    # top_news = getNewsAll()
+    top_news = select_mongo_news()
     result = set()
     for i in top_news:
+        if not isinstance(i['newsKeyword'], dict):
+            print("not dict ",type(i['newsKeyword']))
+            continue
+        else:
+            print("dict ", type(i['newsKeyword']))
         for k, v in i['newsKeyword'].items():
             result.add(k)
     print(len(result))
@@ -201,7 +209,7 @@ def insert_one_user_keyword(user_seq, keyword, weight):
 
 
 # 컨텐츠 기반추천을 할때 가중치를 가진 키워드와 유사한 키워드가 있는 뉴스추천을 진행한다.
-@router.get('/fast/select_user_keyword/{user_seq}')
+# @router.get('/fast/select_user_keyword/{user_seq}')
 def select_user_keyword(user_seq):
     connection = mysql_create_session()
     try:
@@ -337,6 +345,14 @@ def get_news_title_keyword():
         return None
     return response
 
+def select_mongo_news():
+    response = client.meta_news.find({}, {"_id": 1, "newsTitle": 1, "newsKeyword": 1})
+    # result = [doc for doc in response]
+
+    if not response:
+        return None
+    return response
+
 
 def select_all_ratings():
     connection = mysql_create_session()
@@ -380,15 +396,15 @@ def select_all_news():
 
 # select rating from ratings where user_seq = ? AND news_seq = ?
 # 유사도 가져오기
-def select_user_news_rating(user_seq, news_seq):
+def select_user_news_rating(user_seq):
     connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # 파라미터를 사용한 쿼리 실행
-            sql = "select rating from ratings where user_seq = %s"
-            cursor.execute(sql,(user_seq))
-            result = cursor.fetchone()
+            sql = "select news_seq, rating from ratings where user_seq = %s"
+            cursor.execute(sql,user_seq)
+            result = cursor.fetchall()
             return result
     except Exception as e:
         print(f"Error occurred select_all_news: {e}")
@@ -399,16 +415,16 @@ def select_user_news_rating(user_seq, news_seq):
         connection.close()
 
 
-# select news_seq is_solved from user_news where user_seq=?
+# select news_seq is_solved from user_news where user_seq=? AND is_solved = False
 # 사용자가 본뉴스를 거르고 추천하기위해 정보를 가져온다
-def select_news_solved():
+def select_news_solved(user_seq):
     connection = mysql_create_session()
     try:
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # 파라미터를 사용한 쿼리 실행
-            sql = "select news_seq news_id, news_title title from news"
-            cursor.execute(sql)
+            sql = "select news_seq, is_solved from user_news where user_seq=%s AND is_solved = True"
+            cursor.execute(sql, user_seq)
             result = cursor.fetchall()
             return result
     except Exception as e:
