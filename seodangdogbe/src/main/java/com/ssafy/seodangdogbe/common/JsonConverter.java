@@ -7,7 +7,7 @@ import jakarta.persistence.AttributeConverter;
 import java.io.IOException;
 import java.util.List;
 
-import static com.ssafy.seodangdogbe.word.dto.KorApiDto.*;
+import static com.ssafy.seodangdogbe.word.dto.WordApiDto.*;
 
 public class JsonConverter implements AttributeConverter<Object, String> {
     private final static ObjectMapper objectMapper = new ObjectMapper();
@@ -37,7 +37,16 @@ public class JsonConverter implements AttributeConverter<Object, String> {
             return objectMapper.readValue(json, KorApiSearchDto.class);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static EncycApiDto apiJsonToEncycApiDto(String json) {
+        try {
+            return objectMapper.readValue(json, EncycApiDto.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

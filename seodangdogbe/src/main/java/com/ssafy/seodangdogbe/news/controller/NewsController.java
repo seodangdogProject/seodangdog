@@ -2,12 +2,13 @@ package com.ssafy.seodangdogbe.news.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.common.MsgResponseDto;
+import com.ssafy.seodangdogbe.keyword.domain.Keyword;
+import com.ssafy.seodangdogbe.keyword.service.KeywordService;
 import com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 import com.ssafy.seodangdogbe.news.service.NewsService;
 import com.ssafy.seodangdogbe.user.domain.User;
-import com.ssafy.seodangdogbe.user.dto.BadgeDto;
 import com.ssafy.seodangdogbe.user.service.UserBadgeService;
-import com.ssafy.seodangdogbe.word.dto.KorApiDto;
+import com.ssafy.seodangdogbe.word.dto.WordApiDto;
 import com.ssafy.seodangdogbe.word.dto.UserWordDto;
 import com.ssafy.seodangdogbe.word.dto.WordDto;
 import com.ssafy.seodangdogbe.word.dto.WordDto.WordRequestDto;
@@ -19,8 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 import static com.ssafy.seodangdogbe.news.dto.MetaNewsDto.*;
 
 @RestController
@@ -31,7 +30,7 @@ public class NewsController {
     public final NewsService newsService;
     public final UserService userService;
     public final WordService wordService;
-    public final UserWordService userWordServcie;
+    public final UserWordService userWordService;
     public final UserBadgeService userBadgeService;
 
     @Operation(description = "newsSeq(mysql pk)로 mongodb에 있는 뉴스 본문 조회")
@@ -78,9 +77,9 @@ public class NewsController {
         User user = userService.getUser();
 
         if (newsService.setUserNewsSolve(user.getUserSeq(), dto)) {
-            String alterMsg = userBadgeService.checkNewBadge(user); // 뱃지 획득체크
+            String alterMsg = userBadgeService.checkNewBadge(user)  ; // 뱃지 획득체크
             if (alterMsg != null){
-                return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("읽기기록 저장 성공", alterMsg));
+                return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("풀이기록 저장 성공", alterMsg));
             }
             return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("풀이기록 저장 성공"));
         } else
@@ -95,9 +94,9 @@ public class NewsController {
 
         String word = wordDto.getWord();
         // ** 단어가 mongodb에 들어와있는지 확인하고, 없다면 api 호출해서 넣어주어야 함 -> 이렇게 접근할 일 없음
-        if (!wordService.isExistWord(word)){
+        if (!wordService.existWord(word)){
             // 표준국어대사전 API(사전검색 api만 사용) 호출 및 결과 값 받아오기
-            KorApiDto.KorApiSearchDto korApiSearchDto = wordService.callStDictSearchApi(word);
+            WordApiDto.KorApiSearchDto korApiSearchDto = wordService.callStDictSearchApi(word);
 
             // 결과 값 DB에 저장
             WordDto.MetaWordDto metaWordDto = new WordDto.MetaWordDto(korApiSearchDto);
@@ -106,14 +105,14 @@ public class NewsController {
 
 
         // 사용자단어 테이블에 이미 있는지 체크
-        UserWordDto userWordDto = userWordServcie.findUserWord(userSeq, word);
+        UserWordDto userWordDto = userWordService.findUserWord(userSeq, word);
 
         // 있다면 삭제여부 체크 후 저장
         if (userWordDto != null){
             System.out.println("사용자단어 테이블에 이미 있는 단어입니다.");
             if (userWordDto.isDelete()) {    // 삭제되었다면
                 System.out.println("삭제된 단어입니다.");
-                userWordServcie.updateUserWordExist(userSeq, word);
+                userWordService.updateUserWordExist(userSeq, word);
                 return ResponseEntity.ok().body(new MsgResponseDto("단어 스크랩 성공"));
             } else {    // 이미 스크랩되어있는 상태라면
                 System.out.println("이미 스크랩 된 상태입니다.");
@@ -122,7 +121,7 @@ public class NewsController {
         }
 
         // 없다면 사용자단어 테이블에 저장
-        if (userWordServcie.setUserWord(user, word) != null){
+        if (userWordService.setUserWord(user, word) != null){
             return ResponseEntity.ok().body(new MsgResponseDto("단어 스크랩 성공"));
         } else {
             return ResponseEntity.badRequest().body(new MsgResponseDto("단어 스크랩 실패"));

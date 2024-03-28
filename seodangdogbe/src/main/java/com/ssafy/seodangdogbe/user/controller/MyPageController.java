@@ -52,6 +52,8 @@ public class MyPageController {
         resultDto.setRecentViewNews(mypageService.getRecentViewNews(user));
         resultDto.setRecentSolvedNews(mypageService.getRecentSolvedNews(user));
 
+        // wordCloud
+        resultDto.setWordCloudImgUrl(mypageService.getWordCloud(user.getUserSeq()).block());
 
         return resultDto;
     }

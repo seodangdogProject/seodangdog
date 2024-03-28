@@ -2,6 +2,7 @@ package com.ssafy.seodangdogbe.news.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.seodangdogbe.auth.service.UserService;
+import com.ssafy.seodangdogbe.common.MessageResponseDto;
 import com.ssafy.seodangdogbe.keyword.dto.loseWeightFastReqDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +22,6 @@ public class FastApiService {
 
     @Autowired
     public FastApiService(WebClient webClient, UserService userService) {
-
         this.webClient = webClient;
         this.userService = userService;
     }
@@ -42,15 +42,16 @@ public class FastApiService {
         return list;
     }
 
-    public void updateWeigth(List<loseWeightFastReqDto> loseWeightFastReqDtoList) {
-        this.webClient.post()
+    public MessageResponseDto updateWeigth(loseWeightFastReqDto loseWeightFastReqDtoList) {
+        return this.webClient.post()
                 .uri("/fast/mf_recom/update")
                 .bodyValue(loseWeightFastReqDtoList)
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
                         clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
-                .bodyToMono(String.class)// 응답값이 뭔지는 왜 안알ㄹ줬노... -> 일단 string
+                .bodyToMono(MessageResponseDto.class)// 응답값이 뭔지는 왜 안알ㄹ줬노... -> 일단 string
                 .block(); // 동기적 처리로 일단 냅두기
+
     }
 
     public Mono<List<MfRecommendResponse>> fetchMfRecommendations() {
@@ -63,6 +64,8 @@ public class FastApiService {
                 .bodyToMono(new ParameterizedTypeReference<List<MfRecommendResponse>>() {
                 });
     }
+
+
 
 
 
