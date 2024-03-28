@@ -2,6 +2,8 @@ package com.ssafy.seodangdogbe.news.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.common.MsgResponseDto;
+import com.ssafy.seodangdogbe.keyword.domain.Keyword;
+import com.ssafy.seodangdogbe.keyword.service.KeywordService;
 import com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 import com.ssafy.seodangdogbe.news.service.NewsService;
 import com.ssafy.seodangdogbe.user.domain.User;
@@ -75,9 +77,9 @@ public class NewsController {
         User user = userService.getUser();
 
         if (newsService.setUserNewsSolve(user.getUserSeq(), dto)) {
-            String alterMsg = userBadgeService.checkNewBadge(user); // 뱃지 획득체크
+            String alterMsg = userBadgeService.checkNewBadge(user)  ; // 뱃지 획득체크
             if (alterMsg != null){
-                return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("읽기기록 저장 성공", alterMsg));
+                return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("풀이기록 저장 성공", alterMsg));
             }
             return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("풀이기록 저장 성공"));
         } else

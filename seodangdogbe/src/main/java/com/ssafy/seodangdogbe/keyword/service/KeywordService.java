@@ -24,12 +24,11 @@ public class KeywordService {
 
     public final UserKeywordRepository userKeywordRepository;
 
-    // 클릭 시 해당 뉴스 키워드 증가
     public void minusKeywordListWeight(User user, List<NewsRefreshReqDto> newsRefreshReqDtoList, double highWeight, double rowWeight){
         userKeywordRepository.decrementKeywordWeight(user, newsRefreshReqDtoList, highWeight, rowWeight);
     }
 
-    public void addKeywordListWeight(User user, List<String> newsKeywordList, double weight ){
+    public void addKeywordListWeight(User user, List<String> newsKeywordList, double weight){
         userKeywordRepository.incrementKeywordWeight(user, newsKeywordList, weight);
     }
 

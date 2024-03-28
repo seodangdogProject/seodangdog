@@ -21,7 +21,6 @@ public class FastApiService {
 
     @Autowired
     public FastApiService(WebClient webClient, UserService userService) {
-
         this.webClient = webClient;
         this.userService = userService;
     }
@@ -63,6 +62,8 @@ public class FastApiService {
                 .bodyToMono(new ParameterizedTypeReference<List<MfRecommendResponse>>() {
                 });
     }
+
+
 
 
 

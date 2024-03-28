@@ -1,6 +1,9 @@
 package com.ssafy.seodangdogbe.news.service;
 
 import com.ssafy.seodangdogbe.auth.repository.UserRepository;
+import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshRequestDto;
+import com.ssafy.seodangdogbe.keyword.repository.UserKeywordRepository;
+import com.ssafy.seodangdogbe.news.domain.KeywordNews;
 import com.ssafy.seodangdogbe.news.repository.MetaNewsRepository;
 import com.ssafy.seodangdogbe.news.repository.NewsRepository;
 import com.ssafy.seodangdogbe.news.repository.UserNewsRepository;
@@ -13,6 +16,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.plaf.PanelUI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +33,7 @@ public class NewsService {
     public final NewsRepository newsRepository;
     public final MetaNewsRepository metaNewsRepository;
     public final UserNewsRepository userNewsRepository;
+    public final UserKeywordRepository userKeywordRepository;
 
     // mysql뉴스 조회
     public NewsResponseDto getNewsPreview(Long newsSeq){
@@ -139,6 +145,14 @@ public class NewsService {
         // 요약 경험치 증가
         int exp = userExp.getSummaryExp();
         userExp.setSummaryExp(exp + 1);
+
+        List<String> keywordList = new ArrayList<>();
+        for (KeywordNews newsKeyword : news.getKeywordNewsList()){
+            keywordList.add(newsKeyword.getKeyword().getKeyword());
+        }
+
+        // 뉴스에 포함된 키워드 가중치 증가
+        userKeywordRepository.incrementKeywordWeight(user, keywordList, 0.99);
 
         System.out.println("사용자 뉴스풀이 저장 성공");
         return true;
