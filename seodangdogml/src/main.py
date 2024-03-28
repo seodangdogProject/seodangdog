@@ -33,7 +33,7 @@ def scheduled_job():
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    back_scheduler.start()
+    # back_scheduler.start()
     yield
 
 
