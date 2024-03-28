@@ -61,20 +61,46 @@ def save_news():
     news_data = morph_sep(news_data)
 
     # 키워드 추출 및 저장
-    print("키워드 추출 및 시작")
-    print("본문 키워드 작업 시작")
+    print("본문 키워드 추출 시작")
     news_data = keyword_generate(news_data, "newsMainText", "newsKeyword")
-    print("네이버 요약 키워드 작업 시작")
+
+    print("중복 기사 배제 시작")
+    news_data = get_unique_news(news_data)
+
+    print("네이버 요약 키워드 추출 시작")
     news_data = keyword_generate(news_data, "newsSummary", "newsSummaryKeyword")
 
-    # GPT 문제 저장
-
-
+    # MongoDB 저장
     mongoDB["meta_news"].insert_many(news_data)
-    return {"message": str(len(news_data)) + " news saved!"}
+
+    # mysql 저장
+    mysql_save(news_data)
+    return {"message" : f"{len(news_data)} news saved!"}
+
+
+def get_unique_news(news_data):
+    deleted_news_index = []
+
+    for i in range(len(news_data)):
+        if i in deleted_news_index: continue
+        target_news = news_data[i]
+        for j in range(len(news_data)):
+            if(i==j): continue
+            compare_news = news_data[j]
+            if(len(set(target_news["newsKeyword"].keys()) & set(compare_news["newsKeyword"].keys())) >= 15):
+                # print("============")
+                # print(target_news["news_url"])
+                # print(target_news["newsKeyword"].keys())
+                # print("----")
+                # print(compare_news["news_url"])
+                # print(compare_news["newsKeyword"].keys())
+                deleted_news_index.append(j)
+
+    news_data = [news for i, news in enumerate(news_data) if i not in deleted_news_index]
+    return news_data
 
 @router.get("/delete_duplicated_news")
-def delete_duplicated_news():
+def delete_duplicated_news(news_data):
     deleted_news_id_list = []
     deleted_news_oid_list = []
     deleted_news_index = []
@@ -129,8 +155,6 @@ def delete_duplicated_news():
     mysqlDB.commit()
     mysqlDB.close()
 
-    # return json.loads(json_util.dumps(result))
-
 
 @router.get("/getNews")
 def getNews():
@@ -148,17 +172,14 @@ def findNews(limit):
     response = mongoDB.meta_news.find({}).limit(limit)
     return json.loads(json_util.dumps(response))
 
-@router.get("/mysql_save")
-def mysql_save():
-    # 뉴스 가져오기
-    news_data = getNewsAll()
+
+def mysql_save(news_data):
 
     mysqlDB = mysql_create_session()
-    #
     cursor = mysqlDB.cursor()
 
-    sql = (
-        f"insert into news (count_solve, count_view, news_access_id, news_created_at, news_description, news_img_url, news_title, media_code, created_at, modified_at) values ")
+    sql = (f"insert into news (count_solve, count_view, news_access_id, news_created_at, news_description, "
+           f"news_img_url, news_title, media_code, created_at, modified_at) values ")
 
     keyword_list = set()
     for news in news_data:
@@ -249,6 +270,7 @@ def get_wordcloud(user_seq):
     image_url = f'https://{settings.S3_BUCKET_NAME}.s3.{settings.S3_LOCATION}.amazonaws.com/{FILE_NAME}'
 
     return image_url
+
 
 def image_to_byte_array(image: Image, format: str = 'png'):
     result = io.BytesIO()
