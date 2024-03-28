@@ -1,5 +1,5 @@
 # GPT
-GPT_API_KEY = "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"
+GPT_API_KEY = "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"
 
 # S3
 S3_BUCKET_NAME = "seodangdog-s3"

@@ -21,13 +21,15 @@ from crawling.news_crawling import crawling_main, test
 back_scheduler = BackgroundScheduler(timezone='Asia/Seoul')
 
 
-@back_scheduler.scheduled_job('cron', minute="45", hour="14", id='crawling_cron')
+@back_scheduler.scheduled_job('cron', minute="00", hour="16", id='crawling_cron')
 def scheduled_job():
     print("예정된 스케쥴 시작 : crawling_cron")
     crawling_main()
     print("스케쥴 : 크롤링 종료")
     save_news()
-    print("스케쥴 : MongoDB, Mysql 저장 종료")
+    print("스케쥴 : MongoDB 저장 종료")
+    mysql_save()
+    print("스케쥴 : Mysql 저장 종료")
     print("예정된 스케쥴 종료 : crawling_cron")
 
 

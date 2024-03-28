@@ -37,7 +37,7 @@ def extract_noun(text):
     word = okt.nouns(text)
     p = okt.pos(text)
     for pos in p:
-      if pos[1] in ['SL']:
+      if pos[1] in ['Alpha']:
         word.append(pos[0])
     for w in word:
       if len(w)>1 and w not in stopwords:
