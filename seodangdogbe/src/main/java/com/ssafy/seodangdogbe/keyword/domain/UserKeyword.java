@@ -1,5 +1,6 @@
 package com.ssafy.seodangdogbe.keyword.domain;
 
+import com.ssafy.seodangdogbe.common.BaseTimeEntity;
 import com.ssafy.seodangdogbe.keyword.domain.Keyword;
 import com.ssafy.seodangdogbe.user.domain.User;
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserKeyword {
+public class UserKeyword extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userKeywordSeq;

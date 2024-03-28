@@ -34,22 +34,22 @@ public class InitializationService {
 //        userRepository.save(user1);
 //        userRepository.save(user2);
 
-        List<String> badgeImgUrls = new ArrayList<>();
-        String imgUrl = "https://seodangdog-s3.s3.ap-northeast-2.amazonaws.com/badges/badge";
-        for (int i = 1; i <= 7; i++){
-            badgeImgUrls.add(imgUrl+i+".png");
-        }
+//        List<String> badgeImgUrls = new ArrayList<>();
+//        String imgUrl = "https://seodangdog-s3.s3.ap-northeast-2.amazonaws.com/badges/badge";
+//        for (int i = 1; i <= 7; i++){
+//            badgeImgUrls.add(imgUrl+i+".png");
+//        }
 
-        List<Badge> badges = new ArrayList<>();
+//        List<Badge> badges = new ArrayList<>();
 
-        // 뱃지 목록 입력
-        badges.add(new Badge("까막눈",badgeImgUrls.get(0),"회원가입 시 주어지는 뱃지입니다.",0));
-        badges.add(new Badge("어휘왕",badgeImgUrls.get(1),"어휘 문제를 10개 이상 맞힐 경우 뱃지 획득",10));
-        badges.add(new Badge("추론왕",badgeImgUrls.get(2),"추론 문제를 10개 이상 맞힐 경우 뱃지 획득",10));
-        badges.add(new Badge("판단왕",badgeImgUrls.get(3),"판단 문제를 10개 이상 맞힐 경우 뱃지 획득",10));
-        badges.add(new Badge("요약왕",badgeImgUrls.get(4),"요약까지 완료한 뉴스 갯수가 10개 이상일 경우 뱃지 획득",10));
-        badges.add(new Badge("뉴스왕",badgeImgUrls.get(5),"뉴스를 20개 이상 읽을 경우 뱃지 획득",20));
-        badges.add(new Badge("퀴즈왕",badgeImgUrls.get(6),"단어 게임에서 단어를 20개 이상 맞힐 경우 뱃지 획득",20));
+//        // 뱃지 목록 입력
+//        badges.add(new Badge("까막눈",badgeImgUrls.get(0),"회원가입 시 주어지는 뱃지입니다.",0));
+//        badges.add(new Badge("어휘왕",badgeImgUrls.get(1),"어휘 문제를 10개 이상 맞힐 경우 뱃지 획득",10));
+//        badges.add(new Badge("추론왕",badgeImgUrls.get(2),"추론 문제를 10개 이상 맞힐 경우 뱃지 획득",10));
+//        badges.add(new Badge("판단왕",badgeImgUrls.get(3),"판단 문제를 10개 이상 맞힐 경우 뱃지 획득",10));
+//        badges.add(new Badge("요약왕",badgeImgUrls.get(4),"요약까지 완료한 뉴스 갯수가 10개 이상일 경우 뱃지 획득",10));
+//        badges.add(new Badge("뉴스왕",badgeImgUrls.get(5),"뉴스를 20개 이상 읽을 경우 뱃지 획득",20));
+//        badges.add(new Badge("퀴즈왕",badgeImgUrls.get(6),"단어 게임에서 단어를 20개 이상 맞힐 경우 뱃지 획득",20));
 
 //        badgeRepository.saveAll(badges);
 
