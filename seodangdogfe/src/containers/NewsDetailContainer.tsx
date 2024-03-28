@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import Cover from "@/components/newsDetail/Cover";
 import NewsContent from "@/components/newsDetail/NewsContent";
 import Quiz from "@/components/newsDetail/Quiz";
@@ -10,19 +10,23 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "./NewsDetailContainer.module.css";
 import Summary from "@/components/newsDetail/Summary";
+import NotSolved from "@/components/newsDetail/NotSolved";
 export default function NewsDetailContainer() {
-  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+  // react전용 변수
+  const pathname = usePathname();
   const cx = classNames.bind(styled);
 
-  const pathname = usePathname();
+  //퀴즈 관련 변수
+  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [data, setData] = useState({});
+  const [isSolved, setIsSolved] = useState<boolean>(false);
   const [keywords, setKeywords] = useState<any[]>([]);
   const [quiz_1, setQuiz_1] = useState<any[]>([]);
   const [quiz_2, setQuiz_2] = useState<any[]>([]);
   const [quiz_3, setQuiz_3] = useState<any[]>([]);
   const [quizData, setQuizData] = useState<any[]>([]);
-  // 0 : 커버페이지 , 1,2,3 : 퀴즈
-  const [currentQuizNumber, setCurrentQuizNumber] = useState<number>(0);
+
+  const [currentQuizNumber, setCurrentQuizNumber] = useState<number>(0); // 0 : 커버페이지 , 1,2,3 : 퀴즈
 
   useEffect(() => {
     // 데이터 받아오는 함수 START
@@ -35,6 +39,7 @@ export default function NewsDetailContainer() {
         for (const [key] of Object.entries(resData.newsKeyword)) {
           keywordList.push(key);
         }
+        setIsSolved(resData.solved);
         setKeywords(keywordList);
         setData(resData);
         setQuizData(resData.newsQuiz);
@@ -42,26 +47,25 @@ export default function NewsDetailContainer() {
         console.log("error 발생");
       }
     })();
+    // 데이터 받아오는 함수 END
   }, []);
 
   return (
     <>
-      <div className={cx("container")}>
-        <div className={cx("detail-container", ["box-shodow-custom"])}>
-          <NewsContent keywords={keywords} data={data} />
-          {currentQuizNumber === 0 ? (
-            <Cover setCurrentQuiz={setCurrentQuizNumber} />
-          ) : currentQuizNumber < 4 ? (
-            <Quiz
-              currentQuizNumber={currentQuizNumber}
-              quizData={quizData}
-              setCurrentQuizNumber={setCurrentQuizNumber}
-            />
-          ) : (
-            <Summary />
-          )}
-        </div>
-      </div>
+      {isSolved ? (
+        // 풀었으면 렌더링
+        <>풀었다</>
+      ) : (
+        // 풀지 않았으면 렌더링
+        <NotSolved
+          data={data}
+          currentQuizNumber={currentQuizNumber}
+          setCurrentQuizNumber={setCurrentQuizNumber}
+          keywords={keywords}
+          quizData={quizData}
+          cx={cx}
+        />
+      )}
     </>
   );
 }
