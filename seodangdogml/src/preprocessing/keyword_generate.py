@@ -92,6 +92,7 @@ def keyword_generate(news_data, targetCol, resultCol):
         keyword_weighted_list = df.loc[i].sort_values(ascending=False)[1:]
         keyword_list = keyword_weighted_list.index
         weight_list = list(keyword_weighted_list)
+        news_data[i][resultCol] = {}
         if targetCol == "newsSummary":
             for j in range(5):
                 if weight_list[j] != 0:
