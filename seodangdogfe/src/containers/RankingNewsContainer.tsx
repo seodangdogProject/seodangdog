@@ -67,7 +67,17 @@ export default function RankingNewsContainer() {
                 onClick={() => goNewsDetail(newsList[0].newsSeq)}
                 className={cx("first")}
               >
-                <img src={newsList[0].newsImgUrl} alt="" />
+                <div className={cx("first__card")}>
+                  <img src={newsList[0].newsImgUrl} alt="" />
+                  <div className={cx("first__card__content")}>
+                    <div className={cx("first__card__content__title")}>
+                      {newsList[0].newsTitle}
+                    </div>
+                    <div className={cx("first__card__content__date")}>
+                      {changeDateFormat(newsList[0].newsCreatedAt)}
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className={cx("second-third-container")}>
                 <div

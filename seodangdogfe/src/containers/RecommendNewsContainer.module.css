@@ -85,12 +85,19 @@
 }
 .line-item {
   width: 30%;
+  padding: 10px 10px;
+  box-sizing: border-box;
   cursor: pointer;
+}
+.line-item:hover {
+  background-color: rgba(55, 25, 205, 0.103);
+  border-radius: 15px;
 }
 .item-container img {
   display: block;
   width: 100%;
   /* width: 100px; */
+  height: 216px;
   object-fit: cover;
   border-radius: 15px;
   margin-bottom: 10px;
@@ -104,12 +111,19 @@
 .title {
   font-weight: bold;
   font-size: 1.3rem;
-  margin-bottom: 10px;
+  margin: 10px 0;
+  height: 41px;
+  display: flex;
+  align-items: center;
 }
 .description {
   color: #606060;
   font-size: 0.8rem;
   margin-bottom: 10px;
+  height: 51px;
+  overflow: hidden;
+  white-space: wrap;
+  text-overflow: clip;
 }
 .date {
   color: #606060;
