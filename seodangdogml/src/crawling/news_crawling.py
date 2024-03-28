@@ -12,13 +12,19 @@ def time_calculator(days):
     result = []
     now = datetime.now()
 
-    for days_before in range(days + 1):
-        before_date = now - relativedelta(days=days_before)
-        # print("{}일 전 :".format(days_before), before_date)
+    # for days_before in range(days + 1):
+    #     before_date = now - relativedelta(days=days_before)
+    #     # print("{}일 전 :".format(days_before), before_date)
+    #
+    #     before_date_str = before_date.strftime('%Y%m%d')
+    #     # print(before_date_str)
+    #     result.append(before_date_str)
 
-        before_date_str = before_date.strftime('%Y%m%d')
-        # print(before_date_str)
-        result.append(before_date_str)
+    # days 수 만큼 이전 날로 설정
+    before_date = now - relativedelta(days=days)
+    before_date_str = before_date.strftime('%Y%m%d')
+    # print(before_date_str)
+    result.append(before_date_str)
     return result
 
 def tag_decomposer(content):
@@ -143,7 +149,7 @@ def crawling_main():
     press_list = press_list[:10]
 
     # 뉴스 크롤링 일(日) 수 계산
-    date_list = time_calculator(0) # 90 : 3개월
+    date_list = time_calculator(1)  # time_calculator(1) : 1일 전의 날짜 반환
 
     # 서버 로그 기록을 위한 print
     print(f"{date_list[0]} 크롤링 시작.")
