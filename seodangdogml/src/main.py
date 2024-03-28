@@ -21,14 +21,14 @@ from crawling.news_crawling import crawling_main, test
 back_scheduler = BackgroundScheduler(timezone='Asia/Seoul')
 
 
-@back_scheduler.scheduled_job('cron', minute="00", hour="6", id='crawling_cron')
+@back_scheduler.scheduled_job('cron', minute="00", hour="13", id='crawling_cron')
 def scheduled_job():
-    print("띵동. 크론잡입니다. 예정된 시각은 오전 6시 정각이었습니다.")
-    print(f"현재 시각은 {(time.localtime().tm_hour+9)%24}시, {time.localtime().tm_min}분입니다.")
-    print("그럼 다음에 뵙겠습니다.")
-    # crawling_main()
-    # save_news()
-    # mysql_save()
+    print("예정된 스케쥴 시작 : crawling_cron")
+    crawling_main()
+    print("스케쥴 : 크롤링 종료")
+    save_news()
+    print("스케쥴 : MongoDB, Mysql 저장 종료")
+    print("예정된 스케쥴 종료 : crawling_cron")
 
 
 @asynccontextmanager
