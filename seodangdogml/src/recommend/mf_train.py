@@ -88,6 +88,15 @@ def save_mf(model):
         pickle.dump(model, f)
 
 
+def load_mf():
+    base_src = './recommend'
+    model_name = 'mf_online.pkl'
+    save_path = os.path.join(base_src, model_name)
+    with open(save_path, 'rb') as f:
+        model = pickle.load(f)
+    return model
+
+
 # 변수로 넘어온 user_seq, news_seq는 인덱스(0부터)로 변환해서 학습을 시켜야한다.
 def online_learning(mf, user_id, item_id, rating, weight=1):
 

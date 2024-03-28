@@ -245,7 +245,21 @@ def select_ratings(news_seq, user_seq):
     finally:
         # 연결 종료
         connection.close()
-
+def select_user_ratings(user_seq):
+    connection = mysql_create_session()
+    try:
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            sql = "select news_seq from ratings where user_seq = %s"
+            cursor.execute(sql, user_seq)
+            result = cursor.fetchall()
+            return result
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        connection.rollback()
+        return False
+    finally:
+        # 연결 종료
+        connection.close()
 
 async def async_select_ratings(news_seq, user_seq):
     try:

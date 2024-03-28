@@ -12,6 +12,7 @@ from repository.recommend_repository import select_user_keyword
 from repository.recommend_repository import select_news_id_seq
 from repository.recommend_repository import get_news_title_keyword
 from repository.recommend_repository import select_ratings
+from repository.recommend_repository import select_user_ratings
 from repository.recommend_repository import update_ratings
 from repository.recommend_repository import insert_ratings
 from repository.recommend_repository import select_news_solved
@@ -64,6 +65,7 @@ def renewal_news_data():
         result.append(temp)
     return result
 
+
 def get_news_seq():
     data = select_news_id_seq()
     result = {entry['news_id']: entry['news_seq'] for entry in data}
@@ -90,7 +92,7 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
 
     start_time = time.time()
 
-    recommended_news = await recommend_news(user_seq, news_data, user_keyword_list, keyword_weights,flag)
+    recommended_news = await recommend_news(user_seq, news_data, user_keyword_list, keyword_weights, flag)
 
     end_time = time.time()
     execution_time = end_time - start_time
@@ -119,6 +121,10 @@ async def update_rating(recommended_news, user_seq):
     start_time = time.time()
     insert_rating_data = []
     update_rating_data = []
+    
+    # rating에 유저와 뉴스가 존재하는지 확인하기위함
+    user_ratings = select_user_ratings(user_seq)
+
     for news in recommended_news:
         # print(news)
         news_id = news[0]
@@ -126,8 +132,15 @@ async def update_rating(recommended_news, user_seq):
         news_title = news[1]
         # news_similarity = format_weight(news[2])
         news_similarity = news[2]
-        info = select_ratings(news_seq, user_seq)
-        if info is None:
+        # info = select_ratings(news_seq, user_seq)
+
+        is_found = False
+        for ur in user_ratings:
+            if ur['news_seq'] == news_seq:
+                is_found = True
+                break
+
+        if not is_found:
             temp = [news_seq, user_seq, news_similarity]
             insert_rating_data.append(temp)
         else:
@@ -196,7 +209,7 @@ async def recommend_news(user_seq, news_data, user_keywords, keyword_weights, fl
         top_21_recommended_news = recommended_news[:top_n]
         return top_21_recommended_news
     else:
-        top_42_recommendations = recommended_news[:(top_n*2)]
+        top_42_recommendations = recommended_news[:(top_n * 2)]
         if len(top_42_recommendations) >= top_n:
             next_21_recommendations = top_42_recommendations[top_n:]
             return next_21_recommendations
@@ -213,7 +226,7 @@ def format_weight(value):
     return result
 
 
-##########################test##################################################
+###########################test##################################################
 # def user_news_rating(news_title, user_keywords, keyword_weights):
 def user_news_rating(news_title, user_keywords, keyword_weights, max_df=1.0, min_df=1, max_features=None):
     # TF-IDF 변환기 생성
