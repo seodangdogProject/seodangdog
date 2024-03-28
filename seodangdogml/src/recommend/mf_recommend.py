@@ -45,7 +45,6 @@ mf = load_mf()
 
 
 def get_news_title(news_id):
-    print(news_id)
     return news.loc[news_id]['title']
 
 
@@ -91,7 +90,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
     if user_seq in mf.user_id_index:
         top_n = 21
         recommendations = recommend_news(user_seq, mf, top_n)
-
+        print("mf_recommend finished in", len(recommendations))
         # 추천목록화인 start
         # print(recommendations)
         # print("Recommendations for user", user_id)
