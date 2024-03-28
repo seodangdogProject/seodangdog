@@ -17,6 +17,10 @@ from repository.recommend_repository import insert_ratings
 from repository.recommend_repository import select_news_solved
 from recommend.mf_train import multiprocessing_train
 from recommend.mf_train import online_learning
+from recommend.mf_train import save_mf
+from recommend.mf_train import load_mf
+from repository.recommend_repository import select_user_ratings
+
 import asyncio
 import pickle
 import time
@@ -35,23 +39,6 @@ class MfNewsDto:
         self.news_seq = news_seq
         self.news_title = news_title
         self.news_similarity = news_similarity
-
-
-def load_mf():
-    base_src = './recommend'
-    model_name = 'mf_online.pkl'
-    save_path = os.path.join(base_src, model_name)
-    with open(save_path, 'rb') as f:
-        model = pickle.load(f)
-    return model
-
-
-def save_mf(model):
-    base_src = './recommend'
-    model_name = 'mf_online.pkl'
-    save_path = os.path.join(base_src, model_name)
-    with open(save_path, 'wb') as f:
-        pickle.dump(model, f)
 
 
 mf = load_mf()
@@ -150,6 +137,7 @@ class UpdateData(BaseModel):
 
 @router.post('/fast/mf_recom/update')
 async def mf_update(data: UpdateData):
+    print('mf online learning')
     user_seq = data.user_seq
     info = data.info
     result = select_user_news_rating(user_seq)
@@ -180,13 +168,23 @@ async def mf_update(data: UpdateData):
 async def insert_rating(recommended_news, user_seq):
     start_time = time.time()
     insert_rating_data = []
+
+    # rating에 유저와 뉴스가 존재하는지 확인하기위함
+    user_ratings = select_user_ratings(user_seq)
+
     for rn in recommended_news:
         news_seq = rn.news_seq
         news_title = rn.news_title
         news_similarity = rn.news_similarity
-        info = select_ratings(news_seq, user_seq)
+        # info = select_ratings(news_seq, user_seq)
 
-        if info is None:
+        is_found = False
+        for ur in user_ratings:
+            if ur['news_seq'] == news_seq:
+                is_found = True
+                break
+
+        if not is_found:
             temp = [news_seq, user_seq, news_similarity]
             insert_rating_data.append(temp)
 
