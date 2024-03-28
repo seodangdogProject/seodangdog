@@ -8,7 +8,7 @@ S3_ACCESS_KEY = "AKIAYS2NT7VYZUUQXEU6"
 S3_SECRET_KEY = "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"
 
 # wordcloud font path
-WC_FONT_PATH = "resource/NanumGothicExtraBold.ttf"
+WC_FONT_PATH = "fast_resources/NanumGothicExtraBold.ttf"
 
 # mongoDB
 MONGO = {

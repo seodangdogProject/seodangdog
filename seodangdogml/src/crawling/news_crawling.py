@@ -54,7 +54,6 @@ def headline_objector(headline_html):
     headline["pressName"] = headline_html.select_one("span.writing").text.strip()
     headline["url"] = headline_html.select("a")[-1]["href"]
 
-    # print(headline)
     return headline
 
 def news_objector(driver, headline_html, options):
@@ -106,7 +105,7 @@ def news_objector(driver, headline_html, options):
 
 def file_save(news):
     # json 파일로 저장
-    with open('resource/news.json', 'w', encoding="utf8") as f:
+    with open('fast_resources/news.json', 'w', encoding="utf8") as f:
         json.dump(news, f, indent=4, ensure_ascii=False)
     # print("==> 현재까지의 작업 내용을 저장하였습니다.")
     # print("==> 현재까지 크롤링한 뉴스 수 : ", news_count)
@@ -134,7 +133,7 @@ def crawling_main():
     #Part 4. 반복문 활용 언론사별 뉴스 추출
     news = []
     news_count = 0
-    # with open('../resource/news.json','r', encoding='utf8') as f:
+    # with open('../fast_resources/news.json','r', encoding='utf8') as f:
     #     news = json.load(f)
     #     news_count = len(news)
 
@@ -220,7 +219,7 @@ def crawling_main():
     main_driver.quit()
 
 def test():
-    service = Service(executable_path="resource/chromedriver")
+    service = Service(executable_path="fast_resources/chromedriver")
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')

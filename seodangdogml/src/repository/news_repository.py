@@ -119,14 +119,18 @@ def mysql_save():
         keyword_list.update(news['newsKeyword'])
         keyword_list.update(news['newsSummaryKeyword'])
     sql = sql[:-2] + ";"
-    result = cursor.execute(sql)
+    cursor.execute(sql)
 
     # 전체 키워드 저장
+    sql = "select * from keyword;"
+    cursor.execute(sql)
+    result = cursor.fetchall()
     sql = f"insert into keyword (keyword) values "
     for word in keyword_list:
-        sql += f"(\"{word}\"),\n"
+        if (word,) not in result:
+            sql += f"(\"{word}\"),\n"
     sql = sql[:-2] + ";"
-    result = cursor.execute(sql)
+    cursor.execute(sql)
 
     # 뉴스별 키워드 저장
     save_keyword_news()
@@ -135,7 +139,7 @@ def mysql_save():
 
 
 @router.get("/keywordNewsSave")
-def save_keyword_news(mysqlDB, ):
+def save_keyword_news():
 
     mysqlDB = mysql_create_session()
     cursor = mysqlDB.cursor()
