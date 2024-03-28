@@ -1,5 +1,6 @@
 package com.ssafy.seodangdogbe.keyword.service;
 
+import com.ssafy.seodangdogbe.common.MessageResponseDto;
 import com.ssafy.seodangdogbe.keyword.domain.Keyword;
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.keyword.dto.JoinKeywordDto;
@@ -29,11 +30,11 @@ public class KeywordService {
     private final JoinKeywordRepository joinKeywordRepository;
 
     // 클릭 시 해당 뉴스 키워드 증가
-    public void minusKeywordListWeight(User user, List<NewsRefreshReqDto> newsRefreshReqDtoList, double highWeight, double rowWeight){
-        userKeywordRepository.decrementKeywordWeight(user, newsRefreshReqDtoList, highWeight, rowWeight);
+    public MessageResponseDto minusKeywordListWeight(User user, List<NewsRefreshReqDto> newsRefreshReqDtoList, double highWeight, double rowWeight){
+        return userKeywordRepository.decrementKeywordWeight(user, newsRefreshReqDtoList, highWeight, rowWeight);
     }
 
-    public void addKeywordListWeight(User user, List<String> newsKeywordList, double weight ){
+    public void addKeywordListWeight(User user, List<String> newsKeywordList, double weight){
         userKeywordRepository.incrementKeywordWeight(user, newsKeywordList, weight);
     }
 

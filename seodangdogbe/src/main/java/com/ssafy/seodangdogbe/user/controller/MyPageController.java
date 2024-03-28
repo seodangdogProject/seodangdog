@@ -38,8 +38,7 @@ public class MyPageController {
         resultDto.setAbility(new UserAbilityDto(user.getUserExp()));
         // ability constant
         int attendanceCount = mypageService.getAttendanceCount(user);
-        LocalDateTime joinDate = user.getCreatedAt();
-        long duringDate = ChronoUnit.DAYS.between(joinDate, LocalDateTime.now());
+        long duringDate = ChronoUnit.DAYS.between(user.getCreatedAt(), LocalDateTime.now());
         resultDto.getAbility().setConstantAbility((float) attendanceCount / duringDate);
 
         // badge
@@ -52,6 +51,10 @@ public class MyPageController {
         resultDto.setRecentViewNews(mypageService.getRecentViewNews(user));
         resultDto.setRecentSolvedNews(mypageService.getRecentSolvedNews(user));
 
+        // wordCloud
+        String wordCloud = mypageService.getWordCloud(user.getUserSeq()).block();
+        System.out.println(wordCloud);
+        resultDto.setWordCloudImgUrl(wordCloud.substring(1, wordCloud.length()-1));
 
         return resultDto;
     }

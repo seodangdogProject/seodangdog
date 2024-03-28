@@ -5,13 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Map;
 
 @Getter
-@Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class Quiz {
-    private Question question;
-    private Answer answer;
+@Embeddable
+public class Question {
+    private String questionText;
+    private Map<String, String> choices;
 }

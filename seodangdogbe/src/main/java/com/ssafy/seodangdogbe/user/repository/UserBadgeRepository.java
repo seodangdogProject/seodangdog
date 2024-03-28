@@ -12,4 +12,5 @@ public interface UserBadgeRepository extends JpaRepository<UserBadge, Integer> {
 
     UserBadge findByUserAndBadge(User user, Badge badge);
 
+//    void saveAll(List<UserBadge> userBadges);
 }

@@ -21,6 +21,8 @@ public class MetaNewsDto {
     @ToString
     public static class MetaNewsResponseDto {
 //        private Long newsSeq;   // newsSeq는 mysql에서의 pk
+        @Setter
+        private boolean isSolved;
 
         private String newsTitle;
         private List<String> newsSummary;

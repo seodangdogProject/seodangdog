@@ -1,6 +1,9 @@
 package com.ssafy.seodangdogbe.news.service;
 
 import com.ssafy.seodangdogbe.auth.repository.UserRepository;
+import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshRequestDto;
+import com.ssafy.seodangdogbe.keyword.repository.UserKeywordRepository;
+import com.ssafy.seodangdogbe.news.domain.KeywordNews;
 import com.ssafy.seodangdogbe.news.repository.MetaNewsRepository;
 import com.ssafy.seodangdogbe.news.repository.NewsRepository;
 import com.ssafy.seodangdogbe.news.repository.UserNewsRepository;
@@ -13,6 +16,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.plaf.PanelUI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +33,7 @@ public class NewsService {
     public final NewsRepository newsRepository;
     public final MetaNewsRepository metaNewsRepository;
     public final UserNewsRepository userNewsRepository;
+    public final UserKeywordRepository userKeywordRepository;
 
     // mysql뉴스 조회
     public NewsResponseDto getNewsPreview(Long newsSeq){
@@ -63,7 +69,7 @@ public class NewsService {
             System.out.println("뉴스 원본 데이터 없음.");
             return null;
         }
-        System.out.println("뉴스 미리보기 데이터 없음");
+        System.out.println("뉴스 데이터 없음");
         return null;
     }
 
@@ -140,6 +146,14 @@ public class NewsService {
         int exp = userExp.getSummaryExp();
         userExp.setSummaryExp(exp + 1);
 
+        List<String> keywordList = new ArrayList<>();
+        for (KeywordNews newsKeyword : news.getKeywordNewsList()){
+            keywordList.add(newsKeyword.getKeyword().getKeyword());
+        }
+
+        // 뉴스에 포함된 키워드 가중치 증가
+        userKeywordRepository.incrementKeywordWeight(user, keywordList, 0.99);
+
         System.out.println("사용자 뉴스풀이 저장 성공");
         return true;
     }
@@ -158,9 +172,9 @@ public class NewsService {
 
     // 사용자-뉴스 테이블 저장(최초조회)
     public void setUserNewsInit(int userSeq, Long newsSeq) {
-        // ** 유저나 뉴스가 없는 경우에 대해 예외처리 => .orElseThrow() 사용
-        User user = userRepository.findById(userSeq).get();
-        News news = newsRepository.findByNewsSeq(newsSeq).get();
+        // 유저나 뉴스가 없는 경우에 대해 예외처리 => .orElseThrow() 사용
+        User user = userRepository.findById(userSeq).orElseThrow(NullPointerException::new);
+        News news = newsRepository.findByNewsSeq(newsSeq).orElseThrow(NullPointerException::new);
 
         UserNews initUserNews = new UserNews(user, news);
         userNewsRepository.save(initUserNews);
@@ -181,9 +195,18 @@ public class NewsService {
                 .orElseThrow(() -> new NullPointerException("사용자뉴스가 존재하지 않습니다."));
         UserNewsResponseDto dto = new UserNewsResponseDto(findUserNews.getHighlightList(), findUserNews.getWordList());
         if (findUserNews.isSolved()) {
+            dto.setSolved(true);
             dto.setUserAnswers(findUserNews.getUserAnswerList());
             dto.setUserSummary(findUserNews.getUserSummary());
         }
         return dto;
+    }
+
+    // 사용자-뉴스 기록이 있더라도 조회한 시간 업데이트하기
+    public void ressetUserNewsViewTime(int userSeq, Long newsSeq){
+        UserNews userNews = userNewsRepository
+                .findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq)
+                .orElseThrow(NullPointerException::new);
+        userNewsRepository.save(userNews);
     }
 }

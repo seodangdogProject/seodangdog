@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-public class KorApiDto {
+public class WordApiDto {
 
     /* ============================ 표준국어대사전 검색 api 결과 ============================*/
     @Getter
@@ -42,6 +42,26 @@ public class KorApiDto {
             private String definition;
             private String link;
         }
+    }
+
+
+    /* ============================ 네이버 백과사전 검색 api 결과 ============================*/
+    @Getter
+    @NoArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class EncycApiDto {
+        private int total;
+        private List<ItemDto> items;
+
+        @Getter
+        @NoArgsConstructor
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static class ItemDto {
+            private String title;
+            private String link;
+            private String description;
+        }
+
     }
 
 

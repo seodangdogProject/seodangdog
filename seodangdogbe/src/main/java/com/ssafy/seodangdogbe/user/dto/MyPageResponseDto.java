@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -25,7 +26,7 @@ public class MyPageResponseDto {
     private String badgeImgUrl;
 
 //    private List<LocalDateTime> strictDateList;
-    private List<Integer> streakList;
+    private List<LocalDate> streakList;
 
     private NewsPreviewListDto recentViewNews;
     private NewsPreviewListDto recentSolvedNews;
