@@ -5,6 +5,7 @@ from pymongo import MongoClient
 from fastapi import APIRouter, HTTPException
 from konlpy.tag import Okt
 from PIL import Image
+from wordcloud import WordCloud
 import os
 import sys
 import json
@@ -12,8 +13,6 @@ import time
 import io
 import pymysql
 import boto3
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
 # 사용자 라이브러리 import
 sys.path.append(os.path.abspath('src'))
 from preprocessing.keyword_generate import keyword_generate
@@ -53,7 +52,7 @@ def morph_sep(news_data):
 def save_news():
     print("json 파일 불러오는 중...")
     start_t = time.time()
-    with open('resource/news.json', 'r', encoding="utf8") as f:
+    with open('fast_resources/news.json', 'r', encoding="utf8") as f:
         news_data = json.load(f)
     # news_data = news_data[:10]
 
@@ -74,10 +73,70 @@ def save_news():
     mongoDB["meta_news"].insert_many(news_data)
     return {"message": str(len(news_data)) + " news saved!"}
 
+@router.get("/delete_duplicated_news")
+def delete_duplicated_news():
+    deleted_news_id_list = []
+    deleted_news_oid_list = []
+    deleted_news_index = []
+    # 몽고 DB에서 삭제하기
+    response = mongoDB.meta_news.find({}, {"_id": 1, "news_url":1, "newsKeyword": 1})
+    news_data = json.loads(json_util.dumps(response))
+
+    for i in range(len(news_data)):
+        if i in deleted_news_index: continue
+        target_news = news_data[i]
+        for j in range(len(news_data)):
+            if(i==j): continue
+            compare_news = news_data[j]
+            if(len(set(target_news["newsKeyword"].keys()) & set(compare_news["newsKeyword"].keys())) >= 15):
+                # print("============")
+                # print(target_news["news_url"])
+                # print(target_news["newsKeyword"].keys())
+                # print("----")
+                # print(compare_news["news_url"])
+                # print(compare_news["newsKeyword"].keys())
+                deleted_news_id_list.append(compare_news["_id"]["$oid"])
+                deleted_news_oid_list.append(ObjectId(compare_news["_id"]["$oid"]))
+                deleted_news_index.append(j)
+
+    result = mongoDB.meta_news.delete_many({"_id": {"$in":deleted_news_oid_list}})
+
+
+    mysqlDB = mysql_create_session()
+    cursor = mysqlDB.cursor()
+
+    sql = (f"select news_seq from news where news_access_id in (")
+    cursor.execute(sql)
+    news_seq_list = cursor.fetchall()
+
+    sql = (f"delete from keyword_news where news_seq in (")
+    for news_seq in news_seq_list:
+        sql += f"{news_seq},"
+    sql = sql[:-1] + ");"
+    cursor.execute(sql)
+
+    sql = (f"delete from user_news where news_seq in (")
+    for news_seq in news_seq_list:
+        sql += f"{news_seq},"
+    sql = sql[:-1] + ");"
+    cursor.execute(sql)
+
+    sql = (f"delete from news where news_access_id in (")
+    for news_seq in news_seq_list:
+        sql += f"{news_seq},"
+    sql = sql[:-1] + ");"
+    cursor.execute(sql)
+    mysqlDB.commit()
+    mysqlDB.close()
+
+    # return json.loads(json_util.dumps(result))
+
+
 @router.get("/getNews")
 def getNews():
     response = mongoDB.meta_news.find({}, {"_id": 1, "newsTitle": 1})
     return json.loads(json_util.dumps(response))
+
 
 @router.get("/getNewsAll")
 def getNewsAll():
@@ -133,16 +192,13 @@ def mysql_save():
     cursor.execute(sql)
 
     # 뉴스별 키워드 저장
-    save_keyword_news()
+    save_keyword_news(mysqlDB, cursor)
     mysqlDB.commit()
     mysqlDB.close()
 
 
 @router.get("/keywordNewsSave")
-def save_keyword_news():
-
-    mysqlDB = mysql_create_session()
-    cursor = mysqlDB.cursor()
+def save_keyword_news(cursor):
 
     # mysql에 저장된 뉴스의 seq, oid 조회
     sql = (f"select news_seq, news_access_id from news;")
@@ -169,6 +225,7 @@ def get_wordcloud(user_seq):
     sql = f"select keyword, weight from user_keyword where user_seq = %s order by weight desc;"
     result_cnt = cursor.execute(sql, user_seq)
     sql_result = cursor.fetchall()
+    mysqlDB.close()
 
     if len(sql_result) == 0:
         return HTTPException(status_code=204, detail="Keywords not found")
