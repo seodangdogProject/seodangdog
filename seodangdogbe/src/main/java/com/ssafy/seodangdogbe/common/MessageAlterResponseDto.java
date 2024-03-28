@@ -6,11 +6,11 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MsgResponseDto {
+public class MessageAlterResponseDto {
     private String msg;
     private String alertMsg;
 
-    public MsgResponseDto(String msg) {
+    public MessageAlterResponseDto(String msg) {
         this.msg = msg;
     }
 

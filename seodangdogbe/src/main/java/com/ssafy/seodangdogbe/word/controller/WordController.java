@@ -1,11 +1,10 @@
 package com.ssafy.seodangdogbe.word.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
-import com.ssafy.seodangdogbe.common.MsgResponseDto;
+import com.ssafy.seodangdogbe.common.MessageAlterResponseDto;
 import com.ssafy.seodangdogbe.word.service.WordService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,12 +63,12 @@ public class WordController {
 
     @Operation(description = "사용자단어 테이블에서 단어를 삭제한다.")
 //    @PatchMapping("/myword/{word}")  // or word
-    public ResponseEntity<MsgResponseDto> removeUserWord(@PathVariable("word") String word){
+    public ResponseEntity<MessageAlterResponseDto> removeUserWord(@PathVariable("word") String word){
         int userSeq = userService.getUserSeq();
         if (wordService.setDelete(userSeq, word))
-            return ResponseEntity.ok().body(new MsgResponseDto("정상적으로 삭제되었습니다."));
+            return ResponseEntity.ok().body(new MessageAlterResponseDto("정상적으로 삭제되었습니다."));
         else
-            return ResponseEntity.badRequest().body(new MsgResponseDto("단어 삭제에 실패했습니다."));
+            return ResponseEntity.badRequest().body(new MessageAlterResponseDto("단어 삭제에 실패했습니다."));
     }
 
 }
