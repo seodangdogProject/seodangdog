@@ -2,10 +2,13 @@ package com.ssafy.seodangdogbe.keyword.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.common.MessageResponseDto;
+import com.ssafy.seodangdogbe.keyword.domain.JoinKeyword;
 import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshReqDto;
 import com.ssafy.seodangdogbe.keyword.service.KeywordService;
 import com.ssafy.seodangdogbe.news.service.NewsService;
+import com.ssafy.seodangdogbe.user.domain.Badge;
 import com.ssafy.seodangdogbe.user.domain.User;
+import com.ssafy.seodangdogbe.user.domain.UserBadge;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,10 +38,14 @@ public class KeywordController {
         return ResponseEntity.ok(result);
     }
 
-//    @GetMapping("/join-keyword")
-//    public List<String> getAllKeywords(){
-//        User user = userService.getUser();
-//        List<Join>
-//    }
+    @GetMapping("/join-keyword")
+    public List<String> getAllKeywords(){
+        User user = userService.getUser();
+        List<JoinKeyword> joinKeywords = keywordService.getAllJoinKeywords();
+
+        return joinKeywords.stream()
+                .map(JoinKeyword::getKeyword)
+                .toList();
+    }
 
 }
