@@ -1,40 +1,52 @@
 .container {
   font-family: "Pretendard-Regular";
-  margin: 0 26px;
-  /* flex-grow: 1; */
-  /* padding: 100px 80px; */
-  box-sizing: border-box;
   width: 40%;
+  box-sizing: border-box;
+  padding: 0 30px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
+}
+.summary-container {
+  width: 100%;
+  border-radius: 20px;
+  box-sizing: border-box;
 }
 .naver-summary {
   border-radius: 15px;
   border: 1px solid #a000d8;
   padding: 15px 25px;
+  box-sizing: border-box;
+  height: 230px;
 }
-.naver-title {
+.naver-color {
+  color: green;
+}
+.title {
   display: flex;
   align-items: center;
   font-family: "hambaknoon";
   color: #454545;
   margin-bottom: 10px;
 }
-.naver-title > div:first-child {
+.title > div:first-child {
   margin-right: 10px;
   /* display: flex;
   align-items: center; */
 }
 .content {
   font-family: "NanumMyeongjo";
+  font-weight: bold;
   font-size: 12px;
   line-height: 1.3;
 }
+.user-summary .title img {
+  width: 22px;
+}
 
 .user-summary {
-  box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
   padding: 15px 25px;
+  box-sizing: border-box;
   border-radius: 15px;
   margin-top: 50px;
+  height: 230px;
 }
