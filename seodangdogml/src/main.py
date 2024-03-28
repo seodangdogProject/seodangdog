@@ -21,7 +21,7 @@ from crawling.news_crawling import crawling_main, test
 back_scheduler = BackgroundScheduler(timezone='Asia/Seoul')
 
 
-@back_scheduler.scheduled_job('cron', minute="35", hour="13", id='crawling_cron')
+@back_scheduler.scheduled_job('cron', minute="40", hour="13", id='crawling_cron')
 def scheduled_job():
     print("예정된 스케쥴 시작 : crawling_cron")
     crawling_main()
