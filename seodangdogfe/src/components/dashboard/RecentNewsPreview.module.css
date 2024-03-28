@@ -1,74 +1,75 @@
 .container {
-  width: 100%;
-  height: 100%;
-  /* display: flex;
+    width: 100%;
+    height: 100%;
+    /* display: flex;
   flex-direction: column;
   justify-content: space-between; */
 }
+
 .caption {
-  font-family: "hunminjungum";
-  padding: 5px 0;
-  cursor: pointer;
-  font-size: 0.9rem;
+    font-family: "hunminjungum";
+    padding: 5px 0;
+    cursor: pointer;
+    font-size: 0.9rem;
 }
 .last_seen_container,
 .last_solved_container {
-  height: 45%;
-  box-sizing: border-box;
+    height: 40%;
+    box-sizing: border-box;
 }
 .preview {
-  box-sizing: border-box;
-  /* height: 90%; */
-  height: 80%;
-  border-radius: 15px;
-  display: flex;
-  padding: 10px 20px;
-  position: relative;
-  background-color: #d1c2f2;
+    box-sizing: border-box;
+    /* height: 90%; */
+    height: 80%;
+    border-radius: 15px;
+    display: flex;
+    padding: 10px 20px;
+    position: relative;
+    background-color: #d1c2f2;
 }
 
 .preview img {
-  display: block;
-  margin-right: 12px;
-  box-sizing: border-box;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+    display: block;
+    margin-right: 12px;
+    box-sizing: border-box;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
 }
 
 .body {
-  font-family: "Pretendard-Regular";
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+    font-family: "Pretendard-Regular";
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 .title {
-  font-weight: bold;
-  font-size: 1.2rem;
+    font-weight: bold;
+    font-size: 1.2rem;
 }
 .hashtag {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 .hashtag .item {
-  font-size: 14px;
-  font-weight: bold;
-  padding: 5px 14px;
-  box-sizing: border-box;
-  border-radius: 20px;
-  background-color: #ffda92;
-  color: #4d4d4d;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 14px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    background-color: #ffda92;
+    color: #4d4d4d;
 }
 .date {
-  font-family: "Pretendard-Regular";
-  position: absolute;
-  right: 8px;
-  bottom: 5px;
-  color: #525252;
-  font-size: 13px;
+    font-family: "Pretendard-Regular";
+    position: absolute;
+    right: 8px;
+    bottom: 5px;
+    color: #525252;
+    font-size: 13px;
 }
 .last_solved_container {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 .last_solved_container .preview {
-  background-color: #f1d1a8;
+    background-color: #f1d1a8;
 }
