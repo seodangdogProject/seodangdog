@@ -11,6 +11,8 @@ RUN apt-get -y install wget
 RUN mkdir /code/resource
 RUN wget --no-verbose -O /code/resource/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb
 RUN apt-get install -y /code/resource/chrome.deb
+# 찬영 : 형태소 분리를 위한 jdk를 설치한다.
+RUN sudo apt install default-jdk -y
 
 # pip install 해주기 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
