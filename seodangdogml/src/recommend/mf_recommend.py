@@ -62,7 +62,7 @@ def get_news_title(news_id):
     return news.loc[news_id]['title']
 
 
-def recommend_news(user_seq, mf_model, top_n=5):
+def recommend_news(user_seq, mf_model, top_n=21):
     predicted_ratings = [] # 사용자가 풀지 않은 뉴스만 저장
     predicted_ratings_solved=[] # 사용자가 본 뉴스 저장
     solved_news = select_news_solved(user_seq)
@@ -102,7 +102,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
     print("mf_recommend")
 
     if user_seq in mf.user_id_index:
-        top_n = 10
+        top_n = 21
         recommendations = recommend_news(user_seq, mf, top_n)
 
         # 추천목록화인 start

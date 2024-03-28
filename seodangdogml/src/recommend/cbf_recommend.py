@@ -49,13 +49,14 @@ class NewsDto:
 def renewal_news_data():
     # 현재는 100개의 뉴스에 대해서만 들고온다 -> 추천되는건 rating테이블에 넣는데 너무 많으면 추천이 잘되는지 확인불가
     data = get_news_title_keyword()
+
     result = []
     for doc in data:
-        news_id= str(doc['_id'])
+        news_id = str(doc['_id'])
         news_title = doc.get('newsTitle')
-        news_keyword=doc.get('newsKeyword')
+        news_keyword = doc.get('newsKeyword')
         keyword_str = " ".join(news_keyword.keys())
-        temp ={
+        temp = {
             "news_id": news_id,
             "news_title": news_title,
             "keyword_str": keyword_str
@@ -148,6 +149,7 @@ async def update_rating(recommended_news, user_seq):
 
 
 async def recommend_news(user_seq, news_data, user_keywords, keyword_weights, flag):
+    top_n = 21
     # 뉴스 데이터프레임 생성
     # df_news = pd.DataFrame([[news.title] for news in news_data], columns=['title'])
     tfidf_vectorizer = TfidfVectorizer()
@@ -191,16 +193,16 @@ async def recommend_news(user_seq, news_data, user_keywords, keyword_weights, fl
     recommended_news = filtered_recommendations + solved_recommendations
 
     if flag:
-        top_10_recommended_news = recommended_news[:10]
-        return top_10_recommended_news
+        top_21_recommended_news = recommended_news[:top_n]
+        return top_21_recommended_news
     else:
-        top_20_recommendations = recommended_news[:20]
-        if len(top_20_recommendations) >= 10:
-            next_10_recommendations = top_20_recommendations[10:]
-            return next_10_recommendations
+        top_42_recommendations = recommended_news[:(top_n*2)]
+        if len(top_42_recommendations) >= top_n:
+            next_21_recommendations = top_42_recommendations[top_n:]
+            return next_21_recommendations
         else:
-            top_10_recommended_news = recommended_news[:10]
-            return top_10_recommended_news
+            top_21_recommended_news = recommended_news[:top_n]
+            return top_21_recommended_news
 
 
 # 가중치에 100을 곱한다.

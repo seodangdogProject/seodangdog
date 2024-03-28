@@ -13,6 +13,7 @@ from bson import json_util
 from bson import ObjectId
 
 from repository.news_repository import findNews
+from repository.news_repository import getNewsAll
 
 router = APIRouter()
 
@@ -50,7 +51,7 @@ def find_user(user_seq):
 
 
 # 테스트를 위해 임의의 사용자의 정보를 만든다.
-@router.get('/fast/inset_user')
+# @router.get('/fast/inset_user')
 def insert_user():
     limit = 10
 
@@ -145,7 +146,7 @@ def select_news_id_seq():
         # 연결 종료
         connection.close()
 # 테스트를 위해 뽑아온 키워드들을 모든 사용자에게 부여한다.
-@router.get('/fast/insert_all_user_keyword')
+# @router.get('/fast/insert_all_user_keyword')
 def insert_all_user_keyword():
     print('start -  insert_all_user_keyword')
     limit = 30  # 유저당 넣을 키워드 수
@@ -162,9 +163,16 @@ def insert_all_user_keyword():
 
 # 테스트를 위해 100개의 뉴스에 대하서만 키워드를 가져온다
 def get_keyword_top100news():
-    top_news = findNews(100)
+    # top_news = findNews(100)
+    # top_news = getNewsAll()
+    top_news = select_mongo_news()
     result = set()
     for i in top_news:
+        if not isinstance(i['newsKeyword'], dict):
+            print("not dict ",type(i['newsKeyword']))
+            continue
+        else:
+            print("dict ", type(i['newsKeyword']))
         for k, v in i['newsKeyword'].items():
             result.add(k)
     print(len(result))
@@ -201,7 +209,7 @@ def insert_one_user_keyword(user_seq, keyword, weight):
 
 
 # 컨텐츠 기반추천을 할때 가중치를 가진 키워드와 유사한 키워드가 있는 뉴스추천을 진행한다.
-@router.get('/fast/select_user_keyword/{user_seq}')
+# @router.get('/fast/select_user_keyword/{user_seq}')
 def select_user_keyword(user_seq):
     connection = mysql_create_session()
     try:
@@ -331,6 +339,14 @@ async def async_update_ratings(rating_data):
 # cbf추천을 위해 몽고디비에서 데이터를 들고온다. 뉴스제목, 아이디, 키워드를 들고온다
 def get_news_title_keyword():
     response = client.meta_news.find({}, {"_id": 1, "newsTitle": 1, "newsKeyword": 1}).limit(100)
+    # result = [doc for doc in response]
+
+    if not response:
+        return None
+    return response
+
+def select_mongo_news():
+    response = client.meta_news.find({}, {"_id": 1, "newsTitle": 1, "newsKeyword": 1})
     # result = [doc for doc in response]
 
     if not response:
