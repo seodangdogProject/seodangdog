@@ -1,12 +1,15 @@
 package com.ssafy.seodangdogbe.keyword.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.seodangdogbe.common.MessageResponseDto;
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
+import com.ssafy.seodangdogbe.keyword.dto.InfoDto;
 import com.ssafy.seodangdogbe.keyword.dto.loseWeightFastReqDto;
 import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshReqDto;
 import com.ssafy.seodangdogbe.news.service.FastApiService;
 import com.ssafy.seodangdogbe.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.bson.LazyBSONList;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -30,11 +33,13 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     @Override
     @Transactional
-    public void decrementKeywordWeight(User user, List<NewsRefreshReqDto> newsRefreshReqDtoList, double highWeight, double rowWeight) {
+    public MessageResponseDto decrementKeywordWeight(User user, List<NewsRefreshReqDto> newsRefreshReqDtoList, double highWeight, double rowWeight) {
 
         List<Long> seeNewsSeq = new ArrayList<>();
         List<Long> notSeenNewsSeq = new ArrayList<>();
-        List<loseWeightFastReqDto> loseWeightFastReqDtoList = new ArrayList<>();
+        loseWeightFastReqDto dto = new loseWeightFastReqDto();
+        List<InfoDto> infoDtos = new ArrayList<>();
+
         // 만약 안본 두개의 뉴스의 키워드가 중복된다면 -> 두번 내리는거 맞는지 물어봐야됨
         List<String> seenNewsKeyword = new ArrayList<>();
         List<String> notSeenNewsKeyword = new ArrayList<>();
@@ -48,13 +53,13 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
             if (!exists) { // 존재하지않음 -> 안봄
                 notSeenNewsSeq.add(news.getNewSeq());
-                loseWeightFastReqDtoList.add(new loseWeightFastReqDto(user.getUserSeq(), news.getNewSeq(),  highWeight));
+                infoDtos.add(new InfoDto(news.getNewSeq(), highWeight));
                 for(String str : news.getKeyword()) {
                     notSeenNewsKeyword.add(str);
                 }
             }else { // 존재함 -> 봄
                 seeNewsSeq.add(news.getNewSeq());
-                loseWeightFastReqDtoList.add(new loseWeightFastReqDto(user.getUserSeq(), news.getNewSeq(), rowWeight));
+                infoDtos.add(new InfoDto(news.getNewSeq(), rowWeight));
                 for(String str : news.getKeyword()) {
                     seenNewsKeyword.add(str);
                 }
@@ -75,9 +80,12 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
                 .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(notSeenNewsKeyword))
                 .execute();
 
-        // fastApi로 전송
-        fastApiService.updateWeigth(loseWeightFastReqDtoList);
+        // fast api
+        dto.setUserSeq(user.getUserSeq());
+        dto.setInfo(infoDtos);
 
+        // fastApi로 전송
+        return fastApiService.updateWeigth(dto);
     }
 
     @Override

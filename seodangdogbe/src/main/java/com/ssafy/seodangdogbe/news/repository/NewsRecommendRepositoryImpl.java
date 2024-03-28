@@ -100,14 +100,14 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
 
         queryFactory
                 .update(userKeyword)
-                .set(userKeyword.weight, userKeyword.weight.add(1))
+                .set(userKeyword.weight, userKeyword.weight.add(0.44))
                 .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(alreadyKeyword))
                 .execute();
 
         entityManager.flush();
         entityManager.clear();
 
-        saveAll(user, newKeyword, 3);
+        saveAll(user, newKeyword, 2);
 
         return List.of(new UserRecommendResponseDto(newsPreviewLists));
     }
