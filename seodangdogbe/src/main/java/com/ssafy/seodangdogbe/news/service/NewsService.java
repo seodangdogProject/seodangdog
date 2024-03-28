@@ -69,7 +69,7 @@ public class NewsService {
             System.out.println("뉴스 원본 데이터 없음.");
             return null;
         }
-        System.out.println("뉴스 미리보기 데이터 없음");
+        System.out.println("뉴스 데이터 없음");
         return null;
     }
 
@@ -195,9 +195,18 @@ public class NewsService {
                 .orElseThrow(() -> new NullPointerException("사용자뉴스가 존재하지 않습니다."));
         UserNewsResponseDto dto = new UserNewsResponseDto(findUserNews.getHighlightList(), findUserNews.getWordList());
         if (findUserNews.isSolved()) {
+            dto.setSolved(true);
             dto.setUserAnswers(findUserNews.getUserAnswerList());
             dto.setUserSummary(findUserNews.getUserSummary());
         }
         return dto;
+    }
+
+    // 사용자-뉴스 기록이 있더라도 조회한 시간 업데이트하기
+    public void ressetUserNewsViewTime(int userSeq, Long newsSeq){
+        UserNews userNews = userNewsRepository
+                .findByUserUserSeqAndNewsNewsSeq(userSeq, newsSeq)
+                .orElseThrow(NullPointerException::new);
+        userNewsRepository.save(userNews);
     }
 }

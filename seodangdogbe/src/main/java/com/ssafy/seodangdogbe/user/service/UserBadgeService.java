@@ -5,6 +5,7 @@ import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.domain.UserBadge;
 import com.ssafy.seodangdogbe.user.domain.UserExp;
 import com.ssafy.seodangdogbe.user.dto.BadgeDto;
+import com.ssafy.seodangdogbe.user.dto.UserBadgeDto;
 import com.ssafy.seodangdogbe.user.repository.BadgeRepository;
 import com.ssafy.seodangdogbe.user.repository.UserBadgeRepository;
 import jakarta.transaction.Transactional;
@@ -63,8 +64,7 @@ public class UserBadgeService {
 
         UserExp userExp = user.getUserExp();
         for (Badge badge : badgeList){
-            if (userBadgeList.contains(badge))
-                continue;
+            if (userBadgeList.contains(badge)) continue;
 
             int condition = badge.getBadgeCondition();
             int userCondition = switch (badge.getBadgeName()) {
@@ -82,7 +82,6 @@ public class UserBadgeService {
             }
         }
 
-        // 새로 획득한 뱃지 전달을 어떻게 할 지?
         userBadgeRepository.saveAll(newBadgeList);;
 
         if (!newBadgeList.isEmpty()){
@@ -97,5 +96,17 @@ public class UserBadgeService {
             return sb.toString();
         }
         return null;
+    }
+
+    // 전체뱃지 정보 + 사용자경험치 정보
+    public List<UserBadgeDto> getBadgeInfoAndUserExp(User user) {
+        List<Badge> badgeList = badgeRepository.findAll();
+        List<UserBadgeDto> result = new ArrayList<>();
+
+        for (Badge badge : badgeList){
+            result.add(new UserBadgeDto(user, badge));
+        }
+
+        return result;
     }
 }
