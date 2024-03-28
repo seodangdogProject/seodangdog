@@ -9,6 +9,7 @@ import classNames from "classnames/bind";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "./NewsDetailContainer.module.css";
+import Summary from "@/components/newsDetail/Summary";
 export default function NewsDetailContainer() {
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const cx = classNames.bind(styled);
@@ -21,7 +22,7 @@ export default function NewsDetailContainer() {
   const [quiz_3, setQuiz_3] = useState<any[]>([]);
   const [quizData, setQuizData] = useState<any[]>([]);
   // 0 : 커버페이지 , 1,2,3 : 퀴즈
-  const [currentQuizNumber, setCurrentQuiz] = useState<number>(0);
+  const [currentQuizNumber, setCurrentQuizNumber] = useState<number>(0);
 
   useEffect(() => {
     // 데이터 받아오는 함수 START
@@ -42,19 +43,22 @@ export default function NewsDetailContainer() {
       }
     })();
   }, []);
+
   return (
     <>
       <div className={cx("container")}>
         <div className={cx("detail-container", ["box-shodow-custom"])}>
           <NewsContent keywords={keywords} data={data} />
           {currentQuizNumber === 0 ? (
-            <Cover setCurrentQuiz={setCurrentQuiz} />
-          ) : (
+            <Cover setCurrentQuiz={setCurrentQuizNumber} />
+          ) : currentQuizNumber < 4 ? (
             <Quiz
               currentQuizNumber={currentQuizNumber}
               quizData={quizData}
-              setCurrentQuiz={setCurrentQuiz}
+              setCurrentQuizNumber={setCurrentQuizNumber}
             />
+          ) : (
+            <Summary />
           )}
         </div>
       </div>

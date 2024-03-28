@@ -2,12 +2,12 @@ import { Dispatch, SetStateAction } from "react";
 import styled from "./Quiz.module.css";
 import classNames from "classnames/bind";
 interface Props {
-  setCurrentQuiz: Dispatch<SetStateAction<number>>;
+  setCurrentQuizNumber: Dispatch<SetStateAction<number>>;
   quizData: any[];
   currentQuizNumber: number;
 }
 export default function Quiz({
-  setCurrentQuiz,
+  setCurrentQuizNumber,
   quizData,
   currentQuizNumber,
 }: Props) {
@@ -31,7 +31,10 @@ export default function Quiz({
             ))}
           </ul>
           <div className={cx("btn-container")}>
-            <button className={cx("next-btn")}>
+            <button
+              onClick={() => setCurrentQuizNumber(currentQuizNumber + 1)}
+              className={cx("next-btn")}
+            >
               <div>다음</div>
               <div className={cx("next-icon")}>
                 <img src="/next-icon.svg" alt="" />
