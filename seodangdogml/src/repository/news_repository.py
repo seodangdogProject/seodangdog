@@ -1,6 +1,9 @@
 # 외부 라이브러리 import
+from datetime import datetime
+
 from bson import json_util
 from bson.objectid import ObjectId
+from dateutil.relativedelta import relativedelta
 from pymongo import MongoClient
 from fastapi import APIRouter, HTTPException
 from konlpy.tag import Okt
@@ -29,6 +32,12 @@ def mysql_create_session():
     connection = pymysql.connect(host=settings.MYSQL["host"], port=settings.MYSQL["port"], user=settings.MYSQL["user"], passwd=settings.MYSQL["passwd"], db=settings.MYSQL["db"], charset=settings.MYSQL["charset"])
     return connection
 
+def repo_time_calc(days):
+    now = datetime.now()
+    before_date = now - relativedelta(days=days)
+    before_date_str = before_date.strftime('%Y-%m-%d')
+    return before_date_str
+
 def morph_sep(news_data):
     ### 형태소 분리
     okt = Okt()
@@ -51,10 +60,8 @@ def morph_sep(news_data):
 @router.get("/save_news")
 def save_news():
     print("json 파일 불러오는 중...")
-    start_t = time.time()
     with open('fast_resources/news.json', 'r', encoding="utf8") as f:
         news_data = json.load(f)
-    # news_data = news_data[:10]
 
     # 형태소 저장
     print("형태소 분리 및 저장 중...")
@@ -72,10 +79,6 @@ def save_news():
 
     # MongoDB 저장
     mongoDB["meta_news"].insert_many(news_data)
-
-    # mysql 저장
-    mysql_save(news_data)
-    return {"message" : f"{len(news_data)} news saved!"}
 
 
 def get_unique_news(news_data):
@@ -173,7 +176,8 @@ def findNews(limit):
     return json.loads(json_util.dumps(response))
 
 
-def mysql_save(news_data):
+def mysql_save():
+    news_data = json.loads(json_util.dumps(mongoDB.meta_news.find({"newsCreatedAt" : {"$regex" : f"^{repo_time_calc(1)}"}})))
 
     mysqlDB = mysql_create_session()
     cursor = mysqlDB.cursor()
@@ -213,7 +217,7 @@ def mysql_save(news_data):
     cursor.execute(sql)
 
     # 뉴스별 키워드 저장
-    save_keyword_news(mysqlDB, cursor)
+    save_keyword_news(cursor)
     mysqlDB.commit()
     mysqlDB.close()
 
@@ -222,7 +226,7 @@ def mysql_save(news_data):
 def save_keyword_news(cursor):
 
     # mysql에 저장된 뉴스의 seq, oid 조회
-    sql = (f"select news_seq, news_access_id from news;")
+    sql = (f"select news_seq, news_access_id from news where news_created_at like '{repo_time_calc(1)}%'")
     cursor.execute(sql)
 
     sql = f"insert into keyword_news (keyword, news_seq) values "
@@ -232,7 +236,6 @@ def save_keyword_news(cursor):
         keyword_list = mongo_news["newsKeyword"].keys()
         for keyword in keyword_list:
             sql += f"(\"{keyword}\", \"{mysql_news[0]}\"),\n"
-
 
     sql = sql[:-2] + ";"
     cursor.execute(sql)
