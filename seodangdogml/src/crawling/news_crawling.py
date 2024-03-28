@@ -118,15 +118,17 @@ def file_save(news):
 
 def crawling_main():
     #Part 2. 셀레니움 크롬창 제어
+    service = Service(executable_path="fast_resources/chromedriver")
     options = webdriver.ChromeOptions()
-    options.add_argument("headless")
-    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
     # options.add_argument('start-maximized')	# 크롬 최대화
     # options.add_experimental_option("detach", True) # 크롤링 중인 창 닫지 않고 유지
 
     base_url = "https://news.naver.com"
 
-    main_driver = webdriver.Chrome(options=options)
+    main_driver = webdriver.Chrome(service=service, options=options)
     main_driver.get(base_url+"/main/officeList.naver")
     main_driver.find_element(By.ID, 'groupOfficeList')
 
