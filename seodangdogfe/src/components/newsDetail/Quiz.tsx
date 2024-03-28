@@ -1,37 +1,35 @@
+import { Dispatch, SetStateAction } from "react";
 import styled from "./Quiz.module.css";
 import classNames from "classnames/bind";
-export default function Quiz() {
+interface Props {
+  setCurrentQuiz: Dispatch<SetStateAction<number>>;
+  quizData: any[];
+  currentQuizNumber: number;
+}
+export default function Quiz({
+  setCurrentQuiz,
+  quizData,
+  currentQuizNumber,
+}: Props) {
   const cx = classNames.bind(styled);
   return (
     <>
       <div className={cx("quiz-container")}>
         <div className={cx("quiz-content")}>
           <h4 className={cx("question")}>
-            <div>1.</div>
-            <div>위 기사에서 언급된 “수급상황실”은 무엇을 의미합니까?</div>
+            <div>{currentQuizNumber}. </div>
+            <div>{quizData[currentQuizNumber].question.questionText}</div>
           </h4>
-          <div className={cx("case-container")}>
-            <div className={cx("case")}>
-              <div className={cx("case__number")}>(A)</div>
-              <div className={cx("case__item")}>공급량 조절을 위한 부서</div>
-            </div>
-            <div className={cx("case")}>
-              <div className={cx("case__number")}>(A)</div>
-              <div className={cx("case__item")}>긴급한 재고 확인 장소</div>
-            </div>
-            <div className={cx("case")}>
-              <div className={cx("case__number")}>(A)</div>
-              <div className={cx("case__item")}>
-                물품 수요 및 공급 상활을 모니터링하는 시설
-              </div>
-            </div>
-            <div className={cx("case")}>
-              <div className={cx("case__number")}>(A)</div>
-              <div className={cx("case__item")}>
-                가격 변동에 따른 수요 조절기구
-              </div>
-            </div>
-          </div>
+          <ul className={cx("case-container")}>
+            {Object.entries<string>(
+              quizData[currentQuizNumber].question.choices
+            ).map(([key, value]: [string, string]) => (
+              <li key={key} className={cx("case")}>
+                <div className={cx("case__number")}>({key})</div>
+                <div className={cx("case__item")}>{value}</div>
+              </li>
+            ))}
+          </ul>
           <div className={cx("btn-container")}>
             <button className={cx("next-btn")}>
               <div>다음</div>
