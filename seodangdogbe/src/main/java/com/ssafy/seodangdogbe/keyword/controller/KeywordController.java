@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/keyword")
 @RequiredArgsConstructor
 public class KeywordController {
 
@@ -22,18 +22,23 @@ public class KeywordController {
     public final NewsService newsService;
     public final KeywordService keywordService;
 
-    @PostMapping("/keyword/click")
+    @PostMapping("/click")
     public void addWeight(@RequestBody List<String> keywords){
         User user = userService.getUser();
         keywordService.addKeywordListWeight(user, keywords, 1.28);
     }
 
-    @PostMapping("/keyword/refre")
+    @PostMapping("/refre")
     public ResponseEntity<MessageResponseDto> minusWeight(@RequestBody List<NewsRefreshReqDto> newsRefreshReqDtoList){
-        int userSeq = userService.getUserSeq();
         User user = userService.getUser();
         MessageResponseDto result = keywordService.minusKeywordListWeight(user, newsRefreshReqDtoList, -0.35, -0.2);
         return ResponseEntity.ok(result);
     }
+
+//    @GetMapping("/join-keyword")
+//    public List<String> getAllKeywords(){
+//        User user = userService.getUser();
+//        List<Join>
+//    }
 
 }

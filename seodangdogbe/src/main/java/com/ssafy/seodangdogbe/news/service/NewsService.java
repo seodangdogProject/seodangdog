@@ -172,9 +172,9 @@ public class NewsService {
 
     // 사용자-뉴스 테이블 저장(최초조회)
     public void setUserNewsInit(int userSeq, Long newsSeq) {
-        // ** 유저나 뉴스가 없는 경우에 대해 예외처리 => .orElseThrow() 사용
-        User user = userRepository.findById(userSeq).get();
-        News news = newsRepository.findByNewsSeq(newsSeq).get();
+        // 유저나 뉴스가 없는 경우에 대해 예외처리 => .orElseThrow() 사용
+        User user = userRepository.findById(userSeq).orElseThrow(NullPointerException::new);
+        News news = newsRepository.findByNewsSeq(newsSeq).orElseThrow(NullPointerException::new);
 
         UserNews initUserNews = new UserNews(user, news);
         userNewsRepository.save(initUserNews);

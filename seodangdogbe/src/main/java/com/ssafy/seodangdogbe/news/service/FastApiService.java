@@ -49,7 +49,7 @@ public class FastApiService {
                 .retrieve()
                 .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
                         clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
-                .bodyToMono(MessageResponseDto.class)// 응답값이 뭔지는 왜 안알ㄹ줬노... -> 일단 string
+                .bodyToMono(MessageResponseDto.class)  // 응답값이 뭔지는 왜 안알ㄹ줬노... -> 일단 string
                 .block(); // 동기적 처리로 일단 냅두기
 
     }
