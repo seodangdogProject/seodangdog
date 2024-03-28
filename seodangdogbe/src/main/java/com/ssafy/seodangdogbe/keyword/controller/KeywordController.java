@@ -24,7 +24,6 @@ public class KeywordController {
 
     @PostMapping("/keyword/click")
     public void addWeight(@RequestBody List<String> keywords){
-        int userSeq = userService.getUserSeq();
         User user = userService.getUser();
         keywordService.addKeywordListWeight(user, keywords, 1.28);
     }

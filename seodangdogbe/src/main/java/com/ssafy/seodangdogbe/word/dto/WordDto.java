@@ -7,7 +7,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ssafy.seodangdogbe.word.dto.KorApiDto.*;
+import static com.ssafy.seodangdogbe.word.dto.WordApiDto.*;
 
 public class WordDto {
 
@@ -27,8 +27,6 @@ public class WordDto {
             private String pos;
             private String definition;
             private String link;
-//            private List<WordDetailsDto> details;     // 뜻 하나만 가져오려고했는데, 첫번째 뜻만 가져올거면 리스트로 가져올 필요가 없고, 중복
-//            private List<WordCommDto> comms;          // comm_pattern_info > sense_info > lexical_info 라서 뜻 마다 연관어가 있는게 아니라서 위의 이유로 연관어들을 가져오더라도 몇번째 뜻의 연관어인지 구분할 수 X
 
             // 표준국어대사전 api 결과를 db에 저장하는 용도의 dto
             public WordItemDto(KorApiSearchDto.ItemDto dto){
@@ -36,6 +34,14 @@ public class WordDto {
                 this.pos = dto.getPos();
                 this.definition = dto.getSense().getDefinition();
                 this.link = dto.getSense().getLink();
+            }
+
+            // 네이버 백과사전 api 결과를 db에 저장하는 용도의 dto
+            public WordItemDto(EncycApiDto.ItemDto dto, int idx){
+                this.supNo = idx;
+                this.pos = dto.getTitle();    // 품사 X => 검색결과로 나타나는 단어 반환
+                this.definition = dto.getDescription();
+                this.link = dto.getLink();
             }
 
             // db MetaWord -> MetaWordDto
@@ -60,6 +66,23 @@ public class WordDto {
                 this.items.add(new WordItemDto(item));
             }
         }
+
+
+        // 네이버 백과사전 api 결과를 db에 저장하는 용도의 dto
+        public MetaWordDto(String word, EncycApiDto encycApiDto, String wordLang) {
+            EncycApiDto dto = encycApiDto;
+
+            this.wordLang = wordLang;
+            this.total = dto.getTotal();
+            this.word = word;
+
+            List<EncycApiDto.ItemDto> items = dto.getItems();
+            int idx = 1;
+            for (EncycApiDto.ItemDto item : items){
+                this.items.add(new WordItemDto(item, idx++));
+            }
+        }
+
 
         // db MetaWord -> MetaWordDto
         public MetaWordDto(MetaWord metaWord){

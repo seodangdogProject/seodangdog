@@ -10,12 +10,18 @@ import com.ssafy.seodangdogbe.user.repository.BadgeRepository;
 import com.ssafy.seodangdogbe.user.repository.UserBadgeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,28 +34,24 @@ public class MyPageService {
     public final UserNewsRepository userNewsRepository;
     public final UserNewsRepositoryCustom userNewsRepositoryCustom;
 
+    public final WebClient webClient;
+
     // 출석일 수 조회
     public Integer getAttendanceCount(User user){
          return userNewsRepositoryCustom.countSolvedDate(user);
     }
 
     // 뉴스를 푼 날짜 목록 조회
-    public List<Integer> getSolvedDateRecord(User user) {
+    public List<LocalDate> getSolvedDateRecord(User user) {
         LocalDateTime current = LocalDateTime.now();
         LocalDateTime start = current.minusDays(100);
+
         // 지금으로부터 100일 이내의 푼 내역을 순서대로 가져온다.
         List<LocalDateTime> solvedDateList = userNewsRepositoryCustom.findSolvedDateList(user, start, current);
 
-        // 크기 100의 boolean 배열로 반환
-        Integer[] streaks = new Integer[100];
-        Arrays.fill(streaks, 0);
-
-        for (LocalDateTime solvedDate : solvedDateList){
-            int idx = (int) ChronoUnit.DAYS.between(start, solvedDate);
-            streaks[idx]++;
-        }
-
-        return Arrays.stream(streaks).toList();
+        return solvedDateList.stream()
+                .map(LocalDateTime::toLocalDate)
+                .collect(Collectors.toList());
     }
 
     // 사용자가 가장 최근에 본 뉴스 조회
@@ -63,4 +65,16 @@ public class MyPageService {
         UserNews findRecentSolvedNews = userNewsRepositoryCustom.findRecentSolvedUserNews(user);
         return new NewsPreviewListDto(findRecentSolvedNews.getNews());
     }
+
+    // 사용자 워드클라우드 조회
+    public Mono<String> getWordCloud(int userSeq){
+        return this.webClient.get()
+                .uri("/fast/mypages/wordclouds/{userSeq}", userSeq)
+                .retrieve()
+                .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
+                        clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
+                .bodyToMono(new ParameterizedTypeReference<String>() {
+                });
+    }
+
 }

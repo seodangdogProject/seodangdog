@@ -30,7 +30,7 @@ public class KeywordService {
         return userKeywordRepository.decrementKeywordWeight(user, newsRefreshReqDtoList, highWeight, rowWeight);
     }
 
-    public void addKeywordListWeight(User user, List<String> newsKeywordList, double weight ){
+    public void addKeywordListWeight(User user, List<String> newsKeywordList, double weight){
         userKeywordRepository.incrementKeywordWeight(user, newsKeywordList, weight);
     }
 
