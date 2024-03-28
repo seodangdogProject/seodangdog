@@ -118,7 +118,7 @@ def file_save(news):
 
 def crawling_main():
     #Part 2. 셀레니움 크롬창 제어
-    service = Service(executable_path="resources/chromedriver")
+    service = Service(executable_path="resource/chromedriver")
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
@@ -227,7 +227,7 @@ def crawling_main():
     main_driver.quit()
 
 def test():
-    service = Service(executable_path="fast_resources/chromedriver")
+    service = Service(executable_path="resource/chromedriver")
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
