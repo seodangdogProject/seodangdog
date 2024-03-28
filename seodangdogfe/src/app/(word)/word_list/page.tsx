@@ -119,8 +119,9 @@ const OneWord: React.FC = () => {
 
     const searchKeyword = () => {
         (async () => {
+            console.log(searchText);
             const res = await privateFetch(
-                "/myword/search/prefix?=" + searchText,
+                `/myword/search/prefix?prefix=${searchText}`,
                 "GET"
             );
             if (res.status === 200) {
