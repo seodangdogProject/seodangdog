@@ -1,11 +1,13 @@
 package com.ssafy.seodangdogbe.keyword.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
+import com.ssafy.seodangdogbe.keyword.dto.JoinKeywordDto;
 import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshReqDto;
 import com.ssafy.seodangdogbe.keyword.service.KeywordService;
 import com.ssafy.seodangdogbe.news.service.NewsService;
 import com.ssafy.seodangdogbe.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public class KeywordController {
     public final UserService userService;
     public final NewsService newsService;
     public final KeywordService keywordService;
+
 
     @PostMapping("/keyword") // controller 어떻게 맞추기로 했는 지모루겠어서 둘게욤 ~
     public void addWeight(@RequestBody List<String> keywords){
@@ -33,4 +36,8 @@ public class KeywordController {
         keywordService.minusKeywordListWeight(user, newsRefreshReqDtoList, -0.35, -0.2);
     }
 
+    @GetMapping("/join/keyword")
+    public ResponseEntity<List<JoinKeywordDto>> getAllKeywords() {
+        return ResponseEntity.ok(keywordService.findAllKeywords());
+    }
 }
