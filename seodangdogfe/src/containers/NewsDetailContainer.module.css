@@ -14,6 +14,7 @@
   background-color: #fff;
   padding: 40px 0 35px 60px;
   box-sizing: border-box;
+  position: relative;
 }
 .news-content {
   display: flex;
@@ -45,4 +46,35 @@
   width: 50%;
   object-fit: cover;
   text-align: center;
+}
+
+/* 그리기 툴 css */
+.pentool {
+  position: absolute;
+  width: 43px;
+  height: 201px;
+  border-radius: 20px;
+  left: -20px;
+  top: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.pentool__item {
+  text-align: center;
+  cursor: pointer;
+  width: 60%;
+  padding: 20%;
+}
+.pentool__item:hover {
+  background-color: #73c6c1;
+  border-radius: 8px;
+  color: white;
+}
+.pentool__item img {
+  width: 100%;
 }
