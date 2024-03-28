@@ -27,7 +27,6 @@
     color: rgba(73, 57, 113, 1);
 }
 .main_cotainer {
-    display: flex;
     height: 70%;
     display: flex;
     justify-content: center; /* 수평 가운데 정렬 */

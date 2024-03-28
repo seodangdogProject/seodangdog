@@ -86,17 +86,17 @@ const OneWord: React.FC = () => {
     const handleToggleKo = () => {
         console.log("한글로 변경 버튼");
         setLanguage("ko");
+        setSearchText(" ");
         setEngColor(styles.unselected_toggle_item);
         setKoColor(styles.selected_toggle_item);
-        // setWordList(koWordList);
     };
 
     const handleToggleEng = () => {
         console.log("영어로 변경 버튼");
         setLanguage("eng");
+        setSearchText(" ");
         setEngColor(styles.selected_toggle_item);
         setKoColor(styles.unselected_toggle_item);
-        // setWordList(engWordList);
     };
 
     const deleteWord = (wordSeq: number) => {
@@ -132,7 +132,6 @@ const OneWord: React.FC = () => {
                 console.log("error 발생");
             }
         })();
-        initReq(); // 다시 요청하기
     };
 
     return (
@@ -149,6 +148,7 @@ const OneWord: React.FC = () => {
                     <div className={styles.search_cotinaer}>
                         <input
                             type="text"
+                            value={searchText}
                             className={styles.search_input}
                             onChange={handleSearchInputChange}
                         />
