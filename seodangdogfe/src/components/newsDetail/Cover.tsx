@@ -2,9 +2,9 @@ import { Dispatch, SetStateAction } from "react";
 import styled from "./Cover.module.css";
 import classNames from "classnames/bind";
 interface Props {
-  goNext: Dispatch<SetStateAction<number>>;
+  setCurrentQuiz: Dispatch<SetStateAction<number>>;
 }
-export default function Cover({ goNext }: Props) {
+export default function Cover({ setCurrentQuiz }: Props) {
   const cx = classNames.bind(styled);
   return (
     <>
@@ -13,7 +13,7 @@ export default function Cover({ goNext }: Props) {
           <img
             src="/cover-icon.svg"
             alt="coverPage"
-            onClick={() => goNext((prev) => prev + 1)}
+            onClick={() => setCurrentQuiz(1)}
           />
         </div>
       </div>
