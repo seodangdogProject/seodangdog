@@ -33,6 +33,9 @@ public class UserNewsDto {
     @Getter
     @AllArgsConstructor
     public static class UserNewsResponseDto {
+        @Setter
+        private boolean isSolved = false;
+
         private List<Integer> highlightList = new ArrayList<>();
         private List<Integer> wordList = new ArrayList<>();
         @Setter

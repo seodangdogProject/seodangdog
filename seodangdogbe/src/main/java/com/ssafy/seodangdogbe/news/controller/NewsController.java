@@ -48,6 +48,7 @@ public class NewsController {
             metaNewsResponseDto.setWordList(userRecord.getWordList());
             metaNewsResponseDto.setUserAnswerList(userRecord.getUserAnswers());
             metaNewsResponseDto.setUserSummary(userRecord.getUserSummary());
+            metaNewsResponseDto.setSolved(userRecord.isSolved());
         }
 
         return metaNewsResponseDto;
