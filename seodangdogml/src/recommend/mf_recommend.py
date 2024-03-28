@@ -87,7 +87,9 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
     start_time = time.time()
     print("mf_recommend")
 
+    print(mf.user_id_index)
     if user_seq in mf.user_id_index:
+
         top_n = 21
         recommendations = recommend_news(user_seq, mf, top_n)
         print("mf_recommend finished in", len(recommendations))
@@ -104,9 +106,10 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
 
         # rating에 없는걸 추천받으면 넣는다
         insert_task = asyncio.create_task(insert_rating(recommendations, user_seq))
-
+        print(len(recommendations))
         return recommendations
-    else:
+    # 예외대처(온라인학습으로 했어도 예외발생시 재학습)
+    else:   
         # 방금회원가입했으면(mf 모델에 학습되어 있지 않으면) 추천되지 않는 cbf를 추천하고 mf를 다시 학습시킨다
         print('User not found -> cbf reommend')
         # background_tasks = BackgroundTasks()
@@ -115,12 +118,10 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
 
         start_time = time.time()
         # update_task = asyncio.create_task(train_mf_model())
+
+        # 온라인 학습데이터는 따로 저장할 필요가 없다 -> ratings에 반영하기때문에 재학습시 온라인데이터학습할필요없다.
         multiprocessing_train()
 
-        end_time = time.time()
-        execution_time = end_time - start_time
-
-        print(f"mf 훈련시간: {execution_time} 초")
         return recommended_news
 
 
@@ -142,6 +143,7 @@ async def mf_update(data: UpdateData):
     result = select_user_news_rating(user_seq)
     result = pd.DataFrame(result)
 
+    # 이미 추천된 비율에대가 예측치를 곱해서 온라인학습을시킨다.
     for i in info:
         news_seq = i[0]
         weight = i[1]
@@ -152,10 +154,13 @@ async def mf_update(data: UpdateData):
             print(news_seq, " not exist")
             continue
 
+        # 사용자가 보지 않는 뉴스는(추천할게없어 무작위로 추천받은건 rating이 0이다) update하면 없는 아이템이나 사용자경향을 무작위로 선택한다
+        # 그리고 get_one_prediction이 오는데 그건 0이 아니다
+        # 그렇다고 또 추천받으면? cbf는 업데이트되는데 mf는 안한다
         print(mf.get_one_prediction(user_seq, news_seq))
-
+        print("rating : ", rating['rating'].values[0])
         rating = rating['rating'].values[0] * 5
-
+        print("rating : ", rating)
         online_learning(mf, user_seq, news_seq, rating, weight)
         print(mf.get_one_prediction(user_seq, news_seq))
 
