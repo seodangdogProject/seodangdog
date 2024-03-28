@@ -16,6 +16,7 @@ public class JoinKeyword {
     @Id
     private int joinKeywordSeq;
 
+    @Column(unique = true, nullable = false)
     private String keyword;
 
 }

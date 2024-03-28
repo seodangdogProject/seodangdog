@@ -1,9 +1,7 @@
 package com.ssafy.seodangdogbe.news.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
-import com.ssafy.seodangdogbe.common.MsgResponseDto;
-import com.ssafy.seodangdogbe.keyword.domain.Keyword;
-import com.ssafy.seodangdogbe.keyword.service.KeywordService;
+import com.ssafy.seodangdogbe.common.MessageAlterResponseDto;
 import com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 import com.ssafy.seodangdogbe.news.service.NewsService;
 import com.ssafy.seodangdogbe.user.domain.User;
@@ -57,38 +55,38 @@ public class NewsController {
 
     @Operation(description = "사용자 읽기기록 저장")
     @PatchMapping("/read")
-    public ResponseEntity<MsgResponseDto> setReadRecord(@RequestBody UserNewsReadRequestDto dto){
+    public ResponseEntity<MessageAlterResponseDto> setReadRecord(@RequestBody UserNewsReadRequestDto dto){
         User user = userService.getUser();
 
         if (newsService.setUserNewsRead(user.getUserSeq(), dto)) {
             String alterMsg = userBadgeService.checkNewBadge(user); // 뱃지 획득체크
             if (alterMsg != null){
-                return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("읽기기록 저장 성공", alterMsg));
+                return ResponseEntity.status(HttpStatus.OK).body(new MessageAlterResponseDto("읽기기록 저장 성공", alterMsg));
             }
-            return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("읽기기록 저장 성공"));
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageAlterResponseDto("읽기기록 저장 성공"));
         }
         else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MsgResponseDto("읽기기록 저장 오류"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageAlterResponseDto("읽기기록 저장 오류"));
     }
 
     @Operation(description = "사용자 풀이기록 저장")
     @PatchMapping("/solve")
-    public ResponseEntity<MsgResponseDto> setSolveRecord(@RequestBody UserNewsSolveRequestDto dto){
+    public ResponseEntity<MessageAlterResponseDto> setSolveRecord(@RequestBody UserNewsSolveRequestDto dto){
         User user = userService.getUser();
 
         if (newsService.setUserNewsSolve(user.getUserSeq(), dto)) {
             String alterMsg = userBadgeService.checkNewBadge(user)  ; // 뱃지 획득체크
             if (alterMsg != null){
-                return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("풀이기록 저장 성공", alterMsg));
+                return ResponseEntity.status(HttpStatus.OK).body(new MessageAlterResponseDto("풀이기록 저장 성공", alterMsg));
             }
-            return ResponseEntity.status(HttpStatus.OK).body(new MsgResponseDto("풀이기록 저장 성공"));
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageAlterResponseDto("풀이기록 저장 성공"));
         } else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MsgResponseDto("풀이기록 저장 실패"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageAlterResponseDto("풀이기록 저장 실패"));
     }
 
     @Operation(description = "사용자 단어 스크랩 (단어장에 단어 저장)")
     @PostMapping("/word")
-    public ResponseEntity<MsgResponseDto> setUserWord(@RequestBody WordRequestDto wordDto) throws Exception {
+    public ResponseEntity<MessageAlterResponseDto> setUserWord(@RequestBody WordRequestDto wordDto) throws Exception {
         int userSeq = userService.getUserSeq();
         User user = userService.getUser();
 
@@ -113,18 +111,18 @@ public class NewsController {
             if (userWordDto.isDelete()) {    // 삭제되었다면
                 System.out.println("삭제된 단어입니다.");
                 userWordService.updateUserWordExist(userSeq, word);
-                return ResponseEntity.ok().body(new MsgResponseDto("단어 스크랩 성공"));
+                return ResponseEntity.ok().body(new MessageAlterResponseDto("단어 스크랩 성공"));
             } else {    // 이미 스크랩되어있는 상태라면
                 System.out.println("이미 스크랩 된 상태입니다.");
-                return ResponseEntity.ok().body(new MsgResponseDto("이미 스크랩 되어있는 단어입니다."));
+                return ResponseEntity.ok().body(new MessageAlterResponseDto("이미 스크랩 되어있는 단어입니다."));
             }
         }
 
         // 없다면 사용자단어 테이블에 저장
         if (userWordService.setUserWord(user, word) != null){
-            return ResponseEntity.ok().body(new MsgResponseDto("단어 스크랩 성공"));
+            return ResponseEntity.ok().body(new MessageAlterResponseDto("단어 스크랩 성공"));
         } else {
-            return ResponseEntity.badRequest().body(new MsgResponseDto("단어 스크랩 실패"));
+            return ResponseEntity.badRequest().body(new MessageAlterResponseDto("단어 스크랩 실패"));
         }
     }
 

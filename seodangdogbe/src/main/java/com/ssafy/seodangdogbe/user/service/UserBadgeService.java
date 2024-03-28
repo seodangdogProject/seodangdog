@@ -1,6 +1,5 @@
 package com.ssafy.seodangdogbe.user.service;
 
-import com.ssafy.seodangdogbe.common.MsgResponseDto;
 import com.ssafy.seodangdogbe.user.domain.Badge;
 import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.domain.UserBadge;
@@ -10,13 +9,10 @@ import com.ssafy.seodangdogbe.user.repository.BadgeRepository;
 import com.ssafy.seodangdogbe.user.repository.UserBadgeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
