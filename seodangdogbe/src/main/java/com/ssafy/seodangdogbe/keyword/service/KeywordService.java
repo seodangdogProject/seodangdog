@@ -7,6 +7,7 @@ import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.keyword.dto.JoinKeywordDto;
 import com.ssafy.seodangdogbe.keyword.dto.NewsKeywordDto;
 import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshReqDto;
+import com.ssafy.seodangdogbe.keyword.dto.UserKeywordDto;
 import com.ssafy.seodangdogbe.keyword.repository.JoinKeywordRepository;
 import com.ssafy.seodangdogbe.keyword.repository.JoinKeywordRepositoryCustom;
 import com.ssafy.seodangdogbe.keyword.repository.UserKeywordRepository;
@@ -49,5 +50,9 @@ public class KeywordService {
 
     public List<JoinKeyword> getAllJoinKeywords() {
         return joinKeywordRepository.findAll();
+    }
+
+    public List<UserKeywordDto> getAllUserKeywords(){
+
     }
 }

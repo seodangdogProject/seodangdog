@@ -57,12 +57,16 @@ public class MyPageService {
     // 사용자가 가장 최근에 본 뉴스 조회
     public NewsPreviewListDto getRecentViewNews(User user){
         UserNews findRecentViewNews = userNewsRepositoryCustom.findRecentViewUserNews(user);
+        if (findRecentViewNews == null)
+            return null;
         return new NewsPreviewListDto(findRecentViewNews.getNews());
     }
 
     // 사용자가 가장 최근에 푼 뉴스 조회
     public NewsPreviewListDto getRecentSolvedNews(User user){
         UserNews findRecentSolvedNews = userNewsRepositoryCustom.findRecentSolvedUserNews(user);
+        if (findRecentSolvedNews == null)
+            return null;
         return new NewsPreviewListDto(findRecentSolvedNews.getNews());
     }
 
