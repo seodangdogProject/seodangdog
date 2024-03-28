@@ -54,7 +54,6 @@ def headline_objector(headline_html):
     headline["pressName"] = headline_html.select_one("span.writing").text.strip()
     headline["url"] = headline_html.select("a")[-1]["href"]
 
-    # print(headline)
     return headline
 
 def news_objector(driver, headline_html, options):
