@@ -8,7 +8,6 @@ import os
 import time
 import multiprocessing
 
-
 router = APIRouter()
 
 @router.get('/fast/mf_recom/train')
@@ -21,6 +20,24 @@ def multiprocessing_train():
     process.start()
 
     return {"msg": "Training started."}
+
+
+def save_mf(model):
+    base_src = './recommend'
+    model_name = 'mf_online.pkl'
+    save_path = os.path.join(base_src, model_name)
+    with open(save_path, 'wb') as f:
+        pickle.dump(model, f)
+
+
+def load_mf():
+    base_src = './recommend'
+    model_name = 'mf_online.pkl'
+    save_path = os.path.join(base_src, model_name)
+    with open(save_path, 'rb') as f:
+        model = pickle.load(f)
+    return model
+
 
 def train_mf_model():
 
@@ -48,7 +65,7 @@ def train_mf_model():
         'alpha': 0.001,
         'beta': 0.02,
         'iterations': 3900,
-        'verbose': False
+        'verbose': True
     }
 
     mf = NEW_MF(R_temp, hyper_params)
@@ -78,23 +95,9 @@ def train_mf_model():
     # 학습을 통해 최적의 K값 찾기 end
 
     save_mf(mf)
+    print(mf.user_id_index)
+    print('모델저장완료')
 
-
-def save_mf(model):
-    base_src = './recommend'
-    model_name = 'mf_online.pkl'
-    save_path = os.path.join(base_src, model_name)
-    with open(save_path, 'wb') as f:
-        pickle.dump(model, f)
-
-
-def load_mf():
-    base_src = './recommend'
-    model_name = 'mf_online.pkl'
-    save_path = os.path.join(base_src, model_name)
-    with open(save_path, 'rb') as f:
-        model = pickle.load(f)
-    return model
 
 
 # 변수로 넘어온 user_seq, news_seq는 인덱스(0부터)로 변환해서 학습을 시켜야한다.
