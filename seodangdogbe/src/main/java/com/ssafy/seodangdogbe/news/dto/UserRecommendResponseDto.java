@@ -12,7 +12,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class UserRecommendResponseDto {
-
     private List<NewsPreviewListDto> newsPreviewList;
 
 }

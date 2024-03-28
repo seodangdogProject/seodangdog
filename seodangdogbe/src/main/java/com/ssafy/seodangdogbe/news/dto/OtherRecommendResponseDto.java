@@ -9,6 +9,5 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class OtherRecommendResponseDto {
-
     private List<NewsPreviewListDto> newsPreviewList;
 }
