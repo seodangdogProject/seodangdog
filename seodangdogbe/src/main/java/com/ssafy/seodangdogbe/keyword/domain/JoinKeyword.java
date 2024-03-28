@@ -1,10 +1,6 @@
 package com.ssafy.seodangdogbe.keyword.domain;
 
-<<<<<<< HEAD
-
-=======
 import jakarta.persistence.Column;
->>>>>>> 20d6739a7a8646ef8a7fde4e7fbcb10f7bb59cea
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
