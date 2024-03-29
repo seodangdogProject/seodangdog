@@ -24,7 +24,7 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final WordMeanService wordMeanService;
-    private UserService userService;
+    private final UserService userService;
     @Autowired
     public GameService(GameRepository gameRepository, WordMeanService wordMeanService, UserService userService) {
         this.gameRepository = gameRepository;
