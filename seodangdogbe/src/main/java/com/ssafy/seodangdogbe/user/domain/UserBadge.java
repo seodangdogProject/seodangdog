@@ -12,6 +12,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "user_badge",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_seq", "badge_seq"})})
 public class UserBadge extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +24,7 @@ public class UserBadge extends BaseTimeEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "badge_seq")
+    @JoinColumn(name = "badge_seq", columnDefinition = "1")
     private Badge badge;
 
     public UserBadge(User user, Badge badge) {

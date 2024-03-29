@@ -9,6 +9,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(name = "user_media",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_seq", "media_code"})})
 public class UserMedia {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
