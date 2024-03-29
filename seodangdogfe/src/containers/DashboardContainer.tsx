@@ -8,7 +8,7 @@ import Strict from "@/components/strict/strict";
 import Chart from "@/components/chart/chart";
 import WordCloud from "@/components/wordCloud/wordCloud";
 import { privateFetch } from "@/utils/http-commons";
-import { mypageState } from "@/atoms/userRecoil";
+import { mypageState, nicknameState } from "@/atoms/userRecoil";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { MyPageDto } from "@/atoms/type";
 
@@ -19,6 +19,8 @@ function State() {
 export default function DashboardContainer() {
     const mypageDto = useRecoilValue<MyPageDto | null>(mypageState);
     const setMyPageDto = useSetRecoilState(mypageState);
+    const usernickname = useRecoilValue<string | null>(nicknameState);
+    const setUserNickname = useSetRecoilState(nicknameState);
 
     useEffect(() => {
         // 데이터 받아오는 함수 START
@@ -29,6 +31,7 @@ export default function DashboardContainer() {
                 console.log(data);
                 console.log(data.streakList);
                 setMyPageDto(data);
+                setUserNickname(data.nickname);
             } else {
                 console.log("error 발생");
             }
@@ -51,7 +54,7 @@ export default function DashboardContainer() {
                             <div className={styled.title}>Info</div>
                             <div className={cx("user", ["box-shodow-custom"])}>
                                 <UserCard
-                                    nickname={mypageDto?.nickname}
+                                    nickname={usernickname!}
                                     userId={mypageDto?.userId}
                                     userBadgeNewsList={mypageDto?.userBadgeList}
                                     badgeImgUrl={mypageDto?.badgeImgUrl}

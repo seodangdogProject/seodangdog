@@ -15,3 +15,8 @@ export const mypageState = atom({
     key: "mypageState",
     default: null,
 });
+
+export const nicknameState = atom({
+    key: "nicknameState",
+    default: null,
+});

@@ -23,7 +23,14 @@ const RecentNewsPreview = (props: newsProps) => {
                                 props.seenNewsthumbnail?.newsCreatedAt || ""
                             )}
                         </div>
-                        <img src={props.seenNewsthumbnail?.newsImgUrl} alt="" />
+                        <img
+                            src={
+                                props.seenNewsthumbnail?.newsImgUrl == "None"
+                                    ? "/images/default-news-image.jpg"
+                                    : props.seenNewsthumbnail?.newsImgUrl
+                            }
+                            alt=""
+                        />
                         <div className={styled.body}>
                             <h4 className={styled.title}>
                                 {props.seenNewsthumbnail?.newsTitle}
@@ -56,7 +63,11 @@ const RecentNewsPreview = (props: newsProps) => {
                             )}
                         </div>
                         <img
-                            src={props.solvedNewsthumbnail?.newsImgUrl}
+                            src={
+                                props.solvedNewsthumbnail?.newsImgUrl == "None"
+                                    ? "/images/default-news-image.jpg"
+                                    : props.solvedNewsthumbnail?.newsImgUrl
+                            }
                             alt=""
                         />
                         <div className={styled.body}>
