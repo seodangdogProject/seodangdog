@@ -9,6 +9,7 @@ import com.ssafy.seodangdogbe.jwt.JWTProvider;
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.user.domain.Badge;
 import com.ssafy.seodangdogbe.user.domain.User;
+import com.ssafy.seodangdogbe.user.dto.UserNicknameModifyReqDto;
 import com.ssafy.seodangdogbe.user.repository.BadgeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
@@ -26,6 +29,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
+
     private final UserRepository userRepository;
     private  final UserKeywordRepository userKeywordRepository;
     private final PasswordEncoder passwordEncoder;
@@ -65,6 +69,13 @@ public class UserService {
         return user.getUserSeq();
     }
 
+    @Transactional
+    public void modifyNickname( UserNicknameModifyReqDto dto){
+        User user = getUser();
+        System.out.println(dto.getNickname());
+        user.setNickname(dto.getNickname());
+    }
+
     public JWT login(ReqUserLoginDto reqUserLoginDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -88,6 +99,9 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
         return user.getUserSeq();
     }
+
+
+
 
     // 회원 seq로 회원 조회
     public User getUser(){

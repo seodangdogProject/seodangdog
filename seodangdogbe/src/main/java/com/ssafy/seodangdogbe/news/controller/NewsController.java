@@ -2,6 +2,7 @@ package com.ssafy.seodangdogbe.news.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.common.MessageAlterResponseDto;
+import com.ssafy.seodangdogbe.keyword.service.KeywordService;
 import com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 import com.ssafy.seodangdogbe.news.service.NewsService;
 import com.ssafy.seodangdogbe.user.domain.User;
@@ -18,6 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.ssafy.seodangdogbe.news.dto.MetaNewsDto.*;
 
 @RestController
@@ -28,22 +32,26 @@ public class NewsController {
     public final NewsService newsService;
     public final UserService userService;
     public final WordService wordService;
+    public final KeywordService keywordService;
+
     public final UserWordService userWordService;
     public final UserBadgeService userBadgeService;
 
     @Operation(description = "newsSeq(mysql pk)로 mongodb에 있는 뉴스 본문 조회")
     @GetMapping("/{newsSeq}")
     public MetaNewsResponseDto getNewsDetails(@PathVariable(name = "newsSeq") Long newsSeq){
-        // 로그인한 사용자 jwt에서 userSeq를 가져오기
-        int userSeq = userService.getUserSeq();
+        // 로그인한 사용자 jwt에서 user가져오기
+       User user = userService.getUser();
 
         MetaNewsResponseDto metaNewsResponseDto = newsService.getNewsDetailsByNewsSeq(newsSeq);
+        List<String> newsKeywordList = new ArrayList<>(metaNewsResponseDto.getNewsKeyword().keySet());
 
-        if (!newsService.getUserNewsExist(userSeq, newsSeq)){    // 사용자-뉴스 테이블에 기록이 없을 경우(최초접근 데이터 넣기)
-            newsService.setUserNewsInit(userSeq, newsSeq);
-
+        if (!newsService.getUserNewsExist(user.getUserSeq(), newsSeq)){    // 사용자-뉴스 테이블에 기록이 없을 경우 (최초접근 데이터 넣기)
+            keywordService.addKeywordListWeight(user, newsKeywordList, 1.28);
+            newsService.setUserNewsInit(user.getUserSeq(), newsSeq);
         } else {    // 사용자-뉴스 접근기록이 있는 경우
-            UserNewsResponseDto userRecord = newsService.getReadOrSolveRecord(userSeq, newsSeq);
+            keywordService.addKeywordListWeight(user, newsKeywordList, 0.33);
+            UserNewsResponseDto userRecord = newsService.getReadOrSolveRecord(user.getUserSeq(), newsSeq);
             metaNewsResponseDto.setHighlightList(userRecord.getHighlightList());
             metaNewsResponseDto.setWordList(userRecord.getWordList());
             metaNewsResponseDto.setUserAnswerList(userRecord.getUserAnswers());
@@ -126,9 +134,5 @@ public class NewsController {
             return ResponseEntity.badRequest().body(new MessageAlterResponseDto("단어 스크랩 실패"));
         }
     }
-
-
-
-
 
 }

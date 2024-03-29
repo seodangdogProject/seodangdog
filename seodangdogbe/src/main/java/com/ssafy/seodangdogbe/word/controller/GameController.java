@@ -41,8 +41,7 @@ public class GameController {
     public ResponseEntity<MessageAlterResponseDto> processGameResult(@RequestBody GameResultRequestDto requestDto) {
         User user = userService.getUser();
 
-//        gameService.deleteWords(requestDto);
-        gameService.deleteWords(user.getUserSeq(), requestDto);
+        gameService.deleteWords(user, requestDto);
 
         String alterMsg = userBadgeService.checkNewBadge(user); // 뱃지 획득체크
         if (alterMsg != null){
