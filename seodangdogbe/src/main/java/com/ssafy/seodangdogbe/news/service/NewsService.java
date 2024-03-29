@@ -146,6 +146,7 @@ public class NewsService {
         int exp = userExp.getSummaryExp();
         userExp.setSummaryExp(exp + 1);
 
+        // ** 뉴스 키워드 리스트 -> 가중치를 증가시킬 키워드 리스트로 변환
         List<String> keywordList = new ArrayList<>();
         for (KeywordNews newsKeyword : news.getKeywordNewsList()){
             keywordList.add(newsKeyword.getKeyword().getKeyword());

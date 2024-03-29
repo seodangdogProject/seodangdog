@@ -32,7 +32,7 @@ public class User extends BaseTimeEntity {
 
     // 사용자 대표 뱃지
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "badge_seq", columnDefinition = "int default 1")
+    @JoinColumn(name = "badge_seq")
     private Badge badge;
 
     @Column(length = 15, unique = true)
