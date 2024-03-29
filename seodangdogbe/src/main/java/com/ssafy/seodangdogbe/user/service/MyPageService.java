@@ -70,7 +70,7 @@ public class MyPageService {
         return new NewsPreviewListDto(findRecentSolvedNews.getNews());
     }
 
-    // 사용자 워드클라우드 조회
+    // 사용자 워드클라우드 fastAPI 조회
     public Mono<String> getWordCloud(int userSeq){
         return this.webClient.get()
                 .uri("/fast/mypages/wordclouds/{userSeq}", userSeq)

@@ -46,14 +46,4 @@ public class KeywordController {
     }
 
 
-//    @GetMapping("/join-keyword")
-//    public List<String> getAllKeywords(){
-//        User user = userService.getUser();
-//        List<JoinKeyword> joinKeywords = keywordService.getAllJoinKeywords();
-//
-//        return joinKeywords.stream()
-//                .map(JoinKeyword::getKeyword)
-//                .toList();
-//    }
-
 }

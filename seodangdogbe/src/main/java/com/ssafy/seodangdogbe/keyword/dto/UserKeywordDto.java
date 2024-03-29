@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserKeywordDto {
-    private String keyword;
-    private float weight;
-
+    private String text;
+    private float value;
 }

@@ -1,6 +1,5 @@
 package com.ssafy.seodangdogbe.user.dto;
 
-import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.keyword.dto.UserKeywordDto;
 import com.ssafy.seodangdogbe.news.dto.NewsPreviewListDto;
 import com.ssafy.seodangdogbe.user.domain.User;
@@ -23,20 +22,17 @@ public class MyPageResponseDto {
 
     private UserAbilityDto ability;
 
-    private String wordCloudImgUrl;
-
     private List<BadgeDto> userBadgeList;
     private String badgeImgUrl;
 
     private List<LocalDate> streakList;
-    private List<Integer> streakCntList;
+//    private List<Integer> streakCntList;
 
     private NewsPreviewListDto recentViewNews;
     private NewsPreviewListDto recentSolvedNews;
 
-    private List<UserKeywordDto> userKeywordList;
+    private List<UserKeywordDto> wordCloudKeywords;
 
-    //newsSeq, newsImgUrl, newsTitle, newsDescription, newsCreatedAt, newsKeyword;
 
     @Getter
     @Setter

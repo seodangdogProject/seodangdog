@@ -1,6 +1,9 @@
 package com.ssafy.seodangdogbe.user.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
+import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
+import com.ssafy.seodangdogbe.keyword.dto.UserKeywordDto;
+import com.ssafy.seodangdogbe.keyword.service.KeywordService;
 import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.dto.MyPageResponseDto;
 import com.ssafy.seodangdogbe.user.service.MyPageService;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static com.ssafy.seodangdogbe.user.dto.MyPageResponseDto.*;
 
@@ -25,6 +29,7 @@ import static com.ssafy.seodangdogbe.user.dto.MyPageResponseDto.*;
 public class MyPageController {
 
     public final UserService userService;
+    public final KeywordService keywordService;
     public final MyPageService mypageService;
     public final UserBadgeService userBadgeService;
 
@@ -56,11 +61,8 @@ public class MyPageController {
         resultDto.setRecentSolvedNews(mypageService.getRecentSolvedNews(user));
 
         // wordCloud
-//        String wordCloud = mypageService.getWordCloud(user.getUserSeq()).block();
-//        resultDto.setWordCloudImgUrl(wordCloud.substring(1, wordCloud.length()-1));
-
-        boolean keywords;
-        resultDto.setUserKeywordList(List<String> keywords);
+        List<UserKeywordDto> userKeywords = keywordService.getWordCloudKeywords(user);
+        resultDto.setWordCloudKeywords(userKeywords);
 
         return resultDto;
     }

@@ -48,11 +48,10 @@ public class KeywordService {
                 .collect(Collectors.toList());
     }
 
-    public List<JoinKeyword> getAllJoinKeywords() {
-        return joinKeywordRepository.findAll();
+    public List<UserKeywordDto> getWordCloudKeywords(User user) {
+        return userKeywordRepository.getWordCloudUserKeyword(user).stream()
+                .map(entity -> new UserKeywordDto(entity.getKeyword().getKeyword(), entity.getWeight().floatValue()))
+                .collect(Collectors.toList());
     }
 
-    public List<UserKeywordDto> getAllUserKeywords(){
-
-    }
 }
