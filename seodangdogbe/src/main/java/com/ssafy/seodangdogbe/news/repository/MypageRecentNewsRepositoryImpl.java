@@ -33,7 +33,7 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
                 .join(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq))
                 .where(QUserNews.userNews.isSolved.eq(true))
                 .orderBy(QNews.news.createdAt.desc())
-                .limit(50)
+                .limit(20)
                 .fetch();
 
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
@@ -41,6 +41,7 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
 
+            String mediaImgUrl = news.getMedia().getMediaImgUrl();
             return new NewsPreviewListDto(
                     news.getNewsSeq(),
                     news.getNewsImgUrl(),
@@ -48,6 +49,7 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    mediaImgUrl,
                     keywords
             );
         }).collect(Collectors.toList());
@@ -63,14 +65,14 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
                 .join(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq))
                 .where(QUserNews.userNews.isSolved.eq(false))
                 .orderBy(QNews.news.createdAt.desc())
-                .limit(50)
+                .limit(20)
                 .fetch();
 
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
             List<String> keywords = news.getKeywordNewsList().stream()
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
-
+            String mediaImgUrl = news.getMedia().getMediaImgUrl();
             return new NewsPreviewListDto(
                     news.getNewsSeq(),
                     news.getNewsImgUrl(),
@@ -78,6 +80,7 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    mediaImgUrl,
                     keywords
             );
         }).collect(Collectors.toList());

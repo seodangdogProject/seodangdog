@@ -73,6 +73,8 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 reqKeywords.add(keyword);
             }
 
+            String mediaImgUrl = news.getMedia().getMediaImgUrl();
+
             return new NewsPreviewListDto(
                     news.getNewsSeq(),
                     news.getNewsImgUrl(),
@@ -80,6 +82,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    mediaImgUrl,
                     keywords
             );
         }).collect(Collectors.toList());
@@ -129,7 +132,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
             List<String> keywords = news.getKeywordNewsList().stream()
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
-
+            String mediaImgUrl = news.getMedia().getMediaImgUrl();
             return new NewsPreviewListDto(
                     news.getNewsSeq(),
                     news.getNewsImgUrl(),
@@ -137,6 +140,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    mediaImgUrl,
                     keywords
             );
         }).collect(Collectors.toList());
@@ -158,7 +162,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
             List<String> keywords = news.getKeywordNewsList().stream()
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
-
+            String mediaImgUrl = news.getMedia().getMediaImgUrl();
             return new NewsPreviewListDto(
                     news.getNewsSeq(),
                     news.getNewsImgUrl(),
@@ -166,6 +170,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    mediaImgUrl,
                     keywords
             );
         }).collect(Collectors.toList());
@@ -186,7 +191,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
             List<String> keywords = news.getKeywordNewsList().stream()
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
-
+            String mediaImgUrl = news.getMedia().getMediaImgUrl();
             return new NewsPreviewListDto(
                     news.getNewsSeq(),
                     news.getNewsImgUrl(),
@@ -194,6 +199,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    mediaImgUrl,
                     keywords
             );
         }).collect(Collectors.toList());
