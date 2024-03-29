@@ -208,7 +208,8 @@ async def recommend_news(user_seq, user_keywords, keyword_weights, flag):
         else:
             solved_recommendations.append((news_data[i]['news_id'], news_data[i]['news_title'], similarities[0][i]))
 
-    recommended_news = filtered_recommendations + solved_recommendations
+    recommended_news = filtered_recommendations
+    # + solved_recommendations)
 
     if flag:
         top_21_recommended_news = recommended_news[:top_n]

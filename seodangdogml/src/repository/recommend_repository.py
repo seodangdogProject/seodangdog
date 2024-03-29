@@ -442,7 +442,7 @@ def select_news_solved(user_seq):
         # 트랜잭션과 유사 -> 해당 블록내부는 하나의 트랜잭션으로 간주
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             # 파라미터를 사용한 쿼리 실행
-            sql = "select news_seq, is_solved from user_news where user_seq=%s AND is_solved = True"
+            sql = "select news_seq, is_solved from user_news where user_seq=%s"
             cursor.execute(sql, user_seq)
             result = cursor.fetchall()
             return result
