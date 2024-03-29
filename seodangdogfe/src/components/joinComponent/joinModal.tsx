@@ -55,10 +55,30 @@ function Modal({
   }
 
   // 회원가입버튼 클릭시 처리하는 로직
-  function registHandler() {
-    const keywordIdList = data.map((item) => item.id);
-    publicFetch("/join", "GET");
-  }
+  const registHandler = async () => {
+    const userId = idEl.current ? idEl.current.value : "";
+    const password = passwordEl.current ? passwordEl.current.value : "";
+    const nickname = nicknameEl.current ? nicknameEl.current.value : "";
+    const keywords = data.map((item) => item.keyword);
+
+    try {
+      const response = await publicFetch("/join", "POST", {
+        userId,
+        password,
+        nickname,
+        keywords,
+      });
+
+      if (response.ok) {
+        console.log("회원가입 성공");
+        onClickToggleModal();
+      } else {
+        console.error("회원가입 실패");
+      }
+    } catch (error) {
+      console.error("회원가입 중 에러 발생:", error);
+    }
+  };
 
   return (
     <>
@@ -128,8 +148,10 @@ function Modal({
             Sign up
           </button>
         </div> */}
-        <Link href="/landing" className={styles.login_button_container}>
-          <button className={styles.login_button}>Sign up</button>
+        <Link href="/" className={styles.login_button_container}>
+          <button onClick={registHandler} className={styles.login_button}>
+            Sign up
+          </button>
         </Link>
         <div className={styles.footer}>
           select : {data.length}
