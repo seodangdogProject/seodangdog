@@ -8,6 +8,8 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
+@Table(name = "keyword_news",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"news_seq", "keyword"})})
 public class KeywordNews extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
