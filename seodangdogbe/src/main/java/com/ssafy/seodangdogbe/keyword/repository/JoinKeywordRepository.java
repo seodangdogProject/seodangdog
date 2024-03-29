@@ -8,8 +8,3 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JoinKeywordRepository extends JpaRepository<JoinKeyword, Long>, JoinKeywordRepositoryCustom {
 }
-//import org.springframework.data.jpa.repository.JpaRepository;
-//
-//public interface JoinKeywordRepository extends JpaRepository<JoinKeyword, Integer> {
-//
-//}

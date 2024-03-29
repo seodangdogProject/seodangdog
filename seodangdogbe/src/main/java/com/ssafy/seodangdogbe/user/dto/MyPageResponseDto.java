@@ -1,6 +1,8 @@
 package com.ssafy.seodangdogbe.user.dto;
 
+import com.ssafy.seodangdogbe.keyword.dto.UserKeywordDto;
 import com.ssafy.seodangdogbe.news.dto.NewsPreviewListDto;
+import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.domain.UserExp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,28 +22,27 @@ public class MyPageResponseDto {
 
     private UserAbilityDto ability;
 
-    private String wordCloudImgUrl;
-
     private List<BadgeDto> userBadgeList;
     private String badgeImgUrl;
 
-//    private List<LocalDateTime> strictDateList;
     private List<LocalDate> streakList;
+//    private List<Integer> streakCntList;
 
     private NewsPreviewListDto recentViewNews;
     private NewsPreviewListDto recentSolvedNews;
 
-    //newsSeq, newsImgUrl, newsTitle, newsDescription, newsCreatedAt, newsKeyword;
+    private List<UserKeywordDto> wordCloudKeywords;
+
 
     @Getter
     @Setter
     @NoArgsConstructor
     public static class UserAbilityDto {
-        private float wordAbility;        // 어휘 / 푼 뉴스 수
-        private float inferenceAbility;   // 추론 / 푼 뉴스 수
-        private float judgementAbility;   // 판단 / 푼 뉴스 수
-        private float summaryAbility;     // 푼 뉴스 / 본 뉴스
-        private float constantAbility;    // ** 스트릭 날짜 수 / 가입일자로부터 현재까지
+        private float wordAbility = 0;        // 어휘 / 푼 뉴스 수
+        private float inferenceAbility = 0;   // 추론 / 푼 뉴스 수
+        private float judgementAbility = 0;   // 판단 / 푼 뉴스 수
+        private float summaryAbility = 0;     // 푼 뉴스 / 본 뉴스
+        private float constantAbility = 0;    // ** 스트릭 날짜 수 / 가입일자로부터 현재까지
 
         /*
             newExp: 본 뉴스 수
@@ -51,7 +52,8 @@ public class MyPageResponseDto {
             summaryExp: 요약 제출 개수 (= 푼 뉴스 수)
          */
 
-        public UserAbilityDto(UserExp userExp){
+        public UserAbilityDto(User user){
+            UserExp userExp = user.getUserExp();
             this.wordAbility = (float) userExp.getWordExp() / userExp.getSummaryExp();
             this.inferenceAbility = (float) userExp.getInferenceExp() / userExp.getSummaryExp();
             this.judgementAbility = (float) userExp.getJudgementExp() / userExp.getSummaryExp();
