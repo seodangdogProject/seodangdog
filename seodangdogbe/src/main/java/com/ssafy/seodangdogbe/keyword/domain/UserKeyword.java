@@ -10,8 +10,9 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
+@Table(name = "user_keyword",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_seq", "keyword"})})
 public class UserKeyword extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

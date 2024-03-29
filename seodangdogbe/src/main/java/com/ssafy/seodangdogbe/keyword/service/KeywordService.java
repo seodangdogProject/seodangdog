@@ -33,11 +33,12 @@ public class KeywordService {
     private final JoinKeywordRepository joinKeywordRepository;
 
 
-    // 클릭 시 해당 뉴스 키워드 증가
+    // 새로고침 시 뉴스 키워드 감소
     public MessageResponseDto minusKeywordListWeight(User user, List<NewsRefreshReqDto> newsRefreshReqDtoList, double highWeight, double rowWeight){
         return userKeywordRepository.decrementKeywordWeight(user, newsRefreshReqDtoList, highWeight, rowWeight);
     }
 
+    // 클릭 시 해당 뉴스 키워드 증가
     public void addKeywordListWeight(User user, List<String> newsKeywordList, double weight){
         userKeywordRepository.incrementKeywordWeight(user, newsKeywordList, weight);
     }

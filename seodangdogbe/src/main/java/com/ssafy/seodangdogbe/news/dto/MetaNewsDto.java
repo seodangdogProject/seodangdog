@@ -41,6 +41,7 @@ public class MetaNewsDto {
 
         private List<Quiz> newsQuiz;
 
+
         // 뉴스 풀이 기록
         @Setter
         private List<Integer> highlightList;
@@ -63,6 +64,7 @@ public class MetaNewsDto {
             this.newsPos = metaNews.getNewsPos();
             this.newsKeyword = metaNews.getNewsKeyword();
             this.newsSummaryKeyword = metaNews.getNewsSummaryKeyword();
+            this.newsQuiz = metaNews.getNewsQuiz();
         }
 
     }

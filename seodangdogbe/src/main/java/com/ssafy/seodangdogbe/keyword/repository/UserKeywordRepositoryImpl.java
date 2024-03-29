@@ -34,7 +34,6 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     @Override
     @Transactional
     public MessageResponseDto decrementKeywordWeight(User user, List<NewsRefreshReqDto> newsRefreshReqDtoList, double highWeight, double rowWeight) {
-
         List<Long> seeNewsSeq = new ArrayList<>();
         List<Long> notSeenNewsSeq = new ArrayList<>();
         loseWeightFastReqDto dto = new loseWeightFastReqDto();
@@ -91,12 +90,11 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     @Override
     @Transactional
-    public void incrementKeywordWeight(User user, List<String> list, double weight) {
-
+    public void incrementKeywordWeight(User user, List<String> newskeywordList, double weight) {
         List<UserKeyword> insertKeyword = new ArrayList<>();
         List<String> updateKeyword = new ArrayList<>();
 
-        for (String keyword : list) {
+        for (String keyword : newskeywordList) {
             boolean exists = queryFactory.selectOne()
                     .from(userKeyword)
                     .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.eq(keyword))
@@ -110,13 +108,13 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
             }
         }
 
-        System.out.println(insertKeyword);
+        System.out.println("새로운 키워드 : "+insertKeyword);
         saveAll(insertKeyword);
 
         queryFactory
                 .update(userKeyword)
                 .set(userKeyword.weight, userKeyword.weight.add(weight))
-                .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(list))
+                .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(newskeywordList))
                 .execute();
 
     }

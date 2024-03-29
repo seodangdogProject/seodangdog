@@ -69,7 +69,7 @@ dependencies {
 
 	// sql log
 	// https://mvnrepository.com/artifact/com.github.gavlyukovskiy/p6spy-spring-boot-starter
-	//	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.1'
+//		implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.1'
 
 }
 
