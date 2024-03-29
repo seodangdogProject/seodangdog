@@ -46,13 +46,13 @@
 
 .dashboard__bottom__first {
     /* width: 1111px; */
-    width: 60%;
+    width: 70%;
     border-radius: 15px;
     padding: 15px 40px 0px 40px;
     box-sizing: border-box;
 }
 .dashboard__bottom__second {
-    width: 40%;
+    width: 30%;
     border-radius: 15px;
 }
 

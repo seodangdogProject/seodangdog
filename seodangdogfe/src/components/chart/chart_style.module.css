@@ -1,23 +1,7 @@
-.strictContainer {
+.container {
+    height: 100%;
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
-}
-.strictElement {
-    flex-direction: row-reverse;
-    border-radius: 10px;
-    width: 30px;
-    height: 25px;
-    margin: 2px;
-    position: relative;
-}
-.weekName {
-    width: 40px;
-    height: 25px;
-    display: flex;
-    margin: 2px;
-    justify-content: center;
-    align-items: center;
-    font-size: 12px;
-    font-family: "pretendard";
-    font-weight: bold;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
 }
