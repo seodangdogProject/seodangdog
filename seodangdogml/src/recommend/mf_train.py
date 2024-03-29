@@ -34,9 +34,13 @@ def load_mf():
     base_src = './recommend'
     model_name = 'mf_online.pkl'
     save_path = os.path.join(base_src, model_name)
+    if not os.path.exists(save_path):
+        train_mf_model()
     with open(save_path, 'rb') as f:
         model = pickle.load(f)
     return model
+
+
 
 
 def train_mf_model():
@@ -95,7 +99,7 @@ def train_mf_model():
     # 학습을 통해 최적의 K값 찾기 end
 
     save_mf(mf)
-    print(mf.user_id_index)
+    print("mf.user_id_index : ", mf.user_id_index)
     print('모델저장완료')
 
 
