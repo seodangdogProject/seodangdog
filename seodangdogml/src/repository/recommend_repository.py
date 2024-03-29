@@ -146,15 +146,15 @@ def select_news_id_seq():
         # 연결 종료
         connection.close()
 # 테스트를 위해 뽑아온 키워드들을 모든 사용자에게 부여한다.
-# @router.get('/fast/insert_all_user_keyword')
+@router.get('/fast/insert_all_user_keyword')
 def insert_all_user_keyword():
     print('start -  insert_all_user_keyword')
-    limit = 30  # 유저당 넣을 키워드 수
+    limit = 50  # 유저당 넣을 키워드 수
     users = select_all_user()
     for user in users:
         user_seq = user['user_seq']
-        weights = [random.randint(1, 10) for _ in range(limit)]
-        keywords = pick_keyword(limit)
+        weights = [random.randint(1, 20) for _ in range(limit)]
+        keywords = pick_keyword(user_seq, limit)
         for i in range(limit):
             insert_one_user_keyword(user_seq, keywords[i], weights[i])
     print('end -  insert_all_user_keyword')
@@ -165,6 +165,7 @@ def insert_all_user_keyword():
 def get_keyword_top100news():
     # top_news = findNews(100)
     # top_news = getNewsAll()
+    count = 1
     top_news = select_mongo_news()
     result = set()
     for i in top_news:
@@ -175,14 +176,18 @@ def get_keyword_top100news():
             print("dict ", type(i['newsKeyword']))
         for k, v in i['newsKeyword'].items():
             result.add(k)
-    print(len(result))
+        count=count+1
+    print("all news count: ", count)
+    print(" pick count: ", len(result))
+
     return list(result)
 
 
 # 테스트를 위해 가져온 뉴스 키워드중 임의로 30개를 뽑아 사용자에게 부여한다.
-def pick_keyword(limit):
+def pick_keyword(user_seq, limit):
+    print(user_seq)
     all_keyword = get_keyword_top100news()
-    # set에서 랜덤으로 30개의 값을 뽑음
+    # set에서 랜덤으로 50개의 값을 뽑음
     keyword = random.sample(all_keyword, limit)
 
     return keyword
@@ -352,7 +357,7 @@ async def async_update_ratings(rating_data):
 
 # cbf추천을 위해 몽고디비에서 데이터를 들고온다. 뉴스제목, 아이디, 키워드를 들고온다
 def get_news_title_keyword():
-    response = client.meta_news.find({}, {"_id": 1, "newsTitle": 1, "newsKeyword": 1}).limit(100)
+    response = client.meta_news.find({}, {"_id": 1, "newsTitle": 1, "newsKeyword": 1})
     # result = [doc for doc in response]
 
     if not response:
