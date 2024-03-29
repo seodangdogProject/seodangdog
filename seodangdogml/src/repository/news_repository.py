@@ -80,6 +80,30 @@ def save_news():
     # MongoDB 저장
     mongoDB["meta_news"].insert_many(news_data)
 
+@router.get("/update_news")
+def update_news():
+    print("update news start")
+    news_data = json.loads(json_util.dumps(mongoDB.meta_news.find({
+                              "newsQuiz": {
+                                "$exists": False
+                              }
+                            })))
+
+    print(f"문제 없는 뉴스 {len(news_data)}개 확인")
+    cnt = 0
+
+    for news in news_data:
+        # 문제 없는 뉴스를 넣어 문제 있는 뉴스로 만듦
+        update_data = {
+            "$set": {
+                "newsQuiz": question_generate(news)["newsQuiz"]
+            }
+        }
+        # 몽고 DB 수정
+        mongoDB.meta_news.update_one({"_id": ObjectId(news["_id"]["$oid"])}, update_data)
+        cnt+=1
+        if(cnt%100==0): print(f"{cnt}개 뉴스에 문제 삽입 완료")
+
 
 def get_unique_news(news_data):
     deleted_news_index = []
