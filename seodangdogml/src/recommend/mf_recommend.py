@@ -65,7 +65,8 @@ def recommend_news(user_seq, mf_model, top_n=21):
     predicted_ratings.sort(key=lambda x: x[1], reverse=True)
     predicted_ratings_solved.sort(key=lambda x: x[1], reverse=True)
 
-    predicted_ratings = predicted_ratings+predicted_ratings_solved
+    predicted_ratings = predicted_ratings
+    # +predicted_ratings_solved
 
     # print(predicted_ratings)
     # print("all_recommend_count ", len(predicted_ratings))
@@ -163,6 +164,7 @@ async def mf_update(data: UpdateData):
         online_learning(mf, user_seq, news_seq, rating, weight)
         print(mf.get_one_prediction(user_seq, news_seq))
 
+    #     뉴스를 저장하지말고!!!!!! 키워드를 저장해서 cbf를 돌? 에반데
     # 온라인 학습후 업데이트된 모델 저장
     save_mf(mf)
     return {'msg': 'update success'}
