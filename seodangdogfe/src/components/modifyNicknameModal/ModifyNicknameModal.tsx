@@ -6,12 +6,15 @@ import { MyPageDto } from "@/atoms/type";
 import { mypageState } from "@/atoms/userRecoil";
 import { privateFetch } from "@/utils/http-commons";
 import { keywordWeight } from "@/atoms/type";
+import ToastPopup from "@/components/toast/Toast";
+
 interface ModalProps {
     onClickToggleModal: () => void;
 }
 
 function Modal(props: ModalProps) {
     const mypageDto = useRecoilValue<MyPageDto | null>(mypageState);
+    const [toast, setToast] = useState(false);
     const [refNickname, setRefNickname] = useState<string[]>([]);
     const setMyPageDto = useSetRecoilState(mypageState);
     const [nickname, setNickname] = useState<string>(
@@ -54,8 +57,8 @@ function Modal(props: ModalProps) {
             const res = await privateFetch("/mypages/nickname", "PATCH", body);
             if (res.status === 200) {
                 const data = await res.json();
-
                 reloadInfo();
+                setToast(true);
             } else {
                 console.log("error 발생");
             }
@@ -89,6 +92,12 @@ function Modal(props: ModalProps) {
     return (
         <>
             <div className={styles.modal_container}>
+                {toast && (
+                    <ToastPopup
+                        setToast={setToast}
+                        message={"변경이 완료되었습니다."}
+                    />
+                )}
                 <div className={styles.header_container}>
                     <div className={styles.title}>
                         <div className={styles.title_content}>
@@ -96,7 +105,6 @@ function Modal(props: ModalProps) {
                         </div>
                         <div className={styles.horizontal}></div>
                     </div>
-
                     <CloseModal
                         className={styles.exit_button}
                         onClick={(e: React.MouseEvent) => {

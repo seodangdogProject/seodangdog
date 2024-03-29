@@ -7,11 +7,14 @@ import { badgeInfo } from "@/atoms/type";
 import LockBadgeIcon from "@/assets/lock-badge-icon.svg";
 import { mypageState } from "@/atoms/userRecoil";
 import { MyPageDto } from "@/atoms/type";
+import ToastPopup from "@/components/toast/Toast";
+
 interface ModalProps {
     onClickToggleModal: () => void;
 }
 
 function Modal(props: ModalProps) {
+    const [toast, setToast] = useState(false);
     const [badgeInfo, setBadgeInfo] = useState<badgeInfo[] | undefined>();
     const [status, setStatus] = useState<boolean>(false);
     const [clickedBadge, setClickedBadge] = useState<number | null>();
@@ -52,6 +55,7 @@ function Modal(props: ModalProps) {
                 if (res.status === 200) {
                     const data = await res.json();
                     console.log(data);
+                    setToast(true);
                     getBadgeInfo();
                     updateUserInfo();
                 } else {
@@ -80,6 +84,13 @@ function Modal(props: ModalProps) {
     return (
         <>
             <div className={styles.modal_container}>
+                {toast && (
+                    <ToastPopup
+                        setToast={setToast}
+                        message={"변경이 완료되었습니다."}
+                    />
+                )}
+
                 <div className={styles.header_container}>
                     <div
                         className={styles.exit_button}
