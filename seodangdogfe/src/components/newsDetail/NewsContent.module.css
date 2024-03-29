@@ -61,15 +61,35 @@
   white-space: pre-wrap;
 }
 
-.highlight {
-  /* cursor: pointer; */
-  /* cursor: url("/highlighter-icon.cur") 10 20 auto; */
+/* 단어 관련 */
+.dictionary-word {
+  cursor: pointer;
+}
+.dictionary-word:hover {
+  /* text-decoration: underline; */
+  color: orange;
+  cursor: inherit;
+}
 
-  cursor: url("../../assets/highlighter-cursor.svg") 0 0, auto;
+/* 마우스 커서 바뀌기 */
+
+.highlight {
+  cursor: url("../../assets/highlighter-cursor.svg") 0 20, auto;
 }
 .finder {
   cursor: url("../../assets/search-cursor.svg") 0 0, auto;
 }
 .eraser {
-  cursor: url("../../assets/eraser-cursor.svg") 0 0, auto;
+  cursor: url("../../assets/eraser-cursor.svg") 0 20, auto;
+}
+
+.filled {
+  background-color: rgb(193, 171, 255, 0.4);
+  display: inline-block;
+}
+.news-content.finder {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

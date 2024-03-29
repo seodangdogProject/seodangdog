@@ -16,6 +16,9 @@
   box-sizing: border-box;
   position: relative;
 }
+.detail-container:focus {
+  outline: none;
+}
 .news-content {
   display: flex;
   flex-direction: column;

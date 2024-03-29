@@ -18,7 +18,7 @@ export default function NewsDetailContainer() {
 
   //퀴즈 관련 변수
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
   const [isSolved, setIsSolved] = useState<boolean>(false);
   const [keywords, setKeywords] = useState<any[]>([]);
   const [quiz_1, setQuiz_1] = useState<any[]>([]);
@@ -39,6 +39,7 @@ export default function NewsDetailContainer() {
         for (const [key] of Object.entries(resData.newsKeyword)) {
           keywordList.push(key);
         }
+        console.log(resData);
         setIsSolved(resData.solved);
         setKeywords(keywordList);
         setData(resData);
