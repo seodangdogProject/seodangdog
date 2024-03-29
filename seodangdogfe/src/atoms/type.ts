@@ -31,7 +31,7 @@ export type MyPageDto = {
     nickname: string;
     userId: string;
     ability: ability;
-    wordCloudImgUrl: string;
+    wordCloudKeywords: keywordWeight[];
     userBadgeList: badge[];
     badgeImgUrl: string;
     streakList: string[];
@@ -52,4 +52,9 @@ export type badgeInfo = {
     userBadgeExp: number;
     represent: boolean;
     collected: boolean;
+};
+
+export type keywordWeight = {
+    text: string;
+    value: number;
 };

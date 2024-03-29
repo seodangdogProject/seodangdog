@@ -45,7 +45,9 @@ const RecentNewsPreview = (props: newsProps) => {
                 {/* 두 번째 */}
                 <div className={styled.last_solved_container}>
                     <h3 className={styled.caption}>
-                        최근 푼 기사&#32;&#32;&gt;
+                        <Link href="/dashboard/last-solved">
+                            최근 푼 기사&#32;&#32;&gt;
+                        </Link>
                     </h3>
                     <div className={styled.preview}>
                         <div className={styled.date}>

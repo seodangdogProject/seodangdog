@@ -6,20 +6,11 @@ import RecentNewsPreview from "@/components/dashboard/RecentNewsPreview";
 import UserCard from "@/components/dashboard/UserCard";
 import Strict from "@/components/strict/strict";
 import Chart from "@/components/chart/chart";
+import WordCloud from "@/components/wordCloud/wordCloud";
 import { privateFetch } from "@/utils/http-commons";
 import { mypageState } from "@/atoms/userRecoil";
-import {
-    useRecoilState,
-    RecoilRoot,
-    useRecoilCallback,
-    useRecoilValue,
-    useSetRecoilState,
-} from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { MyPageDto } from "@/atoms/type";
-
-function Info() {
-    return <></>;
-}
 
 function State() {
     return <></>;
@@ -27,7 +18,6 @@ function State() {
 
 export default function DashboardContainer() {
     const mypageDto = useRecoilValue<MyPageDto | null>(mypageState);
-
     const setMyPageDto = useSetRecoilState(mypageState);
 
     useEffect(() => {
@@ -91,12 +81,10 @@ export default function DashboardContainer() {
                                         "box-shodow-custom",
                                     ])}
                                 >
-                                    <img
-                                        src={mypageDto?.wordCloudImgUrl}
-                                        alt="워드 클라우드 이미지"
-                                        style={{
-                                            overflow: "hidden",
-                                        }}
+                                    <WordCloud
+                                        wordCloudKeywords={
+                                            mypageDto?.wordCloudKeywords
+                                        }
                                     />
                                 </div>
                             </div>

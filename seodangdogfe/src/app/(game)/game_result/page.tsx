@@ -20,7 +20,7 @@ const WordResult: React.FC = () => {
     const [correctWordList] = useRecoilState(correctWordListState);
     const [unCorrectWordList] = useRecoilState(unCorrectWordListState);
     const reqData = {
-        wordSeq: unCorrectWordList.map((item) => item.wordSeq),
+        wordSeq: correctWordList.map((item) => item.wordSeq),
     };
     const handleClick = () => {
         console.log("다음으로");
