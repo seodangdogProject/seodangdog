@@ -37,7 +37,7 @@ def scheduled_job():
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    # back_scheduler.start()
+    back_scheduler.start()
 
     # cbf추천을 위한 초기데이터 설정(recommend.cbf_recommend)
     renewal_news_data()
