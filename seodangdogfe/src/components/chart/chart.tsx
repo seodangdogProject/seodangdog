@@ -10,6 +10,7 @@ import {
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
 import { ability } from "@/atoms/type";
+import styles from "./chart_style.module.css";
 
 interface chartProps {
     ability: ability | undefined;
@@ -21,11 +22,11 @@ const Chart = (props: chartProps) => {
         scale: {
             beginAtZero: true,
             max: 100,
-            stepSize: 10,
+            stepSize: 20,
         },
         elements: {
             line: {
-                borderWidth: 3,
+                borderWidth: 2,
             },
         },
     };
@@ -36,12 +37,11 @@ const Chart = (props: chartProps) => {
             labels: ["어휘", "판단", "추론", "요약", "성실"],
             datasets: [
                 {
-                    label: "D0",
                     fill: true,
                     data: [0, 0, 0, 0, 0],
                     backgroundColor: "rgba(54, 162, 235, 0.2)",
-                    borderColor: "rgb(54, 162, 235)",
-                    pointBackgroundColor: "rgb(54, 162, 235)",
+                    borderColor: "#FF7474",
+                    pointBackgroundColor: "#F1DEF0",
                     pointBorderColor: "#fff",
                     pointHoverBackgroundColor: "#fff",
                     pointHoverBorderColor: "rgb(54, 162, 235)",
@@ -53,7 +53,6 @@ const Chart = (props: chartProps) => {
             labels: ["어휘", "판단", "추론", "요약", "성실"],
             datasets: [
                 {
-                    label: "D0",
                     fill: true,
                     data: [
                         props.ability?.wordAbility * 100,
@@ -63,8 +62,8 @@ const Chart = (props: chartProps) => {
                         props.ability?.constantAbility * 100,
                     ],
                     backgroundColor: "rgba(54, 162, 235, 0.2)",
-                    borderColor: "rgb(54, 162, 235)",
-                    pointBackgroundColor: "rgb(54, 162, 235)",
+                    borderColor: "#FF7474",
+                    pointBackgroundColor: "#F1DEF0",
                     pointBorderColor: "#fff",
                     pointHoverBackgroundColor: "#fff",
                     pointHoverBorderColor: "rgb(54, 162, 235)",
@@ -84,7 +83,12 @@ const Chart = (props: chartProps) => {
 
     return (
         <>
-            <Radar options={options} data={data} />
+            <div
+                className={styles.container}
+                style={{ width: "100%", height: "100%", overflow: "hidden" }}
+            >
+                <Radar options={options} data={data} />
+            </div>
         </>
     );
 };
