@@ -72,10 +72,6 @@ def renewal_news_data():
     return result
 
 
-# 초기데이터 설정
-renewal_news_data()
-
-
 def get_news_seq():
     data = select_news_id_seq()
     result = {entry['news_id']: entry['news_seq'] for entry in data}

@@ -31,11 +31,16 @@ def scheduled_job():
     mysql_save()
     print("스케쥴 : Mysql 저장 종료")
     print("예정된 스케쥴 종료 : crawling_cron")
+    renewal_news_data()
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     back_scheduler.start()
+    back_scheduler.start()
+
+    # cbf추천을 위한 초기데이터 설정(recommend.cbf_recommend)
+    renewal_news_data()
     yield
 
 
