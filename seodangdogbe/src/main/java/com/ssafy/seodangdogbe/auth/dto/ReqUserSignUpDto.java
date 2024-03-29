@@ -1,13 +1,12 @@
 package com.ssafy.seodangdogbe.auth.dto;
 
 import com.ssafy.seodangdogbe.user.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +15,7 @@ public class ReqUserSignUpDto {
     private String userId;
     private String password;
     private String nickname;
+    private List<String> keywords;
 
     @Builder
     public User toEntity() {
@@ -26,4 +26,15 @@ public class ReqUserSignUpDto {
                 .role("USER")
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "ReqUserSignUpDto{" +
+                "userId='" + userId + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", keywords=" + keywords +
+                '}';
+    }
+
 }

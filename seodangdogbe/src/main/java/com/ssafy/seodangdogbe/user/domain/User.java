@@ -81,6 +81,14 @@ public class User extends BaseTimeEntity {
         this.password = password;
     }
 
+    public User(String userId, String password, String nickname, Badge badge){
+        this.userId = userId;
+        this.password = password;
+        this.nickname = nickname;
+        this.badge = badge;
+        this.role = "USER";
+    }
+
     public User(int userSeq){
         this.userSeq = userSeq;
     }
