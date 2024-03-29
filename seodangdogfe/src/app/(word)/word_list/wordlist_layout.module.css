@@ -71,6 +71,11 @@
     cursor: pointer;
 }
 
+.toggle_item:hover {
+    font-size: 25px;
+    transition: transform 0.3s ease-in-out; /* transform 속성에 대한 스무스한 트랜지션 효과 추가 */
+}
+
 .selected_toggle_item {
     background-color: white;
 }
@@ -88,6 +93,11 @@
     min-height: 70px;
     box-shadow: 2px 2px 2px gray;
     margin-bottom: 3px;
+}
+
+.wordBox:hover {
+    transform: translateY(-2px); /* 호버될 때 요소를 위로 이동 */
+    box-shadow: 2px 2px 2px black;
 }
 
 .word {
