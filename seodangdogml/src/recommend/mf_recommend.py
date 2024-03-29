@@ -43,23 +43,25 @@ class MfNewsDto:
 
 mf = load_mf()
 
+
 def get_news_title(news_id):
     return news.loc[news_id]['title']
 
 
 def recommend_news(user_seq, mf_model, top_n=21):
-    predicted_ratings = [] # 사용자가 풀지 않은 뉴스만 저장
-    predicted_ratings_solved=[] # 사용자가 본 뉴스 저장
+    predicted_ratings = []  # 사용자가 풀지 않은 뉴스만 저장
+    predicted_ratings_solved = []  # 사용자가 본 뉴스 저장
     solved_news = select_news_solved(user_seq)
+
+    solved_news_list = [sn['news_seq'] for sn in solved_news]
 
     for item_id in mf_model.item_id_index.keys():
         predicted_rating = mf_model.get_one_prediction(user_seq, item_id)
-
-        if item_id not in [sn['news_seq'] for sn in solved_news]:
+        if item_id not in solved_news_list:
             predicted_ratings.append((item_id, predicted_rating))
         else:
             predicted_ratings_solved.append((item_id, predicted_rating))
-            print("solved ", item_id)
+            # print("solved ", item_id)
 
     # 예측 평점을 기준으로 내림차순 정렬
     predicted_ratings.sort(key=lambda x: x[1], reverse=True)
@@ -109,7 +111,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
         print(len(recommendations))
         return recommendations
     # 예외대처(온라인학습으로 했어도 예외발생시 재학습)
-    else:   
+    else:
         # 방금회원가입했으면(mf 모델에 학습되어 있지 않으면) 추천되지 않는 cbf를 추천하고 mf를 다시 학습시킨다
         print('User not found -> cbf reommend')
         # background_tasks = BackgroundTasks()
