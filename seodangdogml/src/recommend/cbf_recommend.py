@@ -20,6 +20,7 @@ from repository.recommend_repository import async_update_ratings
 from repository.recommend_repository import async_insert_ratings
 from fastapi import BackgroundTasks
 import asyncio
+
 import aiomysql
 
 import numpy as np
@@ -200,15 +201,19 @@ async def recommend_news(user_seq, user_keywords, keyword_weights, flag):
 
     # 사용자가 푼 뉴스 가져오기
     solved_news = select_news_solved(user_seq)  # 사용자가 이미 푼 뉴스를 가져옴
+    solved_news_list = [sn['news_seq'] for sn in solved_news]
 
     # 사용자가 이미 푼 뉴스를 제외하고 추천 리스트에 추가
     filtered_recommendations = []
     solved_recommendations = []
     for i in recommendation_indices:
-        if news_data[i]['news_id'] not in [sn['news_seq'] for sn in solved_news]:
-            filtered_recommendations.append((news_data[i]['news_id'], news_data[i]['news_title'], similarities[0][i]))
+        news_id = news_data[i]['news_id']
+        news_seq = news_id_seq[news_id]
+        news_title = news_data[i]['news_title']
+        if news_seq not in solved_news_list:
+            filtered_recommendations.append((news_id, news_title, similarities[0][i]))
         else:
-            solved_recommendations.append((news_data[i]['news_id'], news_data[i]['news_title'], similarities[0][i]))
+            solved_recommendations.append((news_id, news_title, similarities[0][i]))
 
     recommended_news = filtered_recommendations
     # + solved_recommendations)
