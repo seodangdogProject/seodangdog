@@ -1,20 +1,25 @@
 package com.ssafy.seodangdogbe.user.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
+import com.ssafy.seodangdogbe.common.MessageResponseDto;
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.keyword.dto.UserKeywordDto;
 import com.ssafy.seodangdogbe.keyword.service.KeywordService;
 import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.dto.MyPageResponseDto;
+import com.ssafy.seodangdogbe.user.dto.UserNicknameModifyReqDto;
 import com.ssafy.seodangdogbe.user.service.MyPageService;
 import com.ssafy.seodangdogbe.user.service.UserBadgeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -65,5 +70,19 @@ public class MyPageController {
         resultDto.setWordCloudKeywords(userKeywords);
 
         return resultDto;
+    }
+    
+    @Operation(description = "닉네임 변경")
+    @PatchMapping("/nickname")
+    public ResponseEntity<MessageResponseDto> modifyNickname(UserNicknameModifyReqDto dto){
+        MessageResponseDto result;
+        try{
+            userService.modifyNickname(dto);
+            result = new MessageResponseDto("성공");
+        }catch (IllegalArgumentException e){
+            result = new MessageResponseDto("실패");
+        }
+        return ResponseEntity.ok(result);
+
     }
 }

@@ -9,6 +9,7 @@ import com.ssafy.seodangdogbe.jwt.JWTProvider;
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.user.domain.Badge;
 import com.ssafy.seodangdogbe.user.domain.User;
+import com.ssafy.seodangdogbe.user.dto.UserNicknameModifyReqDto;
 import com.ssafy.seodangdogbe.user.repository.BadgeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
+
     private final UserRepository userRepository;
     private  final UserKeywordRepository userKeywordRepository;
     private final PasswordEncoder passwordEncoder;
@@ -88,6 +90,12 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
         return user.getUserSeq();
     }
+
+    public void modifyNickname( UserNicknameModifyReqDto dto){
+        User user = getUser();
+        user.setNickname(dto.getNickname());
+    }
+
 
     // 회원 seq로 회원 조회
     public User getUser(){
