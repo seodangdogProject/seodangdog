@@ -4,12 +4,15 @@ import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Map;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
 public class Answer {
-    private int num;
+    private Object number;
     private String reason;
 }
