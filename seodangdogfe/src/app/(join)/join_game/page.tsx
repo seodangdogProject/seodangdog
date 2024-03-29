@@ -8,26 +8,61 @@ import styles from "./game_layout.module.css";
 import JoinModal from "../../../components/joinComponent/joinModal";
 import { publicFetch } from "../../../utils/http-commons";
 
-interface keyword {
+interface Keyword {
   id: number;
   keyword: string;
 }
 
 export default function Join() {
+  const router = useRouter();
+  const [letters, setLetters] = useState<Keyword[]>([]);
+  const [isOpenModal, setOpenModal] = useState<boolean>(false);
+  const [userKeywords, setUserKeywords] = useState<
+    { id: number; keyword: string }[]
+  >([]);
+  const [clickedKeywords, setClickedKeywords] = useState<string[]>([]);
+  const [unLock, setUnLock] = useState(true);
+  const [userKeywordsSize, setUserKeywordsSize] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [allKeywords, setAllKeywords] = useState<Keyword[]>([]);
+
+  //배열 섞기
+  function shuffleArray(array: Keyword[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+  //배열 분할
+  function chunkArray(array: Keyword[], size: number) {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size));
+    }
+    return result;
+  }
+
+  function lockToggle() {
+    setUnLock(false);
+  }
+
+  //키워드 추출
   useEffect(() => {
     const fetchKeywords = async () => {
       try {
-        const response = await publicFetch("/join/keyword", "GET");
+        const response = await publicFetch("/keyword/join", "GET");
         // if (!response.ok) throw new Error("Failed to fetch keywords");
         const data = await response.json();
-        console.log("Received data:", data);
+        // console.log("Received data:", data);
 
-        const keywordList = data.map((item) => ({
+        let keywordList: Keyword[] = data.map((item: any) => ({
           id: item.joinKeywordSeq,
           keyword: item.keyword,
         }));
 
-        setLetters(keywordList);
+        keywordList = shuffleArray(keywordList);
+        setAllKeywords(keywordList);
       } catch (error) {
         console.error("Error fetching keywords:", error);
       }
@@ -36,80 +71,62 @@ export default function Join() {
     fetchKeywords();
   }, []);
 
-  //   const keywordList = [
-  //     { id: 1, keyword: "사과" },
-  //     { id: 2, keyword: "바나나" },
-  //     { id: 3, keyword: "딸기" },
-  //     { id: 4, keyword: "포도" },
-  //     { id: 5, keyword: "수박" },
-  //     { id: 6, keyword: "오렌지" },
-  //     { id: 7, keyword: "파인애플" },
-  //     { id: 8, keyword: "체리" },
-  //     { id: 9, keyword: "멜론" },
-  //     { id: 10, keyword: "레몬" },
-  //     { id: 11, keyword: "라임" },
-  //     { id: 12, keyword: "복숭아" },
-  //     { id: 13, keyword: "배" },
-  //     { id: 14, keyword: "키위" },
-  //     { id: 15, keyword: "밤" },
-  //     { id: 16, keyword: "자두" },
-  //     { id: 17, keyword: "체리" },
-  //     { id: 18, keyword: "오렌지" },
-  //     { id: 19, keyword: "수박" },
-  //     { id: 20, keyword: "딸기" },
-  //   ];
+  //키워드 20개씩 조회
+  useEffect(() => {
+    const chunkedKeywords = chunkArray(allKeywords, 30);
+    if (currentPage < chunkedKeywords.length) {
+      setLetters(chunkedKeywords[currentPage]);
+    }
+  }, [currentPage, allKeywords]);
 
-  const router = useRouter();
-  const [letters, setLetters] = useState<keyword[]>([]);
-  const [isOpenModal, setOpenModal] = useState<boolean>(false);
-  const [userKeywords, setUserKeywords] = useState<
-    { id: number; keyword: string }[]
-  >([]);
-  // 클릭 여부를 추적하는 상태 추가
-  const [clickedLetters, setClickedLetters] = useState<number[]>([]);
-  const [unLock, setUnLock] = useState(true);
-  const [userKeywordsSize, setUserKeywordsSize] = useState(0);
-
-  function lockToggle() {
-    setUnLock(false);
-  }
+  const nextPage = useCallback(() => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  }, []);
 
   const onClickToggleModal = useCallback(() => {
-    setOpenModal(!isOpenModal);
-  }, [isOpenModal]);
+    if (userKeywordsSize > 9) {
+      setOpenModal(!isOpenModal);
+    } else {
+      alert("단어를 10개 이상 선택해주세요.");
+    }
+  }, [isOpenModal, userKeywordsSize]);
 
   const handleLetterClick = async (id: number, keyword: string) => {
     // 이미 선택된 단어인지 확인
-    const isAlreadySelected = userKeywords.some((item) => item.id === id);
+    const isAlreadySelected = userKeywords.some(
+      (item) => item.keyword === keyword
+    );
     if (isAlreadySelected) {
       // 이미 선택된 단어라면, 리스트에서 제거
-      setUserKeywords(userKeywords.filter((item) => item.id !== id));
-      console.log(keyword, " 제거");
+      setUserKeywords(userKeywords.filter((item) => item.keyword !== keyword));
+      //   console.log(keyword, " 제거");
       setUserKeywordsSize((count) => count - 1);
-      setClickedLetters(clickedLetters.filter((clickedId) => clickedId !== id));
+      setClickedKeywords(
+        clickedKeywords.filter((existingKeyword) => existingKeyword !== keyword)
+      );
     } else {
       // 선택되지 않은 새로운 단어라면, 리스트에 추가
       setUserKeywords((prevKeywords) => [...prevKeywords, { id, keyword }]);
-      setClickedLetters([...clickedLetters, id]);
-      console.log(keyword, " 잡음");
+      setClickedKeywords([...clickedKeywords, keyword]);
+      //   console.log(keyword, " 잡음");
       setUserKeywordsSize((count) => count + 1);
-    }
-
-    if (userKeywordsSize >= 9) {
-      lockToggle();
     }
   };
   //담긴 키워드 목록 확인
+  //   useEffect(() => {
+  //     console.log("현재 선택된 키워드 목록:", userKeywords);
+  //   }, [userKeywords]);
+
   useEffect(() => {
-    console.log("현재 선택된 키워드 목록:", userKeywords);
+    setUserKeywordsSize(userKeywords.length);
+    setUnLock(userKeywords.length < 10);
   }, [userKeywords]);
 
   useEffect(() => {
-    console.log("클릭된 단어들의 ID 목록:", clickedLetters);
-  }, [clickedLetters]);
+    console.log("클릭된 키워드 목록:", clickedKeywords);
+  }, [clickedKeywords]);
 
   useEffect(() => {
-    // 선택된 키워드 개수를 업데이트하고 콘솔에 출력
     setUserKeywordsSize(userKeywords.length);
     console.log("현재 선택된 키워드 개수:", userKeywords.length);
   }, [userKeywords]);
@@ -137,7 +154,7 @@ export default function Join() {
             <div
               key={item.id}
               className={`${styles.wordBox} ${
-                clickedLetters.includes(item.id) ? styles.clicked : ""
+                clickedKeywords.includes(item.keyword) ? styles.clicked : ""
               }`}
               onClick={() => handleLetterClick(item.id, item.keyword)}
             >
@@ -145,6 +162,13 @@ export default function Join() {
             </div>
           ))}
         </div>
+
+        <button
+          onClick={nextPage}
+          style={{ position: "fixed", bottom: "20px", right: "20px" }}
+        >
+          새로운 키워드
+        </button>
 
         <Link href="/join_game">
           <div
