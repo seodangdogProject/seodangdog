@@ -42,7 +42,7 @@ public class MetaNews {
     private Map<String, Double> newsKeyword;
     private Map<String, Double> newsSummaryKeyword;
 
-    @ElementCollection
+    @Field("newsQuiz")
     private List<Quiz> newsQuiz = new ArrayList<>();    // 퀴즈 1,2,3
 
 }
