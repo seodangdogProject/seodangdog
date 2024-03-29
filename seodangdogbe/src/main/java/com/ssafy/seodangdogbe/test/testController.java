@@ -7,6 +7,8 @@ import com.ssafy.seodangdogbe.jwt.JWT;
 import com.ssafy.seodangdogbe.jwt.JWTDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class testController {
 
     private final UserService userService;
+
 
     @PostMapping("/join")
     public ResponseEntity<Integer> join(@RequestBody ReqUserSignUpDto userSignUpDto) {

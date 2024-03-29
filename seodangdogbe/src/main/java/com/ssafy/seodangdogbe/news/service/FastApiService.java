@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,7 +22,7 @@ public class FastApiService {
     private final UserService userService;
 
     @Autowired
-    public FastApiService(WebClient webClient, UserService userService) {
+    public FastApiService(WebClient webClient, @Lazy UserService userService) {
         this.webClient = webClient;
         this.userService = userService;
     }
