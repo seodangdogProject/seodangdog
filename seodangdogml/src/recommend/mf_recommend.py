@@ -43,7 +43,6 @@ class MfNewsDto:
 
 mf = load_mf()
 
-
 def get_news_title(news_id):
     return news.loc[news_id]['title']
 

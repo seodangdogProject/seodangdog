@@ -47,10 +47,14 @@ class NewsDto:
         self.news_similarity = news_similarity
 
 
+news_data = []
+df_news = pd.DataFrame(columns=["keyword"])
+
+
 def renewal_news_data():
     # 현재는 100개의 뉴스에 대해서만 들고온다 -> 추천되는건 rating테이블에 넣는데 너무 많으면 추천이 잘되는지 확인불가
+    global news_data, df_news
     data = get_news_title_keyword()
-
     result = []
     for doc in data:
         news_id = str(doc['_id'])
@@ -63,7 +67,13 @@ def renewal_news_data():
             "keyword_str": keyword_str
         }
         result.append(temp)
+    news_data = result
+    df_news = pd.DataFrame([[news['keyword_str']] for news in news_data], columns=['keyword_str'])
     return result
+
+
+# 초기데이터 설정
+renewal_news_data()
 
 
 def get_news_seq():
@@ -72,8 +82,6 @@ def get_news_seq():
     return result
 
 
-news_data = renewal_news_data()
-df_news = pd.DataFrame([[news['keyword_str']] for news in news_data], columns=['keyword_str'])
 news_id_seq = get_news_seq()
 
 
@@ -92,7 +100,7 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
 
     start_time = time.time()
 
-    recommended_news = await recommend_news(user_seq, news_data, user_keyword_list, keyword_weights, flag)
+    recommended_news = await recommend_news(user_seq, user_keyword_list, keyword_weights, flag)
 
     end_time = time.time()
     execution_time = end_time - start_time
@@ -121,7 +129,7 @@ async def update_rating(recommended_news, user_seq):
     start_time = time.time()
     insert_rating_data = []
     update_rating_data = []
-    
+
     # rating에 유저와 뉴스가 존재하는지 확인하기위함
     user_ratings = select_user_ratings(user_seq)
 
@@ -161,10 +169,11 @@ async def update_rating(recommended_news, user_seq):
     print(f"cbf - 데이터업데이트완료: {execution_time} 초")
 
 
-async def recommend_news(user_seq, news_data, user_keywords, keyword_weights, flag):
+async def recommend_news(user_seq, user_keywords, keyword_weights, flag):
     top_n = 21
     # 뉴스 데이터프레임 생성
-    # df_news = pd.DataFrame([[news.title] for news in news_data], columns=['title'])
+    # df_news = pd.DataFrame([[news.title] for news in news_data], columns=
+    global news_data, df_news
     tfidf_vectorizer = TfidfVectorizer()
 
     # 뉴스키워드를 합친것을 벡터화
