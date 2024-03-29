@@ -65,17 +65,16 @@ public class GameService {
     }
 
     @Transactional
-    public void deleteWords(int userSeq, GameResultRequestDto requestDto) {
+    public void deleteWords(User user, GameResultRequestDto requestDto) {
 //        int userSeq = userService.getUserSeq();
         List<Long> wordSeqs = requestDto.getWordSeq();
 
         // 사용자 단어게임 경험치 증가
-        User user = userService.getUser();
         int exp = user.getUserExp().getWordGameExp();
         user.getUserExp().setWordGameExp(exp + wordSeqs.size());
 
         // 데이터베이스에서 해당 단어들의 isDelete 상태를 true로 업데이트
-        gameRepository.deleteWordsBySeqsAndUserSeq(wordSeqs, userSeq);
+        gameRepository.deleteWordsBySeqsAndUserSeq(wordSeqs, user.getUserSeq());
     }
 
 }
