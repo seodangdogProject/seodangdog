@@ -1,6 +1,9 @@
 # 외부 라이브러리 import
+from datetime import datetime
+
 from bson import json_util
 from bson.objectid import ObjectId
+from dateutil.relativedelta import relativedelta
 from pymongo import MongoClient
 from fastapi import APIRouter, HTTPException
 from konlpy.tag import Okt
@@ -29,6 +32,12 @@ def mysql_create_session():
     connection = pymysql.connect(host=settings.MYSQL["host"], port=settings.MYSQL["port"], user=settings.MYSQL["user"], passwd=settings.MYSQL["passwd"], db=settings.MYSQL["db"], charset=settings.MYSQL["charset"])
     return connection
 
+def repo_time_calc(days):
+    now = datetime.now()
+    before_date = now - relativedelta(days=days)
+    before_date_str = before_date.strftime('%Y-%m-%d')
+    return before_date_str
+
 def morph_sep(news_data):
     ### 형태소 분리
     okt = Okt()
@@ -51,10 +60,8 @@ def morph_sep(news_data):
 @router.get("/save_news")
 def save_news():
     print("json 파일 불러오는 중...")
-    start_t = time.time()
     with open('fast_resources/news.json', 'r', encoding="utf8") as f:
         news_data = json.load(f)
-    # news_data = news_data[:10]
 
     # 형태소 저장
     print("형태소 분리 및 저장 중...")
@@ -73,9 +80,29 @@ def save_news():
     # MongoDB 저장
     mongoDB["meta_news"].insert_many(news_data)
 
-    # mysql 저장
-    mysql_save(news_data)
-    return {"message" : f"{len(news_data)} news saved!"}
+@router.get("/update_news")
+def update_news():
+    print("update news start")
+    news_data = json.loads(json_util.dumps(mongoDB.meta_news.find({
+                              "newsQuiz": {
+                                "$exists": False
+                              }
+                            })))
+
+    print(f"문제 없는 뉴스 {len(news_data)}개 확인")
+    cnt = 0
+
+    for news in news_data:
+        # 문제 없는 뉴스를 넣어 문제 있는 뉴스로 만듦
+        update_data = {
+            "$set": {
+                "newsQuiz": question_generate(news)["newsQuiz"]
+            }
+        }
+        # 몽고 DB 수정
+        mongoDB.meta_news.update_one({"_id": ObjectId(news["_id"]["$oid"])}, update_data)
+        cnt+=1
+        if(cnt%100==0): print(f"{cnt}개 뉴스에 문제 삽입 완료")
 
 
 def get_unique_news(news_data):
@@ -173,7 +200,8 @@ def findNews(limit):
     return json.loads(json_util.dumps(response))
 
 
-def mysql_save(news_data):
+def mysql_save():
+    news_data = json.loads(json_util.dumps(mongoDB.meta_news.find({"newsCreatedAt" : {"$regex" : f"^{repo_time_calc(1)}"}})))
 
     mysqlDB = mysql_create_session()
     cursor = mysqlDB.cursor()
@@ -213,7 +241,7 @@ def mysql_save(news_data):
     cursor.execute(sql)
 
     # 뉴스별 키워드 저장
-    save_keyword_news(mysqlDB, cursor)
+    save_keyword_news(cursor)
     mysqlDB.commit()
     mysqlDB.close()
 
@@ -222,7 +250,7 @@ def mysql_save(news_data):
 def save_keyword_news(cursor):
 
     # mysql에 저장된 뉴스의 seq, oid 조회
-    sql = (f"select news_seq, news_access_id from news;")
+    sql = (f"select news_seq, news_access_id from news where news_created_at like '{repo_time_calc(1)}%'")
     cursor.execute(sql)
 
     sql = f"insert into keyword_news (keyword, news_seq) values "
@@ -232,7 +260,6 @@ def save_keyword_news(cursor):
         keyword_list = mongo_news["newsKeyword"].keys()
         for keyword in keyword_list:
             sql += f"(\"{keyword}\", \"{mysql_news[0]}\"),\n"
-
 
     sql = sql[:-2] + ";"
     cursor.execute(sql)
