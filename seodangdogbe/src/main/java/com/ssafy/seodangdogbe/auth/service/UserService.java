@@ -56,7 +56,7 @@ public class UserService {
                 .password(passwordEncoder.encode(userSignUpDto.getPassword())) // 비밀번호 해싱
                 .nickname(userSignUpDto.getNickname())
                 .badge(basicBadge)
-                .role("USER") // role 기본값 할당
+                .role("ROLE_USER") // role 기본값 할당
                 .build();
         user = userRepository.save(user); // 저장
 
