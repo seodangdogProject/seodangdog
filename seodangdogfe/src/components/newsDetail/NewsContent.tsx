@@ -4,14 +4,22 @@ import classNames from "classnames/bind";
 export default function NewsContent({
   keywords,
   data,
+  cursor,
 }: {
   keywords: string[];
   data: any;
+  cursor?: number | null;
 }) {
   const cx = classNames.bind(styled);
   return (
     <>
-      <section className={cx("news-content")}>
+      <section
+        className={cx("news-content", {
+          highlight: cursor === 0,
+          finder: cursor === 1,
+          eraser: cursor === 2,
+        })}
+      >
         <h1 className={cx("title")}>{data.newsTitle}</h1>
         <div className={cx("date")}>2024.03.06. 오전 11:37</div>
         <div className={cx("hashtag")}>

@@ -61,11 +61,15 @@
   white-space: pre-wrap;
 }
 
-.pentool {
-  position: absolute;
-  width: 43px;
-  height: 201px;
-  border-radius: 20px;
-  left: -40px;
-  top: 0;
+.highlight {
+  /* cursor: pointer; */
+  /* cursor: url("/highlighter-icon.cur") 10 20 auto; */
+
+  cursor: url("../../assets/highlighter-cursor.svg") 0 0, auto;
+}
+.finder {
+  cursor: url("../../assets/search-cursor.svg") 0 0, auto;
+}
+.eraser {
+  cursor: url("../../assets/eraser-cursor.svg") 0 0, auto;
 }

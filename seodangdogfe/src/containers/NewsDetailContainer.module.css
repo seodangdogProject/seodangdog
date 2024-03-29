@@ -70,11 +70,24 @@
   width: 60%;
   padding: 20%;
 }
-.pentool__item:hover {
-  background-color: #73c6c1;
+.pentool__item.active {
+  background-color: #00000011;
   border-radius: 8px;
-  color: white;
+}
+.pentool__item:hover {
+  background-color: #00000011;
+  border-radius: 8px;
+  color: #fff;
 }
 .pentool__item img {
   width: 100%;
+}
+.highlight {
+  cursor: url("../assets/highlighter-cursor.svg") 0 0, auto;
+}
+.finder {
+  cursor: url("../assets/search-cursor.svg") 0 0, auto;
+}
+.eraser {
+  cursor: url("../assets/eraser-cursor.svg") 0 0, auto;
 }
