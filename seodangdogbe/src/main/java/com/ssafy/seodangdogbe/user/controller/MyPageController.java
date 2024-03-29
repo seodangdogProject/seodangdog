@@ -14,10 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -74,7 +71,7 @@ public class MyPageController {
     
     @Operation(description = "닉네임 변경")
     @PatchMapping("/nickname")
-    public ResponseEntity<MessageResponseDto> modifyNickname(UserNicknameModifyReqDto dto){
+    public ResponseEntity<MessageResponseDto> modifyNickname(@RequestBody UserNicknameModifyReqDto dto){
         MessageResponseDto result;
         try{
             userService.modifyNickname(dto);

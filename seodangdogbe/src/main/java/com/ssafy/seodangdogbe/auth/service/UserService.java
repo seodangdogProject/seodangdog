@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
@@ -68,6 +69,13 @@ public class UserService {
         return user.getUserSeq();
     }
 
+    @Transactional
+    public void modifyNickname( UserNicknameModifyReqDto dto){
+        User user = getUser();
+        System.out.println(dto.getNickname());
+        user.setNickname(dto.getNickname());
+    }
+
     public JWT login(ReqUserLoginDto reqUserLoginDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -92,11 +100,7 @@ public class UserService {
         return user.getUserSeq();
     }
 
-    @Transactional
-    public void modifyNickname( UserNicknameModifyReqDto dto){
-        User user = getUser();
-        user.setNickname(dto.getNickname());
-    }
+
 
 
     // 회원 seq로 회원 조회
