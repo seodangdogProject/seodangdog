@@ -19,7 +19,7 @@ export default function RankingNewsContainer() {
       const res = await privateFetch("/main/" + category, "GET");
       if (res.status !== 200) {
         // 오류처리
-        router.replace("/landing");
+        router.replace("/");
       }
       const data = (await res.json())[0].newsPreviewList;
       setNewsList(data);
