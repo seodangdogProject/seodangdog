@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "./NewsContent.module.css";
 import classNames from "classnames/bind";
+import { privateFetch } from "@/utils/http-commons";
 export default function NewsContent({
   keywords,
   data,
@@ -14,11 +15,17 @@ export default function NewsContent({
   const cx = classNames.bind(styled);
   const textEl = useRef<HTMLPreElement>(null);
   const selection = useRef(window.getSelection());
+  const [prevWordPop, setPrevWordPop] = useState<HTMLElement | null>(null);
   const [startIdx, setStartIdx] = useState<number>(0);
   const [highlightList, setHighLightList] = useState<number[]>([]);
+  const [wordList, setWordList] = useState<number[]>([]);
+  const [wordInfo, setWordInfo] = useState<any>(null);
 
   useEffect(() => {
     setHighLightList(data?.highlightList || []);
+    return () => {
+      privateFetch("/news/read", "PATCH", wordList);
+    };
   }, []);
 
   // 형광팬 칠하고 지우는메서드
@@ -46,6 +53,42 @@ export default function NewsContent({
       }
       setHighLightList(Array.from(list));
       selection.current?.empty();
+    }
+  }
+  // 단어 검색 하기 함수
+  async function getDictionary(e: any, text: string, index: number) {
+    if (cursor !== 2) return;
+    if (prevWordPop !== null) {
+      prevWordPop.removeChild(prevWordPop.children[0]);
+    }
+    const el = document.createElement("div");
+    try {
+      const res = await privateFetch("/news/word/" + text, "GET");
+      let data: {
+        word: string;
+        wordLang: string;
+        total: number;
+        items: any[];
+      } | null = null;
+      if (res.status !== 200) {
+        throw "adfasd";
+      } else {
+        data = await res.json();
+        setWordInfo(data);
+        console.log(data);
+        el.setAttribute("class", cx("dict-modal"));
+        // el.innerText = data?.word || "";
+        // data?.items.forEach((item) => {
+        //   el.innerHTML += item.definition;
+        // });
+        console.log(wordList);
+        setWordList((prev) => [...prev, index]);
+        el.innerHTML += data?.items[0].definition;
+        setPrevWordPop(e.target);
+        e.target.appendChild(el);
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
   return (
@@ -76,6 +119,7 @@ export default function NewsContent({
               {data.newsPos.map(
                 (item: { word: string; pos: string }, index: number) => {
                   const { word, pos } = item;
+                  // 뛰어 쓰기일 경우
                   if (pos === "Foreign" && word === "\n\n") {
                     return (
                       <div
@@ -88,11 +132,13 @@ export default function NewsContent({
                         <br />
                       </div>
                     );
+                    // 단어일 경우
                   } else if (pos === "Noun" || pos === "Alpha") {
                     return (
                       <span
                         onMouseDown={(e) => highlightEnter(e)}
                         onMouseUp={(e) => highlightOut(e)}
+                        onClick={(e) => getDictionary(e, word, index)}
                         key={index}
                         className={cx({
                           "dictionary-word": cursor === 2,

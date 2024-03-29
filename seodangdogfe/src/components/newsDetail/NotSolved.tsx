@@ -27,8 +27,8 @@ export default function NotSolved({
     setCursor(cursorToChange);
   }
   function nextCursor(e: any) {
-    console.log(e);
-    if (e.keyCode === 32 || 17) setCursor((prev) => (prev + 1) % 3);
+    if (e.keyCode === 32 || e.keyCode == 17)
+      setCursor((prev) => (prev + 1) % 3);
   }
   useEffect(() => {
     detailContainerEl.current?.focus();
