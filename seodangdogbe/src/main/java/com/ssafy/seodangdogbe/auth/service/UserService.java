@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -91,6 +92,7 @@ public class UserService {
         return user.getUserSeq();
     }
 
+    @Transactional
     public void modifyNickname( UserNicknameModifyReqDto dto){
         User user = getUser();
         user.setNickname(dto.getNickname());
