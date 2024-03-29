@@ -7,10 +7,12 @@ import com.ssafy.seodangdogbe.keyword.dto.UserKeywordDto;
 import com.ssafy.seodangdogbe.keyword.service.KeywordService;
 import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.dto.MyPageResponseDto;
+import com.ssafy.seodangdogbe.user.dto.UserInfoCorrectResponseDto;
 import com.ssafy.seodangdogbe.user.dto.UserNicknameModifyReqDto;
 import com.ssafy.seodangdogbe.user.service.MyPageService;
 import com.ssafy.seodangdogbe.user.service.UserBadgeService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -80,6 +82,13 @@ public class MyPageController {
             result = new MessageResponseDto("실패");
         }
         return ResponseEntity.ok(result);
+    }
 
+    @Operation(description = "닉네임, 대표뱃지만 조회")
+    @GetMapping("/nickname-badge")
+    public UserInfoCorrectResponseDto getNicknameAndBadge(){
+        User user = userService.getUser();
+
+        return new UserInfoCorrectResponseDto(user.getNickname(), user.getBadge().getBadgeImgUrl());
     }
 }
