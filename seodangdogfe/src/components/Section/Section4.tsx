@@ -34,13 +34,12 @@ const Section = (props: ISectionProps) => {
                             onInit={(typewriter) => {
                                 typewriter
                                     .typeString(
-                                        "다시 보고 싶은 <br/> <span style='color: #9758FF;'> 단어를 저장 </span>  할 수 있습니다"
+                                        "다시 보고 싶은 <br/> <span style='color: #9758FF;'> 단어를 저장</span>할 수 있습니다"
                                     )
-
-                                    .pauseFor(1000)
                                     .start();
                             }}
                             options={{
+                                cursor: ` `,
                                 wrapperClassName: `${commonStyles.title}`, // 커스텀 클래스 추가
                             }}
                         />

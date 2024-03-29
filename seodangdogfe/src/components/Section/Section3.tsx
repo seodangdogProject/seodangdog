@@ -42,13 +42,12 @@ const Section = (props: ISectionProps) => {
                             onInit={(typewriter) => {
                                 typewriter
                                     .typeString(
-                                        "뉴스의 내용으로 <br/> <span style='color: #9758FF;'> 문제를 제공 </span> 합니다"
+                                        "뉴스의 내용으로 <br/> <span style='color: #9758FF;'> 문제를 제공</span>합니다"
                                     )
-
-                                    .pauseFor(1000)
                                     .start();
                             }}
                             options={{
+                                cursor: ` `,
                                 wrapperClassName: `${commonStyles.title}`, // 커스텀 클래스 추가
                             }}
                         />

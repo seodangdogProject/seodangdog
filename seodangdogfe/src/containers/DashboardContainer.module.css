@@ -1,107 +1,112 @@
 .container {
-  width: 100%;
-  height: 100%;
-  min-width: 1300px;
-  background-color: #fff;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    min-width: 1300px;
+    background-color: #fff;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* layout */
 .dashboard {
-  width: 90%;
-  height: 90%;
+    width: 90%;
+    height: 90%;
 }
 
 .dashboard__top {
-  width: 100%;
-  display: flex;
-  border-radius: 15px;
-  gap: 10px;
-  margin-bottom: 26px;
+    width: 95%;
+    height: 55%;
+    display: flex;
+    border-radius: 15px;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .dashboard__top__first {
-  height: 100%;
-  width: 45%;
-  border-radius: 15px;
+    height: 100%;
+    width: 45%;
+    border-radius: 15px;
 }
+
 .dashboard__top__second {
-  /* height: 100%; */
-  width: 55%;
-  border-radius: 15px;
+    height: 100%;
+    width: 50%;
+    border-radius: 15px;
 }
 
 .dashboard__bottom {
-  height: 40%;
-  display: flex;
-  gap: 37px;
+    width: 95%;
+    height: 40%;
+    display: flex;
+    gap: 10px;
 }
 
 .dashboard__bottom__first {
-  /* width: 1111px; */
-  border-radius: 15px;
-  padding: 0 50px;
-  box-sizing: border-box;
+    /* width: 1111px; */
+    width: 60%;
+    border-radius: 15px;
+    padding: 15px 40px 0px 40px;
+    box-sizing: border-box;
 }
 .dashboard__bottom__second {
-  width: 534px;
-  border-radius: 15px;
+    width: 35%;
+    border-radius: 15px;
 }
+
 .padding-item {
-  box-sizing: border-box;
-  padding: 10px 50px;
+    box-sizing: border-box;
+    padding: 10px 50px;
 }
 
 .title {
-  font-family: "hunminjungum";
-  /* font-size: 30px; */
-  font-weight: bold;
-  box-sizing: border-box;
-  padding-bottom: 10px;
+    font-family: "hunminjungum";
+    /* font-size: 30px; */
+    font-weight: bold;
+    box-sizing: border-box;
+    padding-bottom: 10px;
 }
 
 .wordcloud {
-  width: 100%;
-  /* height: 465px; */
-  height: 90%;
-  background-color: #d6e3f8;
-  box-sizing: border-box;
-  border-radius: 15px;
-  padding: 15px 15px;
+    width: 100%;
+    /* height: 465px; */
+    height: 90%;
+    background-color: #d6e3f8;
+    box-sizing: border-box;
+    border-radius: 15px;
+    padding: 15px 15px;
 }
 .boxshadow {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .state {
-  width: 100%;
-  height: 85%;
-  background-color: #d6e3f8;
-  border-radius: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    height: 85%;
+    background-color: #d6e3f8;
+    border-radius: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .user {
-  width: 100%;
-  height: 40%;
-  /* margin-top: 10px; */
+    width: 100%;
+    height: 40%;
+    /* margin-top: 10px; */
 }
 .streak {
-  margin-top: 20px;
-  width: 100%;
-  /* height: 100%; */
-  background-color: white;
-  padding-bottom: 10px;
-  box-sizing: border-box;
-  /* margin-top: 40px; */
+    margin-top: 20px;
+    width: 100%;
+    /* height: 100%; */
+    background-color: white;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+    padding-left: 10px;
 }

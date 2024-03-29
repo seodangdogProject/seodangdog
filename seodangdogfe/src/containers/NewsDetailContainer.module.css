@@ -1,21 +1,20 @@
 .container {
+  min-width: 1300px;
+  width: 100%;
+  height: 100%;
   display: flex;
-  max-width: 100%;
-  /* min-width: 100%; */
-  width: calc(100% - 200px);
-  /* max-height: 100%;
-  min-height: 100%; */
-  /* min-height: calc(100vh-80px); */
-  height: calc(100% - 80px);
-  background-color: #ffff;
-  margin: 40px 100px;
-  border-radius: 15px;
+  justify-content: center;
+  align-items: center;
+}
+.detail-container {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  background-color: red;
+  background-color: #fff;
+  padding: 40px 0 35px 60px;
   box-sizing: border-box;
-  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.16);
-
-  padding: 80px 0 35px 85px;
-
-  display: flex;
+  position: relative;
 }
 .news-content {
   display: flex;
@@ -47,4 +46,35 @@
   width: 50%;
   object-fit: cover;
   text-align: center;
+}
+
+/* 그리기 툴 css */
+.pentool {
+  position: absolute;
+  width: 43px;
+  height: 201px;
+  border-radius: 20px;
+  left: -20px;
+  top: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.pentool__item {
+  text-align: center;
+  cursor: pointer;
+  width: 60%;
+  padding: 20%;
+}
+.pentool__item:hover {
+  background-color: #73c6c1;
+  border-radius: 8px;
+  color: white;
+}
+.pentool__item img {
+  width: 100%;
 }

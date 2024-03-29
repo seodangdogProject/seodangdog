@@ -1,40 +1,71 @@
 "use client";
-import NewsContent from "@/components/newsDetail/NewsContent";
-import styled from "./NewsDetailContainer.module.css";
-import classNames from "classnames/bind";
-import Quiz from "@/components/newsDetail/Quiz";
+
+import { Dispatch, SetStateAction, useRef } from "react";
 import Cover from "@/components/newsDetail/Cover";
-import { useEffect, useState } from "react";
+import NewsContent from "@/components/newsDetail/NewsContent";
+import Quiz from "@/components/newsDetail/Quiz";
 import { privateFetch } from "@/utils/http-commons";
+import classNames from "classnames/bind";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import styled from "./NewsDetailContainer.module.css";
+import Summary from "@/components/newsDetail/Summary";
+import NotSolved from "@/components/newsDetail/NotSolved";
 export default function NewsDetailContainer() {
-  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+  // react전용 변수
+  const pathname = usePathname();
   const cx = classNames.bind(styled);
 
+  //퀴즈 관련 변수
+  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [data, setData] = useState({});
-  const pathname = usePathname();
+  const [isSolved, setIsSolved] = useState<boolean>(false);
+  const [keywords, setKeywords] = useState<any[]>([]);
+  const [quiz_1, setQuiz_1] = useState<any[]>([]);
+  const [quiz_2, setQuiz_2] = useState<any[]>([]);
+  const [quiz_3, setQuiz_3] = useState<any[]>([]);
+  const [quizData, setQuizData] = useState<any[]>([]);
+
+  const [currentQuizNumber, setCurrentQuizNumber] = useState<number>(0); // 0 : 커버페이지 , 1,2,3 : 퀴즈
 
   useEffect(() => {
-    console.log(pathname.split("/")[2]);
     // 데이터 받아오는 함수 START
     (async () => {
       const res = await privateFetch("/news/" + pathname.split("/")[2], "GET");
-      if (res.status === 200) setData(await res.json());
-      else {
+      if (res.status === 200) {
+        let resData = await res.json();
+        let keywordList = [];
+        console.log(typeof Object.entries(resData.newsKeyword));
+        for (const [key] of Object.entries(resData.newsKeyword)) {
+          keywordList.push(key);
+        }
+        setIsSolved(resData.solved);
+        setKeywords(keywordList);
+        setData(resData);
+        setQuizData(resData.newsQuiz);
+      } else {
         console.log("error 발생");
       }
     })();
+    // 데이터 받아오는 함수 END
   }, []);
+
   return (
     <>
-      <div className={cx("container")}>
-        <NewsContent data={data} />
-        {currentQuestion === 0 ? (
-          <Cover goNext={setCurrentQuestion} />
-        ) : (
-          <Quiz />
-        )}
-      </div>
+      {isSolved ? (
+        // 풀었으면 렌더링
+        <>풀었다</>
+      ) : (
+        // 풀지 않았으면 렌더링
+        <NotSolved
+          data={data}
+          currentQuizNumber={currentQuizNumber}
+          setCurrentQuizNumber={setCurrentQuizNumber}
+          keywords={keywords}
+          quizData={quizData}
+          cx={cx}
+        />
+      )}
     </>
   );
 }
