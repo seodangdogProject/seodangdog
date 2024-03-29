@@ -61,6 +61,21 @@ function Modal({
     const nickname = nicknameEl.current ? nicknameEl.current.value : "";
     const keywords = data.map((item) => item.keyword);
 
+    if (!userId) {
+      alert("아이디는 필수 입력 사항입니다.");
+      return;
+    }
+
+    if (!password) {
+      alert("비밀번호는 필수 입력 사항입니다.");
+      return;
+    }
+
+    if (!nickname) {
+      alert("닉네임은 필수 입력 사항입니다.");
+      return;
+    }
+
     try {
       const response = await publicFetch("/join", "POST", {
         userId,
@@ -72,6 +87,7 @@ function Modal({
       if (response.ok) {
         console.log("회원가입 성공");
         onClickToggleModal();
+        window.location.href = "/";
       } else {
         console.error("회원가입 실패");
       }
@@ -148,11 +164,11 @@ function Modal({
             Sign up
           </button>
         </div> */}
-        <Link href="/" className={styles.login_button_container}>
+        <div className={styles.login_button_container}>
           <button onClick={registHandler} className={styles.login_button}>
             Sign up
           </button>
-        </Link>
+        </div>
         <div className={styles.footer}>
           select : {data.length}
           {/* {data
