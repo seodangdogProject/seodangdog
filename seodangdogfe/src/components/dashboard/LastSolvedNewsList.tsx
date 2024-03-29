@@ -65,10 +65,11 @@ export default function LastNewsList() {
                     <div className={styled.content}>
                         {newsList.map((item, idx) => (
                             <Link
+                                key={idx}
                                 style={{ color: "#000" }}
                                 href={`/news/${item.newsSeq}`}
                             >
-                                <CardNews data={item} />
+                                <CardNews key={idx} data={item} />
                             </Link>
                         ))}
                     </div>
