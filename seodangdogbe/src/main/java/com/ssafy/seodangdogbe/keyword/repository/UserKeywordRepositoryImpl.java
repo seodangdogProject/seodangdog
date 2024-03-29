@@ -88,6 +88,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
         return fastApiService.updateWeigth(dto);
     }
 
+
     @Override
     @Transactional
     public void incrementKeywordWeight(User user, List<String> list, double weight) {
@@ -120,6 +121,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     }
 
+
     @Transactional
     public void saveAll(List<UserKeyword> list) {
         String sql = "INSERT INTO user_keyword (user_seq, keyword, weight) " +
@@ -142,4 +144,12 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     }
 
 
+    @Override
+    @Transactional
+    public List<UserKeyword> getWordCloudUserKeyword(User user) {
+        return queryFactory.selectFrom(userKeyword)
+                .where(userKeyword.user.eq(user))
+                .limit(400)
+                .fetch();
+    }
 }

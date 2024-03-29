@@ -18,5 +18,4 @@ public interface UserKeywordRepository extends JpaRepository<UserKeyword, Long>,
 
     List<UserKeyword> findAllByUser(User user);
 
-    Optional<UserKeyword> findByUserAndKeyword(User user, Keyword keyword);
 }
