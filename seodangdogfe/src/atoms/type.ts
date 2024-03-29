@@ -23,6 +23,17 @@ export type newsThumbnail = {
     newsKeyword: string[];
 };
 
+export type newsDetailThumbnail = {
+    newsSeq: number;
+    newsImgUrl: string;
+    newsTitle: string;
+    newsDescription: string;
+    newsCreatedAt: string;
+    countView: number;
+    media: string;
+    newsKeyword: string[];
+};
+
 export type IPageObj = {
     pageNum: number;
 };
