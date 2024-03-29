@@ -41,8 +41,6 @@ def load_mf():
     return model
 
 
-
-
 def train_mf_model():
 
     ratings = select_all_ratings()
@@ -120,7 +118,8 @@ def online_learning(mf, user_id, item_id, rating, weight=1):
         # np.random.normal() 함수는 정규 분포를 따르는 난수를 생성하는 함수(평균과 표준 편차가 인자)
         ## scale=1./mf.K로 표준 편차를 설정 -> 1/mf.K를 표준 편차로 가지는 정규 분포를 따르는 난수
         ### size=(1, mf.K) -> 1행, mf.K(잠재요인)열 형태의 난수를 생성
-        mf.P = np.vstack([mf.P, np.random.normal(scale=1./mf.K, size=(1, mf.K))])
+        existing_user_features = mf.P.mean(axis=0)  # 예시로 평균 사용
+        mf.P = np.vstack([mf.P, existing_user_features])
         mf.b_u = np.append(mf.b_u, 0)
 
     if item_id not in mf.item_id_index:
@@ -130,7 +129,8 @@ def online_learning(mf, user_id, item_id, rating, weight=1):
         print(mf.item_id_index[item_id])
         mf.index_item_id[mf.num_items] = item_id
         mf.num_items += 1
-        mf.Q = np.vstack([mf.Q, np.random.normal(scale=1./mf.K, size=(1, mf.K))])
+        existing_item_features = mf.Q.mean(axis=0)  # 예시로 평균 사용
+        mf.Q = np.vstack([mf.Q, existing_item_features])
         mf.b_d = np.append(mf.b_d, 0)
 
     # 사용자와 아이템을 모델에 추가한 후에는 모델을 업데이트

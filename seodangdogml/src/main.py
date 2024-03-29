@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 
 # 사용자 라이브러리 추가
-from recommend.cbf_recommend import router as cbf_router, renewal_news_data
+from recommend.cbf_recommend import router as cbf_router, renewal_news_data, get_news_seq
 from recommend.cf_recommend import router as cf_router
 from repository.news_repository import router as news_repo_router
 from repository.recommend_repository import router as recommend_repo_router
@@ -32,6 +32,7 @@ def scheduled_job():
     print("스케쥴 : Mysql 저장 종료")
     print("예정된 스케쥴 종료 : crawling_cron")
     renewal_news_data()
+    get_news_seq()
 
 
 @asynccontextmanager
@@ -40,6 +41,7 @@ async def lifespan(_: FastAPI):
 
     # cbf추천을 위한 초기데이터 설정(recommend.cbf_recommend)
     renewal_news_data()
+    get_news_seq()
     yield
 
 

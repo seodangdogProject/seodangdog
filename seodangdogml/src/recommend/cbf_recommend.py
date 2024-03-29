@@ -49,7 +49,7 @@ class NewsDto:
 
 news_data = []
 df_news = pd.DataFrame(columns=["keyword"])
-
+news_id_seq = []
 
 def renewal_news_data():
     # 현재는 100개의 뉴스에 대해서만 들고온다 -> 추천되는건 rating테이블에 넣는데 너무 많으면 추천이 잘되는지 확인불가
@@ -71,14 +71,16 @@ def renewal_news_data():
     df_news = pd.DataFrame([[news['keyword_str']] for news in news_data], columns=['keyword_str'])
     return result
 
+# renewal_news_data는 서버실행시 실행
+# get_news_seq는 서버실행시 실행
+
 
 def get_news_seq():
+    global news_id_seq
     data = select_news_id_seq()
     result = {entry['news_id']: entry['news_seq'] for entry in data}
+    news_id_seq = result
     return result
-
-
-news_id_seq = get_news_seq()
 
 
 # BackgroundTasks의 의존성주입
