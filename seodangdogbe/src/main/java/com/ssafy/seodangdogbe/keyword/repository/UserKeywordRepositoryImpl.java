@@ -3,6 +3,7 @@ package com.ssafy.seodangdogbe.keyword.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seodangdogbe.common.MessageResponseDto;
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
+import com.ssafy.seodangdogbe.keyword.dto.DeWeightReqDto;
 import com.ssafy.seodangdogbe.keyword.dto.InfoDto;
 import com.ssafy.seodangdogbe.keyword.dto.loseWeightFastReqDto;
 import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshReqDto;
@@ -87,6 +88,23 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
         return fastApiService.updateWeigth(dto);
     }
 
+    @Override
+    @Transactional
+    public MessageResponseDto decrementKeywordWeightV2(User user, List<DeWeightReqDto> deWeightReqDtoList) {
+
+        List<DeWeightReqDto.KeywordInfo> list = DeWeightReqDto.extractKeywordInfoList(deWeightReqDtoList);
+        loseWeightFastReqDto dto = new loseWeightFastReqDto();
+
+        // 가중치 낮추기
+        updateAll(user, list);
+
+        // fast Api로 전송하기
+        dto.setUserSeq(user.getUserSeq());
+        dto.setInfo(DeWeightReqDto.extractInfoDtoList(deWeightReqDtoList));
+
+        // fastApi로 전송
+        return fastApiService.updateWeigth(dto);
+    }
 
     @Override
     @Transactional
@@ -136,7 +154,28 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
                     @Override
                     public int getBatchSize() {
-                        return list.size();
+                        return 10;
+                    }
+                });
+    }
+
+    @Transactional
+    public void updateAll(User user, List<DeWeightReqDto.KeywordInfo> list) {
+        String sql = "UPDATE user_keyword SET weight = weight - ?  " +
+                "WHERE user_seq =? AND keyword = ?";
+
+        jdbcTemplate.batchUpdate(sql,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement sql, int i) throws SQLException {
+                        sql.setDouble(1, list.get(i).getWeight());
+                        sql.setInt(2, user.getUserSeq());
+                        sql.setString(3, list.get(i).getKeyword());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return 10;
                     }
                 });
     }

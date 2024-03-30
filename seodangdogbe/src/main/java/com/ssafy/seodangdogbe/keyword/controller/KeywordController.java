@@ -1,6 +1,7 @@
 package com.ssafy.seodangdogbe.keyword.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
+import com.ssafy.seodangdogbe.keyword.dto.DeWeightReqDto;
 import com.ssafy.seodangdogbe.keyword.dto.JoinKeywordDto;
 import com.ssafy.seodangdogbe.common.MessageResponseDto;
 import com.ssafy.seodangdogbe.keyword.domain.JoinKeyword;
@@ -36,6 +37,13 @@ public class KeywordController {
     public ResponseEntity<MessageResponseDto> minusWeight(@RequestBody List<NewsRefreshReqDto> newsRefreshReqDtoList){
         User user = userService.getUser();
         MessageResponseDto result = keywordService.minusKeywordListWeight(user, newsRefreshReqDtoList, -0.35, -0.2);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/refre/v2")
+    public ResponseEntity<MessageResponseDto> minusWeightV2(@RequestBody List<DeWeightReqDto> deWeightReqDtosList){
+        User user = userService.getUser();
+        MessageResponseDto result = keywordService.minusKeywordListWeightV2(user, deWeightReqDtosList);
         return ResponseEntity.ok(result);
     }
 

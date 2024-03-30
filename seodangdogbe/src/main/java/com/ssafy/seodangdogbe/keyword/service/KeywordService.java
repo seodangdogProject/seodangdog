@@ -4,10 +4,7 @@ import com.ssafy.seodangdogbe.common.MessageResponseDto;
 import com.ssafy.seodangdogbe.keyword.domain.JoinKeyword;
 import com.ssafy.seodangdogbe.keyword.domain.Keyword;
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
-import com.ssafy.seodangdogbe.keyword.dto.JoinKeywordDto;
-import com.ssafy.seodangdogbe.keyword.dto.NewsKeywordDto;
-import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshReqDto;
-import com.ssafy.seodangdogbe.keyword.dto.UserKeywordDto;
+import com.ssafy.seodangdogbe.keyword.dto.*;
 import com.ssafy.seodangdogbe.keyword.repository.JoinKeywordRepository;
 import com.ssafy.seodangdogbe.keyword.repository.JoinKeywordRepositoryCustom;
 import com.ssafy.seodangdogbe.keyword.repository.UserKeywordRepository;
@@ -36,6 +33,12 @@ public class KeywordService {
     // 새로고침 시 뉴스 키워드 감소
     public MessageResponseDto minusKeywordListWeight(User user, List<NewsRefreshReqDto> newsRefreshReqDtoList, double highWeight, double rowWeight){
         return userKeywordRepository.decrementKeywordWeight(user, newsRefreshReqDtoList, highWeight, rowWeight);
+    }
+
+    // 새로고침 시 뉴스 키워드 감소
+    @Transactional
+    public MessageResponseDto minusKeywordListWeightV2(User user, List<DeWeightReqDto> deWeightReqDtoList){
+        return userKeywordRepository.decrementKeywordWeightV2(user, deWeightReqDtoList);
     }
 
     // 클릭 시 해당 뉴스 키워드 증가
