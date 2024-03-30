@@ -45,23 +45,22 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         }
 
-        // 기본뱃지들고오기
-        Optional<Badge> findBasicBadge = badgeRepository.findById(1);
-        if (findBasicBadge.isEmpty()) return 0;
-        Badge basicBadge = findBasicBadge.get();
+//        // 기본뱃지들고오기
+//        Optional<Badge> findBasicBadge = badgeRepository.findById(1);
+//        if (findBasicBadge.isEmpty()) return 0;
+//        Badge basicBadge = findBasicBadge.get();
 
 //        User user = userSignUpDto.toEntity();
         User user = User.builder()
                 .userId(userSignUpDto.getUserId())
                 .password(passwordEncoder.encode(userSignUpDto.getPassword())) // 비밀번호 해싱
                 .nickname(userSignUpDto.getNickname())
-                .badge(basicBadge)
                 .role("USER") // role 기본값 할당
                 .build();
         user = userRepository.save(user); // 저장
 
         for (String keyword : userSignUpDto.getKeywords()) {
-            // 각 키워드에 대해 UserKeyword 엔티티 생성 및 저장
+            // 회원가입 시 선택한 키워드들에 대해 UserKeyword 엔티티 생성 및 저장 (가중치 3)
             UserKeyword userKeyword = new UserKeyword(user, keyword, 3.0);
             userKeywordRepository.save(userKeyword);
         }

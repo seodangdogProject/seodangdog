@@ -2,6 +2,7 @@ package com.ssafy.seodangdogbe.user.dto;
 
 import com.ssafy.seodangdogbe.user.domain.Badge;
 import com.ssafy.seodangdogbe.user.domain.User;
+import com.ssafy.seodangdogbe.user.domain.UserBadge;
 import com.ssafy.seodangdogbe.user.domain.UserExp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,14 +14,15 @@ import lombok.NoArgsConstructor;
 public class UserBadgeDto {
 
     private BadgeDto badgeDto;
-    private boolean isCollected;
+    private boolean isCollected = false;
     private boolean isRepresent = false;
     private int userBadgeExp;
 
-    public UserBadgeDto(User user, Badge badge){
+    public UserBadgeDto(User user, UserBadge userBadge){
+        this.badgeDto = new BadgeDto(userBadge.getBadge());
+
         UserExp userExp = user.getUserExp();
-        this.badgeDto = new BadgeDto(badge);
-        int exp = switch (badge.getBadgeName()) {
+        this.userBadgeExp = switch (userBadge.getBadge().getBadgeName()) {
             case "어휘왕" -> userExp.getWordExp();
             case "추론왕" -> userExp.getInferenceExp();
             case "판단왕" -> userExp.getJudgementExp();
@@ -30,9 +32,24 @@ public class UserBadgeDto {
             default -> 0;
         };
 
-        this.isCollected = badge.getBadgeCondition() <= exp;
-        this.isRepresent = user.getBadge().getBadgeSeq() == badge.getBadgeSeq();
-        this.userBadgeExp = exp;
+        this.isCollected = true;
+        this.isRepresent = userBadge.isRepBadge();
+    }
+
+
+    public UserBadgeDto(User user, Badge badge){
+        this.badgeDto = new BadgeDto(badge);
+
+        UserExp userExp = user.getUserExp();
+        this.userBadgeExp = switch (badge.getBadgeName()) {
+            case "어휘왕" -> userExp.getWordExp();
+            case "추론왕" -> userExp.getInferenceExp();
+            case "판단왕" -> userExp.getJudgementExp();
+            case "요약왕" -> userExp.getSummaryExp();
+            case "뉴스왕" -> userExp.getNewsExp();
+            case "퀴즈왕" -> userExp.getWordGameExp();
+            default -> 0;
+        };
     }
 
     @Getter

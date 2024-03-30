@@ -31,13 +31,18 @@ public class User extends BaseTimeEntity {
     private UserExp userExp = new UserExp();
 
     // 사용자 대표 뱃지
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "badge_seq")
-    private Badge badge;
+    private UserBadge userBadge;
 
-    @Column(length = 15, unique = true)
+    @Column(length = 15, unique = true, nullable = false)
     private String userId;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    private String nickname;
+
+    private String role;
 
     // 양방향 연관관계 매핑 (주인X)
     @OneToMany(mappedBy = "user")
@@ -60,10 +65,6 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private List<UserNews> userNewsList = new ArrayList<>();
 
-    private String role;
-
-    private String nickname;
-
     // 함수
     public List<String> getRoleList(){
         if(this.role.length() > 0){
@@ -76,22 +77,14 @@ public class User extends BaseTimeEntity {
         this.password = passwordEncoder.encode(password);
     }
 
-    public User(String userId, String password){
-        this.userId = userId;
-        this.password = password;
-    }
 
-    public User(String userId, String password, String nickname, Badge badge){
-        this.userId = userId;
-        this.password = password;
-        this.nickname = nickname;
-        this.badge = badge;
-        this.role = "USER";
-    }
-
-    public User(int userSeq){
-        this.userSeq = userSeq;
-    }
+//    public User(String userId, String password, String nickname, Badge badge){
+//        this.userId = userId;
+//        this.password = password;
+//        this.nickname = nickname;
+//        this.badge = badge;
+//        this.role = "USER";
+//    }
 
 
 }

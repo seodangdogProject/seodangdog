@@ -19,6 +19,7 @@ public class UserNewsRepositoryImpl implements UserNewsRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     private final QUserNews qUserNews = QUserNews.userNews;
+
     public List<LocalDateTime> findSolvedDateList(User user, LocalDateTime start, LocalDateTime end){
         return queryFactory.selectDistinct(qUserNews.modifiedAt)  // 안겹치게 하려면 Distinct 붙이기
                 .from(qUserNews)

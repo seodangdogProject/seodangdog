@@ -19,9 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BadgeController {
 
-    public final UserService userService;
-    public final BadgeService badgeService;
-    public final UserBadgeService userBadgeService;
+    private final UserService userService;
+    private final BadgeService badgeService;
+    private final UserBadgeService userBadgeService;
 
     @Operation(description = "전체 뱃지 목록 조회")
     @GetMapping
