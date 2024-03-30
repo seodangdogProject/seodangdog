@@ -83,12 +83,13 @@
 .unselected_toggle_item {
     background-color: rgba(197, 204, 221, 1);
 }
+
 .wordBox {
     background-color: white;
     font-family: "NanumMyeongjo";
-    border-radius: 5px;
-    padding: 10px;
-    padding-top: 20px;
+    border-radius: 10px;
+    padding: 20px;
+    padding-top: 30px;
     width: 100%;
     min-height: 70px;
     box-shadow: 2px 2px 2px gray;
@@ -108,8 +109,10 @@
 }
 
 .mean {
+    width: 90%;
     margin-left: 20px;
     margin-bottom: 10px;
+    line-height: 1.3rem;
 }
 
 .search_cotinaer {

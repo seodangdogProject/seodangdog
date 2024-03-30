@@ -5,10 +5,12 @@ import styled from "./LastNewsList.module.css";
 import classNames from "classnames/bind";
 import { privateFetch } from "@/utils/http-commons";
 import { newsDetailThumbnail } from "@/atoms/type";
+import changeDateFormat from "@/utils/changeDateFormat";
 
 function CardNews({ data }: { data: newsDetailThumbnail }) {
     return (
         <div className={styled.cardNews}>
+           <div className={styled.imageContainer}>
             <img
                 src={
                     data.newsImgUrl == "None"
@@ -17,10 +19,13 @@ function CardNews({ data }: { data: newsDetailThumbnail }) {
                 }
                 alt=""
             />
+            </div>
             <div className={styled.desc}>
                 <div className={styled.title}>{data.newsTitle}</div>
                 <div className={styled.meta}>
-                    조회수 {data.countView} | {data.newsCreatedAt}
+                조회수 {data.countView} | {changeDateFormat(
+                                                data.newsCreatedAt
+                                            )}
                 </div>
                 <div className={styled.company}>
                     <img src={data.media} alt="" />
