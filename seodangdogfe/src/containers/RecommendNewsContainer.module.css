@@ -84,7 +84,7 @@
   margin-bottom: 50px;
 }
 .line-item {
-  width: 30%;
+  width: 33%;
   padding: 10px 10px;
   box-sizing: border-box;
   cursor: pointer;
@@ -105,14 +105,14 @@
 .title,
 .description,
 .date {
-  padding-left: 10px;
+  padding: 0px 5px;
   font-family: "Pretendard-Regular";
 }
 .title {
   font-weight: bold;
   font-size: 1.3rem;
   margin: 10px 0;
-  height: 41px;
+  /* height: 41px; */
   display: flex;
   align-items: center;
 }

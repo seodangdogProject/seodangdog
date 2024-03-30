@@ -8,7 +8,7 @@ import {
     Title,
     RadialLinearScale,
 } from "chart.js";
-import { Radar } from "react-chartjs-2";
+import { Line, Radar } from "react-chartjs-2";
 import { ability } from "@/atoms/type";
 import styles from "./chart_style.module.css";
 
@@ -63,8 +63,11 @@ const Chart = (props: chartProps) => {
                     ],
                     backgroundColor: "rgba(54, 162, 235, 0.2)",
                     borderColor: "#FF7474",
+                    borderWidth: 2,
+                    // pointStyle: Line,
                     pointBackgroundColor: "#F1DEF0",
-                    pointBorderColor: "#fff",
+                    pointBorderColor: "red",
+                    pointBorderWidth: 1,
                     pointHoverBackgroundColor: "#fff",
                     pointHoverBorderColor: "rgb(54, 162, 235)",
                 },
