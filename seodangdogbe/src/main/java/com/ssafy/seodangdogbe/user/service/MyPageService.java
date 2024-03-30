@@ -34,7 +34,7 @@ public class MyPageService {
     public final UserNewsRepository userNewsRepository;
     public final UserNewsRepositoryCustom userNewsRepositoryCustom;
 
-    public final WebClient webClient;
+//    public final WebClient webClient;
 
     // 출석일 수 조회
     public Integer getAttendanceCount(User user){
@@ -71,14 +71,14 @@ public class MyPageService {
     }
 
     // 사용자 워드클라우드 fastAPI 조회
-    public Mono<String> getWordCloud(int userSeq){
-        return this.webClient.get()
-                .uri("/fast/mypages/wordclouds/{userSeq}", userSeq)
-                .retrieve()
-                .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
-                        clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
-                .bodyToMono(new ParameterizedTypeReference<String>() {
-                });
-    }
+//    public Mono<String> getWordCloud(int userSeq){
+//        return this.webClient.get()
+//                .uri("/fast/mypages/wordclouds/{userSeq}", userSeq)
+//                .retrieve()
+//                .onStatus(httpStatus -> httpStatus.is4xxClientError() || httpStatus.is5xxServerError(),
+//                        clientResponse -> Mono.error(new RuntimeException("API 호출 실패, 상태 코드: " + clientResponse.statusCode())))
+//                .bodyToMono(new ParameterizedTypeReference<String>() {
+//                });
+//    }
 
 }

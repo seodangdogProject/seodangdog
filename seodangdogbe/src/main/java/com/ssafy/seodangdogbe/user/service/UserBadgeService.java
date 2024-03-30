@@ -113,21 +113,18 @@ public class UserBadgeService {
 
     // 전체뱃지 정보 + 사용자경험치 정보
     public List<UserBadgeDto> getBadgeInfoAndUserExp(User user) {
-//        List<UserBadge> findUserBadgeList = userBadgeRepository.findAllByUserOrderByBadgeSeq(user);
         List<UserBadge> findUserBadgeList = userBadgeRepositoryCustom.findAllByUser(user);
+        List<Badge> findBadgeList = findUserBadgeList.stream().map(UserBadge::getBadge).toList();
+        List<UserBadgeDto> result = new ArrayList<>(findUserBadgeList.stream().map(UserBadgeDto::new).toList());
 
-        List<UserBadgeDto> result = new ArrayList<>();
+        List<Badge> badgeList = badgeRepository.findAll();
 
-        int idx = 1;
-        for (UserBadge userBadge : findUserBadgeList){
-            if (idx == userBadge.getBadge().getBadgeSeq()) {
-                result.add(new UserBadgeDto(user, userBadge));
-            }
-            else {
-                result.add(new UserBadgeDto(user, badgeRepository.findById(idx).orElseThrow(NullPointerException::new)));
+        for (Badge badge : badgeList){
+            if (!findBadgeList.contains(badge)){    // 보유하지 않은 뱃지
+                result.add(new UserBadgeDto(user, badge));
             }
         }
 
-        return result;
+        return result.stream().sorted(((o1, o2) -> o1.getBadgeDto().getBadgeSeq() - o2.getBadgeDto().getBadgeSeq())).toList();
     }
 }

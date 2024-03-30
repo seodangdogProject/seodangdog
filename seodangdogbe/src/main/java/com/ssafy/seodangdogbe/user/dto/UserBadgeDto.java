@@ -18,25 +18,6 @@ public class UserBadgeDto {
     private boolean isRepresent = false;
     private int userBadgeExp;
 
-    public UserBadgeDto(User user, UserBadge userBadge){
-        this.badgeDto = new BadgeDto(userBadge.getBadge());
-
-        UserExp userExp = user.getUserExp();
-        this.userBadgeExp = switch (userBadge.getBadge().getBadgeName()) {
-            case "어휘왕" -> userExp.getWordExp();
-            case "추론왕" -> userExp.getInferenceExp();
-            case "판단왕" -> userExp.getJudgementExp();
-            case "요약왕" -> userExp.getSummaryExp();
-            case "뉴스왕" -> userExp.getNewsExp();
-            case "퀴즈왕" -> userExp.getWordGameExp();
-            default -> 0;
-        };
-
-        this.isCollected = true;
-        this.isRepresent = userBadge.isRepBadge();
-    }
-
-
     public UserBadgeDto(User user, Badge badge){
         this.badgeDto = new BadgeDto(badge);
 
@@ -50,6 +31,24 @@ public class UserBadgeDto {
             case "퀴즈왕" -> userExp.getWordGameExp();
             default -> 0;
         };
+    }
+
+
+    // from userBadge 테이블
+    public UserBadgeDto(UserBadge userBadge) {
+        this.badgeDto = new BadgeDto(userBadge.getBadge());
+        UserExp userExp = userBadge.getUser().getUserExp();
+        this.userBadgeExp = switch (userBadge.getBadge().getBadgeName()) {
+            case "어휘왕" -> userExp.getWordExp();
+            case "추론왕" -> userExp.getInferenceExp();
+            case "판단왕" -> userExp.getJudgementExp();
+            case "요약왕" -> userExp.getSummaryExp();
+            case "뉴스왕" -> userExp.getNewsExp();
+            case "퀴즈왕" -> userExp.getWordGameExp();
+            default -> 0;
+        };
+        this.isCollected = true;
+        this.isRepresent = userBadge.isRepBadge();
     }
 
     @Getter

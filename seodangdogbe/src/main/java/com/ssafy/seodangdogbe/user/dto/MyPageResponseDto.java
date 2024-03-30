@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Getter
@@ -23,7 +26,7 @@ public class MyPageResponseDto {
     private UserAbilityDto ability;
 
     private List<BadgeDto> userBadgeList;
-    private String badgeImgUrl;
+    private String badgeImgUrl;     // repBadgeImgUrl
 
     private List<LocalDate> streakList;
 //    private List<Integer> streakCntList;
@@ -52,13 +55,15 @@ public class MyPageResponseDto {
             summaryExp: 요약 제출 개수 (= 푼 뉴스 수)
          */
 
-        public UserAbilityDto(User user){
+        public UserAbilityDto(User user, int attendanceCount){
             UserExp userExp = user.getUserExp();
             this.wordAbility = (float) userExp.getWordExp() / userExp.getSummaryExp();
             this.inferenceAbility = (float) userExp.getInferenceExp() / userExp.getSummaryExp();
             this.judgementAbility = (float) userExp.getJudgementExp() / userExp.getSummaryExp();
             this.summaryAbility = (float) userExp.getSummaryExp() / userExp.getNewsExp();
-//            this.constantAbility = ;
+
+            long duringDate = ChronoUnit.DAYS.between(user.getCreatedAt(), LocalDateTime.now());
+            this.constantAbility = (float) attendanceCount / duringDate;
         }
     }
 }

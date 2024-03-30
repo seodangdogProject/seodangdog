@@ -43,7 +43,7 @@ public class BadgeController {
         User user = userService.getUser();
 
         if (userBadgeService.setRepresentBadge(user, badgeSeq)){
-            return ResponseEntity.ok().body(new MessageAlterResponseDto("대표 뱃지 변경에 성공"));
+            return ResponseEntity.ok().body(new MessageAlterResponseDto("대표 뱃지 변경 성공"));
         } else {
             return ResponseEntity.badRequest().body(new MessageAlterResponseDto("대표 뱃지 변경 실패"));
         }
@@ -51,7 +51,7 @@ public class BadgeController {
 
     @Operation(description = "전체 뱃지 목록 + 사용자 뱃지 현황")
     @GetMapping("/info")
-    public List<UserBadgeDto>  getBadgeInfoAndUserExp(){
+    public List<UserBadgeDto> getBadgeInfoAndUserExp(){
         User user = userService.getUser();
 
         return userBadgeService.getBadgeInfoAndUserExp(user);

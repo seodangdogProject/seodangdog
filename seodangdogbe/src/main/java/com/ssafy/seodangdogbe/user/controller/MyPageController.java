@@ -46,12 +46,10 @@ public class MyPageController {
         resultDto.setUserId(user.getUserId());
         resultDto.setNickname(user.getNickname());
 
-        // ability
-        resultDto.setAbility(new UserAbilityDto(user));
-        // ability constant
+        // 출석일
         int attendanceCount = mypageService.getAttendanceCount(user);
-        long duringDate = ChronoUnit.DAYS.between(user.getCreatedAt(), LocalDateTime.now());
-        resultDto.getAbility().setConstantAbility((float) attendanceCount / duringDate);
+        // ability
+        resultDto.setAbility(new UserAbilityDto(user, attendanceCount));
 
         // badge
         resultDto.setBadgeImgUrl(userBadgeService.getBadgeImgUrl(user));
