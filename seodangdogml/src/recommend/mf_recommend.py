@@ -8,7 +8,7 @@ from fastapi import BackgroundTasks
 import pandas as pd
 import os
 from recommend.cbf_recommend import format_weight
-from recommend.cbf_recommend import cbf_recommend
+from recommend.cbf_recommend import cbf_recommend, get_df_news
 from recommend.cbf_recommend import news_id_seq
 from repository.recommend_repository import select_ratings
 from repository.recommend_repository import update_ratings
@@ -29,16 +29,20 @@ from pydantic import BaseModel
 router = APIRouter()
 
 # 뉴스데이터 로드 start
-news = select_all_news()
-news = pd.DataFrame(news)
-news = news.set_index('news_id')
+
+news = []
+def renewal_news_df():
+    global news
+    news = pd.DataFrame(select_all_news())
+    news = news.set_index('news_id')
 
 
 class MfNewsDto:
-    def __init__(self, news_seq, news_title, news_similarity):
+    def __init__(self, news_seq, news_title, news_similarity, news_summary_keyword):
         self.news_seq = news_seq
         self.news_title = news_title
         self.news_similarity = news_similarity
+        self.news_keyword = news_summary_keyword
 
 
 mf = load_mf()
@@ -73,13 +77,15 @@ def recommend_news(user_seq, mf_model, top_n=21):
     # print(predicted_ratings)
     # print("all_recommend_count ", len(predicted_ratings))
     # 상위 top_n개의 영화를 추천 목록에 추가
+    df_news = get_df_news()
     recommended_news = []
     for i in range(min(top_n, len(predicted_ratings))):
         news_seq = predicted_ratings[i][0]
         news_title = get_news_title(news_seq)
         # news_similarity = format_weight(predicted_ratings[i][1])
         news_similarity = predicted_ratings[i][1]
-        recommended_news.append(MfNewsDto(news_seq, news_title, news_similarity))
+        news_summary_keyword= df_news[df_news['news_seq'] == news_seq]['news_summary_keyword'].values[0]
+        recommended_news.append(MfNewsDto(news_seq, news_title, news_similarity, news_summary_keyword))
 
     return recommended_news
 
