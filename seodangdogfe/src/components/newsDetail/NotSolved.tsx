@@ -13,6 +13,11 @@ export default function NotSolved({
   quizData,
   cx, // newsDetailContainer.module.css
   newsSeq,
+  setAnswerList,
+  answerList,
+  setUserSummary,
+  solveQuiz,
+  setCorrectList,
 }: {
   data: any;
   currentQuizNumber: number;
@@ -21,6 +26,11 @@ export default function NotSolved({
   cx: Function;
   newsSeq: number;
   quizData: any[];
+  setAnswerList: Dispatch<SetStateAction<number[]>>;
+  answerList: number[];
+  setUserSummary: Dispatch<SetStateAction<string>>;
+  solveQuiz: Function;
+  setCorrectList: Dispatch<SetStateAction<boolean[]>>;
 }) {
   const detailContainerEl = useRef<HTMLDivElement>(null);
   // 0 : 형광펜 , 2 : 지우개, 2 : 돋보기
@@ -107,9 +117,16 @@ export default function NotSolved({
             currentQuizNumber={currentQuizNumber}
             quizData={quizData}
             setCurrentQuizNumber={setCurrentQuizNumber}
+            setAnswerList={setAnswerList}
+            answerList={answerList}
+            setCorrectList={setCorrectList}
           />
         ) : (
-          <Summary isSolved={false} />
+          <Summary
+            solveQuiz={solveQuiz}
+            setUserSummary={setUserSummary}
+            isSolved={false}
+          />
         )}
       </div>
     </div>

@@ -27,19 +27,31 @@ export default function NewsContent({
   const [clickedWord, setClickedWord] = useState<any>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  // cleanup 함수에서 사용하기 위해 설정한 useRef 변수
+  const latestHighlightListRef = useRef<number[]>();
+  latestHighlightListRef.current = highlightList;
+  const latestWordListRef = useRef<number[]>();
+  latestWordListRef.current = wordList;
+
   useEffect((): any => {
     setHighLightList(data?.highlightList || []);
-    console.log(data);
+    // console.log(data);
+  }, [data]);
+  useEffect((): any => {
     return async () => {
-      const a = await privateFetch("/news/read", "PATCH", {
+      const body = {
         newsSeq: newsSeq,
-        highlightList,
-        wordList,
-      });
-      const b = await privateFetch("/news/word", "POST", {
-        word: wordList[0],
-      });
-      console.log(await a.json());
+        highlightList: latestHighlightListRef.current,
+        wordList: latestWordListRef.current,
+      };
+      try {
+        const res = await privateFetch("/news/read", "PATCH", body);
+        if (res.status !== 200) {
+          throw "통신 에러 발생!";
+        }
+      } catch (error) {
+        console.error(error);
+      }
     };
   }, []);
 

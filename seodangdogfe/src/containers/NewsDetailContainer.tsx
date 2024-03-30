@@ -26,6 +26,11 @@ export default function NewsDetailContainer() {
   const [quiz_3, setQuiz_3] = useState<any[]>([]);
   const [quizData, setQuizData] = useState<any[]>([]);
 
+  // 유저가 작성한 답 변수들
+  const [answerList, setAnswerList] = useState<number[]>([]);
+  const [userSummary, setUserSummary] = useState<string>("");
+  const [correctList, setCorrectList] = useState<boolean[]>([]);
+
   const [currentQuizNumber, setCurrentQuizNumber] = useState<number>(0); // 0 : 커버페이지 , 1,2,3 : 퀴즈
 
   useEffect(() => {
@@ -35,7 +40,6 @@ export default function NewsDetailContainer() {
       if (res.status === 200) {
         let resData = await res.json();
         let keywordList = [];
-        console.log(typeof Object.entries(resData.newsKeyword));
         for (const [key] of Object.entries(resData.newsKeyword)) {
           keywordList.push(key);
         }
@@ -50,7 +54,27 @@ export default function NewsDetailContainer() {
     })();
     // 데이터 받아오는 함수 END
   }, []);
-
+  // METHOD
+  // 제출 버튼 누르면 서버로 데이터 보냄
+  async function solveQuiz() {
+    const body = {
+      newsSeq: pathname.split("/")[2],
+      userAnswerList: answerList,
+      correctList: correctList,
+      userSummary: {
+        userSummaryContent: userSummary,
+        userSummaryKeyword: [],
+      },
+    };
+    try {
+      const res = await privateFetch("/news/solve", "PATCH", body);
+      if (res.status !== 200) {
+        throw "서버통신 에러";
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <>
       {isSolved ? (
@@ -66,6 +90,11 @@ export default function NewsDetailContainer() {
           quizData={quizData}
           cx={cx}
           newsSeq={Number(pathname.split("/")[2])}
+          setAnswerList={setAnswerList}
+          answerList={answerList}
+          setUserSummary={setUserSummary}
+          solveQuiz={solveQuiz}
+          setCorrectList={setCorrectList}
         />
       )}
     </>

@@ -1,12 +1,33 @@
+import { Dispatch, SetStateAction, useRef } from "react";
 import styled from "./Summary.module.css";
 import classNames from "classnames/bind";
-export default function Summary({ isSolved }: { isSolved: boolean }) {
+import { text } from "stream/consumers";
+import { privateFetch } from "@/utils/http-commons";
+export default function Summary({
+  setUserSummary,
+  solveQuiz,
+  isSolved,
+}: {
+  setUserSummary: Dispatch<SetStateAction<string>>;
+  solveQuiz: Function;
+  isSolved: boolean;
+}) {
   const cx = classNames.bind(styled);
+  const textareaEl = useRef<HTMLTextAreaElement>(null);
+
+  // METHOD
+  function userSummaryHandler() {
+    setUserSummary(textareaEl.current?.value || "");
+  }
   return (
     <>
       <div className={cx("container")}>
         <div className={cx("summary-container")}>
-          {!isSolved ? <div className={cx("next-btn")}>제출</div> : null}
+          {!isSolved ? (
+            <div onClick={() => solveQuiz()} className={cx("next-btn")}>
+              제출
+            </div>
+          ) : null}
           <div className={cx("naver-summary")}>
             <h3 className={cx("title")}>
               <div>
@@ -51,6 +72,8 @@ export default function Summary({ isSolved }: { isSolved: boolean }) {
             </h3>
             <div className={cx("content")}>
               <textarea
+                onChange={userSummaryHandler}
+                ref={textareaEl}
                 maxLength={200}
                 className={cx("textarea")}
                 cols={30}
