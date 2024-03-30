@@ -26,7 +26,12 @@ public class UserKeyword extends BaseTimeEntity {
     @JoinColumn(name = "keyword")
     private Keyword keyword;
 
-    private Double weight = 3.0;
+    private Double weight = 1.0;
+
+    public UserKeyword(User user, String keyword) {
+        this.user = user;
+        this.keyword = new Keyword(keyword);
+    }
 
     public UserKeyword(User user, String keyword, double weight) {
         this.user = user;

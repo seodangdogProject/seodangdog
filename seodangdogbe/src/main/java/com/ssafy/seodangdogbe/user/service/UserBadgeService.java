@@ -8,20 +8,24 @@ import com.ssafy.seodangdogbe.user.dto.BadgeDto;
 import com.ssafy.seodangdogbe.user.dto.UserBadgeDto;
 import com.ssafy.seodangdogbe.user.repository.BadgeRepository;
 import com.ssafy.seodangdogbe.user.repository.UserBadgeRepository;
+import com.ssafy.seodangdogbe.user.repository.UserBadgeRepositoryCustom;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserBadgeService {
 
-    public final BadgeRepository badgeRepository;
-    public final UserBadgeRepository userBadgeRepository;
+    private final BadgeRepository badgeRepository;
+    private final UserBadgeRepository userBadgeRepository;
+    private final UserBadgeRepositoryCustom userBadgeRepositoryCustom;
 
     // 사용자 보유 뱃지 목록 조회
     public List<BadgeDto> getUserBadgeList(User user) {
@@ -35,21 +39,30 @@ public class UserBadgeService {
 
     // 사용자 대표뱃지 이미지 조회
     public String getBadgeImgUrl(User user){
-        return user.getBadge().getBadgeImgUrl();
+        return userBadgeRepositoryCustom.findByUserRepBadge(user)
+                .getBadge().getBadgeImgUrl();
+
     }
 
     // 대표뱃지 변경
-    public boolean setRepresentBadge(User user, int badgeSeq) {
-        List<UserBadge> findBadges = userBadgeRepository.findAllByUser(user);
-        Badge badge = badgeRepository.findById(badgeSeq).orElseThrow(NullPointerException::new);
+    public boolean setRepresentBadge(User user, int newBadgeSeq) {
+        List<UserBadge> findUserBadges = userBadgeRepository.findAllByUser(user);
 
-        UserBadge findUserBadge = userBadgeRepository.findByUserAndBadge(user, badge);
-        if (findBadges.contains(findUserBadge)){
-            findUserBadge.getUser().setBadge(badge);
+        // 현재 대표뱃지 -> 대표뱃지 해제
+        UserBadge curRep = userBadgeRepositoryCustom.findByUserRepBadge(user);
+        curRep.setRepBadge(false);
+
+        // 새로운 대표뱃지 설정
+        UserBadge newRep = userBadgeRepositoryCustom.findUserBadge(user, newBadgeSeq);
+        if (newRep != null){
+            newRep.setRepBadge(true);
             return true;
-        } else {    // 사용자가 갖고있지 않은 뱃지라면
-            return false;
         }
+
+        return false;
+//        UserBadge newRep = null;
+//                .orElseThrow(() -> new NullPointerException("새로 지정할 대표 뱃지를 찾을 수 없습니다."));
+//        newRep.setRepBadge(true);
     }
 
     // 새로운 뱃지 획득 여부 체크
@@ -100,13 +113,18 @@ public class UserBadgeService {
 
     // 전체뱃지 정보 + 사용자경험치 정보
     public List<UserBadgeDto> getBadgeInfoAndUserExp(User user) {
+        List<UserBadge> findUserBadgeList = userBadgeRepositoryCustom.findAllByUser(user);
+        List<Badge> findBadgeList = findUserBadgeList.stream().map(UserBadge::getBadge).toList();
+        List<UserBadgeDto> result = new ArrayList<>(findUserBadgeList.stream().map(UserBadgeDto::new).toList());
+
         List<Badge> badgeList = badgeRepository.findAll();
-        List<UserBadgeDto> result = new ArrayList<>();
 
         for (Badge badge : badgeList){
-            result.add(new UserBadgeDto(user, badge));
+            if (!findBadgeList.contains(badge)){    // 보유하지 않은 뱃지
+                result.add(new UserBadgeDto(user, badge));
+            }
         }
 
-        return result;
+        return result.stream().sorted(((o1, o2) -> o1.getBadgeDto().getBadgeSeq() - o2.getBadgeDto().getBadgeSeq())).toList();
     }
 }

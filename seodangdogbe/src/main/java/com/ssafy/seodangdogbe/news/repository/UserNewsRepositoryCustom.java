@@ -12,5 +12,6 @@ public interface UserNewsRepositoryCustom {
     Integer countSolvedDate(User user);
 
     UserNews findRecentViewUserNews(User user);
+
     UserNews findRecentSolvedUserNews(User user);
 }

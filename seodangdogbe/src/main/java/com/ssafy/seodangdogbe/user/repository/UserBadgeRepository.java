@@ -6,11 +6,12 @@ import com.ssafy.seodangdogbe.user.domain.UserBadge;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserBadgeRepository extends JpaRepository<UserBadge, Integer> {
     List<UserBadge> findAllByUser(User user);
 
-    UserBadge findByUserAndBadge(User user, Badge badge);
+    boolean existsByUserAndBadgeBadgeSeq(User user, int badgeSeq);
 
-//    void saveAll(List<UserBadge> userBadges);
+    //    void saveAll(List<UserBadge> userBadges);
 }

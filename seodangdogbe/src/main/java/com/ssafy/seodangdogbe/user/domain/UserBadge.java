@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -27,8 +28,11 @@ public class UserBadge extends BaseTimeEntity {
     @JoinColumn(name = "badge_seq", columnDefinition = "1")
     private Badge badge;
 
+    private boolean isRepBadge = true;
+
     public UserBadge(User user, Badge badge) {
         this.user = user;
         this.badge = badge;
+        this.isRepBadge = false;
     }
 }
