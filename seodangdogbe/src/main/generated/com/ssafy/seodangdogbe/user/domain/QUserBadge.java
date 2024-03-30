@@ -32,6 +32,8 @@ public class QUserBadge extends EntityPathBase<UserBadge> {
     //inherited
     public final BooleanPath isDelete = _super.isDelete;
 
+    public final BooleanPath isRepBadge = createBoolean("isRepBadge");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 

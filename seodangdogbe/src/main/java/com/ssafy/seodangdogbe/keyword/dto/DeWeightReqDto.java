@@ -2,8 +2,6 @@ package com.ssafy.seodangdogbe.keyword.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class DeWeightReqDto {
 
-    Long newSeq;
+    Long newsSeq;
     KeywordInfo[] keywordInfoList;
 
     @Data
@@ -39,7 +37,7 @@ public class DeWeightReqDto {
 
         for (DeWeightReqDto dto : dtoList) {
             for (KeywordInfo keywordInfo : dto.keywordInfoList) {
-                InfoDtoList.add(new InfoDto(dto.newSeq, keywordInfo.weight));
+                InfoDtoList.add(new InfoDto(dto.newsSeq, keywordInfo.weight));
             }
         }
 

@@ -1,6 +1,8 @@
 package com.ssafy.seodangdogbe.news.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.seodangdogbe.keyword.domain.Keyword;
 import com.ssafy.seodangdogbe.news.domain.News;
 import com.ssafy.seodangdogbe.news.domain.QKeywordNews;
 import com.ssafy.seodangdogbe.news.domain.QNews;
@@ -22,7 +24,9 @@ import com.ssafy.seodangdogbe.news.service.FastApiService.MfRecommendResponse;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.ssafy.seodangdogbe.keyword.domain.QUserKeyword.userKeyword;
@@ -48,8 +52,8 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
     @Override
     @Transactional
     public List<UserRecommendResponseDto> findNewsRecommendations(User user) {
-        List<String> reqKeywords = new ArrayList<>();
-        List<String> alreadyKeyword = new ArrayList<>();
+        Set<String> reqKeywords = new HashSet<>();
+        Set<String> alreadyKeyword = new HashSet<>();
         List<String> newKeyword = new ArrayList<>();
 
         List<Long> recommendedNewsSeqs = fastApiService.fetchRecommendations().block().stream()
@@ -59,11 +63,8 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
         List<News> newsList = queryFactory
                 .select(news)
                 .from(news)
-                .leftJoin(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq)).fetchJoin()
-                .where(news.newsSeq.in(recommendedNewsSeqs).and(userNews.isSolved.isNull().or(userNews.isSolved.eq(false)))
-                ).fetch();
+                .where(news.newsSeq.in(recommendedNewsSeqs)).fetch();
 
-        System.out.println(newsList);
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
             List<String> keywords = news.getKeywordNewsList().stream()
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword())
@@ -87,19 +88,27 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
             );
         }).collect(Collectors.toList());
 
-        for (String k : reqKeywords) {
-            // 이미 본 기록이 있으면
-            boolean exists = queryFactory.selectOne()
-                    .from(userKeyword)
-                    .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.eq(k))
-                    .fetchFirst() != null;
+        List<String> keywordList = queryFactory
+                .select(Projections.constructor(String.class, userKeyword.keyword.keyword))
+                .from(userKeyword)
+                .where(userKeyword.user.eq(user))
+                .fetch();
 
-            if (exists) {
-                alreadyKeyword.add(k);
-            } else {
-                newKeyword.add(k);
-            }
+        System.out.println("======================");
+        System.out.println(keywordList);
+        System.out.println(keywordList.size());
+
+        for (String k : reqKeywords) {
+           if(keywordList.contains(k)){
+               alreadyKeyword.add(k);
+           }else {
+               newKeyword.add(k);
+           }
         }
+
+        System.out.println("======================");
+        System.out.println(newKeyword);
+        System.out.println(alreadyKeyword);
 
         queryFactory
                 .update(userKeyword)
@@ -107,10 +116,10 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(alreadyKeyword))
                 .execute();
 
+        saveAll(user, newKeyword, 2);
+
         entityManager.flush();
         entityManager.clear();
-
-        saveAll(user, newKeyword, 2);
 
         return List.of(new UserRecommendResponseDto(newsPreviewLists));
     }
