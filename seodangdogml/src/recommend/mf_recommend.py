@@ -86,15 +86,15 @@ def recommend_news(user_seq, mf_model, top_n=21):
 
 @router.get('/fast/mf_recom/{user_seq}')
 async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
-    start_time = time.time()
-    print("mf_recommend")
+    # start_time = time.time()
+    # print("mf_recommend")
 
-    print(mf.user_id_index)
     if user_seq in mf.user_id_index:
 
         top_n = 21
         recommendations = recommend_news(user_seq, mf, top_n)
-        print("mf_recommend finished in", len(recommendations))
+        # print("mf_recommend finished in", len(recommendations))
+
         # 추천목록화인 start
         # print(recommendations)
         # print("Recommendations for user", user_id)
@@ -102,13 +102,14 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
         #     print(f"{i}. {news.news_title} (NEWS SEQ: {news.news_seq}, {news.news_similarity})")
         # 추천목록화인 end
 
-        end_time = time.time()
-        execution_time = end_time - start_time
-        print(f"mf 추천: {execution_time} 초")
+        # end_time = time.time()
+        # execution_time = end_time - start_time
+        # print(f"mf 추천: {execution_time} 초")
 
         # rating에 없는걸 추천받으면 넣는다
         insert_task = asyncio.create_task(insert_rating(recommendations, user_seq))
-        print(len(recommendations))
+
+        # print(len(recommendations))
         return recommendations
     # 예외대처(온라인학습으로 했어도 예외발생시 재학습)
     else:
