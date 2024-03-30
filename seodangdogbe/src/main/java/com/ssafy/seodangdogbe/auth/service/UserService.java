@@ -55,7 +55,7 @@ public class UserService {
                 .userId(userSignUpDto.getUserId())
                 .password(passwordEncoder.encode(userSignUpDto.getPassword())) // 비밀번호 해싱
                 .nickname(userSignUpDto.getNickname())
-                .role("USER") // role 기본값 할당
+                .role("ROLE_USER") // role 기본값 할당
                 .build();
         user = userRepository.save(user); // 저장
 
