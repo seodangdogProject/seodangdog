@@ -30,10 +30,10 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private UserExp userExp = new UserExp();
 
-    // 사용자 대표 뱃지
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "badge_seq")
-    private UserBadge userBadge;
+//    // 사용자 대표 뱃지
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "badge_seq")
+//    private UserBadge userBadge;
 
     @Column(length = 15, unique = true, nullable = false)
     private String userId;
@@ -53,7 +53,7 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private List<UserKeyword> userKeywords = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<UserBadge> userBadges = new ArrayList<>();
 
@@ -77,6 +77,10 @@ public class User extends BaseTimeEntity {
         this.password = passwordEncoder.encode(password);
     }
 
+    public void addUserBadge(UserBadge userBadge) {
+        userBadge.setUser(this);
+        this.userBadges.add(userBadge);
+    }
 
 //    public User(String userId, String password, String nickname, Badge badge){
 //        this.userId = userId;
