@@ -36,6 +36,11 @@ public class NewsRecommendService {
         return newsRecommendRepository.findNewsRecommendations(user);
     }
 
+    public UserRecommendResponseDtoV2 getNewsRecommendationsV2() {
+        User user = userService.getUser();
+        return newsRecommendRepository.findNewsRecommendationsV2(user);
+    }
+
     public List<MostViewRecommendResponseDto> getMostViewNewsRecommendations() {
             int userSeq = userService.getUserSeq();
             return newsRecommendRepository.findMostViewNewsRecommendations(userSeq);

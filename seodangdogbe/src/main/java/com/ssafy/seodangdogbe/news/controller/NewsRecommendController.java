@@ -1,10 +1,7 @@
 package com.ssafy.seodangdogbe.news.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
-import com.ssafy.seodangdogbe.news.dto.MostSummaryRecommendResponseDto;
-import com.ssafy.seodangdogbe.news.dto.MostViewRecommendResponseDto;
-import com.ssafy.seodangdogbe.news.dto.OtherRecommendResponseDto;
-import com.ssafy.seodangdogbe.news.dto.UserRecommendResponseDto;
+import com.ssafy.seodangdogbe.news.dto.*;
 import com.ssafy.seodangdogbe.news.service.NewsRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +29,13 @@ public class NewsRecommendController {
     public List<UserRecommendResponseDto> getNewsRecommendations() {
         log.info(" **** 맞춤 뉴스 추천 *** ");
         return newsRecommendService.getNewsRecommendations();
+    }
+
+    @GetMapping("/user-recommend/v2")
+    @Operation(description = "메인페이지 - 맞춤형 뉴스 추천")
+    public UserRecommendResponseDtoV2 getNewsRecommendationsV2() {
+        log.info(" **** 맞춤 뉴스 추천 *** ");
+        return newsRecommendService.getNewsRecommendationsV2();
     }
 
     @GetMapping("/other-recommend")

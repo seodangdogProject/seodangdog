@@ -16,10 +16,12 @@ public class KeywordNews extends BaseTimeEntity {
     private Long keywordNewsSeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne
     @JoinColumn(name = "news_seq")
     private News news;
 
     @ManyToOne(fetch = FetchType.LAZY)
+//  @ManyToOne
     @JoinColumn(name = "keyword")
     private Keyword keyword;
 }
