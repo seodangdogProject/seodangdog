@@ -94,3 +94,6 @@
 .eraser {
   cursor: url("../assets/eraser-cursor.svg") 0 0, auto;
 }
+.not-solved-container {
+  width: 40%;
+}

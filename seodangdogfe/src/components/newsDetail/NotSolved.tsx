@@ -4,6 +4,7 @@ import Quiz from "./Quiz";
 import Summary from "./Summary";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import Highlighter from "@/assets/highlighter-icon.svg";
+import CountDown from "./CountDown";
 export default function NotSolved({
   data,
   currentQuizNumber,
@@ -100,7 +101,8 @@ export default function NotSolved({
         />
         {currentQuizNumber === 0 ? (
           <Cover setCurrentQuiz={setCurrentQuizNumber} />
-        ) : currentQuizNumber < 4 ? (
+        ) : // <CountDown />
+        currentQuizNumber < 4 ? (
           <Quiz
             currentQuizNumber={currentQuizNumber}
             quizData={quizData}
