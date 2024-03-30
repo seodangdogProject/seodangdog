@@ -41,11 +41,12 @@ class News:
 
 
 class NewsDto:
-    def __init__(self, news_id, news_seq, news_title, news_similarity):
+    def __init__(self, news_id, news_seq, news_title, news_similarity,news_summary_keyword):
         self.news_id = news_id
         self.news_seq = news_seq
         self.news_title = news_title
         self.news_similarity = news_similarity
+        self.news_keyword = news_summary_keyword
 
 
 news_data = []
@@ -54,25 +55,45 @@ news_id_seq = []
 tfidf_vectorizer = []
 news_vectors=[]
 
+
+def get_df_news():
+    return df_news
+
 def renewal_news_data():
     # 현재는 100개의 뉴스에 대해서만 들고온다 -> 추천되는건 rating테이블에 넣는데 너무 많으면 추천이 잘되는지 확인불가
-    global news_data, df_news, news_vectors, tfidf_vectorizer
+    global news_data, df_news, news_vectors, tfidf_vectorizer, news_id_seq
+
+    news_id_seq_data = select_news_id_seq()
+    result = {entry['news_id']: entry['news_seq'] for entry in news_id_seq_data}
+    news_id_seq = result
+
     data = get_news_title_keyword()
     result = []
+    df_result = []
     for doc in data:
         news_id = str(doc['_id'])
         news_title = doc.get('newsTitle')
         news_keyword = doc.get('newsKeyword')
         keyword_str = " ".join(news_keyword.keys())
+        news_summary_keyword = doc.get('newsSummaryKeyword')
         temp = {
             "news_id": news_id,
+            "news_seq": news_id_seq[news_id],
             "news_title": news_title,
-            "keyword_str": keyword_str
+            "keyword_str": keyword_str,
+            "news_summary_keyword": news_summary_keyword
         }
+
+        df_result.append({
+            'news_seq' : temp['news_seq'],
+            'keyword_str' : keyword_str,
+            'news_summary_keyword':news_summary_keyword
+        })
+
         result.append(temp)
     news_data = result
-    df_news = pd.DataFrame([[news['keyword_str']] for news in news_data], columns=['keyword_str'])
 
+    df_news = pd.DataFrame(df_result, columns=['news_seq', 'keyword_str', 'news_summary_keyword'])
     tfidf_vectorizer = TfidfVectorizer()
     corpus = df_news['keyword_str']
     news_vectors = tfidf_vectorizer.fit_transform(corpus)
@@ -81,14 +102,6 @@ def renewal_news_data():
 
 # renewal_news_data는 서버실행시 실행
 # get_news_seq는 서버실행시 실행
-
-
-def get_news_seq():
-    global news_id_seq
-    data = select_news_id_seq()
-    result = {entry['news_id']: entry['news_seq'] for entry in data}
-    news_id_seq = result
-    return result
 
 
 # BackgroundTasks의 의존성주입
@@ -119,8 +132,9 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
         news_title = news[1]
         # news_similarity = format_weight(news[2])
         news_similarity = news[2]
+        news_summary_keyword = news[3]
 
-        result.append(NewsDto(news_id, news_seq, news_title, news_similarity))
+        result.append(NewsDto(news_id, news_seq, news_title, news_similarity,news_summary_keyword))
 
     update_task = asyncio.create_task(update_rating(recommended_news, user_seq))
     # end_time = time.time()
@@ -221,10 +235,11 @@ async def recommend_news(user_seq, user_keywords, keyword_weights, flag):
         news_id = news_data[i]['news_id']
         news_seq = news_id_seq[news_id]
         news_title = news_data[i]['news_title']
+        news_summary_keyword = news_data[i]['news_summary_keyword']
         if news_seq not in solved_news_list:
-            filtered_recommendations.append((news_id, news_title, similarities[0][i]))
+            filtered_recommendations.append((news_id, news_title, similarities[0][i], news_summary_keyword))
         else:
-            solved_recommendations.append((news_id, news_title, similarities[0][i]))
+            solved_recommendations.append((news_id, news_title, similarities[0][i], news_summary_keyword))
 
     recommended_news = filtered_recommendations
     # + solved_recommendations)
