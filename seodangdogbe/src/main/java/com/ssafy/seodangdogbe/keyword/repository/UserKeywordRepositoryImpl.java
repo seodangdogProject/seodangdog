@@ -123,8 +123,8 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
             }
         }
 
-        System.out.println("새로운 키워드 : "+insertKeyword);
-        saveAll(insertKeyword);
+        System.out.println("새로운 키워드 : " + insertKeyword);
+        saveAll(user, insertKeyword);
 
         queryFactory
                 .update(userKeyword)
@@ -136,7 +136,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
 
     @Transactional
-    public void saveAll(List<UserKeyword> list) {
+    public void saveAll(User user, List<UserKeyword> list) {
         String sql = "INSERT INTO user_keyword (user_seq, keyword, weight) " +
                 "VALUES (?, ?, ?)";
 
@@ -144,14 +144,14 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement sql, int i) throws SQLException {
-                        sql.setInt(1, list.get(i).getUser().getUserSeq());
+                        sql.setInt(1, user.getUserSeq());
                         sql.setString(2, list.get(i).getKeyword().getKeyword());
                         sql.setDouble(3, list.get(i).getWeight());
                     }
 
                     @Override
                     public int getBatchSize() {
-                        return 10;
+                        return list.size();
                     }
                 });
     }
