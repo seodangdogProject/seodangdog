@@ -3,10 +3,7 @@ package com.ssafy.seodangdogbe.keyword.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seodangdogbe.common.MessageResponseDto;
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
-import com.ssafy.seodangdogbe.keyword.dto.DeWeightReqDto;
-import com.ssafy.seodangdogbe.keyword.dto.InfoDto;
-import com.ssafy.seodangdogbe.keyword.dto.loseWeightFastReqDto;
-import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshReqDto;
+import com.ssafy.seodangdogbe.keyword.dto.*;
 import com.ssafy.seodangdogbe.news.service.FastApiService;
 import com.ssafy.seodangdogbe.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -161,21 +158,21 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     @Transactional
     public void updateAll(User user, List<DeWeightReqDto.KeywordInfo> list) {
-        String sql = "UPDATE user_keyword SET weight = weight - ?  " +
+        String sql = "UPDATE user_keyword SET weight = weight / 2 " +
                 "WHERE user_seq =? AND keyword = ?";
 
         jdbcTemplate.batchUpdate(sql,
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement sql, int i) throws SQLException {
-                        sql.setDouble(1, list.get(i).getWeight());
-                        sql.setInt(2, user.getUserSeq());
-                        sql.setString(3, list.get(i).getKeyword());
+//                        sql.setDouble(1, list.get(i).getWeight());
+                        sql.setInt(1, user.getUserSeq());
+                        sql.setString(2, list.get(i).getKeyword());
                     }
 
                     @Override
                     public int getBatchSize() {
-                        return 10;
+                        return list.size();
                     }
                 });
     }

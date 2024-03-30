@@ -24,12 +24,12 @@ public class NewsRecommendController {
         this.userService = userService;
     }
 
-    @GetMapping("/user-recommend")
-    @Operation(description = "메인페이지 - 맞춤형 뉴스 추천")
-    public List<UserRecommendResponseDto> getNewsRecommendations() {
-        log.info(" **** 맞춤 뉴스 추천 *** ");
-        return newsRecommendService.getNewsRecommendations();
-    }
+//    @GetMapping("/user-recommend")
+//    @Operation(description = "메인페이지 - 맞춤형 뉴스 추천")
+//    public List<UserRecommendResponseDto> getNewsRecommendations() {
+//        log.info(" **** 맞춤 뉴스 추천 *** ");
+//        return newsRecommendService.getNewsRecommendations();
+//    }
 
     @GetMapping("/user-recommend/v2")
     @Operation(description = "메인페이지 - 맞춤형 뉴스 추천")

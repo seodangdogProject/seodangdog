@@ -139,7 +139,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
 
             Map<String, Double> keywords = result.stream()
                     .flatMap(n -> n.getNews_keyword().entrySet().stream())
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue));
 
             reqKeywords.putAll(keywords);
 
@@ -299,7 +299,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     public void setValues(PreparedStatement sql, int i) throws SQLException {
                         sql.setInt(1, user.getUserSeq());
                         sql.setString(2, keywordsList.get(i));
-                        sql.setDouble(3, keywords.get(keywordsList.get(i)));
+                        sql.setDouble(3, keywords.get(keywordsList.get(i)) * 2);
                     }
 
                     @Override

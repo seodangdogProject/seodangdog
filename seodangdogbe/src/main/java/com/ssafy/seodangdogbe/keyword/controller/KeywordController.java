@@ -11,6 +11,7 @@ import com.ssafy.seodangdogbe.news.service.NewsService;
 import com.ssafy.seodangdogbe.user.domain.Badge;
 import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.domain.UserBadge;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,14 +34,15 @@ public class KeywordController {
         keywordService.addKeywordListWeight(user, keywords, 1.28);
     }
 
-    @PostMapping("/refre")
-    public ResponseEntity<MessageResponseDto> minusWeight(@RequestBody List<NewsRefreshReqDto> newsRefreshReqDtoList){
-        User user = userService.getUser();
-        MessageResponseDto result = keywordService.minusKeywordListWeight(user, newsRefreshReqDtoList, -0.35, -0.2);
-        return ResponseEntity.ok(result);
-    }
+//    @PostMapping("/refre")
+//    public ResponseEntity<MessageResponseDto> minusWeight(@RequestBody List<NewsRefreshReqDto> newsRefreshReqDtoList){
+//        User user = userService.getUser();
+//        MessageResponseDto result = keywordService.minusKeywordListWeight(user, newsRefreshReqDtoList, -0.35, -0.2);
+//        return ResponseEntity.ok(result);
+//    }
 
-    @PostMapping("/refre/v2")
+    @Operation(description = "새로고침시 가중치 내리기")
+    @PostMapping("/refre")
     public ResponseEntity<MessageResponseDto> minusWeightV2(@RequestBody List<DeWeightReqDto> deWeightReqDtosList){
         User user = userService.getUser();
         MessageResponseDto result = keywordService.minusKeywordListWeightV2(user, deWeightReqDtosList);

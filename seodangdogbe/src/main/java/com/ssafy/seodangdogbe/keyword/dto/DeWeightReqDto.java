@@ -2,19 +2,24 @@ package com.ssafy.seodangdogbe.keyword.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Data
 @AllArgsConstructor
-public class DeWeightReqDto {
+@NoArgsConstructor
+public class DeWeightReqDto  {
 
     Long newsSeq;
-    KeywordInfo[] keywordInfoList;
+    List<KeywordInfo> keywordInfoList = new ArrayList<>();
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class KeywordInfo {
         String keyword;
         double weight;
