@@ -32,10 +32,10 @@ import static com.ssafy.seodangdogbe.user.dto.MyPageResponseDto.*;
 @Slf4j
 public class MyPageController {
 
-    public final UserService userService;
-    public final KeywordService keywordService;
-    public final MyPageService mypageService;
-    public final UserBadgeService userBadgeService;
+    private final UserService userService;
+    private final KeywordService keywordService;
+    private final MyPageService mypageService;
+    private final UserBadgeService userBadgeService;
 
     @Operation(description = "마이페이지 조회")
     @GetMapping
@@ -46,12 +46,10 @@ public class MyPageController {
         resultDto.setUserId(user.getUserId());
         resultDto.setNickname(user.getNickname());
 
-        // ability
-        resultDto.setAbility(new UserAbilityDto(user));
-        // ability constant
+        // 출석일
         int attendanceCount = mypageService.getAttendanceCount(user);
-        long duringDate = ChronoUnit.DAYS.between(user.getCreatedAt(), LocalDateTime.now());
-        resultDto.getAbility().setConstantAbility((float) attendanceCount / duringDate);
+        // ability
+        resultDto.setAbility(new UserAbilityDto(user, attendanceCount));
 
         // badge
         resultDto.setBadgeImgUrl(userBadgeService.getBadgeImgUrl(user));
@@ -89,6 +87,6 @@ public class MyPageController {
     public UserInfoCorrectResponseDto getNicknameAndBadge(){
         User user = userService.getUser();
 
-        return new UserInfoCorrectResponseDto(user.getNickname(), user.getBadge().getBadgeImgUrl());
+        return new UserInfoCorrectResponseDto(user.getNickname(), userBadgeService.getBadgeImgUrl(user));
     }
 }

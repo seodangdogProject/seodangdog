@@ -7,6 +7,7 @@ import com.ssafy.seodangdogbe.word.repository.MetaWordRepository;
 import com.ssafy.seodangdogbe.word.repository.UserWordRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -25,6 +26,7 @@ import static com.ssafy.seodangdogbe.word.dto.WordDto.*;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class WordService {
     public final UserWordRepository userWordRepository;
     public final MetaWordRepository metaWordRepository;
@@ -60,11 +62,11 @@ public class WordService {
     }
 
     public MetaWordDto findMetaWord(String word){
-        return new MetaWordDto(metaWordRepository.findByWord(word).get());
+        return new MetaWordDto(metaWordRepository.findByWord(word).orElseThrow(NullPointerException::new));
     }
 
     // 네이버 백과사전 api
-    public EncycApiDto callNEncycSearchApi(String word) throws Exception {
+    public EncycApiDto callNEncycSearchApi(String word) {
         String clientId = "7VXk_gxmrs8uoc2k12bm";
         String clientSecret = "P3c4RQb6bJ";
 
@@ -84,7 +86,7 @@ public class WordService {
             conn.setRequestProperty("X-Naver-Client-Secret", clientSecret);
 
             // 응답 데이터 받아오기
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
 
             StringBuilder result = new StringBuilder();
 
@@ -100,14 +102,14 @@ public class WordService {
             else
                 return JsonConverter.apiJsonToEncycApiDto(result.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(String.valueOf(e));
             throw new RuntimeException(e);
         }
 
     }
 
     // 표준국어대사전 검색 OpenAPI
-    public KorApiSearchDto callStDictSearchApi(String word) throws Exception {
+    public KorApiSearchDto callStDictSearchApi(String word) {
         String key = "EFAB63B197416ACEB79CFBC56E615EE2";
 
         try {
@@ -123,7 +125,7 @@ public class WordService {
             conn.setRequestProperty("Content-Type", "application/json");
 
             // 응답 데이터 받아오기
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
 
             StringBuilder result = new StringBuilder();
 
@@ -139,7 +141,7 @@ public class WordService {
             else
                 return JsonConverter.apiJsonToKorApiSearchDto(result.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(String.valueOf(e));
             throw new RuntimeException(e);
         }
     }
