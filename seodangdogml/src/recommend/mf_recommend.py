@@ -154,8 +154,8 @@ async def mf_update(data: UpdateData):
 
     # 이미 추천된 비율에대가 예측치를 곱해서 온라인학습을시킨다.
     for i in info:
-        news_seq = i[0]
-        weight = i[1]
+        news_seq = i['news_seq']
+        weight = i['weight']
 
         rating = result[result['news_seq'] == news_seq]
 
