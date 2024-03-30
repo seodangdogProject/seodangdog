@@ -51,10 +51,12 @@ class NewsDto:
 news_data = []
 df_news = pd.DataFrame(columns=["keyword"])
 news_id_seq = []
+tfidf_vectorizer = []
+news_vectors=[]
 
 def renewal_news_data():
     # 현재는 100개의 뉴스에 대해서만 들고온다 -> 추천되는건 rating테이블에 넣는데 너무 많으면 추천이 잘되는지 확인불가
-    global news_data, df_news
+    global news_data, df_news, news_vectors, tfidf_vectorizer
     data = get_news_title_keyword()
     result = []
     for doc in data:
@@ -70,6 +72,11 @@ def renewal_news_data():
         result.append(temp)
     news_data = result
     df_news = pd.DataFrame([[news['keyword_str']] for news in news_data], columns=['keyword_str'])
+
+    tfidf_vectorizer = TfidfVectorizer()
+    corpus = df_news['keyword_str']
+    news_vectors = tfidf_vectorizer.fit_transform(corpus)
+
     return result
 
 # renewal_news_data는 서버실행시 실행
@@ -170,15 +177,19 @@ async def update_rating(recommended_news, user_seq):
 
 async def recommend_news(user_seq, user_keywords, keyword_weights, flag):
     top_n = 21
+
     # 뉴스 데이터프레임 생성
     # df_news = pd.DataFrame([[news.title] for news in news_data], columns=
-    global news_data, df_news
-    tfidf_vectorizer = TfidfVectorizer()
+    global news_data, df_news, news_vectors, tfidf_vectorizer
+
+
+    ### 학습시킨 데이터를 공용으로 사용하기위해 전역변수로 위치시킨다
+    # tfidf_vectorizer = TfidfVectorizer()
 
     # 뉴스키워드를 합친것을 벡터화
-    corpus = df_news['keyword_str']
-    # corpus = df_news['news_title']
-    news_vectors = tfidf_vectorizer.fit_transform(corpus)
+    # corpus = df_news['keyword_str']
+    # # corpus = df_news['news_title']
+    # news_vectors = tfidf_vectorizer.fit_transform(corpus)
 
     # 사용자 키워드를 TF-IDF 벡터로 변환
     user_vector = tfidf_vectorizer.transform([" ".join(user_keywords)])
@@ -198,6 +209,7 @@ async def recommend_news(user_seq, user_keywords, keyword_weights, flag):
     # 유사도가 높은 순으로 뉴스 추천
     recommendation_indices = similarities.argsort()[0][::-1]
     # print(recommendation_indices)
+
 
     # 사용자가 푼 뉴스 가져오기
     solved_news = select_news_solved(user_seq)  # 사용자가 이미 푼 뉴스를 가져옴
