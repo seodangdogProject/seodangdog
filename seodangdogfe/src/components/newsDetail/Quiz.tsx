@@ -18,11 +18,12 @@ export default function Quiz({
         <div className={cx("quiz-content")}>
           <h4 className={cx("question")}>
             <div>{currentQuizNumber}. </div>
-            <div>{quizData[currentQuizNumber].question.questionText}</div>
+            {/* currentQuizNumber가 0번(커버)부터 시작이라서 -1을 해줌 */}
+            <div>{quizData[currentQuizNumber - 1].question.questionText}</div>
           </h4>
           <ul className={cx("case-container")}>
             {Object.entries<string>(
-              quizData[currentQuizNumber].question.choices
+              quizData[currentQuizNumber - 1].question.choices
             ).map(([key, value]: [string, string]) => (
               <li key={key} className={cx("case")}>
                 <div className={cx("case__number")}>({key})</div>
