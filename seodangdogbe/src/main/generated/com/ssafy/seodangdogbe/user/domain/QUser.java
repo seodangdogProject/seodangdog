@@ -24,8 +24,6 @@ public class QUser extends EntityPathBase<User> {
 
     public final com.ssafy.seodangdogbe.common.QBaseTimeEntity _super = new com.ssafy.seodangdogbe.common.QBaseTimeEntity(this);
 
-    public final QBadge badge;
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
@@ -75,7 +73,6 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.badge = inits.isInitialized("badge") ? new QBadge(forProperty("badge")) : null;
         this.userExp = inits.isInitialized("userExp") ? new QUserExp(forProperty("userExp")) : null;
     }
 

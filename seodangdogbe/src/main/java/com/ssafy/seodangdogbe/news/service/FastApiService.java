@@ -15,6 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FastApiService {
@@ -66,11 +67,6 @@ public class FastApiService {
                 });
     }
 
-
-
-
-
-
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -85,11 +81,11 @@ public class FastApiService {
         @JsonProperty("news_similarity")
         private Double similarity;
     }
-
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     static public class CbfRecommendResponse {
+
         private String news_id;
 
         private Long news_seq;
@@ -97,6 +93,9 @@ public class FastApiService {
         private String news_title;
 
         private Double news_similarity;
+
+        private Map<String, Double> news_keyword;
+
     }
 }
 

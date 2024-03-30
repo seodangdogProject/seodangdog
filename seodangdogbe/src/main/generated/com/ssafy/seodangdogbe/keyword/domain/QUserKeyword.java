@@ -22,13 +22,24 @@ public class QUserKeyword extends EntityPathBase<UserKeyword> {
 
     public static final QUserKeyword userKeyword = new QUserKeyword("userKeyword");
 
+    public final com.ssafy.seodangdogbe.common.QBaseTimeEntity _super = new com.ssafy.seodangdogbe.common.QBaseTimeEntity(this);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
+    //inherited
+    public final BooleanPath isDelete = _super.isDelete;
+
     public final QKeyword keyword;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
     public final com.ssafy.seodangdogbe.user.domain.QUser user;
 
     public final NumberPath<Long> userKeywordSeq = createNumber("userKeywordSeq", Long.class);
 
-    public final NumberPath<Long> weight = createNumber("weight", Long.class);
+    public final NumberPath<Double> weight = createNumber("weight", Double.class);
 
     public QUserKeyword(String variable) {
         this(UserKeyword.class, forVariable(variable), INITS);

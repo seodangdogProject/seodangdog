@@ -18,24 +18,34 @@ public class QQuiz extends BeanPath<Quiz> {
 
     private static final long serialVersionUID = 227325727L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QQuiz quiz = new QQuiz("quiz");
 
-    public final NumberPath<Integer> answer = createNumber("answer", Integer.class);
+    public final QAnswer answer;
 
-    public final ListPath<String, StringPath> content = this.<String, StringPath>createList("content", String.class, StringPath.class, PathInits.DIRECT2);
-
-    public final StringPath example = createString("example");
+    public final QQuestion question;
 
     public QQuiz(String variable) {
-        super(Quiz.class, forVariable(variable));
+        this(Quiz.class, forVariable(variable), INITS);
     }
 
     public QQuiz(Path<? extends Quiz> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QQuiz(PathMetadata metadata) {
-        super(Quiz.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QQuiz(PathMetadata metadata, PathInits inits) {
+        this(Quiz.class, metadata, inits);
+    }
+
+    public QQuiz(Class<? extends Quiz> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.answer = inits.isInitialized("answer") ? new QAnswer(forProperty("answer")) : null;
+        this.question = inits.isInitialized("question") ? new QQuestion(forProperty("question")) : null;
     }
 
 }

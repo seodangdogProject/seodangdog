@@ -1,6 +1,8 @@
 package com.ssafy.seodangdogbe.news.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.seodangdogbe.keyword.domain.Keyword;
 import com.ssafy.seodangdogbe.news.domain.News;
 import com.ssafy.seodangdogbe.news.domain.QKeywordNews;
 import com.ssafy.seodangdogbe.news.domain.QNews;
@@ -21,8 +23,7 @@ import com.ssafy.seodangdogbe.news.service.FastApiService.MfRecommendResponse;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.ssafy.seodangdogbe.keyword.domain.QUserKeyword.userKeyword;
@@ -113,6 +114,83 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
         saveAll(user, newKeyword, 2);
 
         return List.of(new UserRecommendResponseDto(newsPreviewLists));
+    }
+
+    @Override
+    @Transactional
+    public UserRecommendResponseDtoV2 findNewsRecommendationsV2(User user) {
+
+        Map<String, Double> reqKeywords = new HashMap<>();
+        Map<String, Double> alreadyKeyword = new HashMap<>();
+        Map<String, Double> newKeyword = new HashMap<>();
+
+        List<CbfRecommendResponse> result = fastApiService.fetchRecommendations().block().stream().toList();
+
+        List<Long> recommendedNewsSeqs = result.stream()
+                .map(CbfRecommendResponse::getNews_seq)
+                .collect(Collectors.toList());
+
+        List<News> newsList = queryFactory
+                .select(news)
+                .from(news)
+                .where(news.newsSeq.in(recommendedNewsSeqs)).fetch();
+
+        List<MainNewsPreviewDto> newsPreviewLists = newsList.stream().map(news -> {
+
+            Map<String, Double> keywords = result.stream()
+                    .flatMap(n -> n.getNews_keyword().entrySet().stream())
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue));
+
+            reqKeywords.putAll(keywords);
+
+            String mediaImgUrl = news.getMedia().getMediaImgUrl();
+
+            return new MainNewsPreviewDto(
+                    news.getNewsSeq(),
+                    news.getNewsImgUrl(),
+                    news.getNewsTitle(),
+                    news.getNewsDescription(),
+                    news.getNewsCreatedAt(),
+                    news.getCountView(),
+                    mediaImgUrl,
+                    keywords
+            );
+        }).collect(Collectors.toList());
+
+        List<String> keywordList = queryFactory
+                .select(Projections.constructor(String.class, userKeyword.keyword.keyword))
+                .from(userKeyword)
+                .where(userKeyword.user.eq(user))
+                .fetch();
+
+        System.out.println("======================");
+        System.out.println(keywordList);
+        System.out.println(keywordList.size());
+
+        for (String k : reqKeywords.keySet()) {
+           if(keywordList.contains(k)){
+               alreadyKeyword.put(k, reqKeywords.get(k));
+           }else {
+               newKeyword.put(k, reqKeywords.get(k));
+           }
+        }
+
+        System.out.println("======================");
+        System.out.println(newKeyword);
+        System.out.println(alreadyKeyword);
+
+        queryFactory
+                .update(userKeyword)
+                .set(userKeyword.weight, userKeyword.weight.multiply(1.8))
+                .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(alreadyKeyword.keySet()))
+                .execute();
+
+        saveAllV2(user, newKeyword);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        return new UserRecommendResponseDtoV2(newsPreviewLists);
     }
 
     @Override
@@ -208,6 +286,30 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
     }
 
     @Transactional
+    public void saveAllV2(User user, Map<String, Double> keywords) {
+
+        List<String> keywordsList = keywords.keySet().stream().toList();
+
+        String sql = "INSERT INTO user_keyword (user_seq, keyword, weight) " +
+                "VALUES (?, ?, ?)";
+
+        jdbcTemplate.batchUpdate(sql,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement sql, int i) throws SQLException {
+                        sql.setInt(1, user.getUserSeq());
+                        sql.setString(2, keywordsList.get(i));
+                        sql.setDouble(3, keywords.get(keywordsList.get(i)) * 2);
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return keywords.size();
+                    }
+                });
+    }
+
+    @Transactional
     public void saveAll(User user, List<String> keywords, double weight) {
         String sql = "INSERT INTO user_keyword (user_seq, keyword, weight) " +
                 "VALUES (?, ?, ?)";
@@ -227,4 +329,5 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     }
                 });
     }
+
 }
