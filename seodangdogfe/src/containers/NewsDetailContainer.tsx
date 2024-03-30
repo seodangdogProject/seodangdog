@@ -65,6 +65,7 @@ export default function NewsDetailContainer() {
           keywords={keywords}
           quizData={quizData}
           cx={cx}
+          newsSeq={Number(pathname.split("/")[2])}
         />
       )}
     </>

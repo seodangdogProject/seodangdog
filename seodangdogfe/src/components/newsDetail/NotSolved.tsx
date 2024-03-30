@@ -11,12 +11,14 @@ export default function NotSolved({
   keywords,
   quizData,
   cx, // newsDetailContainer.module.css
+  newsSeq,
 }: {
   data: any;
   currentQuizNumber: number;
   keywords: string[];
   setCurrentQuizNumber: Dispatch<SetStateAction<number>>;
   cx: Function;
+  newsSeq: number;
   quizData: any[];
 }) {
   const detailContainerEl = useRef<HTMLDivElement>(null);
@@ -90,7 +92,12 @@ export default function NotSolved({
           </div>
         </div>
         {/* 커서 변환 모달 END*/}
-        <NewsContent cursor={cursor} keywords={keywords} data={data} />
+        <NewsContent
+          cursor={cursor}
+          keywords={keywords}
+          data={data}
+          newsSeq={newsSeq}
+        />
         {currentQuizNumber === 0 ? (
           <Cover setCurrentQuiz={setCurrentQuizNumber} />
         ) : currentQuizNumber < 4 ? (

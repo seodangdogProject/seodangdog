@@ -1,16 +1,21 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useEffect, useRef, useState } from "react";
+import { Children, useEffect, useRef, useState } from "react";
 import styled from "./NewsContent.module.css";
 import classNames from "classnames/bind";
 import { privateFetch } from "@/utils/http-commons";
+import Modal from "@/components/wordComponent/wordDetailModal";
+import changeDateFormat from "@/utils/changeDateFormat";
+import NotSolved from "./NotSolved";
 export default function NewsContent({
   keywords,
   data,
   cursor,
+  newsSeq,
 }: {
   keywords: string[];
   data: any;
   cursor?: number | null;
+  newsSeq: number;
 }) {
   const cx = classNames.bind(styled);
   const textEl = useRef<HTMLPreElement>(null);
@@ -19,12 +24,22 @@ export default function NewsContent({
   const [startIdx, setStartIdx] = useState<number>(0);
   const [highlightList, setHighLightList] = useState<number[]>([]);
   const [wordList, setWordList] = useState<number[]>([]);
-  const [wordInfo, setWordInfo] = useState<any>(null);
+  const [clickedWord, setClickedWord] = useState<any>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  useEffect(() => {
+  useEffect((): any => {
     setHighLightList(data?.highlightList || []);
-    return () => {
-      privateFetch("/news/read", "PATCH", wordList);
+    console.log(data);
+    return async () => {
+      const a = await privateFetch("/news/read", "PATCH", {
+        newsSeq: newsSeq,
+        highlightList,
+        wordList,
+      });
+      const b = await privateFetch("/news/word", "POST", {
+        word: wordList[0],
+      });
+      console.log(await a.json());
     };
   }, []);
 
@@ -56,12 +71,9 @@ export default function NewsContent({
     }
   }
   // 단어 검색 하기 함수
-  async function getDictionary(e: any, text: string, index: number) {
+  async function getWordMeaning(e: any, text: string, index: number) {
+    // 현재 커서가 돋보기인지 유효성검사
     if (cursor !== 2) return;
-    if (prevWordPop !== null) {
-      prevWordPop.removeChild(prevWordPop.children[0]);
-    }
-    const el = document.createElement("div");
     try {
       const res = await privateFetch("/news/word/" + text, "GET");
       let data: {
@@ -71,25 +83,44 @@ export default function NewsContent({
         items: any[];
       } | null = null;
       if (res.status !== 200) {
-        throw "adfasd";
+        throw "서버에러발생";
       } else {
         data = await res.json();
-        setWordInfo(data);
+        // setWordInfo(data);
+        console.log(data?.items);
+        setClickedWord({
+          wordSeq: index, // 여기에선 이 기사에서 단어의 인덱스값을냄나타냄
+          word: data?.word,
+          mean1: data?.items[0].definition,
+          mean2: data?.items[1]?.definition,
+        });
+        setIsModalOpen(true);
         console.log(data);
-        el.setAttribute("class", cx("dict-modal"));
-        // el.innerText = data?.word || "";
-        // data?.items.forEach((item) => {
-        //   el.innerHTML += item.definition;
-        // });
         console.log(wordList);
-        setWordList((prev) => [...prev, index]);
-        el.innerHTML += data?.items[0].definition;
-        setPrevWordPop(e.target);
-        e.target.appendChild(el);
       }
     } catch (error) {
       console.error(error);
     }
+  }
+  // 단어 모달의 자식 컴포넌트로 줄 함수
+  function Scrap() {
+    return (
+      <>
+        <span className={cx("scrap")}>
+          {wordList.includes(clickedWord.wordSeq) ? (
+            <img src="/bookmark-full-icon.svg" alt="" />
+          ) : (
+            <img
+              onClick={() =>
+                setWordList((prev) => [...prev, clickedWord.wordSeq])
+              }
+              src="/bookmark-empty-icon.svg"
+              alt=""
+            />
+          )}
+        </span>
+      </>
+    );
   }
   return (
     <>
@@ -101,8 +132,23 @@ export default function NewsContent({
             eraser: cursor === 1,
           })}
         >
+          {isModalOpen && (
+            <div className={cx("word-modal-container")}>
+              <Modal
+                isOpen={isModalOpen}
+                clickedWord={clickedWord}
+                onClose={() => {
+                  setIsModalOpen(false);
+                }}
+              >
+                <Scrap />
+              </Modal>
+            </div>
+          )}
           <h1 className={cx("title")}>{data.newsTitle}</h1>
-          <div className={cx("date")}>2024.03.06. 오전 11:37</div>
+          <div className={cx("date")}>
+            {changeDateFormat(data.newsCreatedAt)}
+          </div>
           <div className={cx("hashtag")}>
             {keywords.map((item) => (
               <div key={item} className={cx("hashtag-item")}>
@@ -138,7 +184,7 @@ export default function NewsContent({
                       <span
                         onMouseDown={(e) => highlightEnter(e)}
                         onMouseUp={(e) => highlightOut(e)}
-                        onClick={(e) => getDictionary(e, word, index)}
+                        onClick={(e) => getWordMeaning(e, word, index)}
                         key={index}
                         className={cx({
                           "dictionary-word": cursor === 2,

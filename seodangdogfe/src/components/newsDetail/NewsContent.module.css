@@ -65,7 +65,7 @@
 /* 단어 관련 */
 .dictionary-word {
   cursor: pointer;
-  display: inline-block;
+  /* display: inline-block; */
   /* position: relative; */
 }
 .dictionary-word:hover {
@@ -138,11 +138,21 @@
 
 .filled {
   background-color: rgb(193, 171, 255, 0.4);
-  display: inline-block;
 }
 .news-content.finder {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+/* 모달 관련 */
+.word-modal-container {
+  cursor: default;
+}
+
+.scrap {
+  width: 20px;
+  display: inline-block;
+  margin-left: 10px;
+  cursor: pointer;
 }
