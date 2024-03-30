@@ -94,7 +94,7 @@ def get_news_seq():
 # BackgroundTasks의 의존성주입
 @router.get("/fast/cbf_recom/{user_seq}")
 async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=True):
-    print('cbf_recommend start')
+    # print('cbf_recommend start')
 
     user_keyword = select_user_keyword(user_seq)
     # print(user_keyword)
@@ -104,13 +104,13 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
     # check = dict(sorted(keyword_weights.items(), key=lambda x: x[1]))
     # print(check)
 
-    start_time = time.time()
+    # start_time = time.time()
 
     recommended_news = await recommend_news(user_seq, user_keyword_list, keyword_weights, flag)
 
-    end_time = time.time()
-    execution_time = end_time - start_time
-    print(f"유사도 분석 시간: {execution_time} 초")
+    # end_time = time.time()
+    # execution_time = end_time - start_time
+    # print(f"유사도 분석 시간: {execution_time} 초")
 
     result = []
     for news in recommended_news:
@@ -123,9 +123,9 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
         result.append(NewsDto(news_id, news_seq, news_title, news_similarity))
 
     update_task = asyncio.create_task(update_rating(recommended_news, user_seq))
-    end_time = time.time()
-    execution_time = end_time - start_time
-    print(f"추천완료시간: {execution_time} 초")
+    # end_time = time.time()
+    # execution_time = end_time - start_time
+    # print(f"추천완료시간: {execution_time} 초")
 
     return result
 
@@ -209,7 +209,6 @@ async def recommend_news(user_seq, user_keywords, keyword_weights, flag):
     # 유사도가 높은 순으로 뉴스 추천
     recommendation_indices = similarities.argsort()[0][::-1]
     # print(recommendation_indices)
-
 
     # 사용자가 푼 뉴스 가져오기
     solved_news = select_news_solved(user_seq)  # 사용자가 이미 푼 뉴스를 가져옴
