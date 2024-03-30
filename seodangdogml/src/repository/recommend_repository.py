@@ -357,7 +357,7 @@ async def async_update_ratings(rating_data):
 
 # cbf추천을 위해 몽고디비에서 데이터를 들고온다. 뉴스제목, 아이디, 키워드를 들고온다
 def get_news_title_keyword():
-    response = client.meta_news.find({}, {"_id": 1, "newsTitle": 1, "newsKeyword": 1})
+    response = client.meta_news.find({}, {"_id": 1, "newsTitle": 1, "newsKeyword": 1, "newsSummaryKeyword": 1})
     # result = [doc for doc in response]
 
     if not response:
