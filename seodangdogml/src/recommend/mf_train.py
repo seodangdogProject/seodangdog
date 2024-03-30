@@ -316,7 +316,7 @@ class NEW_MF():
 
     def online_sgd(self, new_sample, new_weight):
         i, j, r = new_sample
-        # 새로운 데이터에 가중치를 적용하여 업데이트 수행
+        # 새로운 데이터에 가중치를 적용하여 업데이트 수행(오차에 곱하는 가중치가 클수록 중요도가 높아진다)
         prediction = self.get_prediction(i, j)
         e = (r - prediction) * new_weight
 
