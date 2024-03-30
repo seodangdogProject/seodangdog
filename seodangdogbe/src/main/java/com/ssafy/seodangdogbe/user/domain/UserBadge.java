@@ -25,10 +25,14 @@ public class UserBadge extends BaseTimeEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "badge_seq", columnDefinition = "1")
+    @JoinColumn(name = "badge_seq")
     private Badge badge;
 
     private boolean isRepBadge = true;
+
+    public UserBadge(Badge badge){
+        this.badge = badge;
+    }
 
     public UserBadge(User user, Badge badge) {
         this.user = user;

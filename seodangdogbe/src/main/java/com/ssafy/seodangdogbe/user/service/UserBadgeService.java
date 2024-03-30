@@ -41,7 +41,6 @@ public class UserBadgeService {
     public String getBadgeImgUrl(User user){
         return userBadgeRepositoryCustom.findByUserRepBadge(user)
                 .getBadge().getBadgeImgUrl();
-
     }
 
     // 대표뱃지 변경

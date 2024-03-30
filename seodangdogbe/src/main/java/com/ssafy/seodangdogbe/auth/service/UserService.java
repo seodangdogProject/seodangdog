@@ -9,6 +9,7 @@ import com.ssafy.seodangdogbe.jwt.JWTProvider;
 import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.user.domain.Badge;
 import com.ssafy.seodangdogbe.user.domain.User;
+import com.ssafy.seodangdogbe.user.domain.UserBadge;
 import com.ssafy.seodangdogbe.user.dto.UserNicknameModifyReqDto;
 import com.ssafy.seodangdogbe.user.repository.BadgeRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,7 @@ public class UserService {
 //        if (findBasicBadge.isEmpty()) return 0;
 //        Badge basicBadge = findBasicBadge.get();
 
+
 //        User user = userSignUpDto.toEntity();
         User user = User.builder()
                 .userId(userSignUpDto.getUserId())
@@ -57,11 +59,12 @@ public class UserService {
                 .nickname(userSignUpDto.getNickname())
                 .role("ROLE_USER") // role 기본값 할당
                 .build();
+        user.addUserBadge(new UserBadge(badgeRepository.findById(1).orElseThrow(NullPointerException::new)));
         user = userRepository.save(user); // 저장
 
         for (String keyword : userSignUpDto.getKeywords()) {
-            // 회원가입 시 선택한 키워드들에 대해 UserKeyword 엔티티 생성 및 저장 (가중치 3)
-            UserKeyword userKeyword = new UserKeyword(user, keyword, 3.0);
+            // 회원가입 시 선택한 키워드들에 대해 UserKeyword 엔티티 생성 및 저장 (가중치 1)
+            UserKeyword userKeyword = new UserKeyword(user, keyword, 1.0);
             userKeywordRepository.save(userKeyword);
         }
 
