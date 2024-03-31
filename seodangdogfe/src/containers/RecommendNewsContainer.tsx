@@ -8,7 +8,7 @@ import changeDateFormat from "@/utils/changeDateFormat";
 export default function RecommendNewsContainer() {
   const cx = classNames.bind(styled);
 
-  const [category, setCategory] = useState<string>("user-recommend");
+  const [category, setCategory] = useState<string>("user-recommend/v2");
   const [newsList, setNewsList] = useState<any[]>([]);
   const userRecommendEl = useRef<HTMLDivElement>(null);
   const otherRecommendEl = useRef<HTMLDivElement>(null);
@@ -30,7 +30,7 @@ export default function RecommendNewsContainer() {
         const res = await privateFetch("/main/" + category, "GET");
         let data = await res.json();
         console.log(data);
-        data = data[0].newsPreviewList;
+        data = data.newsPreviewList;
         let subArrays = [];
         for (let i = 0; i < data.length; i += 3) {
           subArrays.push(data.slice(i, i + 3));
@@ -47,7 +47,7 @@ export default function RecommendNewsContainer() {
         <div className={styled.toggle__container}>
           <div className={cx("toggle")}>
             <div
-              onClick={() => toggle("user-recommend")}
+              onClick={() => toggle("user-recommend/v2")}
               ref={userRecommendEl}
               className={cx("toggle__item", "active")}
             >
