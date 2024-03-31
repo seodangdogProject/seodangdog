@@ -35,6 +35,7 @@ export default function NewsContent({
 
   useEffect((): any => {
     setHighLightList(data?.highlightList || []);
+    setWordList(data?.wordList || []);
     // console.log(data);
   }, [data]);
   useEffect((): any => {
@@ -44,6 +45,7 @@ export default function NewsContent({
         highlightList: latestHighlightListRef.current,
         wordList: latestWordListRef.current,
       };
+      console.log(body);
       try {
         const res = await privateFetch("/news/read", "PATCH", body);
         if (res.status !== 200) {
@@ -200,13 +202,19 @@ export default function NewsContent({
                         onMouseUp={(e) => highlightOut(e)}
                         onClick={(e) => getWordMeaning(e, word, index)}
                         key={index}
-                        className={cx({
-                          "dictionary-word": cursor === 2,
-                          filled: highlightList.includes(index),
-                        })}
+                        className={cx(
+                          {
+                            "dictionary-word": cursor === 2,
+                            filled: highlightList.includes(index),
+                          },
+                          "word-circle"
+                        )}
                         data-highlight-idx={index}
                       >
                         {word}
+                        {wordList.includes(index) && (
+                          <img src="/word-circle-icon.svg" alt="" />
+                        )}
                       </span>
                     );
                   } else {
