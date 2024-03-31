@@ -57,15 +57,24 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .map(CbfRecommendResponse::getNews_seq)
                 .collect(Collectors.toList());
 
-        List<News> newsList = queryFactory
+        List<News> unorderedNewsList = queryFactory
                 .select(news)
                 .from(news)
                 .leftJoin(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq)).fetchJoin()
                 .where(news.newsSeq.in(recommendedNewsSeqs).and(userNews.isSolved.isNull().or(userNews.isSolved.eq(false)))
                 ).fetch();
 
-        System.out.println(newsList);
-        List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
+        Map<Long, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < recommendedNewsSeqs.size(); i++) {
+            indexMap.put(recommendedNewsSeqs.get(i), i);
+        }
+
+        List<News> sortedNewsList = unorderedNewsList.stream()
+                .sorted(Comparator.comparingInt(news -> indexMap.getOrDefault(news.getNewsSeq(), -1)))
+                .collect(Collectors.toList());
+
+//        System.out.println(newsList);
+        List<NewsPreviewListDto> newsPreviewLists = sortedNewsList.stream().map(news -> {
             List<String> keywords = news.getKeywordNewsList().stream()
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
@@ -130,12 +139,20 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .map(CbfRecommendResponse::getNews_seq)
                 .collect(Collectors.toList());
 
-        List<News> newsList = queryFactory
+        List<News> unorderedNewsList = queryFactory
                 .select(news)
                 .from(news)
                 .where(news.newsSeq.in(recommendedNewsSeqs)).fetch();
 
-        List<MainNewsPreviewDto> newsPreviewLists = newsList.stream().map(news -> {
+        Map<Long, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < recommendedNewsSeqs.size(); i++) {
+            indexMap.put(recommendedNewsSeqs.get(i), i);
+        }
+        List<News> sortedNewsList = unorderedNewsList.stream()
+                .sorted(Comparator.comparingInt(n -> indexMap.getOrDefault(n.getNewsSeq(), -1)))
+                .collect(Collectors.toList());
+
+        List<MainNewsPreviewDto> newsPreviewLists = sortedNewsList.stream().map(news -> {
 
             Map<String, Double> keywords = result.stream()
                     .flatMap(n -> n.getNews_keyword().entrySet().stream())
@@ -199,14 +216,24 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .map(MfRecommendResponse::getNewsSeq)
                 .collect(Collectors.toList());
 
-        List<News> newsList = queryFactory
+        List<News> unorderedNewsList = queryFactory
                 .select(news)
                 .from(news)
                 .leftJoin(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq)).fetchJoin()
                 .where(news.newsSeq.in(recommendedNewsSeqs).and(userNews.isSolved.isNull().or(userNews.isSolved.eq(false)))
                 ).fetch();
 
-        List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
+        // 추천된 순서대로 뉴스 목록 정렬
+        Map<Long, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < recommendedNewsSeqs.size(); i++) {
+            indexMap.put(recommendedNewsSeqs.get(i), i);
+        }
+
+        List<News> sortedNewsList = unorderedNewsList.stream()
+                .sorted(Comparator.comparingInt(news -> indexMap.getOrDefault(news.getNewsSeq(), -1)))
+                .collect(Collectors.toList());
+
+        List<NewsPreviewListDto> newsPreviewLists = sortedNewsList.stream().map(news -> {
             List<String> keywords = news.getKeywordNewsList().stream()
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
@@ -233,7 +260,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
         List<News> newsList = queryFactory
                 .selectFrom(news)
                 .orderBy(news.countSolve.desc())
-                .limit(10)
+                .limit(50)
                 .fetch();
 
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
@@ -262,7 +289,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .selectFrom(news)
 //                .where(qUserNews.user.userSeq.eq(userSeq))
                 .orderBy(news.countView.desc())
-                .limit(10)
+                .limit(50)
                 .fetch();
 
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
