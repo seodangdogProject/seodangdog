@@ -24,13 +24,16 @@ export default function RecommendNewsContainer() {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken") || "";
     (async () => {
       try {
         const res = await privateFetch("/main/" + category, "GET");
         let data = await res.json();
         console.log(data);
-        data = data.newsPreviewList;
+        if (data instanceof Array) {
+          data = data[0].newsPreviewList;
+        } else {
+          data = data.newsPreviewList;
+        }
         let subArrays = [];
         for (let i = 0; i < data.length; i += 3) {
           subArrays.push(data.slice(i, i + 3));
