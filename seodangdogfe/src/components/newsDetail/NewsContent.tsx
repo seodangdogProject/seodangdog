@@ -114,6 +114,14 @@ export default function NewsContent({
       console.error(error);
     }
   }
+  // 단어 스크랩 함수
+  async function scrapWord() {
+    setWordList((prev) => [...prev, clickedWord.wordSeq]);
+    const body = {
+      word: clickedWord.word,
+    };
+    await privateFetch("/news/word", "POST", body);
+  }
   // 단어 모달의 자식 컴포넌트로 줄 함수
   function Scrap() {
     return (
@@ -122,13 +130,7 @@ export default function NewsContent({
           {wordList.includes(clickedWord.wordSeq) ? (
             <img src="/bookmark-full-icon.svg" alt="" />
           ) : (
-            <img
-              onClick={() =>
-                setWordList((prev) => [...prev, clickedWord.wordSeq])
-              }
-              src="/bookmark-empty-icon.svg"
-              alt=""
-            />
+            <img onClick={scrapWord} src="/bookmark-empty-icon.svg" alt="" />
           )}
         </span>
       </>
