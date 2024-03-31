@@ -46,7 +46,7 @@ export default function NewsDetailContainer() {
         }
         console.log(resData);
         setIsSolved(resData.solved);
-        setAnswerList(resData.userAnswerList);
+        setAnswerList(resData.userAnswerList || []);
         setKeywords(keywordList);
         setData(resData);
         setQuizData(resData.newsQuiz);
