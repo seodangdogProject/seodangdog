@@ -48,6 +48,7 @@ export default function Solved({
               currentQuizNumber={currentQuizNumber}
               answerList={answerList}
               quizData={quizData}
+              setCurrentQuizNumber={setCurrentQuizNumber}
             />
           ) : (
             <Summary
@@ -55,6 +56,7 @@ export default function Solved({
               setUserSummary={data.userSummary.userSummaryContent} // 어차피 실행 안될거라서 막 넣어줌
               newsSummary={data.newsSummary[0]}
               userSummary={data.userSummary.userSummaryContent}
+              setCurrentQuizNumber={setCurrentQuizNumber}
             />
           )}
         </div>

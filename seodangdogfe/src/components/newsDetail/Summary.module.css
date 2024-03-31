@@ -17,7 +17,7 @@
   border: 1px solid #a000d8;
   padding: 15px 25px;
   box-sizing: border-box;
-  height: 230px;
+  height: 200px;
 }
 .naver-color {
   color: green;
@@ -49,7 +49,7 @@
   box-sizing: border-box;
   border-radius: 15px;
   margin-bottom: 30px;
-  height: 230px;
+  height: 200px;
   position: relative;
 }
 
@@ -90,4 +90,47 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* 버튼 관련 css */
+.btn-container {
+  position: absolute;
+  right: 30px;
+  display: flex;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  /* margin-top: 2rem; */
+  padding-right: 5px;
+  padding-top: 10px;
+}
+/* .btn-container {
+  background-color: red;
+  height: 100%;
+  width: 100%;
+} */
+.btn {
+  cursor: pointer;
+  box-sizing: border-box;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100px;
+  border-radius: 20px;
+  background-color: #493971;
+  border: none;
+  color: #fff;
+  font-family: "Pretendard-Regular";
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.prev-icon {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+.prev-icon img {
+  width: 10px;
+  cursor: pointer;
 }

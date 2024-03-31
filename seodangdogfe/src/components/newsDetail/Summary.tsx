@@ -9,12 +9,14 @@ export default function Summary({
   isSolved,
   newsSummary,
   userSummary,
+  setCurrentQuizNumber,
 }: {
   setUserSummary: Dispatch<SetStateAction<string>>;
   solveQuiz?: Function;
   isSolved: boolean;
   newsSummary?: string;
   userSummary?: string;
+  setCurrentQuizNumber: Dispatch<SetStateAction<number>>;
 }) {
   const cx = classNames.bind(styled);
   const textareaEl = useRef<HTMLTextAreaElement>(null);
@@ -77,6 +79,20 @@ export default function Summary({
               )}
             </div>
           </div>
+
+          {isSolved && (
+            <div className={cx("btn-container")}>
+              <button
+                onClick={() => setCurrentQuizNumber((prev) => prev - 1)}
+                className={cx("btn")}
+              >
+                <div className={cx("prev-icon")}>
+                  <img src="/prev-quiz-icon.svg" alt="" />
+                </div>
+                <div>이전</div>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>
