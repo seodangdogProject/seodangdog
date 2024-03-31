@@ -3,13 +3,8 @@
 import React, {
     useState,
     useEffect,
-    useCallback,
-    startTransition,
 } from "react";
 import {
-    useRecoilState,
-    RecoilRoot,
-    useRecoilCallback,
     useRecoilValue,
     useSetRecoilState,
 } from "recoil";
@@ -134,6 +129,12 @@ const OneWord: React.FC = () => {
         })();
     };
 
+    function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
+        if (event.key === "Enter") {
+            searchKeyword();
+        }
+    }
+
     return (
         <>
             <div className={styles.container}>
@@ -151,6 +152,7 @@ const OneWord: React.FC = () => {
                             value={searchText}
                             className={styles.search_input}
                             onChange={handleSearchInputChange}
+                            onKeyDown={handleKeyDown}
                         />
                         <SearchIcon
                             onClick={(

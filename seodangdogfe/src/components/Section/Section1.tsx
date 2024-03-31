@@ -118,7 +118,6 @@ const Section = (props: ISectionProps) => {
                     />
                 </div>
             </main>
-            <span>Page {props.pageNum}</span>
         </div>
     );
 };

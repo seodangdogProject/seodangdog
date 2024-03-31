@@ -14,12 +14,11 @@ export default function RankingNewsContainer() {
   const mostSolvedEl = useRef<HTMLDivElement>(null);
   const router = useRouter();
   useEffect(() => {
-    const token = localStorage.getItem("accessToken") || "";
     (async () => {
       const res = await privateFetch("/main/" + category, "GET");
       if (res.status !== 200) {
         // 오류처리
-        router.replace("/landing");
+        router.replace("/");
       }
       const data = (await res.json())[0].newsPreviewList;
       setNewsList(data);
