@@ -45,6 +45,8 @@ function Modal({
   const passwordEl = useRef<HTMLInputElement>(null);
   const nicknameEl = useRef<HTMLInputElement>(null);
 
+  const [registrationComplete, setRegistrationComplete] = useState(false);
+
   // Method
 
   // 패스워드 *로 숨기기 토글 함수
@@ -86,6 +88,7 @@ function Modal({
 
       if (response.ok) {
         console.log("회원가입 성공");
+        alert(`${nickname}님, 환영해요!`);
         onClickToggleModal();
         window.location.href = "/";
       } else {
@@ -93,6 +96,12 @@ function Modal({
       }
     } catch (error) {
       console.error("회원가입 중 에러 발생:", error);
+    }
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      registHandler();
     }
   };
 
@@ -125,6 +134,7 @@ function Modal({
               name="inputId"
               placeholder="아이디"
               ref={idEl}
+              onKeyPress={handleKeyPress}
             />
             <div className={styles.horizontal}></div>
           </div>
@@ -138,6 +148,7 @@ function Modal({
               name="inputNickname"
               placeholder="닉네임"
               ref={nicknameEl}
+              onKeyPress={handleKeyPress}
             />
             <div className={styles.horizontal}></div>
           </div>
@@ -150,6 +161,7 @@ function Modal({
                 name="inputPassword"
                 placeholder="비밀번호"
                 ref={passwordEl}
+                onKeyPress={handleKeyPress}
               />
               <div className={styles.pass_button} onClick={passwordToggle}>
                 {closeVisible && <ClosePassword />}
@@ -170,7 +182,7 @@ function Modal({
           </button>
         </div>
         <div className={styles.footer}>
-          select : {data.length}
+          {/* select : {data.length} */}
           {/* {data
             .map((keyword) => `${keyword.keyword}(${keyword.id})`)
             .join(", ")} */}
