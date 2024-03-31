@@ -51,6 +51,29 @@
   text-align: center;
 }
 
+/* 페이지네이션 css */
+.paging {
+  background-color: blue;
+  position: relative;
+  z-index: 99;
+}
+.paging ul {
+  position: absolute;
+  gap: 10px;
+  display: flex;
+  left: 25px;
+}
+.paging ul li {
+  width: 17px;
+  height: 17px;
+  border-radius: 100%;
+  border: 3px solid #d1c2f2;
+  cursor: pointer;
+}
+.paging-active {
+  background-color: #d1c2f2;
+}
+
 /* 그리기 툴 css */
 .pentool {
   position: absolute;

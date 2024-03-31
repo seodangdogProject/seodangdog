@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import styled from "./NewsDetailContainer.module.css";
 import Summary from "@/components/newsDetail/Summary";
 import NotSolved from "@/components/newsDetail/NotSolved";
+import Solved from "@/components/newsDetail/Solved";
 export default function NewsDetailContainer() {
   // react전용 변수
   const pathname = usePathname();
@@ -45,6 +46,7 @@ export default function NewsDetailContainer() {
         }
         console.log(resData);
         setIsSolved(resData.solved);
+        setAnswerList(resData.userAnswerList);
         setKeywords(keywordList);
         setData(resData);
         setQuizData(resData.newsQuiz);
@@ -54,6 +56,12 @@ export default function NewsDetailContainer() {
     })();
     // 데이터 받아오는 함수 END
   }, []);
+  useEffect(() => {
+    if (isSolved) {
+      setCurrentQuizNumber(1);
+      console.log(quizData);
+    }
+  }, [isSolved]);
   // METHOD
   // 제출 버튼 누르면 서버로 데이터 보냄
   async function solveQuiz() {
@@ -79,7 +87,17 @@ export default function NewsDetailContainer() {
     <>
       {isSolved ? (
         // 풀었으면 렌더링
-        <>풀었다</>
+
+        <Solved
+          data={data}
+          keywords={keywords}
+          newsSeq={Number(pathname.split("/")[2])}
+          cx={cx}
+          answerList={answerList}
+          currentQuizNumber={currentQuizNumber}
+          setCurrentQuizNumber={setCurrentQuizNumber}
+          quizData={quizData}
+        />
       ) : (
         // 풀지 않았으면 렌더링
         <NotSolved
