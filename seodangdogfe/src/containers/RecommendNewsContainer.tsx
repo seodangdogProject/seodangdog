@@ -75,7 +75,7 @@ export default function RecommendNewsContainer() {
                     key={item.newsSeq}
                     className={cx("line-item")}
                   >
-                    <img src={item.newsImgUrl} alt="" />
+                    <img src={item.newsImgUrl == "None" ? "/images/default-news-image.jpg" : item.newsImgUrl} alt="" />
                     <div className={cx("title")}>{item.newsTitle}</div>
                     <div className={cx("description")}>
                       {item.newsDescription}
