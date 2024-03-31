@@ -24,7 +24,7 @@ export default function Quiz({
               {Object.entries<string>(
                 quizData[currentQuizNumber - 1].question.choices
               ).map(([key, value]: [string, string]) => (
-                <li key={key} className={cx("case")}>
+                <li key={key} className={cx("case", "solved")}>
                   <div
                     className={cx("case__number", {
                       answer: answerList[currentQuizNumber - 1] === Number(key),
