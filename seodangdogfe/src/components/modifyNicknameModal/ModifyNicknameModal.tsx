@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilCallback, useRecoilValue, useSetRecoilState } from "recoil";
 import styles from "./modal.module.css";
 import CloseModal from "@/assets/closeModal-icon.svg";
 import { MyPageDto } from "@/atoms/type";
-import { mypageState } from "@/atoms/userRecoil";
+import { mypageState, nicknameState } from "@/atoms/userRecoil";
 import { privateFetch } from "@/utils/http-commons";
 import { keywordWeight } from "@/atoms/type";
 import ToastPopup from "@/components/toast/Toast";
@@ -14,11 +14,12 @@ interface ModalProps {
 
 function Modal(props: ModalProps) {
     const mypageDto = useRecoilValue<MyPageDto | null>(mypageState);
+    const usernickname = useRecoilValue<string | null>(nicknameState);
     const [toast, setToast] = useState(false);
     const [refNickname, setRefNickname] = useState<string[]>([]);
-    const setMyPageDto = useSetRecoilState(mypageState);
+    const setUserNickname = useSetRecoilState(nicknameState);
     const [nickname, setNickname] = useState<string>(
-        mypageDto?.nickname ? mypageDto.nickname : ""
+        usernickname ? usernickname : ""
     );
     const randomKeyword: keywordWeight[] = [];
     let randomNicknameSet: string[] = [];
@@ -68,12 +69,13 @@ function Modal(props: ModalProps) {
     const reloadInfo = () => {
         // 데이터 받아오는 함수 START
         (async () => {
-            const res = await privateFetch("/mypages", "GET");
+            const res = await privateFetch("/mypages/nickname-badge", "GET");
             if (res.status === 200) {
                 const data = await res.json();
                 console.log(data);
-                console.log(data.streakList);
-                setMyPageDto(data);
+                setUserNickname(
+                    data.nickname // 변경할 값
+                );
             } else {
                 console.log("error 발생");
             }

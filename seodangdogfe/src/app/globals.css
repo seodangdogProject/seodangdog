@@ -2,6 +2,7 @@
 :root {
   --light-purple: #f6f7fb;
 }
+
 /* commons */
 .bg-light-purple {
   background-color: var(--light-purple);
@@ -172,4 +173,8 @@ table {
 }
 a {
   text-decoration: none;
+}
+
+::selection {
+  background-color: rgb(193, 171, 255, 0.4);
 }

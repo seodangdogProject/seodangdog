@@ -4,22 +4,31 @@ import Link from "next/link";
 import styled from "./LastNewsList.module.css";
 import classNames from "classnames/bind";
 import { privateFetch } from "@/utils/http-commons";
-import { newsThumbnail } from "@/atoms/type";
+import { newsDetailThumbnail } from "@/atoms/type";
+import changeDateFormat from "@/utils/changeDateFormat";
 
-function CardNews({ data }: { data: newsThumbnail }) {
+function CardNews({ data }: { data: newsDetailThumbnail }) {
     return (
         <div className={styled.cardNews}>
-            <img src={data.newsImgUrl} alt="" />
+           <div className={styled.imageContainer}>
+            <img
+                src={
+                    data.newsImgUrl == "None"
+                        ? "/images/default-news-image.jpg"
+                        : data.newsImgUrl
+                }
+                alt=""
+            />
+            </div>
             <div className={styled.desc}>
                 <div className={styled.title}>{data.newsTitle}</div>
                 <div className={styled.meta}>
-                    조회수 {data.countView} | {data.newsCreatedAt}
+                조회수 {data.countView} | {changeDateFormat(
+                                                data.newsCreatedAt
+                                            )}
                 </div>
                 <div className={styled.company}>
-                    <img
-                        src="https://mimgnews.pstatic.net/image/upload/office_logo/018/2018/08/08/logo_018_57_20180808174308.png"
-                        alt=""
-                    />
+                    <img src={data.media} alt="" />
                 </div>
                 <div className={styled.summary}>{data.newsDescription}</div>
                 <ul className={styled.hashtag}>
@@ -35,7 +44,7 @@ function CardNews({ data }: { data: newsThumbnail }) {
 }
 export default function LastNewsList() {
     const cx = classNames.bind(styled);
-    const [newsList, setNewsList] = useState<newsThumbnail[]>([]);
+    const [newsList, setNewsList] = useState<newsDetailThumbnail[]>([]);
     //키워드 추출
     useEffect(() => {
         const fetchKeywords = async () => {
