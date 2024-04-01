@@ -46,7 +46,10 @@ export default function NavBar() {
     <>
       <nav className={style.nav}>
         <Link href="/main">
-          <h3 className={style.logo}>서당독</h3>
+          {/* <h3 className={style.logo}>서당독</h3> */}
+          <h3 className={style.logo}>
+            <img src="/logo-icon.svg" alt="" />
+          </h3>
         </Link>
         <ul className={style.item_container}>
           <Link href="/main">
