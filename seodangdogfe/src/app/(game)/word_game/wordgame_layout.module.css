@@ -19,7 +19,16 @@
 }
 
 .logo {
-    margin-top: 50px;
+    font-family: "NanumMyeongjo";
+    margin-top: 70px;
+}
+
+.word_game_logo {
+    font-family: "NanumMyeongjo";
+    margin-top: 100px;
+    margin-bottom: 80px;
+    font-size: 80px;
+    font-weight: 900;
 }
 
 .word_count_box {
@@ -36,6 +45,7 @@
 
 .des_container {
     display: flex;
+    margin-top: 20px;
     margin-bottom: 20px;
     font-size: 24px;
     flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
@@ -47,7 +57,7 @@
     /* 시작하기 버튼*/
     margin-top: 20px;
     border-radius: 30px;
-    background-color: rgba(146, 157, 255, 1);
+    background-color: rgba(150, 150, 250, 1);
     color: #fff;
     font-size: 50px;
     width: 200px;
