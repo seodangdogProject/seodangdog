@@ -5,6 +5,8 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  min-width: 1500px;
+  position: relative;
   background-image: url("../../../assets/landing-background-image.png");
 }
 
@@ -19,7 +21,7 @@
   font-size: 40px;
   font-weight: bold;
   text-align: center;
-  z-index: 10;
+  white-space: nowrap;
 }
 
 .wordContainer {
@@ -83,6 +85,7 @@
 }
 
 .buttonNewKeywords {
+  white-space: nowrap;
   overflow: visible;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
@@ -104,6 +107,7 @@
 
   background: linear-gradient(to right, #1488cc, #2b32b2);
   box-shadow: 0 2px 25px rgba(20, 137, 204, 0.3);
+  position: absolute;
 }
 
 @keyframes buttonMove {
@@ -168,6 +172,7 @@
 }
 
 .nextButton {
+  white-space: nowrap;
   position: absolute;
   bottom: 65px;
   right: 50px;
@@ -203,7 +208,8 @@
 }
 
 .selectedWordCount {
-  position: fixed;
+  white-space: nowrap;
+  position: absolute;
   bottom: 10%;
   left: 50%;
   transform: translate(-50%, 50%);
@@ -215,7 +221,7 @@
 }
 
 .minimumKeywordAlert {
-  position: fixed;
+  position: absolute;
   bottom: 40px;
   left: 50%;
   transform: translateX(-50%);

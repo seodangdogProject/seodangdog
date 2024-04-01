@@ -170,7 +170,7 @@ export default function Join() {
         <button
           onClick={nextPage}
           className={`${styles.buttonNewKeywords} ${styles.mouse}`}
-          style={{ position: "fixed", top: "50px", right: "30px" }}
+          style={{ top: "50px", right: "30px" }}
         >
           새로운 키워드 받기
         </button>
