@@ -7,6 +7,7 @@ import com.ssafy.seodangdogbe.keyword.dto.*;
 import com.ssafy.seodangdogbe.news.service.FastApiService;
 import com.ssafy.seodangdogbe.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.LazyBSONList;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +24,7 @@ import static com.ssafy.seodangdogbe.news.domain.QUserNews.userNews;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
@@ -89,6 +91,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     @Transactional
     public MessageResponseDto decrementKeywordWeightV2(User user, List<DeWeightReqDto> deWeightReqDtoList) {
 
+        log.info("deWeightdto : ",deWeightReqDtoList);
         List<DeWeightReqDto.KeywordInfo> list = DeWeightReqDto.extractKeywordInfoList(deWeightReqDtoList);
         loseWeightFastReqDto dto = new loseWeightFastReqDto();
 
@@ -100,6 +103,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
         dto.setInfo(DeWeightReqDto.extractInfoDtoList(deWeightReqDtoList));
 
         // fastApi로 전송
+        log.info("fast api 요청 dto " , dto);
         return fastApiService.updateWeigth(dto);
     }
 
