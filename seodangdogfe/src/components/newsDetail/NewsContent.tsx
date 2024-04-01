@@ -202,19 +202,17 @@ export default function NewsContent({
                         onMouseUp={(e) => highlightOut(e)}
                         onClick={(e) => getWordMeaning(e, word, index)}
                         key={index}
-                        className={cx(
-                          {
-                            "dictionary-word": cursor === 2,
-                            filled: highlightList.includes(index),
-                          },
-                          "word-circle"
-                        )}
+                        className={cx({
+                          "dictionary-word": cursor === 2,
+                          filled: highlightList.includes(index),
+                          "word-circle": wordList.includes(index),
+                        })}
                         data-highlight-idx={index}
                       >
                         {word}
-                        {wordList.includes(index) && (
+                        {/* {wordList.includes(index) && (
                           <img src="/word-circle-icon.svg" alt="" />
-                        )}
+                        )} */}
                       </span>
                     );
                   } else {
