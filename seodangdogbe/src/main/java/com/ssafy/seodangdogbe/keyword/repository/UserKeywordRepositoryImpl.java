@@ -109,7 +109,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     @Override
     @Transactional
-    public void incrementKeywordWeight(User user, List<String> newskeywordList, double weight) {
+    public void incrementSolvedKeywordWeight(User user, List<String> newskeywordList, double weight) {
         List<UserKeyword> insertKeyword = new ArrayList<>();
         List<String> updateKeyword = new ArrayList<>();
 
@@ -138,6 +138,36 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     }
 
+    @Override
+    @Transactional
+    public void incrementClickedKeywordWeight(User user, List<String> newskeywordList, double weight) {
+        List<UserKeyword> insertKeyword = new ArrayList<>();
+        List<String> updateKeyword = new ArrayList<>();
+
+        for (String keyword : newskeywordList) {
+            boolean exists = queryFactory.selectOne()
+                    .from(userKeyword)
+                    .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.eq(keyword))
+                    .fetchFirst() != null;
+
+            if (!exists) {
+                UserKeyword newKeyword = new UserKeyword(user, keyword, weight);
+                insertKeyword.add(newKeyword);
+            }else {
+                updateKeyword.add(keyword);
+            }
+        }
+
+        System.out.println("새로운 키워드 : " + insertKeyword);
+        saveAll(user, insertKeyword);
+
+        queryFactory
+                .update(userKeyword)
+                .set(userKeyword.weight, userKeyword.weight.multiply(weight))
+                .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(newskeywordList))
+                .execute();
+
+    }
 
     @Transactional
     public void saveAll(User user, List<UserKeyword> list) {
