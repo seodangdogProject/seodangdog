@@ -22,7 +22,7 @@ const OneWord: React.FC = () => {
     const [koColor, setKoColor] = useState(styles.selected_toggle_item);
     const [wordList, setWordList] = useState<Item[]>(koWordList);
     const [isOpenModal, setOpenModal] = useState<boolean>(false);
-    const [clickedWord, setClickedWord] = useState<Item | null>(null);
+    const [clickedWord, setClickedWord] = useState<string | null>(null);
     const [searchText, setSearchText] = useState("");
     const setKoWordList = useSetRecoilState(koWordListState);
     const setEngWordList = useSetRecoilState(engWordListState);
@@ -67,7 +67,7 @@ const OneWord: React.FC = () => {
 
     // 이동
     const handleOpenModal = (word: Item) => {
-        setClickedWord((prevClickedWord) => word); // 함수형 업데이트 사용
+        setClickedWord((prevClickedWord) => word.word); // 함수형 업데이트 사용
         setOpenModal(true);
     };
 
@@ -216,11 +216,21 @@ const OneWord: React.FC = () => {
 
                                 <div className={styles.mean_box}>
                                     <div className={styles.mean}>
-                                        1. {item.mean1}
+                                        1.
+                                        <span
+                                            dangerouslySetInnerHTML={{
+                                                __html: item.mean1,
+                                            }}
+                                        />
                                     </div>
                                     {item.mean2 != null && (
                                         <div className={styles.mean}>
-                                            2. {item.mean2}
+                                            2.
+                                            <span
+                                                dangerouslySetInnerHTML={{
+                                                    __html: item.mean2,
+                                                }}
+                                            />
                                         </div>
                                     )}
                                 </div>

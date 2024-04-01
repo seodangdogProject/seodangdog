@@ -18,35 +18,60 @@ const RecentNewsPreview = (props: newsProps) => {
                         </Link>
                     </h3>
                     <div className={styled.preview}>
-                        <div className={styled.date}>
-                            {changeDateFormat(
-                                props.seenNewsthumbnail?.newsCreatedAt || ""
-                            )}
-                        </div>
-                        <img
-                            src={
-                                props.seenNewsthumbnail?.newsImgUrl == "None"
-                                    ? "/images/default-news-image.jpg"
-                                    : props.seenNewsthumbnail?.newsImgUrl
-                            }
-                            alt=""
-                        />
-                        <div className={styled.body}>
-                            <h4 className={styled.title}>
-                                {props.seenNewsthumbnail?.newsTitle}
-                                {/* [단독]NH농협은행 110억원 배임사고 발생…해당 직원
+                        {props.seenNewsthumbnail ? (
+                            <>
+                                <Link
+                                    style={{
+                                        color: "#000",
+                                        display: "flex",
+                                        width: "100%",
+                                    }}
+                                    href={`/news/${props.seenNewsthumbnail.newsSeq}`}
+                                >
+                                    <div className={styled.date}>
+                                        {changeDateFormat(
+                                            props.seenNewsthumbnail
+                                                ?.newsCreatedAt || ""
+                                        )}
+                                    </div>
+                                    <img
+                                        src={
+                                            props.seenNewsthumbnail
+                                                ?.newsImgUrl == "None"
+                                                ? "/images/default-news-image.jpg"
+                                                : props.seenNewsthumbnail
+                                                      ?.newsImgUrl
+                                        }
+                                        alt=""
+                                    />
+                                    <div className={styled.body}>
+                                        <h4 className={styled.title}>
+                                            {props.seenNewsthumbnail?.newsTitle}
+                                            {/* [단독]NH농협은행 110억원 배임사고 발생…해당 직원
                                 형사고발 */}
-                            </h4>
-                            <ul className={styled.hashtag}>
-                                {props.seenNewsthumbnail?.newsKeyword
-                                    .slice(0, 3)
-                                    .map((item, index) => (
-                                        <li key={index} className={styled.item}>
-                                            #{item}
-                                        </li>
-                                    ))}
-                            </ul>
-                        </div>
+                                        </h4>
+                                        <ul className={styled.hashtag}>
+                                            {props.seenNewsthumbnail?.newsKeyword
+                                                .slice(0, 3)
+                                                .map((item, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className={styled.item}
+                                                    >
+                                                        #{item}
+                                                    </li>
+                                                ))}
+                                        </ul>
+                                    </div>
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <div className={styled.empty_preview}>
+                                    최근 본 뉴스가 존재하지 않습니다.
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
                 {/* 두 번째 */}
@@ -57,33 +82,61 @@ const RecentNewsPreview = (props: newsProps) => {
                         </Link>
                     </h3>
                     <div className={styled.preview}>
-                        <div className={styled.date}>
-                            {changeDateFormat(
-                                props.solvedNewsthumbnail?.newsCreatedAt || ""
-                            )}
-                        </div>
-                        <img
-                            src={
-                                props.solvedNewsthumbnail?.newsImgUrl == "None"
-                                    ? "/images/default-news-image.jpg"
-                                    : props.solvedNewsthumbnail?.newsImgUrl
-                            }
-                            alt=""
-                        />
-                        <div className={styled.body}>
-                            <h4 className={styled.title}>
-                                {props.solvedNewsthumbnail?.newsTitle}
-                            </h4>
-                            <ul className={styled.hashtag}>
-                                {props.solvedNewsthumbnail?.newsKeyword
-                                    .slice(0, 3)
-                                    .map((item, index) => (
-                                        <li key={index} className={styled.item}>
-                                            #{item}
-                                        </li>
-                                    ))}
-                            </ul>
-                        </div>
+                        {props.solvedNewsthumbnail ? (
+                            <>
+                                <Link
+                                    style={{
+                                        color: "#000",
+                                        display: "flex",
+                                        width: "100%",
+                                    }}
+                                    href={`/news/${props.solvedNewsthumbnail.newsSeq}`}
+                                >
+                                    <div className={styled.date}>
+                                        {changeDateFormat(
+                                            props.solvedNewsthumbnail
+                                                ?.newsCreatedAt || ""
+                                        )}
+                                    </div>
+                                    <img
+                                        src={
+                                            props.solvedNewsthumbnail
+                                                ?.newsImgUrl == "None"
+                                                ? "/images/default-news-image.jpg"
+                                                : props.solvedNewsthumbnail
+                                                      ?.newsImgUrl
+                                        }
+                                        alt=""
+                                    />
+                                    <div className={styled.body}>
+                                        <h4 className={styled.title}>
+                                            {
+                                                props.solvedNewsthumbnail
+                                                    ?.newsTitle
+                                            }
+                                        </h4>
+                                        <ul className={styled.hashtag}>
+                                            {props.solvedNewsthumbnail?.newsKeyword
+                                                .slice(0, 3)
+                                                .map((item, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className={styled.item}
+                                                    >
+                                                        #{item}
+                                                    </li>
+                                                ))}
+                                        </ul>
+                                    </div>
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <div className={styled.empty_preview}>
+                                    최근 푼 뉴스가 존재하지 않습니다.{" "}
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
