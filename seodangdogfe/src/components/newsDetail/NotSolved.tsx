@@ -126,6 +126,7 @@ export default function NotSolved({
             solveQuiz={solveQuiz}
             setUserSummary={setUserSummary}
             isSolved={false}
+            setCurrentQuizNumber={setCurrentQuizNumber}
           />
         )}
       </div>

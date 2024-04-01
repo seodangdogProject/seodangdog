@@ -35,6 +35,7 @@ export default function NewsContent({
 
   useEffect((): any => {
     setHighLightList(data?.highlightList || []);
+    setWordList(data?.wordList || []);
     // console.log(data);
   }, [data]);
   useEffect((): any => {
@@ -44,6 +45,7 @@ export default function NewsContent({
         highlightList: latestHighlightListRef.current,
         wordList: latestWordListRef.current,
       };
+      console.log(body);
       try {
         const res = await privateFetch("/news/read", "PATCH", body);
         if (res.status !== 200) {
@@ -114,6 +116,14 @@ export default function NewsContent({
       console.error(error);
     }
   }
+  // 단어 스크랩 함수
+  async function scrapWord() {
+    setWordList((prev) => [...prev, clickedWord.wordSeq]);
+    const body = {
+      word: clickedWord.word,
+    };
+    await privateFetch("/news/word", "POST", body);
+  }
   // 단어 모달의 자식 컴포넌트로 줄 함수
   function Scrap() {
     return (
@@ -122,13 +132,7 @@ export default function NewsContent({
           {wordList.includes(clickedWord.wordSeq) ? (
             <img src="/bookmark-full-icon.svg" alt="" />
           ) : (
-            <img
-              onClick={() =>
-                setWordList((prev) => [...prev, clickedWord.wordSeq])
-              }
-              src="/bookmark-empty-icon.svg"
-              alt=""
-            />
+            <img onClick={scrapWord} src="/bookmark-empty-icon.svg" alt="" />
           )}
         </span>
       </>
@@ -198,13 +202,19 @@ export default function NewsContent({
                         onMouseUp={(e) => highlightOut(e)}
                         onClick={(e) => getWordMeaning(e, word, index)}
                         key={index}
-                        className={cx({
-                          "dictionary-word": cursor === 2,
-                          filled: highlightList.includes(index),
-                        })}
+                        className={cx(
+                          {
+                            "dictionary-word": cursor === 2,
+                            filled: highlightList.includes(index),
+                          },
+                          "word-circle"
+                        )}
                         data-highlight-idx={index}
                       >
                         {word}
+                        {wordList.includes(index) && (
+                          <img src="/word-circle-icon.svg" alt="" />
+                        )}
                       </span>
                     );
                   } else {
