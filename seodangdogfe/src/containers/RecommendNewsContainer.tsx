@@ -72,6 +72,32 @@ export default function RecommendNewsContainer() {
         })();
     };
 
+    // const addWeight = () => {
+    //     return (async () => {
+    //         try {
+    //             console.log("newsData :", newsData);
+    //             if (newsData != undefined) {
+    //                 console.log("변환");
+    //                 const updatedReqList = newsData.map((item, idx) =>
+    //                     convertToDTO(item)
+    //                 );
+    //                 setReqList(updatedReqList);
+    //                 console.log("updatedReqList : ", updatedReqList);
+    //             }
+
+    //             const res = await privateFetch(
+    //                 "/keyword/addWeight",
+    //                 "POST",
+    //                 reqList
+    //             );
+    //             let data = await res.json();
+    //             console.log(data);
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     })();
+    // };
+
     const reMainRef = () => {
         return (async () => {
             try {
