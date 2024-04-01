@@ -42,7 +42,7 @@ public class DeWeightReqDto  {
 
         for (DeWeightReqDto dto : dtoList) {
             for (KeywordInfo keywordInfo : dto.keywordInfoList) {
-                InfoDtoList.add(new InfoDto(dto.newsSeq, keywordInfo.weight));
+                InfoDtoList.add(new InfoDto(dto.newsSeq, 0.5));
             }
         }
 
