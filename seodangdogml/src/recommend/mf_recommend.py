@@ -152,14 +152,14 @@ async def update(data: UpdateData):
 
 
 async def mf_update(data):
-    print('mf online learning')
+    print('mf update - online learning')
     print(mf.user_id_index)
     user_seq = data.user_seq
     info = data.info
 
     result = select_user_news_rating(user_seq)
     result = pd.DataFrame(result)
-    print(result)
+    print("info", len(info))
     # 이미 추천된 비율에대가 예측치를 곱해서 온라인학습을시킨다.
     for i in info:
         print(i)
