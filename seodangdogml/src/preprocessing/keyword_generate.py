@@ -37,7 +37,7 @@ def extract_noun(text):
     word = okt.nouns(text)
     p = okt.pos(text)
     for pos in p:
-      if pos[1] in ['SL']:
+      if pos[1] in ['Alpha']:
         word.append(pos[0])
     for w in word:
       if len(w)>1 and w not in stopwords:
@@ -89,9 +89,17 @@ def keyword_generate(news_data, targetCol, resultCol):
     # 뉴스 데이터에 키워드 저장
     print("뉴스 데이터에 키워드 저장...")
     for i in range(len(news_data)):
+        keyword_weighted_list = df.loc[i].sort_values(ascending=False)[1:]
+        keyword_list = keyword_weighted_list.index
+        weight_list = list(keyword_weighted_list)
+        news_data[i][resultCol] = {}
         if targetCol == "newsSummary":
-            news_data[i][resultCol] = list(df.loc[i].sort_values(ascending=False)[1:6].index)
+            for j in range(5):
+                if weight_list[j] != 0:
+                    news_data[i][resultCol][keyword_list[j]] = weight_list[j]
         else:
-            news_data[i][resultCol] = list(df.loc[i].sort_values(ascending=False)[1:21].index)
+            for j in range(20):
+                if weight_list[j] != 0:
+                    news_data[i][resultCol][keyword_list[j]] = weight_list[j]
 
     return news_data
