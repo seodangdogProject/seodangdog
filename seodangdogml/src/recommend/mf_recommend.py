@@ -8,7 +8,7 @@ from fastapi import BackgroundTasks
 import pandas as pd
 import os
 from recommend.cbf_recommend import format_weight
-from recommend.cbf_recommend import cbf_recommend, get_df_news
+from recommend.cbf_recommend import cbf_recommend, get_df_news, format_weight
 from recommend.cbf_recommend import news_id_seq
 from repository.recommend_repository import select_ratings
 from repository.recommend_repository import update_ratings
@@ -84,7 +84,7 @@ def recommend_news(user_seq, mf_model, top_n=21):
         news_seq = predicted_ratings[i][0]
         news_title = get_news_title(news_seq)
         # news_similarity = format_weight(predicted_ratings[i][1])
-        news_similarity = predicted_ratings[i][1]
+        news_similarity = format_weight(predicted_ratings[i][1])
         news_summary_keyword= df_news[df_news['news_seq'] == news_seq]['news_summary_keyword'].values[0]
         recommended_news.append(MfNewsDto(news_seq, news_title, news_similarity, news_summary_keyword))
 
@@ -153,6 +153,7 @@ async def update(data: UpdateData):
 
 async def mf_update(data):
     print('mf online learning')
+    print(mf.user_id_index)
     user_seq = data.user_seq
     info = data.info
 
@@ -199,7 +200,7 @@ async def insert_rating(recommended_news, user_seq):
     for rn in recommended_news:
         news_seq = rn.news_seq
         news_title = rn.news_title
-        news_similarity = rn.news_similarity
+        news_similarity = format_weight(rn.news_similarity)
         # info = select_ratings(news_seq, user_seq)
 
         is_found = False

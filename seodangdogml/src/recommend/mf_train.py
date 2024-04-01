@@ -106,12 +106,14 @@ def train_mf_model():
 
 # 변수로 넘어온 user_seq, news_seq는 인덱스(0부터)로 변환해서 학습을 시켜야한다.
 def online_learning(mf, user_id, item_id, rating, weight=1):
-
+    print("mf online", user_id, item_id, rating, weight)
     if user_id not in mf.user_id_index:
         # 새로운 사용자인 경우, 사용자를 모델에 추가하고 초기화
         mf.user_id_index[user_id] = mf.num_users
         mf.index_user_id[mf.num_users] = user_id
         mf.num_users += 1
+
+        print("new user mf", mf.user_id_index[user_id])
 
         # 새로운 사용자의 특성을 추가하기 위해 mf.P에 새로운 행을 추가
         # np.random.normal() 함수를 사용하여 임의로 생성되며, 각 요소는 평균이 0이고 표준 편차가 1/mf.K 인 정규 분포를 따르는 난수
@@ -128,7 +130,7 @@ def online_learning(mf, user_id, item_id, rating, weight=1):
         # 새로운 아이템인 경우, 아이템을 모델에 추가하고 초기화
         mf.item_id_index[item_id] = mf.num_items
 
-        print(mf.item_id_index[item_id])
+        print("new item mf", mf.item_id_index[item_id])
         mf.index_item_id[mf.num_items] = item_id
         mf.num_items += 1
         existing_item_features = mf.Q.mean(axis=0)  # 예시로 평균 사용
