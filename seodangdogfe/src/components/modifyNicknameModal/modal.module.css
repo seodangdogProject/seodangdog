@@ -1,0 +1,173 @@
+.modal_container {
+    border-radius: 10px;
+    width: 40%;
+    height: 40%;
+    display: flex;
+    position: fixed;
+    flex-direction: column; /* 세로로 정렬 */
+    justify-content: center;
+    background-color: #f6f7fb;
+    box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
+    z-index: 100;
+    top: 50%;
+    left: 55%;
+    /* padding: 10px; */
+    transform: translate(-50%, -50%);
+    font-family: "hunminjungum";
+}
+
+.horizontal {
+    width: 50%; /* 수평선의 가로 길이 */
+    height: 1px; /* 수평선의 세로 길이 */
+    background-color: black; /* 수평선의 색상 */
+    margin: 10px 0; /* 수평선 위 아래 여백 */
+}
+
+.header_container {
+    margin-top: 10px;
+    height: 20%;
+    display: flex;
+    align-items: center; /* 요소를 수직으로 가운데 정렬합니다. */
+}
+
+.title {
+    width: 100%;
+    margin-top: 10px;
+    font-size: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+}
+
+.exit_button {
+    margin-right: 15px;
+    margin-left: auto;
+    cursor: pointer;
+    padding-bottom: 20px;
+}
+
+.recommend_title {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.content_container {
+    height: 80%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+}
+
+.recommend_container {
+    height: 60%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    animation: fadein 2s;
+    -moz-animation: fadein 2s; /* Firefox */
+    -webkit-animation: fadein 2s; /* Safari and Chrome */
+    -o-animation: fadein 2s; /* Opera */
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-moz-keyframes fadein {
+    /* Firefox */
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-webkit-keyframes fadein {
+    /* Safari and Chrome */
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-o-keyframes fadein {
+    /* Opera */
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.recomend_items {
+    display: flex;
+    gap: 10px;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+}
+
+.recomend_items div {
+    border-radius: 20px;
+}
+
+.recomend_items div:hover {
+    box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
+}
+.recomend_items > div:first-child {
+    background-color: pink;
+}
+
+.recomend_items > div:nth-child(2) {
+    background-color: skyblue;
+}
+
+.recomend_items > div:nth-child(3) {
+    background-color: greenyellow;
+}
+
+.recomend_items > div:nth-child(4) {
+    background-color: peru;
+}
+
+.input_container {
+    margin-top: 10px;
+    height: 40%;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+}
+
+.recommend_item {
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.input_box {
+    border: none;
+    outline: none;
+    padding: 10px;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.saveButton {
+    padding: 10px;
+    border-radius: 20px;
+    display: inline-block;
+    background-color: aquamarine;
+    cursor: pointer;
+}
+
+.saveButton:hover {
+    box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
+}

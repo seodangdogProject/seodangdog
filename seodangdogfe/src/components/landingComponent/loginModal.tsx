@@ -1,18 +1,23 @@
-import React, { PropsWithChildren, useState } from 'react';
-import Link from 'next/link';
-import styled from 'styled-components';
-import styles from './modal.module.css';
-import OpenPassword from '../../assets/openPassword-icon.svg';
-import ClosePassword from '../../assets/closePassword-icon.svg';
-import CloseModal from '../../assets/closeModal-icon.svg';
-import LoginLogo from '../../assets/loginLogo-icon.svg';
+"use client";
+import { publicFetch } from "@/utils/http-commons";
+import Link from "next/link";
+import React, { PropsWithChildren, useRef, useState } from "react";
+import styled from "styled-components";
+import CloseModal from "../../assets/closeModal-icon.svg";
+import ClosePassword from "../../assets/closePassword-icon.svg";
+import LoginLogo from "../../assets/loginLogo-icon.svg";
+import OpenPassword from "../../assets/openPassword-icon.svg";
+import styles from "./modal.module.css";
+import { redirect, useRouter } from "next/navigation";
 
 const Backdrop = styled.div`
     width: 100vw;
     height: 100vh;
     position: fixed;
+    display: flex;
     top: 0;
     background-color: rgba(0, 0, 0, 0.4);
+    z-index: 50;
 `;
 
 interface ModalDefaultType {
@@ -23,14 +28,44 @@ function Modal({
     onClickToggleModal,
     children,
 }: PropsWithChildren<ModalDefaultType>) {
-    let [inputType, setInputType] = useState('password');
+    const router = useRouter();
+    let [inputType, setInputType] = useState("password");
     let [closeVisible, setCloseVisibleVisible] = useState(true);
     let [openVisible, setOpenVisibleVisible] = useState(false);
 
+    // 보낼 로그인 데이터 엘리먼트
+    const userIdEl = useRef<HTMLInputElement>(null);
+    const passwordEl = useRef<HTMLInputElement>(null);
+
     function passwordToggle() {
-        setInputType(inputType === 'text' ? 'password' : 'text');
+        setInputType(inputType === "text" ? "password" : "text");
         setCloseVisibleVisible(closeVisible === true ? false : true);
         setOpenVisibleVisible(openVisible === true ? false : true);
+    }
+
+    // 로그인 처리 함수
+    async function loginHandler(): Promise<JSON> {
+        const body = {
+            userId: userIdEl.current?.value,
+            password: passwordEl.current?.value,
+        };
+
+        const res = await publicFetch("/login", "POST", body);
+        if (res.status !== 200) {
+            alert("로그인에 실패했습니다.");
+            return res;
+        }
+        const { accessToken, refreshToken } = await res.json();
+        window.localStorage.setItem("accessToken", accessToken);
+        window.localStorage.setItem("refreshToken", refreshToken);
+        router.replace("/main");
+        return res;
+    }
+
+    function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
+        if (event.key === "Enter") {
+            loginHandler();
+        }
     }
 
     return (
@@ -54,13 +89,14 @@ function Modal({
                 <div className={styles.form_container}>
                     <div
                         className={styles.input_group_id}
-                        style={{ marginBottom: '50px' }}
+                        style={{ marginBottom: "50px" }}
                     >
                         <input
                             type="text"
                             id="username"
                             name="inputId"
                             placeholder="아이디"
+                            ref={userIdEl}
                         />
                         <div className={styles.horizontal}></div>
                     </div>
@@ -72,6 +108,8 @@ function Modal({
                                 id="username"
                                 name="inputPassword"
                                 placeholder="비밀번호"
+                                ref={passwordEl}
+                                onKeyDown={handleKeyDown} // 엔터 키 이벤트 처리
                             />
                             <div
                                 className={styles.pass_button}
@@ -85,20 +123,28 @@ function Modal({
                     </div>
                 </div>
                 <div className={styles.login_button_container}>
-                    <button className={styles.login_button}>LOGIN</button>
+                    <button
+                        onClick={loginHandler}
+                        className={styles.login_button}
+                    >
+                        LOGIN
+                    </button>
                 </div>
+                {/* <Link className={styles.login_button_container} href="/main">
+          <button className={styles.login_button}>LOGIN</button>
+        </Link> */}
                 <div className={styles.footer}>
                     <div
                         style={{
-                            paddingLeft: '20px',
-                            paddingRight: '20px',
+                            paddingLeft: "20px",
+                            paddingRight: "20px",
                         }}
                     >
-                        아이디가 없으신가요? 지금{' '}
+                        아이디가 없으신가요? 지금{" "}
                         <Link href="/join_game" className={styles.link}>
                             회원가입
-                        </Link>{' '}
-                        하세요!{' '}
+                        </Link>{" "}
+                        하세요!{" "}
                     </div>
                 </div>
             </div>

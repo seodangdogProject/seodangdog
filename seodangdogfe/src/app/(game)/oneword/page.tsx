@@ -1,105 +1,282 @@
-'use client';
+"use client";
 // WordGame.tsx
-import React, { useState, useEffect, useCallback } from 'react';
-import { useRecoilState, RecoilRoot } from 'recoil';
-import { gameWordListState, Item } from '../../../atoms/wordGame';
-import styles from './oneword_layout.module.css';
-import Lottie from 'lottie-react';
-import TimerIcon from '../../../assets/timer-icon.svg';
-import ProgressBar from '@ramonak/react-progress-bar';
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useRecoilState, RecoilRoot, useSetRecoilState } from "recoil";
+import { useRouter } from "next/navigation";
+
+import {
+    gameWordListState,
+    correctWordListState,
+    unCorrectWordListState,
+    Item,
+} from "../../../atoms/wordGame";
+import styles from "./oneword_layout.module.css";
+import TimerIcon from "../../../assets/timer-icon.svg";
+import GameIcon from "../../../assets/quiz-logo-icon.svg";
+import CorrectIcon from "../../../assets/correct-icon.svg";
+import UncorrectIcon from "../../../assets/uncorrect-icon.svg";
 
 const OneWord: React.FC = () => {
+    const router = useRouter();
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [sec, setSec] = useState(0);
-    const [wordList, setWordList] = useRecoilState(gameWordListState);
-    const [testWord, setTestWord] = useState('김아림특화');
-    const [inputValues, setInputValues] = useState(
-        Array(testWord.length).fill('')
-    ); // 입력된 문자열을 추적하는 상태
-    // const [inputValues, setInputValues] = useState(
-    //     Array(wordList[currentIndex].answer.length).fill('')
-    // ); // 입력된 문자열을 추적하는 상태
+    const [sec, setSec] = useState<number>(0);
+    const [wordList] = useRecoilState(gameWordListState); // wordList
+    const [correctWordList] = useRecoilState(correctWordListState); // wordList
+    const [unCorrectWordList] = useRecoilState(unCorrectWordListState); // wordList
+    const [inputValues, setInputValues] = useState<string[]>([]); //
+    const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // 사용자 input 박스 체크
+    const [answerSec, setAnswerSec] = useState<number>(0); // 타이머 2의 초
+    const [isAnswer, setIsAnswer] = useState<boolean>(false);
+    const [isUnCorrect, setIsUnCorrect] = useState<boolean>(false);
+    const [isCorrectIcon, setIsCorrectIcon] = useState<boolean>(false);
+    const [isUnCorrectIcon, setIsUnCorrectIcon] = useState<boolean>(false);
+    const setCorrectWordList = useSetRecoilState(correctWordListState);
+    const setUnCorrectWordList = useSetRecoilState(unCorrectWordListState);
 
-    // 각 입력 요소에 대한 변경 핸들러
-    const handleChange = (index: number, value: string) => {
-        const newInputValues = [...inputValues]; // 이전 입력 값을 복사
-        newInputValues[index] = value; // 변경된 값으로 업데이트
-        setInputValues(newInputValues); // 변경된 입력 값을 상태에 저장
+    // 단어장에 추가하기
+    const addItemToList = useCallback(
+        (flag: boolean, itemToAdd: Item): void => {
+            if (flag) {
+                setCorrectWordList([...correctWordList, itemToAdd]);
+            } else {
+                setUnCorrectWordList([...unCorrectWordList, itemToAdd]);
+            }
+        },
+        [
+            setCorrectWordList,
+            setUnCorrectWordList,
+            correctWordList,
+            unCorrectWordList,
+        ]
+    );
 
-        // 모든 input이 채워졌는지 확인하여 자동으로 단어를 변환=> 빈칸 처리가 너무 힘들어서 일단 보류... ㅜ.ㅜ
-        // if (newInputValues.every((input) => input !== '' && input !== ' ')) {
-        //     handleConvertWord();
-        //     console.log('검사하러가기');
-        // }
+    // 현재 문제의 정답을 가져오는 함수
+    const getCurrentAnswer = () => {
+        return wordList[currentIndex]?.word || "";
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            console.log('검사하러가기');
+    const setAnswerLength = () => {
+        setInputValues(
+            Array.from({ length: getCurrentAnswer().length }, () => "")
+        );
+    };
+
+    // 각 입력 요소에 대한 변경 핸들러 (하나 치면 다음으로 자동 넘어가는거)
+    const handleInputChange = (index: number, value: string) => {
+        const newInputValues = [...inputValues];
+        newInputValues[index] = value;
+        setInputValues(newInputValues);
+    };
+
+    // 입력 처리 함수
+    const handleKeyPress = (
+        index: number,
+        event: React.KeyboardEvent<HTMLInputElement>
+    ) => {
+        if (event.key === "Enter") {
+            console.log("검사하러가기");
             handleConvertWord();
+        } else if (
+            event.key === "Backspace" &&
+            index > 0 &&
+            inputValues[index] === ""
+        ) {
+            // 백스페이스 키 입력 처리
+            const newInputValues = [...inputValues];
+            newInputValues[index - 1] = ""; // 이전 input 요소에 포커스를 이동하고 값을 지움
+            inputRefs.current[index - 1]?.focus();
+            setInputValues(newInputValues);
+        } else if (
+            event.key == " " &&
+            index >= 0 &&
+            index < inputValues.length - 1
+        ) {
+            event.preventDefault();
+            inputRefs.current[index + 1]?.focus();
         }
     };
 
     // 단어 변환 함수
     const handleConvertWord = () => {
-        const convertedWord = inputValues.join(''); // 배열에 있는 문자들을 결합하여 단어로 변환
-        console.log('Converted word:', convertedWord);
+        const convertedWord = inputValues.join(""); // 배열에 있는 문자들을 결합하여 단어로 변환
+        console.log("Converted word:", convertedWord);
+
+        // 현재 문제의 정답을 가져옵니다.
+        const currentAnswer = getCurrentAnswer();
+
+        // 변환된 단어가 현재 문제의 정답과 같은지 확인합니다.
+        if (convertedWord === currentAnswer) {
+            console.log("정답입니다!");
+
+            setIsCorrectIcon(true);
+            setTimeout(() => {
+                setIsCorrectIcon(false);
+            }, 300);
+            addItemToList(true, wordList[currentIndex]);
+            console.log(correctWordList);
+            // 현재 문제가 마지막 문제가 아니라면 다음 문제로 넘어갑니다.
+            if (currentIndex < wordList.length - 1) {
+                setCurrentIndex((prevIndex) => prevIndex + 1);
+                setSec(0); // 타이머를 0으로 초기화합니다.
+            } else {
+                // 마지막 문제라면 모든 문제를 완료했음을 알립니다.
+                // alert("모든 문제를 완료했습니다.");
+                router.push("/game_result");
+            }
+        } else {
+            setIsUnCorrect(true);
+            console.log("shaking");
+
+            // 0.3초 후에 흔들림 효과를 제거
+            setTimeout(() => {
+                setIsUnCorrect(false);
+            }, 300);
+        }
     };
 
+    const check = useCallback(() => {
+        const convertedWord = inputValues.join(""); // 배열에 있는 문자들을 결합하여 단어로 변환
+        console.log("Converted word:", convertedWord);
+
+        // 현재 문제의 정답을 가져옵니다.
+        const currentAnswer = getCurrentAnswer();
+
+        return convertedWord === currentAnswer;
+    }, [inputValues, currentIndex]); // inputValues와 currentIndex에 의존성 추가
+
     useEffect(() => {
-        const interval_id = setInterval(() => {
-            setSec((sec) => {
-                const newcount = sec + 1;
-                console.log(newcount);
-                if (newcount == 11) {
-                    console.log('정지');
-                    clearInterval(interval_id);
-                    //alert('종료');
+        inputRefs.current[0]?.focus(); // 초기 렌더링 시 첫 번째 input 요소에 포커스 설정
+        setAnswerLength(); // 컴포넌트가 렌더링될 때마다 답의 길이에 따라 입력 박스 설정
+    }, [currentIndex, wordList]);
+
+    useEffect(() => {
+        // 타이머 1
+        const timer1 = setInterval(() => {
+            console.log("timer 1 재시작");
+            if (sec >= 10 && sec <= 11) {
+                setIsUnCorrectIcon(true);
+                setTimeout(() => {
+                    setIsUnCorrectIcon(false);
+                }, 300);
+
+                setSec((prevSec) => prevSec + 1);
+            } else if (sec >= 10 && sec < 13) {
+                // 답 보여주기 부분
+                if (!check()) {
+                    addItemToList(false, wordList[currentIndex]);
+                    console.log(wordList[currentIndex]);
+                    console.log("unCorrectWordList : ", unCorrectWordList);
+                    const currentAnswer = getCurrentAnswer();
+                    if (inputValues.join("") !== currentAnswer) {
+                        setInputValues(currentAnswer.split(""));
+                    }
+                    setIsAnswer(true);
+                } else {
                 }
-                return newcount;
-            });
+                setSec((prevSec) => prevSec + 1);
+            } else if (sec < 13) {
+                setSec((prevSec) => prevSec + 1);
+            } else if (sec == 13) {
+                setIsAnswer(false);
+                if (currentIndex == wordList.length - 1) {
+                    alert("모든 문제가 끝남");
+                    clearInterval(timer1);
+                    router.push("/game_result");
+                } else {
+                    setCurrentIndex((prevIndex) =>
+                        prevIndex < wordList.length - 1
+                            ? prevIndex + 1
+                            : prevIndex
+                    );
+                    setSec(0);
+                }
+            }
         }, 1000);
 
-        // 이부분 뒤에 수정하기 (자동으로 넘기도록 -> 타이머 없애고 조건되면 자동으로 바뀌면서 타이머 재시동)
-        const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => {
-                if (prevIndex + 1 >= wordList.length) {
-                    clearInterval(interval); // 배열의 끝에 도달하면 interval을 멈춥니다.
-                }
-                return prevIndex + 1;
-            });
-        }, 5000);
-
         return () => {
-            clearInterval(interval_id);
-            clearInterval(interval);
+            clearInterval(timer1);
         };
-    }, [wordList.length]);
+    }, [sec]);
 
     return (
         <>
             <div className={styles.container}>
                 <div className={styles.content_cotainer}>
-                    <div className={styles.header_container}>스피드 퀴즈 !</div>
-                    <div className={styles.count_container}>
-                        <span> 1</span>
-                        <span> /</span>
-                        <span> 10</span>
+                    {isCorrectIcon && (
+                        <CorrectIcon
+                            style={{
+                                position: "fixed",
+                                top: "50%",
+                                left: "50%",
+                                marginLeft: "5%",
+                                transform: "translate(-50%, -50%)",
+                            }}
+                        ></CorrectIcon>
+                    )}
+                    {isUnCorrectIcon && (
+                        <UncorrectIcon
+                            style={{
+                                position: "fixed",
+                                top: "50%",
+                                left: "50%",
+                                marginLeft: "5%",
+                                transform: "translate(-50%, -50%)",
+                            }}
+                        ></UncorrectIcon>
+                    )}
+
+                    <div className={styles.header_container}>
+                        <GameIcon></GameIcon>
                     </div>
+                    <div className={styles.count_container}>
+                        <span> {currentIndex + 1} </span>
+                        <span> /</span>
+                        <span> {wordList.length}</span>
+                    </div>
+                    <div className={styles.language}>한글</div>
                     <div className={styles.meaning_container}>
-                        조선 왕조가 자신들의 역사를 편찬한 사서
+                        <div
+                            className={styles.meaning_des}
+                            style={{
+                                fontSize: (() => {
+                                    if (
+                                        wordList[currentIndex]?.mean.length < 12
+                                    ) {
+                                        return "40px";
+                                    } else if (
+                                        wordList[currentIndex]?.mean.length < 24
+                                    ) {
+                                        return "30px";
+                                    } else {
+                                        return "20px";
+                                    }
+                                })(),
+                            }}
+                        >
+                            {wordList[currentIndex]?.mean}
+                        </div>
                     </div>
                     <div className={styles.answer_conatiner}>
-                        {testWord.split('').map((char, index) => (
+                        {inputValues.map((value, index) => (
                             <div key={index} className={styles.characterBox}>
                                 <input
                                     type="text"
                                     maxLength={1}
-                                    value={inputValues[index]}
+                                    value={value}
+                                    className={` ${
+                                        isUnCorrect ? styles.shaking : ""
+                                    }`}
                                     onChange={(e) =>
-                                        handleChange(index, e.target.value)
+                                        handleInputChange(index, e.target.value)
                                     }
-                                    onKeyDown={handleKeyDown}
+                                    onKeyDown={(e) => handleKeyPress(index, e)}
+                                    ref={(input) => {
+                                        inputRefs.current[index] = input;
+                                    }}
+                                    style={{
+                                        color: isAnswer ? "red" : "black",
+                                    }}
+                                    disabled={isAnswer}
                                 />
                             </div>
                         ))}
@@ -113,49 +290,17 @@ const OneWord: React.FC = () => {
                                 className={styles.progress_container}
                                 style={{
                                     width: `${(sec / 10) * 100}%`,
-                                    transition: 'width 0.5s ease',
+                                    transition: "width 0.5s ease",
                                 }}
                             >
-                                {/* <div>{sec}</div> */}
+                                {/* <div>{sec}</div>
+                                <div>{answerSec}</div> */}
                             </div>
                         </div>
-                        {/* <ProgressBar
-                            completed={sec}
-                            width="700px"
-                            height="40px"
-                            customLabel={`${sec}`}
-                            className={styles.progress_wrapper}
-                            barContainerClassName={styles.progress_container}
-                            completedClassName={styles.progress_barCompleted}
-                            labelClassName={styles.progress_label}
-                        /> */}
                     </div>
                 </div>
             </div>
-            <div>
-                {/* <h1>{wordList[currentIndex].idx}</h1>
-                <h1>{wordList[currentIndex].mean}</h1>
-                <h1>{wordList[currentIndex].answer}</h1> */}
-                {/* {wordList[currentIndex].answer.split('').map((char, index) => (
-                    <div key={index} className={styles.characterBox}>
-                        <input
-                            type="text"
-                            maxLength={1}
-                            value={inputValues[index]}
-                            onChange={(e) =>
-                                handleChange(index, e.target.value)
-                            }
-                        />
-                    </div>
-                ))} */}
-                <button
-                    onClick={() =>
-                        setCurrentIndex((prevIndex) => prevIndex + 1)
-                    }
-                >
-                    다음 단어
-                </button>
-            </div>
+            <div></div>
         </>
     );
 };

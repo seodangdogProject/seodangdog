@@ -1,0 +1,244 @@
+.modal_container {
+    border-radius: 10px;
+    width: 50%;
+    height: 80%;
+    display: flex;
+    position: fixed;
+    flex-direction: column; /* 세로로 정렬 */
+    justify-content: center;
+    background-color: #f6f7fb;
+    box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
+    z-index: 100;
+    top: 50%;
+    left: 55%;
+    /* padding: 10px; */
+    transform: translate(-50%, -50%);
+    font-family: "hunminjungum";
+}
+
+.horizontal {
+    width: 100%; /* 수평선의 가로 길이 */
+    height: 1px; /* 수평선의 세로 길이 */
+    background-color: black; /* 수평선의 색상 */
+    margin: 10px 0; /* 수평선 위 아래 여백 */
+}
+
+.close_button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.header_container {
+    height: 5%;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    align-items: center;
+}
+
+.exit_button {
+    margin-right: 10px;
+    margin-top: 15px;
+    cursor: pointer;
+    align-self: flex-end; /* 오른쪽 정렬 */
+    display: inline-block;
+}
+
+.modal_content {
+    height: 85%;
+    margin: 5px;
+    display: flex;
+}
+
+.left,
+.right {
+    height: 95%;
+    width: 95%;
+    margin: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    justify-content: center;
+}
+
+.right {
+    width: 100%;
+    background-color: #d6e3f8;
+    box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    align-items: center;
+}
+
+.list_container {
+    height: 95%;
+    width: 95%;
+    background-color: white;
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    align-items: center;
+}
+
+.badgeListTitle {
+    margin-top: 5px;
+    font-size: 30px;
+}
+
+.list_container_title {
+    width: 50%;
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    align-items: center;
+}
+
+.badgeGrid {
+    display: grid;
+    width: 95%;
+    height: 85%;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px; /* 그리드 아이템 사이의 간격을 설정합니다. */
+    /* background-color: #007bff; */
+}
+
+.item {
+    border-radius: 20px;
+    background-color: #ddd;
+    padding: 10px;
+    box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
+    background-color: #f6f7fb;
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    overflow: hidden;
+    justify-content: center; /* 가로 가운데 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    position: relative;
+}
+
+.not_collected {
+    position: absolute;
+    padding: 10px;
+    top: 0;
+    left: 0;
+    width: 90%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.overlay_grey {
+    position: absolute;
+    padding: 10px;
+    top: 0;
+    left: 0;
+    width: 90%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    justify-content: center; /* 가로 가운데 정렬 */
+    flex-direction: column; /* 세로로 정렬 */
+}
+
+.overlay {
+    position: absolute;
+    padding: 10px;
+    top: 0;
+    left: 0;
+    width: 90%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    justify-content: center; /* 가로 가운데 정렬 */
+    flex-direction: column; /* 세로로 정렬 */
+}
+
+.overlay_name {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.overlay_des {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.overlay_condTitle {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.overlay_userExp {
+    color: #5868ff;
+}
+
+.lock {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.item:hover .overlay {
+    opacity: 1; /* hover 시 투명도를 1로 설정하여 나타나게 함 */
+}
+
+.item:hover .overlay_grey {
+    opacity: 1; /* hover 시 투명도를 1로 설정하여 나타나게 함 */
+}
+
+.item img {
+    background-color: white;
+    border-radius: 20px;
+    height: 80%;
+    object-fit: contain;
+}
+
+.selected {
+    border: 4px solid pink;
+}
+
+.rep {
+    border: 4px solid black;
+}
+
+.name {
+    height: 20%;
+    margin-top: 10px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center; /* 가로 가운데 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+}
+
+.button_container {
+    height: 5%;
+    display: flex;
+    justify-content: center; /* 가로 가운데 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    gap: 10px;
+}
+
+.change,
+.save {
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.change {
+    background-color: pink;
+}
+
+.save {
+    background-color: palegoldenrod;
+    padding: 10px;
+}

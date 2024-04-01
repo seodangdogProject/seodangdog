@@ -21,13 +21,12 @@
     height: 20%;
     justify-content: center; /* 수평 가운데 정렬 */
     align-items: center; /* 수직 가운데 정렬 */
-    font-family: 'Pretendard-Regula';
+    font-family: "Pretendard-Regula";
     font-weight: 900;
     font-size: 60px;
     color: rgba(73, 57, 113, 1);
 }
 .main_cotainer {
-    display: flex;
     height: 70%;
     display: flex;
     justify-content: center; /* 수평 가운데 정렬 */
@@ -82,7 +81,7 @@
 
 .footer {
     justify-content: space-between; /* 요소들을 좌우로 분산 배치 */
-    font-family: 'hunminjungum';
+    font-family: "hunminjungum";
     color: gray;
     display: flex;
     padding-right: 40px;
@@ -96,20 +95,20 @@
 }
 
 .score {
-    font-family: 'Pretendard-Regular';
+    font-family: "Pretendard-Regular";
     font-size: 100px;
     color: rgba(112, 0, 255, 1);
     margin-bottom: 30px;
 }
 
 .per {
-    font-family: 'Pretendard-Regular';
+    font-family: "Pretendard-Regular";
     font-size: 120px;
     color: gray;
 }
 
 .ten {
-    font-family: 'Pretendard-Regular';
+    font-family: "Pretendard-Regular";
     margin-top: 20px;
     font-size: 30px;
     color: rgba(84, 84, 84, 1);
@@ -127,5 +126,5 @@
     background-color: white;
     border-radius: 15px;
     font-size: 20px;
-    font-family: 'Pretendard-Regular';
+    font-family: "Pretendard-Regular";
 }

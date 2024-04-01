@@ -1,3 +1,16 @@
+.quiz-container {
+  width: 40%;
+  box-sizing: border-box;
+  padding: 0 30px;
+  display: flex;
+  align-items: center;
+}
+.quiz-content {
+  width: 100%;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+
 .container {
   font-family: "Pretendard-Regular";
   margin: 0 26px;
@@ -19,15 +32,47 @@
 }
 
 .case-container {
-  font-size: 20px;
+  font-size: 1.2rem;
   font-weight: 400;
 }
 .case {
-  margin-top: 35px;
+  margin-top: 30px;
+  padding-left: 25px;
+  display: flex;
+  cursor: pointer;
+}
+.case.solved {
+  cursor: default;
+}
+.case__number {
+  margin-right: 10px;
+  position: relative;
+}
+/* 유저가 체크한 정답 등그라미 해주는 부분 */
+.answer::before {
+  content: "";
+  position: absolute;
+  border: 3px solid #ff0000;
+  border-radius: 100%;
+
+  padding: 15px 15px;
+  width: 30px;
+  height: 30px;
+  left: -6px;
+  top: -5px;
+  /* padding-bottom: 10px; */
+  box-sizing: border-box;
+}
+.case__item {
+  line-height: 1.6rem;
 }
 .btn-container {
   display: flex;
   justify-content: flex-end;
+  padding-right: 10px;
+  box-sizing: border-box;
+  margin-top: 2rem;
+  gap: 10px;
 }
 
 .next-btn {
@@ -46,14 +91,59 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 30px;
+}
+.next-btn:hover {
+  opacity: 0.9;
 }
 .next-icon {
   display: flex;
   align-items: center;
   margin-left: 10px;
 }
+.prev-icon {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+.prev-icon img {
+  width: 10px;
+  cursor: pointer;
+}
 .next-icon img {
   width: 10px;
   cursor: pointer;
+}
+
+/* 맞았을 때 CSS ( SOLVED) */
+.question {
+  position: relative;
+}
+/* 맞음 동그라미 CSS */
+.right-circle {
+  width: 80px;
+  display: inline-block;
+  position: absolute;
+  left: -30px;
+  top: -30px;
+}
+/* 틀렸을 때 빗금 CSS */
+.wrong-line {
+  display: inline-block;
+  position: absolute;
+  left: -30px;
+  top: -30px;
+}
+.isAnswer::before {
+  content: "";
+  position: absolute;
+  border: 3px solid blue;
+  border-radius: 100%;
+
+  padding: 15px 15px;
+  width: 30px;
+  height: 30px;
+  left: -6px;
+  top: -5px;
+  /* padding-bottom: 10px; */
+  box-sizing: border-box;
 }
