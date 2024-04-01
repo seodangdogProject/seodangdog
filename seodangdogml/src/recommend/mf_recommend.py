@@ -45,7 +45,7 @@ class MfNewsDto:
         self.news_keyword = news_summary_keyword
 
 
-mf = load_mf()
+# mf = load_mf()
 
 
 def get_news_title(news_id):
