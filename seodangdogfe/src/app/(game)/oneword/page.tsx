@@ -105,7 +105,7 @@ const OneWord: React.FC = () => {
         const currentAnswer = getCurrentAnswer();
 
         // 변환된 단어가 현재 문제의 정답과 같은지 확인합니다.
-        if (convertedWord === currentAnswer) {
+        if (convertedWord.toLowerCase() === currentAnswer.toLowerCase()) {
             console.log("정답입니다!");
 
             setIsCorrectIcon(true);
