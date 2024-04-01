@@ -179,10 +179,10 @@ export default function Join() {
           <div
             onClick={onClickToggleModal}
             style={{
-              fontSize: "100px",
+              fontSize: "80px",
               position: "absolute",
               bottom: "50px",
-              right: "90px",
+              right: "80px",
               color: "white",
               zIndex: 1,
             }}
