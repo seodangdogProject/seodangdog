@@ -142,6 +142,9 @@ export default function Join() {
           backgroundPosition: "center", // 이미지를 가운데 정렬합니다.
         }}
       >
+        <div className={styles.titleContainer}>
+          좋아하는 키워드를 선택하세요.
+        </div>
         {isOpenModal && (
           <JoinModal
             data={userKeywords}
@@ -156,6 +159,7 @@ export default function Join() {
               className={`${styles.wordBox} ${
                 clickedKeywords.includes(item.keyword) ? styles.clicked : ""
               }`}
+              //   style={getRandomPosition()} // 랜덤 위치 적용
               onClick={() => handleLetterClick(item.id, item.keyword)}
             >
               {item.keyword}
@@ -165,9 +169,10 @@ export default function Join() {
 
         <button
           onClick={nextPage}
-          style={{ position: "fixed", bottom: "20px", right: "20px" }}
+          className={`${styles.buttonNewKeywords} ${styles.mouse}`}
+          style={{ position: "fixed", top: "50px", right: "30px" }}
         >
-          새로운 키워드
+          새로운 키워드 받기
         </button>
 
         <Link href="/join_game">
@@ -176,16 +181,34 @@ export default function Join() {
             style={{
               fontSize: "100px",
               position: "absolute",
-              bottom: 40,
-              left: 20,
+              bottom: "50px",
+              right: "90px",
               color: "white",
-              zIndex: "",
+              zIndex: 1,
             }}
+            className={`${styles.mouse} ${
+              unLock ? styles.lock : styles.unlock
+            }`}
           >
             {unLock && "🔒"}
             {!unLock && "🔓"}
           </div>
+          <button
+            onClick={onClickToggleModal}
+            className={`${styles.nextButton} ${styles.mouse} ${
+              userKeywordsSize >= 10 ? styles.active : ""
+            }`}
+          >
+            다음
+          </button>
         </Link>
+
+        <div className={styles.selectedWordCount}>
+          선택한 키워드 개수: {userKeywordsSize}
+        </div>
+        <div className={styles.minimumKeywordAlert}>
+          키워드를 10개 이상 선택해주세요.
+        </div>
       </div>
     </>
   );

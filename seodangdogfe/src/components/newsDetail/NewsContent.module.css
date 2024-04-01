@@ -5,6 +5,7 @@
   width: 60%;
   font-family: "Pretendard-Regular";
   padding-right: 26px;
+  position: relative;
 }
 .news-content::-webkit-scrollbar {
   width: 23px; /* 스크롤 바의 너비 */
@@ -61,11 +62,106 @@
   white-space: pre-wrap;
 }
 
-.pentool {
+/* 단어 관련 */
+.dictionary-word {
+  cursor: pointer;
+  /* display: inline-block; */
+  /* position: relative; */
+}
+.dictionary-word:hover {
+  /* text-decoration: underline; */
+  color: orange;
+  cursor: inherit;
+}
+/* .dict-modal {
+  width: 100px;
+  height: 100px;
+  border: 1px solid red;
   position: absolute;
-  width: 43px;
-  height: 201px;
-  border-radius: 20px;
-  left: -40px;
+  top: -100px;
+} */
+
+.dict-modal {
+  /* top: -180px;
+  left: -155px; */
+  /* top: -100px; */
+  position: absolute;
+  margin: 0.5em auto;
+  padding: 10px;
+  width: 500px;
+  height: 400px;
+  border-radius: 0.25em;
+  transform: rotate(-4deg) rotateY(15deg);
+  background: #629bdd;
+  /* font: 2em/4 Century Gothic, Verdana, sans-serif; */
+  text-align: center;
+  overflow: auto;
+  color: black;
+}
+.dict-modal:before,
+.dict-modal:after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+}
+.dict-modal:after {
   top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+  transform: rotate(2deg) translate(0.35em, -0.15em) scale(1.02);
+  background: #d1c2f2;
+}
+.dict-modal:before {
+  border: solid 0 transparent;
+  border-right: solid 3.5em #2bade5;
+  border-bottom: solid 0.25em #629bdd;
+  bottom: 0.25em;
+  left: 1.25em;
+  width: 0;
+  height: 10px;
+  transform: rotate(45deg) skewX(75deg);
+}
+
+/* 마우스 커서 바뀌기 */
+
+.highlight {
+  cursor: url("../../assets/highlighter-cursor.svg") 0 20, auto;
+}
+.finder {
+  cursor: url("../../assets/search-cursor.svg") 0 0, auto;
+}
+.eraser {
+  cursor: url("../../assets/eraser-cursor.svg") 0 20, auto;
+}
+
+.filled {
+  background-color: rgb(193, 171, 255, 0.4);
+}
+.news-content.finder {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/* 모달 관련 */
+.word-modal-container {
+  cursor: default;
+}
+.word-circle {
+  position: relative;
+}
+.word-circle img {
+  width: 60px;
+  position: absolute;
+  left: -8px;
+  top: -6px;
+}
+
+.scrap {
+  width: 20px;
+  display: inline-block;
+  margin-left: 10px;
+  cursor: pointer;
 }

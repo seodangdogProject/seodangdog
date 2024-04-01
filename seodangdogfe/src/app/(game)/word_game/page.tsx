@@ -115,6 +115,7 @@ export default function WordGame() {
                                     color: "rgba(180, 188, 255, 1)",
                                     cursor: "auto",
                                 }}
+                                onClick={(e) => e.preventDefault()}
                             >
                                 시작
                             </div>
