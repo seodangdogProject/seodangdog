@@ -45,7 +45,7 @@ class MfNewsDto:
         self.news_keyword = news_summary_keyword
 
 
-# mf = load_mf()
+mf = load_mf()
 
 
 def get_news_title(news_id):
@@ -68,8 +68,8 @@ def recommend_news(user_seq, mf_model, top_n=21):
             # print("solved ", item_id)
 
     # 예측 평점을 기준으로 내림차순 정렬
-    predicted_ratings.sort(key=lambda x: x[1], reverse=True)
-    predicted_ratings_solved.sort(key=lambda x: x[1], reverse=True)
+    predicted_ratings.sort(key=lambda x: x[1], reverse=False)
+    predicted_ratings_solved.sort(key=lambda x: x[1], reverse=False)
 
     predicted_ratings = predicted_ratings
     # +predicted_ratings_solved
@@ -79,7 +79,8 @@ def recommend_news(user_seq, mf_model, top_n=21):
     # 상위 top_n개의 영화를 추천 목록에 추가
     df_news = get_df_news()
     recommended_news = []
-    for i in range(min(top_n, len(predicted_ratings))):
+    # for i in range(min(top_n, len(predicted_ratings))):
+    for i in range(min(len(predicted_ratings), len(predicted_ratings))):
         news_seq = predicted_ratings[i][0]
         news_title = get_news_title(news_seq)
         # news_similarity = format_weight(predicted_ratings[i][1])
@@ -216,7 +217,7 @@ async def mf_update(data: UpdateData):
         # 사용자가 보지 않는 뉴스는(추천할게없어 무작위로 추천받은건 rating이 0이다) update하면 없는 아이템이나 사용자경향을 무작위로 선택한다
         # 그리고 get_one_prediction이 오는데 그건 0이 아니다
         # 그렇다고 또 추천받으면? cbf는 업데이트되는데 mf는 안한다
-        print(mf.get_one_prediction(user_seq, news_seq))
+        # print(mf.get_one_prediction(user_seq, news_seq))
         print("rating : ", rating['rating'].values[0])
         rating = rating['rating'].values[0] * 5
         print("rating : ", rating)
