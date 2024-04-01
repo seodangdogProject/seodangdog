@@ -34,7 +34,7 @@ public class MetaWord {
     private List<WordItem> wordItemList = new ArrayList<>();
 
     public MetaWord(String word, String wordLang, int total, List<WordItem> wordItemList) {
-        this.word = word.replaceAll("[!@#$%^&*(){}\\[\\]_\\-+=?/\\\\]", "");
+        this.word = word.replaceAll("[\\-^]", "");
         this.wordLang = wordLang;
         this.total = total;
         this.wordItemList = wordItemList;
