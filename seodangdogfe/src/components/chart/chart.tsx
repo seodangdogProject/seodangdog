@@ -25,14 +25,8 @@ const Chart = (props: chartProps) => {
             stepSize: 20,
         },
         elements: {
-            point:{
-                radius: 3,
-                pointStyle: 'circle'
-            },
             line: {
-                borderWidth: 3,
-                borderCapStyle: 'round',
-                borderJoinStyle: "round",
+                borderWidth: 2,
             },
         },
     };
@@ -59,7 +53,7 @@ const Chart = (props: chartProps) => {
             labels: ["어휘", "판단", "추론", "요약", "성실"],
             datasets: [
                 {
-                    label: '내 경험치',
+                    fill: true,
                     data: [
                         props.ability?.wordAbility * 100,
                         props.ability?.judgementAbility * 100,
@@ -67,18 +61,15 @@ const Chart = (props: chartProps) => {
                         props.ability?.summaryAbility * 100,
                         props.ability?.constantAbility * 100,
                     ],
-                    fill: true,
-                    // backgroundColor: "rgba(54, 162, 235)",
-                    // line
+                    backgroundColor: "rgba(54, 162, 235, 0.2)",
                     borderColor: "#FF7474",
-                    // point
-                    // pointStyle: 'circle',
-                    pointBackgroundColor: "#FF7474",
-                    pointBorderColor: "#FF7474",
+                    borderWidth: 2,
+                    // pointStyle: Line,
+                    pointBackgroundColor: "#F1DEF0",
+                    pointBorderColor: "red",
                     pointBorderWidth: 1,
-                    pointHoverRadius: 4,
                     pointHoverBackgroundColor: "#fff",
-                    pointHoverBorderColor: "#FF7474",
+                    pointHoverBorderColor: "rgb(54, 162, 235)",
                 },
             ],
         };
