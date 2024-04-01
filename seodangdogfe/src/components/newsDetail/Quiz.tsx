@@ -38,7 +38,7 @@ export default function Quiz({
     return () => {
       clearTimeout(timer);
     };
-  }, [answerList]);
+  }, [answerList, currentQuizNumber]);
 
   useEffect(() => {
     setIsCorrect(false);
@@ -65,15 +65,17 @@ export default function Quiz({
     //   return newArr;
     // });
     // console.log(checkAnswer())
+    checkAnswer();
     setCurrentQuizNumber(currentQuizNumber + 1);
   }
   function checkAnswer(): boolean {
+    console.log("checkAnswer");
     const isCorrect =
       Number(quizData[currentQuizNumber - 1].answer.number) ===
       answerList[currentQuizNumber - 1];
-    console.log("정답 : ", quizData[currentQuizNumber - 1].answer.number);
-    console.log("anawerList : ", answerList);
-    console.log("내가 고른 거 : ", answerList[currentQuizNumber - 1]);
+    // console.log("정답 : ", quizData[currentQuizNumber - 1].answer.number);
+    // console.log("anawerList : ", answerList);
+    // console.log("내가 고른 거 : ", answerList[currentQuizNumber - 1]);
     if (isCorrect) {
       setIsCorrect(true);
     } else {
@@ -141,7 +143,7 @@ export default function Quiz({
             ))}
           </ul>
           <div className={cx("btn-container")}>
-            <button onClick={checkAnswer} className={cx("next-btn")}>
+            <button onClick={moveToNextQuiz} className={cx("next-btn")}>
               <div>다음</div>
               <div className={cx("next-icon")}>
                 <img src="/next-icon.svg" alt="" />
