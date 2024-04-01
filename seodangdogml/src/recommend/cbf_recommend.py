@@ -130,7 +130,7 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
         news_id = news[0]
         news_seq = news_id_seq[news_id]
         news_title = news[1]
-        # news_similarity = format_weight(news[2])
+        news_similarity = format_weight(news[2])
         news_similarity = news[2]
         news_summary_keyword = news[3]
 
@@ -143,6 +143,10 @@ async def cbf_recommend(background_tasks: BackgroundTasks, user_seq: int, flag=T
 
     return result
 
+
+# 가중치에 100을 곱한다.
+def format_weight(value):
+    return round(value, 10)
 
 # 추천이되면 mysql의 rating에 삽입한다. 시간이 걸리기때문에 backgroundtask로 비동기로 수행
 async def update_rating(recommended_news, user_seq):
@@ -255,14 +259,6 @@ async def recommend_news(user_seq, user_keywords, keyword_weights, flag):
         else:
             top_21_recommended_news = recommended_news[:top_n]
             return top_21_recommended_news
-
-
-# 가중치에 100을 곱한다.
-def format_weight(value):
-    result = round(value, 3)
-    if result <= 0:
-        result = 0.001
-    return result
 
 
 ###########################test##################################################

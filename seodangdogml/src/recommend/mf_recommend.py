@@ -8,7 +8,7 @@ from fastapi import BackgroundTasks
 import pandas as pd
 import os
 from recommend.cbf_recommend import format_weight
-from recommend.cbf_recommend import cbf_recommend, get_df_news
+from recommend.cbf_recommend import cbf_recommend, get_df_news, format_weight
 from recommend.cbf_recommend import news_id_seq
 from repository.recommend_repository import select_ratings
 from repository.recommend_repository import update_ratings
@@ -45,7 +45,7 @@ class MfNewsDto:
         self.news_keyword = news_summary_keyword
 
 
-# mf = load_mf()
+mf = load_mf()
 
 
 def get_news_title(news_id):
@@ -68,8 +68,8 @@ def recommend_news(user_seq, mf_model, top_n=21):
             # print("solved ", item_id)
 
     # 예측 평점을 기준으로 내림차순 정렬
-    predicted_ratings.sort(key=lambda x: x[1], reverse=True)
-    predicted_ratings_solved.sort(key=lambda x: x[1], reverse=True)
+    predicted_ratings.sort(key=lambda x: x[1], reverse=False)
+    predicted_ratings_solved.sort(key=lambda x: x[1], reverse=False)
 
     predicted_ratings = predicted_ratings
     # +predicted_ratings_solved
@@ -79,11 +79,12 @@ def recommend_news(user_seq, mf_model, top_n=21):
     # 상위 top_n개의 영화를 추천 목록에 추가
     df_news = get_df_news()
     recommended_news = []
-    for i in range(min(top_n, len(predicted_ratings))):
+    # for i in range(min(top_n, len(predicted_ratings))):
+    for i in range(min(len(predicted_ratings), len(predicted_ratings))):
         news_seq = predicted_ratings[i][0]
         news_title = get_news_title(news_seq)
         # news_similarity = format_weight(predicted_ratings[i][1])
-        news_similarity = predicted_ratings[i][1]
+        news_similarity = format_weight(predicted_ratings[i][1])
         news_summary_keyword= df_news[df_news['news_seq'] == news_seq]['news_summary_keyword'].values[0]
         recommended_news.append(MfNewsDto(news_seq, news_title, news_similarity, news_summary_keyword))
 
@@ -93,7 +94,6 @@ def recommend_news(user_seq, mf_model, top_n=21):
 @router.get('/fast/mf_recom/{user_seq}')
 async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
     # start_time = time.time()
-    # print("mf_recommend")
     global mf
     mf = load_mf()
     print(mf.user_id_index)
@@ -117,7 +117,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
         # rating에 없는걸 추천받으면 넣는다
         insert_task = asyncio.create_task(insert_rating(recommendations, user_seq))
 
-        # print(len(recommendations))
+        print("mf_recommend", len(recommendations))
         return recommendations
     # 예외대처(온라인학습으로 했어도 예외발생시 재학습)
     else:
@@ -128,58 +128,12 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
         # cbf 말고 유사한 사용자를 뽑아서 보여주기
         recommended_news = await cbf_recommend(background_tasks, user_seq, False)
 
-
-        start_time = time.time()
         # update_task = asyncio.create_task(train_mf_model())
 
         # 온라인 학습데이터는 따로 저장할 필요가 없다 -> ratings에 반영하기때문에 재학습시 온라인데이터학습할필요없다.
         # multiprocessing_train()
 
         return recommended_news
-
-
-def find_similar_users(new_user_id, num_similar_users=5):
-    global mf
-    if new_user_id not in mf.user_id_index:
-        # 새로운 사용자인 경우, 사용자를 모델에 추가하고 초기화
-        mf.user_id_index[new_user_id] = mf.num_users
-        mf.index_user_id[mf.num_users] = new_user_id
-        mf.num_users += 1
-
-        existing_user_features = mf.P.mean(axis=0)
-        mf.P = np.vstack([mf.P, existing_user_features])
-        mf.b_u = np.append(mf.b_u, 0)
-
-        # print(existing_user_features)
-
-    new_user_features = mf.P[mf.user_id_index[new_user_id]]
-
-    # 모든 사용자와의 유사도를 계산
-    similarities = []
-    for user_id, index in mf.user_id_index.items():
-        if user_id != new_user_id:
-            # 다른 사용자의 특성을 가져옵니다.
-            other_user_features = mf.P[index]
-            # 두 사용자 간의 코사인 유사도를 계산합니다.
-            similarity = np.dot(new_user_features, other_user_features) / (
-                        np.linalg.norm(new_user_features) * np.linalg.norm(other_user_features))
-            similarities.append((user_id, similarity))
-
-    similarities.sort(key=lambda x: x[1], reverse=True)
-
-    similar_users = similarities[:num_similar_users]
-
-    return similar_users
-
-
-# 새로운 사용자가 등록되면 호출되는 함수
-def get_similar_user(new_user_id):
-    similar_users = find_similar_users(new_user_id)
-    # 유사한 사용자 정보 출력 또는 반환
-    # for user_id, similarity in similar_users:
-    #   print(f"Similar user: {user_id}, Similarity: {similarity}")
-    return similar_users[0][0]
-
 
 
 # new_samples 예제
@@ -193,14 +147,19 @@ class UpdateData(BaseModel):
 
 
 @router.post('/fast/mf_recom/update')
-async def mf_update(data: UpdateData):
+async def update(data: UpdateData):
+    return await mf_update(data)
+
+
+async def mf_update(data):
     print('mf online learning')
+    print(mf.user_id_index)
     user_seq = data.user_seq
     info = data.info
 
     result = select_user_news_rating(user_seq)
     result = pd.DataFrame(result)
-    # print(result)
+    print(result)
     # 이미 추천된 비율에대가 예측치를 곱해서 온라인학습을시킨다.
     for i in info:
         print(i)
@@ -216,9 +175,9 @@ async def mf_update(data: UpdateData):
         # 사용자가 보지 않는 뉴스는(추천할게없어 무작위로 추천받은건 rating이 0이다) update하면 없는 아이템이나 사용자경향을 무작위로 선택한다
         # 그리고 get_one_prediction이 오는데 그건 0이 아니다
         # 그렇다고 또 추천받으면? cbf는 업데이트되는데 mf는 안한다
-        print(mf.get_one_prediction(user_seq, news_seq))
+        # print(mf.get_one_prediction(user_seq, news_seq))
         print("rating : ", rating['rating'].values[0])
-        rating = rating['rating'].values[0] * 5
+        rating = rating['rating'].values[0] * 20
         print("rating : ", rating)
         online_learning(mf, user_seq, news_seq, rating, weight)
         print(mf.get_one_prediction(user_seq, news_seq))
@@ -227,6 +186,8 @@ async def mf_update(data: UpdateData):
     # 온라인 학습후 업데이트된 모델 저장
     save_mf(mf)
     return {'msg': 'update success'}
+
+
 
 
 async def insert_rating(recommended_news, user_seq):
@@ -239,7 +200,7 @@ async def insert_rating(recommended_news, user_seq):
     for rn in recommended_news:
         news_seq = rn.news_seq
         news_title = rn.news_title
-        news_similarity = rn.news_similarity
+        news_similarity = format_weight(rn.news_similarity)
         # info = select_ratings(news_seq, user_seq)
 
         is_found = False
