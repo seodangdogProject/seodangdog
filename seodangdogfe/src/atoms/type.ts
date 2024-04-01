@@ -55,7 +55,7 @@ export type MyPageDto = {
     wordCloudKeywords: keywordWeight[];
     userBadgeList: badge[];
     badgeImgUrl: string;
-    streakList: string[];
+    streakList: Map<string, number>;
     recentViewNews: newsThumbnail;
     recentSolvedNews: newsThumbnail;
 };
