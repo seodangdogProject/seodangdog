@@ -60,7 +60,7 @@ export default function NewsDetailContainer() {
       }
     })();
     // 데이터 받아오는 함수 END
-  }, []);
+  }, [isSolved]);
   useEffect(() => {
     if (isSolved) {
       setCurrentQuizNumber(1);
@@ -83,6 +83,8 @@ export default function NewsDetailContainer() {
       const res = await privateFetch("/news/solve", "PATCH", body);
       if (res.status !== 200) {
         throw "서버통신 에러";
+      } else {
+        setIsSolved(true);
       }
     } catch (error) {
       console.error(error);
