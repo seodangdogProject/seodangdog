@@ -23,6 +23,16 @@ export type newsThumbnail = {
     newsKeyword: string[];
 };
 
+export type RefreshReq = {
+    newsSeq: number;
+    keywordInfoList: KeywordInfo[];
+};
+
+export type KeywordInfo = {
+    keyword: string;
+    weight: number | undefined;
+};
+
 export type newsDetailThumbnail = {
     newsSeq: number;
     newsImgUrl: string;
@@ -68,4 +78,15 @@ export type badgeInfo = {
 export type keywordWeight = {
     text: string;
     value: number;
+};
+
+export type NewsData = {
+    countView: number;
+    media: string;
+    newsCreatedAt: string;
+    newsDescription: string;
+    newsImgUrl: string;
+    newsKeyword: Map<string, number>;
+    newsSeq: number;
+    newsTitle: string;
 };

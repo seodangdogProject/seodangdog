@@ -5,10 +5,15 @@ import classNames from "classnames/bind";
 import { privateFetch } from "../utils/http-commons";
 import { useRouter } from "next/navigation";
 import changeDateFormat from "@/utils/changeDateFormat";
+import { RefreshReq, KeywordInfo, NewsData } from "@/atoms/type";
+import { SourceTextModule } from "vm";
+
 export default function RecommendNewsContainer() {
     const cx = classNames.bind(styled);
     const [category, setCategory] = useState<string>("user-recommend/v2");
+    const [newsData, setNewsData] = useState<NewsData[]>([]);
     const [newsList, setNewsList] = useState<any[]>([]);
+    const [reqList, setReqList] = useState<RefreshReq[]>([]);
     const userRecommendEl = useRef<HTMLDivElement>(null);
     const otherRecommendEl = useRef<HTMLDivElement>(null);
 
@@ -23,48 +28,96 @@ export default function RecommendNewsContainer() {
     }
 
     const refresh = () => {
-        (async () => {
+        refreshKeyword()
+            .then(() => {
+                console.log("업데이트 요청");
+                return reMainRef();
+            })
+            .then(() => {
+                console.log("재추천");
+                // 두 요청이 모두 완료된 후에 할 일
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                // 에러 처리
+            });
+    };
+
+    const refreshKeyword = () => {
+        return (async () => {
             try {
-                const res = await privateFetch("/main/" + category, "GET");
+                console.log("newsData :", newsData);
+                if (newsData != undefined) {
+                    console.log("변환");
+                    const updatedReqList = newsData.map((item, idx) =>
+                        convertToDTO(item)
+                    );
+                    setReqList(updatedReqList);
+                    console.log("updatedReqList : ", updatedReqList);
+                }
+
+                const res = await privateFetch(
+                    "/keyword/refre",
+                    "POST",
+                    reqList
+                );
                 let data = await res.json();
                 console.log(data);
-                if (data instanceof Array) {
-                    data = data[0].newsPreviewList;
-                } else {
-                    data = data.newsPreviewList;
-                }
-                let subArrays = [];
-                for (let i = 0; i < data.length; i += 3) {
-                    subArrays.push(data.slice(i, i + 3));
-                }
-                setNewsList(subArrays);
             } catch (error) {
                 console.error(error);
             }
         })();
     };
 
-    useEffect(() => {
-        (async () => {
+    const reMainRef = () => {
+        return (async () => {
             try {
                 const res = await privateFetch("/main/" + category, "GET");
                 let data = await res.json();
-                console.log(data);
                 if (data instanceof Array) {
                     data = data[0].newsPreviewList;
+                    setNewsData(data);
                 } else {
                     data = data.newsPreviewList;
+                    setNewsData(data);
                 }
                 let subArrays = [];
                 for (let i = 0; i < data.length; i += 3) {
                     subArrays.push(data.slice(i, i + 3));
                 }
+
                 setNewsList(subArrays);
+
+                if (newsData) {
+                    const updatedReqList = newsData.map((item, idx) =>
+                        convertToDTO(item)
+                    );
+                    setReqList(updatedReqList);
+                }
             } catch (error) {
                 console.error(error);
             }
         })();
+    };
+
+    function convertToDTO(obj: NewsData): RefreshReq {
+        const newsSeq = obj.newsSeq;
+        const keywordInfoList: KeywordInfo[] = [];
+
+        for (const [keyword, weight] of Object.entries(obj.newsKeyword)) {
+            keywordInfoList.push({ keyword, weight });
+        }
+
+        return {
+            newsSeq,
+            keywordInfoList,
+        };
+    }
+
+    useEffect(() => {
+        reMainRef();
     }, [category]);
+
     return (
         <>
             <div className={styled.container}>
