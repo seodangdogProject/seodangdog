@@ -149,6 +149,15 @@
 .word-modal-container {
   cursor: default;
 }
+.word-circle {
+  position: relative;
+}
+.word-circle img {
+  width: 60px;
+  position: absolute;
+  left: -8px;
+  top: -6px;
+}
 
 .scrap {
   width: 20px;
