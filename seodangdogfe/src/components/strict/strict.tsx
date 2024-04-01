@@ -4,13 +4,13 @@ import style from "./strict_style.module.css";
 // 예시로 사용할 날짜 데이터 배열
 
 interface grassChart {
-    dates: string[] | undefined;
+    dates: Map<string, number> | undefined;
 }
 
 const GrassChart = (props: grassChart) => {
     // 날짜별 활동 상태를 저장할 상태 변수
     const [activityMap, setActivityMap] = useState<{
-        [date: string]: boolean;
+        [date: string]: number;
     }>({});
 
     // 호버한 칸의 날짜를 저장할 상태 변수
@@ -18,14 +18,19 @@ const GrassChart = (props: grassChart) => {
     const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
 
     // 활동 데이터를 기반으로 활동 상태를 업데이트하는 함수
-    const updateActivityMap = (dates: string[] | undefined) => {
-        const newActivityMap: { [date: string]: boolean } = {};
+    const updateActivityMap = (dates: Map<string, number> | undefined) => {
+        const newActivityMap: { [date: string]: number } = {};
         console.log("dates", dates);
         if (dates === undefined) {
             // setActivityMap();
         } else {
-            dates.forEach((date) => {
-                newActivityMap[date] = true;
+            // dates.forEach((date) => {
+            //     newActivityMap[date] = true;
+            // });
+            // setActivityMap(newActivityMap);
+            
+            Array.prototype.forEach.call(dates,(value, key) => {  
+                newActivityMap[key] = value;
             });
             setActivityMap(newActivityMap);
         }
