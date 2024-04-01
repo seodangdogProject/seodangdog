@@ -23,9 +23,9 @@ public class WordController {
     @GetMapping("/news/word/{word}")
     public ResponseEntity<MetaWordDto> getWord(@PathVariable("word") String word) throws Exception {
 
-        // mongodb에 있는 단어인지 탐색
+        // mongodb에 없는 경우
         // ** api 호출해도 단어가 없을 경우 or 예외처리 해주기?!
-        if (!wordService.existWord(word)){  // mongodb에 없는 경우
+        if (!wordService.existWord(word)){
             if (wordService.isKor(word)){   // 한글 단어일 경우 -> 표준국어대사전 API(사전검색 api만 사용) 호출
                 KorApiSearchDto korApiSearchDto = wordService.callStDictSearchApi(word);
 
@@ -36,7 +36,7 @@ public class WordController {
 
                     return ResponseEntity.ok().body(metaWordDto);
                 }
-                // ** 표준국어대사전에 없는 단어일 경우 -> 백과사전 api 호출
+                // 표준국어대사전에 없는 단어일 경우 -> 백과사전 api 호출
             }
 
             // ** 백과사전 api 검색
