@@ -45,7 +45,7 @@ class MfNewsDto:
         self.news_keyword = news_summary_keyword
 
 
-mf = load_mf()
+# mf = load_mf()
 
 
 def get_news_title(news_id):
@@ -203,6 +203,7 @@ async def mf_update(data: UpdateData):
     # print(result)
     # 이미 추천된 비율에대가 예측치를 곱해서 온라인학습을시킨다.
     for i in info:
+        print(i)
         news_seq = i['news_seq']
         weight = i['weight']
 
