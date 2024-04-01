@@ -36,7 +36,7 @@ public class WordController {
                     MetaWordDto metaWordDto = new MetaWordDto(korApiSearchDto);
                     wordService.saveMetaWordToMongodb(metaWordDto);
 
-                    return ResponseEntity.ok().body(metaWordDto);
+                    return ResponseEntity.ok().body(wordService.findMetaWord(word));
                 }
 
                 // 결과가 없을 경우 -> 백과사전 api 호출
