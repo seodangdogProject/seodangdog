@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -28,14 +29,12 @@ public class MyPageResponseDto {
     private List<BadgeDto> userBadgeList;
     private String badgeImgUrl;     // repBadgeImgUrl
 
-    private List<LocalDate> streakList;
-//    private List<Integer> streakCntList;
+    private Map<LocalDate, Integer> streakList;
 
     private NewsPreviewListDto recentViewNews;
     private NewsPreviewListDto recentSolvedNews;
 
     private List<UserKeywordDto> wordCloudKeywords;
-
 
     @Getter
     @Setter
@@ -64,6 +63,7 @@ public class MyPageResponseDto {
 
             long duringDate = ChronoUnit.DAYS.between(user.getCreatedAt(), LocalDateTime.now());
             this.constantAbility = (float) attendanceCount / duringDate;
+            if (Float.isInfinite(this.constantAbility)) this.constantAbility = 1;
         }
     }
 }

@@ -57,7 +57,7 @@ public class WordService {
         }
     }
 
-    public boolean existWord(String word){
+    public boolean existsWord(String word){
         return metaWordRepository.existsByWord(word);
     }
 
