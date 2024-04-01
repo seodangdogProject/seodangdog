@@ -23,7 +23,14 @@ const RecentNewsPreview = (props: newsProps) => {
                                 props.seenNewsthumbnail?.newsCreatedAt || ""
                             )}
                         </div>
-                        <img src={props.seenNewsthumbnail?.newsImgUrl} alt="" />
+                        <img
+                            src={
+                                props.seenNewsthumbnail?.newsImgUrl == "None"
+                                    ? "/images/default-news-image.jpg"
+                                    : props.seenNewsthumbnail?.newsImgUrl
+                            }
+                            alt=""
+                        />
                         <div className={styled.body}>
                             <h4 className={styled.title}>
                                 {props.seenNewsthumbnail?.newsTitle}
@@ -45,7 +52,9 @@ const RecentNewsPreview = (props: newsProps) => {
                 {/* 두 번째 */}
                 <div className={styled.last_solved_container}>
                     <h3 className={styled.caption}>
-                        최근 푼 기사&#32;&#32;&gt;
+                        <Link href="/dashboard/last-solved">
+                            최근 푼 기사&#32;&#32;&gt;
+                        </Link>
                     </h3>
                     <div className={styled.preview}>
                         <div className={styled.date}>
@@ -54,7 +63,11 @@ const RecentNewsPreview = (props: newsProps) => {
                             )}
                         </div>
                         <img
-                            src={props.solvedNewsthumbnail?.newsImgUrl}
+                            src={
+                                props.solvedNewsthumbnail?.newsImgUrl == "None"
+                                    ? "/images/default-news-image.jpg"
+                                    : props.solvedNewsthumbnail?.newsImgUrl
+                            }
                             alt=""
                         />
                         <div className={styled.body}>

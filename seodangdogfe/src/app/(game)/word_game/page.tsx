@@ -113,8 +113,9 @@ export default function WordGame() {
                                 className={styles.game_start_btn}
                                 style={{
                                     color: "rgba(180, 188, 255, 1)",
-                                    cursor: "none",
+                                    cursor: "auto",
                                 }}
+                                onClick={(e) => e.preventDefault()}
                             >
                                 시작
                             </div>

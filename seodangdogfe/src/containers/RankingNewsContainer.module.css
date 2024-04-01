@@ -55,8 +55,8 @@
   border-top-left-radius: 0;
   box-sizing: border-box;
   padding-top: 40px;
-  padding-left: 80px;
-  padding-right: 80px;
+  padding-left: 40px;
+  padding-right: 40px;
   overflow-y: scroll;
 }
 .section::-webkit-scrollbar {
@@ -65,7 +65,7 @@
 .section::-webkit-scrollbar-track {
   background: #f0f0f0; /* 추적부분의 배경색 */
   opacity: 0.7;
-  border-radius: 15px;
+  border-radius: 10px;
 }
 .section::-webkit-scrollbar-thumb {
   background: #493971; /* 슬라이더의 배경색 */

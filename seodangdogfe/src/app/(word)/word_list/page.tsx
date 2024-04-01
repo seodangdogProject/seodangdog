@@ -1,18 +1,7 @@
 "use client";
 // WordGame.tsx
-import React, {
-    useState,
-    useEffect,
-    useCallback,
-    startTransition,
-} from "react";
-import {
-    useRecoilState,
-    RecoilRoot,
-    useRecoilCallback,
-    useRecoilValue,
-    useSetRecoilState,
-} from "recoil";
+import React, { useState, useEffect } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styles from "./wordlist_layout.module.css";
 import {
     koWordListState,
@@ -23,6 +12,8 @@ import SearchIcon from "../../../assets/search-icon.svg";
 import WordDetailModal from "../../../components/wordComponent/wordDetailModal";
 import { privateFetch } from "@/utils/http-commons";
 import TrashCanIcon from "@/assets/delete-trashcan-icon.svg";
+import ToastPopup from "@/components/toast/Toast";
+
 const OneWord: React.FC = () => {
     const engWordList = useRecoilValue(engWordListState);
     const koWordList = useRecoilValue(koWordListState);
@@ -35,6 +26,7 @@ const OneWord: React.FC = () => {
     const [searchText, setSearchText] = useState("");
     const setKoWordList = useSetRecoilState(koWordListState);
     const setEngWordList = useSetRecoilState(engWordListState);
+    const [toast, setToast] = useState(false);
 
     useEffect(() => {
         // 데이터 받아오는 함수 START
@@ -108,6 +100,7 @@ const OneWord: React.FC = () => {
                 console.log("error 발생");
             }
         })();
+        setToast(true);
         initReq(); // 다시 요청하기
     };
 
@@ -134,6 +127,12 @@ const OneWord: React.FC = () => {
         })();
     };
 
+    function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
+        if (event.key === "Enter") {
+            searchKeyword();
+        }
+    }
+
     return (
         <>
             <div className={styles.container}>
@@ -144,6 +143,16 @@ const OneWord: React.FC = () => {
                         clickedWord={clickedWord}
                     ></WordDetailModal>
                 )}
+
+                <div style={{ marginLeft: "50px" }}>
+                    {toast && (
+                        <ToastPopup
+                            setToast={setToast}
+                            message={"삭제가 완료되었습니다."}
+                        />
+                    )}
+                </div>
+
                 <div className={styles.content_cotainer}>
                     <div className={styles.search_cotinaer}>
                         <input
@@ -151,6 +160,7 @@ const OneWord: React.FC = () => {
                             value={searchText}
                             className={styles.search_input}
                             onChange={handleSearchInputChange}
+                            onKeyDown={handleKeyDown}
                         />
                         <SearchIcon
                             onClick={(

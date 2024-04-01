@@ -1,9 +1,9 @@
-import LastNewsList from "@/components/dashboard/LastNewsList";
+import LastSeenNewsList from "@/components/dashboard/LastSeenNewsList";
 
 export default function LastSeenNews() {
-  return (
-    <>
-      <LastNewsList />
-    </>
-  );
+    return (
+        <>
+            <LastSeenNewsList />
+        </>
+    );
 }
