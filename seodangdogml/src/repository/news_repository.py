@@ -19,7 +19,7 @@ import boto3
 # 사용자 라이브러리 import
 sys.path.append(os.path.abspath('src'))
 from preprocessing.keyword_generate import keyword_generate
-from gpt_connect.gpt_connection import question_generate
+from gpt_connect.gpt_connection import question_generate, question_validate, question_refine
 # 설정 파일
 import settings
 
@@ -32,11 +32,13 @@ def mysql_create_session():
     connection = pymysql.connect(host=settings.MYSQL["host"], port=settings.MYSQL["port"], user=settings.MYSQL["user"], passwd=settings.MYSQL["passwd"], db=settings.MYSQL["db"], charset=settings.MYSQL["charset"])
     return connection
 
+
 def repo_time_calc(days):
     now = datetime.now()
     before_date = now - relativedelta(days=days)
     before_date_str = before_date.strftime('%Y-%m-%d')
     return before_date_str
+
 
 def morph_sep(news_data):
     ### 형태소 분리
@@ -80,30 +82,73 @@ def save_news():
     # MongoDB 저장
     mongoDB["meta_news"].insert_many(news_data)
 
+
 @router.get("/update_news")
 def update_news():
+    # 기존의 문제 변경
     print("update news start")
-    news_data = json.loads(json_util.dumps(mongoDB.meta_news.find({
-                              "newsQuiz": {
-                                "$exists": False
-                              }
-                            })))
+    news_data = json.loads(json_util.dumps(
+        mongoDB.meta_news.find({
+            "newsQuiz": {
+                "$exists": True
+            },
+            "ver" : {
+                "$exists": False
+            }
+        })
+    ))
 
-    print(f"문제 없는 뉴스 {len(news_data)}개 확인")
+    print(f"기존의 문제를 저장한 뉴스 {len(news_data)}개 확인")
     cnt = 0
 
     for news in news_data:
-        # 문제 없는 뉴스를 넣어 문제 있는 뉴스로 만듦
+        stop_check_flag = False
         update_data = {
             "$set": {
+                "ver": 2
+            }
+        }
+        updated_quiz = []
+        for question in news["newsQuiz"]:
+            if question_validate(question):         # 기존 문제 검증
+                updated_quiz.append(question_refine(question))
+            # 불합격 시 문제 재생성
+            else:
+                updated_quiz = question_generate(news)["newsQuiz"]
+                stop_check_flag = True
+            if stop_check_flag: break
+
+        # 몽고 DB 수정
+        update_data["$set"]["newsQuiz"] = updated_quiz
+        # print(update_data)
+        mongoDB.meta_news.update_one({"_id": ObjectId(news["_id"]["$oid"])}, update_data)
+        cnt += 1
+        if cnt % 100 == 0: print(f"{cnt}개 뉴스의 문제 수정 완료.")
+
+    print("기존 문제 수정 완료")
+
+    news_data = json.loads(json_util.dumps(
+        mongoDB.meta_news.find({
+            "newsQuiz": {
+                "$exists": False
+            },
+            "ver": {
+                "$exists": False
+            }
+        })
+    ))
+
+    print(f"문제가 없는 뉴스 {len(news_data)}개 확인")
+    cnt = 0
+
+    for news in news_data:
+        update_data = {
+            "$set": {
+                "ver": 2,
                 "newsQuiz": question_generate(news)["newsQuiz"]
             }
         }
-        # 몽고 DB 수정
         mongoDB.meta_news.update_one({"_id": ObjectId(news["_id"]["$oid"])}, update_data)
-        cnt+=1
-        if(cnt%100==0): print(f"{cnt}개 뉴스에 문제 삽입 완료")
-
 
 def get_unique_news(news_data):
     deleted_news_index = []
@@ -115,12 +160,6 @@ def get_unique_news(news_data):
             if(i==j): continue
             compare_news = news_data[j]
             if(len(set(target_news["newsKeyword"].keys()) & set(compare_news["newsKeyword"].keys())) >= 15):
-                # print("============")
-                # print(target_news["news_url"])
-                # print(target_news["newsKeyword"].keys())
-                # print("----")
-                # print(compare_news["news_url"])
-                # print(compare_news["newsKeyword"].keys())
                 deleted_news_index.append(j)
 
     news_data = [news for i, news in enumerate(news_data) if i not in deleted_news_index]

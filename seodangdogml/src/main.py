@@ -14,14 +14,15 @@ from repository.news_repository import router as news_repo_router
 from repository.recommend_repository import router as recommend_repo_router
 from recommend.mf_train import router as mf_train_router
 from recommend.mf_recommend import router as mf_recommend_router, renewal_news_df
-from repository.news_repository import save_news, mysql_save
-from crawling.news_crawling import crawling_main, test
+from repository.news_repository import save_news, mysql_save, update_news
+from crawling.news_crawling import crawling_main
+from gpt_connect.gpt_connection import question_validate
 
 
 back_scheduler = BackgroundScheduler(timezone='Asia/Seoul')
 
 
-@back_scheduler.scheduled_job('cron', minute="10", hour="10", id='crawling_cron')
+@back_scheduler.scheduled_job('cron', minute="00", hour="03", id='crawling_cron')
 def scheduled_job():
     print("예정된 스케쥴 시작 : crawling_cron")
     crawling_main()
@@ -30,8 +31,11 @@ def scheduled_job():
     print("스케쥴 : MongoDB 저장 종료")
     mysql_save()
     print("스케쥴 : Mysql 저장 종료")
-    print("예정된 스케쥴 종료 : crawling_cron")
+    update_news()
+    print("스케쥴 : 뉴스 문제 저장 종료")
     renewal_news_data()
+    print("스케쥴 : renewal_news_data 종료")
+    print("예정된 스케쥴 종료 : crawling_cron")
 
 
 
@@ -46,7 +50,6 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-# app = FastAPI()
 
 
 if __name__ == "__main__":
@@ -56,11 +59,6 @@ if __name__ == "__main__":
 @app.get("/fast/hello")
 def hello():
     return {"message": "Hello! FastAPI!!"}
-
-@app.get("/fast/chrome_test")
-def chrome_test():
-    test()
-    return {"message": "chrome_test activated."}
 
 
 app.include_router(cbf_router)
