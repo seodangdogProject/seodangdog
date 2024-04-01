@@ -35,6 +35,7 @@ export default function NewsDetailContainer() {
   const [currentQuizNumber, setCurrentQuizNumber] = useState<number>(0); // 0 : 커버페이지 , 1,2,3 : 퀴즈
 
   useEffect(() => {
+    console.log(12345);
     // 데이터 받아오는 함수 START
     (async () => {
       const res = await privateFetch("/news/" + pathname.split("/")[2], "GET");
@@ -46,7 +47,11 @@ export default function NewsDetailContainer() {
         }
         console.log(resData);
         setIsSolved(resData.solved);
-        setAnswerList(resData.userAnswerList || []);
+        setAnswerList(
+          resData.userAnswerList !== null && resData.userAnswerList.length === 0
+            ? Array(3).fill(5)
+            : resData.userAnswerList
+        );
         setKeywords(keywordList);
         setData(resData);
         setQuizData(resData.newsQuiz);
