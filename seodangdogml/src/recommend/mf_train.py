@@ -31,11 +31,9 @@ def save_mf(model):
 
 
 def load_mf():
-    print(os.getcwd())
-    base_src = 'recommend'
+    base_src = './recommend'
     model_name = 'mf_online.pkl'
-    # save_path = os.path.join(base_src, model_name)
-    save_path = base_src+"/"+model_name
+    save_path = os.path.join(base_src, model_name)
     if not os.path.exists(save_path):
         train_mf_model()
     with open(save_path, 'rb') as f:
