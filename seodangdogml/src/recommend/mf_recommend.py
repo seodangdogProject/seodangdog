@@ -79,8 +79,8 @@ def recommend_news(user_seq, mf_model, top_n=21):
     # 상위 top_n개의 영화를 추천 목록에 추가
     df_news = get_df_news()
     recommended_news = []
-    # for i in range(min(top_n, len(predicted_ratings))):
-    for i in range(min(len(predicted_ratings), len(predicted_ratings))):
+    # for i in range(min(len(predicted_ratings), len(predicted_ratings))):
+    for i in range(min(top_n, len(predicted_ratings))):
         news_seq = predicted_ratings[i][0]
         news_title = get_news_title(news_seq)
         # news_similarity = format_weight(predicted_ratings[i][1])
