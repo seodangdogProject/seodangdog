@@ -41,7 +41,8 @@ export default function WordGame() {
         <>
             <div className={styles.container}>
                 <div className={styles.content_cotainer}>
-                    <GameLogo className={styles.logo} />
+                    {/* <GameLogo className={styles.logo} /> */}
+                    <div className={styles.word_game_logo}>스피드 퀴즈!</div>
                     <div className={styles.word_count_box}>
                         {!isAvailable && (
                             <>
@@ -117,7 +118,7 @@ export default function WordGame() {
                                 }}
                                 onClick={(e) => e.preventDefault()}
                             >
-                                시작
+                            시작
                             </div>
                         </Link>
                     )}

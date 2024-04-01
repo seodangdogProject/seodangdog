@@ -58,7 +58,7 @@ export default function NavBar() {
               <div>
                 <MainIcon />
               </div>
-              <div>메인페이지</div>
+              <div>홈</div>
             </li>
           </Link>
           <Link href="/hottopic">
@@ -74,18 +74,7 @@ export default function NavBar() {
               <div>핫토픽</div>
             </li>
           </Link>
-          <Link href="/dashboard">
-            <li
-              className={cx("item", {
-                active: active === "dashboard",
-              })}
-            >
-              <div>
-                <DashboardIcon />
-              </div>
-              <div>대시보드</div>
-            </li>
-          </Link>
+          
           <Link href="/word_list">
             <li
               className={cx("item", {
@@ -110,7 +99,20 @@ export default function NavBar() {
               <div>게임</div>
             </li>
           </Link>
+          <Link href="/dashboard">
+            <li
+              className={cx("item", {
+                active: active === "dashboard",
+              })}
+            >
+              <div>
+                <DashboardIcon />
+              </div>
+              <div>내 정보</div>
+            </li>
+          </Link>
         </ul>
+        
         <div className={cx("logout")}>
           <div onClick={handleLogout} className={cx("item", "logout_item")}>
             <div>
