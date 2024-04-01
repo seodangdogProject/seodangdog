@@ -51,7 +51,7 @@ export default function DashboardContainer() {
                                 ["bg-light-purple"]
                             )}
                         >
-                            <div className={styled.title}>Info</div>
+                            <div className={styled.title}>내 정보</div>
                             <div className={cx("user", ["box-shodow-custom"])}>
                                 <UserCard
                                     nickname={usernickname!}
@@ -60,6 +60,8 @@ export default function DashboardContainer() {
                                     badgeImgUrl={mypageDto?.badgeImgUrl}
                                 />
                             </div>
+                            <div style={{ padding: "5px" }}></div>
+                            <div className={styled.title}>출석부</div>
                             <div
                                 className={cx("streak", ["box-shodow-custom"])}
                             >
@@ -73,7 +75,7 @@ export default function DashboardContainer() {
                                 ["bg-light-purple"]
                             )}
                         >
-                            <div className={styled.title}>워드클라우드</div>
+                            <div className={styled.title}>관심 키워드</div>
                             <div
                                 className={cx("wordcloud", [
                                     "box-shodow-custom",

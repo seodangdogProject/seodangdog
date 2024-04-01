@@ -14,17 +14,30 @@
 }
 
 /* fonts */
-@font-face {
+/* @font-face {
   font-family: "hunminjungum";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/EBSHunminjeongeum.woff")
     format("woff");
   font-weight: normal;
   font-style: normal;
+} */
+
+@font-face {
+  font-family: "hunminjungum";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "realhambaknoon";
+  font-weight: 200;
+  src: url("/fonts/SF함박눈TTF.ttf") format("truetype");
 }
 @font-face {
   font-family: "hambaknoon";
   font-weight: 200;
-  src: url("/fonts/SF함박눈TTF.ttf") format("truetype");
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff") format("truetype");
 }
 @font-face {
   font-family: "pretendard";
@@ -40,7 +53,7 @@
 }
 @font-face {
   font-family: "NanumMyeongjo";
-  src: url("https://cdn.jsdelivr.net/gh/wizfile/font/NanumMyeongjo.woff")
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff")
     format("woff");
   font-style: normal;
 }

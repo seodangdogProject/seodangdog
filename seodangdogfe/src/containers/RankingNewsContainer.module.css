@@ -85,7 +85,7 @@
 .first {
   width: 45%;
   height: 100%;
-  margin-right: 30px;
+  margin-right: 20px;
   cursor: pointer;
   padding: 10px;
   box-sizing: border-box;
@@ -109,13 +109,15 @@
 }
 .first__card__content {
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
   box-sizing: border-box;
   width: 100%;
   bottom: 0;
   height: 110px;
-  border-radius: 15px;
+  /* border-radius: 15px; */
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 .first__card__content__title {
   font-family: "Pretendard-Regular";
@@ -160,13 +162,13 @@
 .info {
   /* display: flex; */
   font-family: "Pretendard-Regular";
-  padding-top: 5px;
+  /* padding-top: 5px; */
   padding-left: 20px;
   height: 100%;
   box-sizing: border-box;
 }
 .info .title {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
 }
 .info .description {
@@ -174,7 +176,7 @@
   max-height: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #606060;
   text-overflow: ellipsis;
   white-space: wrap;
@@ -188,7 +190,7 @@
 }
 .second-third-container div img {
   height: 100%;
-  width: 30%;
+  width: 25%;
   object-fit: cover;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
@@ -196,7 +198,7 @@
 
 /* 나머지 컴포넌트 */
 .other {
-  margin-top: 30px;
+  margin-top: 20px;
   width: 100%;
 }
 .other__item {
