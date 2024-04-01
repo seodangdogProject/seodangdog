@@ -132,7 +132,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
         Map<String, Double> reqKeywords = new HashMap<>();
         Map<String, Double> alreadyKeyword = new HashMap<>();
         Map<String, Double> newKeyword = new HashMap<>();
-
+        List<MainNewsPreviewDto> newsPreviewLists = new ArrayList<>();
         List<CbfRecommendResponse> result = fastApiService.fetchRecommendations().block().stream().toList();
 
         List<Long> recommendedNewsSeqs = result.stream()
@@ -152,17 +152,13 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .sorted(Comparator.comparingInt(n -> indexMap.getOrDefault(n.getNewsSeq(), -1)))
                 .collect(Collectors.toList());
 
-        List<MainNewsPreviewDto> newsPreviewLists = sortedNewsList.stream().map(news -> {
-
-            Map<String, Double> keywords = result.stream()
-                    .flatMap(n -> n.getNews_keyword().entrySet().stream())
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue));
-
+        for(int i = 0; i < sortedNewsList.size(); i++){
+            Map<String, Double> keywords = result.get(i).getNews_keyword();
+            News news = sortedNewsList.get(i);
+            String mediaImgUrl = news.getMedia().getMediaImgUrl();
             reqKeywords.putAll(keywords);
 
-            String mediaImgUrl = news.getMedia().getMediaImgUrl();
-
-            return new MainNewsPreviewDto(
+            newsPreviewLists.add(new MainNewsPreviewDto(
                     news.getNewsSeq(),
                     news.getNewsImgUrl(),
                     news.getNewsTitle(),
@@ -171,8 +167,34 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getCountView(),
                     mediaImgUrl,
                     keywords
-            );
-        }).collect(Collectors.toList());
+            ))
+            ;
+        }
+
+//        List<MainNewsPreviewDto> newsPreviewLists = sortedNewsList.stream().map(news -> {
+//
+//            Map<String, Double> keywords = news.get()
+//
+//                    .flatMap(n -> n.getNews_keyword().entrySet().stream())
+//                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue));
+//
+//            System.out.println(keywords);
+//
+//            reqKeywords.putAll(keywords);
+//
+//            String mediaImgUrl = news.getMedia().getMediaImgUrl();
+//
+//            return new MainNewsPreviewDto(
+//                    news.getNewsSeq(),
+//                    news.getNewsImgUrl(),
+//                    news.getNewsTitle(),
+//                    news.getNewsDescription(),
+//                    news.getNewsCreatedAt(),
+//                    news.getCountView(),
+//                    mediaImgUrl,
+//                    keywords
+//            );
+//        }).collect(Collectors.toList());
 
         List<String> keywordList = queryFactory
                 .select(Projections.constructor(String.class, userKeyword.keyword.keyword))
