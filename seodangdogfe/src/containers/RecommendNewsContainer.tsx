@@ -37,6 +37,9 @@ export default function RecommendNewsContainer() {
                 console.log("재추천");
                 // 두 요청이 모두 완료된 후에 할 일
             })
+            .then(() => {
+                setReqList([]);
+            })
             .catch((error) => {
                 console.error("Error:", error);
                 // 에러 처리
