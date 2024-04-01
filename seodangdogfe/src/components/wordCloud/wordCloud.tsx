@@ -49,7 +49,7 @@ const WordCloud = (props: wordCloudProps) => {
     };
 
     return (
-        <div style={{ backgroundColor: "white", height: "98%", width: "98%" }}>
+        <div style={{ backgroundColor: "white", height: "95%", width: "98%" }}>
             <ReactWordcloud
                 words={props.wordCloudKeywords ? props.wordCloudKeywords : []}
                 options={options}
