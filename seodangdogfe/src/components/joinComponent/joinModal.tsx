@@ -55,12 +55,12 @@ function Modal({
         const userId = idEl.current ? idEl.current.value : "";
 
         try {
-            const response = await publicFetch("/idCheck", "POST", {
+            const response = await publicFetch("/check-id", "POST", {
                 userId,
             });
 
             if (response.ok) {
-                if (response.msg == "AVAILABLE") {
+                if (response.msg == "POSSIBLE") {
                     alert("사용가능한 아이디 입니다.");
                 } else {
                     alert("이미 존재하는 아이디 입니다.");
@@ -168,7 +168,7 @@ function Modal({
                             />
                             <div
                                 className={styles.id_check_btn}
-                                onClick={passwordToggle}
+                                onClick={() => idCheck()}
                             >
                                 중복 체크
                             </div>
