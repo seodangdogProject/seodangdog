@@ -1,7 +1,6 @@
 package com.ssafy.seodangdogbe.news.service;
 
 import com.ssafy.seodangdogbe.auth.repository.UserRepository;
-import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshRequestDto;
 import com.ssafy.seodangdogbe.keyword.repository.UserKeywordRepository;
 import com.ssafy.seodangdogbe.news.domain.KeywordNews;
 import com.ssafy.seodangdogbe.news.repository.MetaNewsRepository;
@@ -16,7 +15,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.plaf.PanelUI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -153,7 +151,7 @@ public class NewsService {
         }
 
         // 뉴스에 포함된 키워드 가중치 증가
-        userKeywordRepository.incrementKeywordWeight(user, keywordList, 0.99);
+        userKeywordRepository.incrementSolvedKeywordWeight(user, keywordList, 0.99);
 
         System.out.println("사용자 뉴스풀이 저장 성공");
         return true;
