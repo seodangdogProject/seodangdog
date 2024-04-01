@@ -30,8 +30,9 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
         List<News> newsList = queryFactory
                 .select(QNews.news)
                 .from(QNews.news)
-                .rightJoin(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq))
-                .where(QUserNews.userNews.isSolved.eq(true))
+                .join(qUserNews).on(QNews.news.newsSeq.eq(QUserNews.userNews.news.newsSeq))
+                .where(QUserNews.userNews.user.userSeq.eq(userSeq)
+                        .and(QUserNews.userNews.isSolved.eq(true)))
                 .orderBy(QNews.news.createdAt.asc())
                 .limit(20)
                 .fetch();
@@ -62,8 +63,9 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
         List<News> newsList = queryFactory
                 .select(QNews.news)
                 .from(QNews.news)
-                .rightJoin(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq))
-                .where(QUserNews.userNews.isSolved.eq(false))
+                .join(qUserNews).on(QNews.news.newsSeq.eq(QUserNews.userNews.news.newsSeq))
+                .where(QUserNews.userNews.user.userSeq.eq(userSeq)
+                        .and(QUserNews.userNews.isSolved.eq(false)))
                 .orderBy(QNews.news.createdAt.asc())
                 .limit(20)
                 .fetch();
