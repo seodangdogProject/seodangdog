@@ -1,8 +1,10 @@
 package com.ssafy.seodangdogbe.auth.service;
 
+import com.ssafy.seodangdogbe.auth.dto.ReqUserIdDto;
 import com.ssafy.seodangdogbe.auth.dto.ReqUserLoginDto;
 import com.ssafy.seodangdogbe.auth.dto.ReqUserSignUpDto;
 import com.ssafy.seodangdogbe.auth.repository.UserRepository;
+import com.ssafy.seodangdogbe.common.MessageResponseDto;
 import com.ssafy.seodangdogbe.keyword.repository.UserKeywordRepository;
 import com.ssafy.seodangdogbe.jwt.JWT;
 import com.ssafy.seodangdogbe.jwt.JWTProvider;
@@ -10,7 +12,9 @@ import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.user.domain.Badge;
 import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.domain.UserBadge;
+import com.ssafy.seodangdogbe.user.dto.UserInfoModifyReqDto;
 import com.ssafy.seodangdogbe.user.dto.UserNicknameModifyReqDto;
+import com.ssafy.seodangdogbe.user.dto.UserPasswordModifyReqDto;
 import com.ssafy.seodangdogbe.user.repository.BadgeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,11 +76,28 @@ public class UserService {
     }
 
     @Transactional
-    public void modifyNickname( UserNicknameModifyReqDto dto){
+    public void modifyNickname(UserNicknameModifyReqDto dto){
         User user = getUser();
-        System.out.println(dto.getNickname());
+//        System.out.println(dto.getNickname());
         user.setNickname(dto.getNickname());
     }
+
+    @Transactional
+    public void modifyPassword(UserPasswordModifyReqDto dto){
+        User user = getUser();
+//        System.out.println(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+    }
+
+    @Transactional
+    public void modifyUserInfo(UserInfoModifyReqDto dto){
+        User user = getUser();
+        user.setNickname(dto.getNickname());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+    }
+
+
+
 
     public JWT login(ReqUserLoginDto reqUserLoginDto) {
 
@@ -102,15 +123,16 @@ public class UserService {
         return user.getUserSeq();
     }
 
-
-
-
     // 회원 seq로 회원 조회
     public User getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
+    }
+
+    public boolean checkIdExists(String userId){
+        return userRepository.findByUserId(userId).isPresent();
     }
 
 }

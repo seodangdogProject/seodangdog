@@ -18,9 +18,7 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,16 +40,20 @@ public class MyPageService {
     }
 
     // 뉴스를 푼 날짜 목록 조회
-    public List<LocalDate> getSolvedDateRecord(User user) {
+    public Map<LocalDate, Integer> getSolvedDateRecord(User user) {
         LocalDateTime current = LocalDateTime.now();
         LocalDateTime start = current.minusDays(100);
 
         // 지금으로부터 100일 이내의 푼 내역을 순서대로 가져온다.
         List<LocalDateTime> solvedDateList = userNewsRepositoryCustom.findSolvedDateList(user, start, current);
 
-        return solvedDateList.stream()
-                .map(LocalDateTime::toLocalDate)
-                .collect(Collectors.toList());
+        Map<LocalDate, Integer> resultMap = new HashMap<>();
+        for (LocalDateTime LDT : solvedDateList){
+            LocalDate LD = LDT.toLocalDate();
+            resultMap.merge(LD, 1, Integer::sum);
+        }
+
+        return resultMap;
     }
 
     // 사용자가 가장 최근에 본 뉴스 조회
