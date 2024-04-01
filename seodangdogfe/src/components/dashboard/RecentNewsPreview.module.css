@@ -77,3 +77,13 @@
 .last_solved_container .preview {
     background-color: hsla(40, 100%, 80%, 0.5);
 }
+
+.empty_preview {
+    width: 100%;
+    display: flex;
+    color: gray;
+    font-weight: bold;
+    font-family: "Pretendard-Regular";
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+}

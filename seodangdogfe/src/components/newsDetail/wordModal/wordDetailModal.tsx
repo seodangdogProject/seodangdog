@@ -49,9 +49,29 @@ function Modal({
     let [openVisible, setOpenVisibleVisible] = useState(false);
     const [word, setWord] = useState<word>();
 
+    const centerModal = () => {
+        const modal = document.querySelector("#modal") as HTMLElement;
+        const containerA = document.querySelector("#container") as HTMLElement;
+
+        if (modal && containerA) {
+            const containerARect = containerA.getBoundingClientRect();
+            const modalWidth = modal.offsetWidth;
+            const modalHeight = modal.offsetHeight;
+            const leftPos =
+                containerARect.left + (containerARect.width - modalWidth) / 2;
+            const topPos =
+                containerARect.top + (containerARect.height - modalHeight) / 2;
+
+            modal.style.left = leftPos + "px";
+            modal.style.top = topPos + "px";
+        }
+    };
+
     useEffect(() => {
+        centerModal();
         // 데이터 받아오는 함수 START
         (async () => {
+            setWord(undefined);
             const res = await privateFetch("/news/word/" + clickedWord, "GET");
             if (res.status === 200) {
                 const data = await res.json();
@@ -64,7 +84,7 @@ function Modal({
     }, []);
     return (
         <>
-            <div className={styles.modal_container}>
+            <div className={styles.modal_container} id="modal">
                 <div className={styles.title}>
                     <div className={styles.title_word}>{clickedWord}</div>
                     <CloseModalIcon
