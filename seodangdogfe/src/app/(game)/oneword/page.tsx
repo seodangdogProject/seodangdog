@@ -247,13 +247,21 @@ const OneWord: React.FC = () => {
                                         wordList[currentIndex]?.mean.length < 24
                                     ) {
                                         return "30px";
+                                    } else if (
+                                        wordList[currentIndex]?.mean.length < 36
+                                    ) {
+                                        return "25px";
                                     } else {
                                         return "20px";
                                     }
                                 })(),
                             }}
                         >
-                            {wordList[currentIndex]?.mean}
+                            <span
+                                dangerouslySetInnerHTML={{
+                                    __html: wordList[currentIndex]?.mean,
+                                }}
+                            />
                         </div>
                     </div>
                     <div className={styles.answer_conatiner}>

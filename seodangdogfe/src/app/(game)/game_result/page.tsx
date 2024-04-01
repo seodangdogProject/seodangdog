@@ -5,6 +5,7 @@ import styles from "./gameresult_layout.module.css";
 import { useRecoilState, RecoilRoot, useSetRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
 import NextButton from "../../../assets/nextButton-icon.svg";
+import WordDetailModal from "../../../components/wordComponent/wordDetailModal";
 import {
     gameWordListState,
     correctWordListState,
@@ -15,6 +16,7 @@ import { privateFetch } from "@/utils/http-commons";
 
 const WordResult: React.FC = () => {
     const router = useRouter();
+    const [isOpenModal, setOpenModal] = useState<boolean>(false);
     const setCorrectWordList = useSetRecoilState(correctWordListState);
     const setUnCorrectWordList = useSetRecoilState(unCorrectWordListState);
     const [correctWordList] = useRecoilState(correctWordListState);
@@ -22,6 +24,8 @@ const WordResult: React.FC = () => {
     const reqData = {
         wordSeq: correctWordList.map((item) => item.wordSeq),
     };
+    const [clickedWord, setClickedWord] = useState<string | null>(null);
+
     const handleClick = () => {
         console.log("다음으로");
 
@@ -42,9 +46,26 @@ const WordResult: React.FC = () => {
         router.push("/word_game");
     };
 
+    // 이동
+    const handleOpenModal = (word: Item) => {
+        setClickedWord((prevClickedWord) => word.word); // 함수형 업데이트 사용
+        setOpenModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
+
     return (
         <>
             <div className={styles.container}>
+                {isOpenModal && (
+                    <WordDetailModal
+                        isOpen={isOpenModal}
+                        onClose={handleCloseModal}
+                        clickedWord={clickedWord}
+                    ></WordDetailModal>
+                )}
                 <div className={styles.content_cotainer}>
                     <div className={styles.header}>SCORE</div>
                     <div className={styles.main_cotainer}>
@@ -55,8 +76,9 @@ const WordResult: React.FC = () => {
                                     key={item.wordSeq}
                                     className={styles.wordBox}
                                     style={{
-                                        border: "1px solid blue",
+                                        border: "2px solid blue",
                                     }}
+                                    onClick={() => handleOpenModal(item)}
                                 >
                                     {item.word}
                                 </div>
@@ -77,8 +99,9 @@ const WordResult: React.FC = () => {
                                     key={item.wordSeq}
                                     className={styles.wordBox}
                                     style={{
-                                        border: "1px solid red",
+                                        border: "2px solid red",
                                     }}
+                                    onClick={() => handleOpenModal(item)}
                                 >
                                     {item.word}
                                 </div>
@@ -89,7 +112,10 @@ const WordResult: React.FC = () => {
                         <div className={styles.des_text}>
                             맞힌 단어는 단어장에서 삭제됩니다
                         </div>
-                        <NextButton onClick={handleClick} />
+                        <NextButton
+                            onClick={handleClick}
+                            style={{ cursor: "pointer" }}
+                        />
                     </div>
                 </div>
             </div>

@@ -178,6 +178,7 @@ function Modal(props: ModalProps) {
                                                 >
                                                     진행도
                                                 </div>
+                                                {}
                                                 <div
                                                     className={
                                                         styles.overlay_cond
@@ -239,14 +240,7 @@ function Modal(props: ModalProps) {
                                                             styles.overlay_userExp
                                                         }
                                                     >
-                                                        {item.userBadgeExp}
-                                                    </span>
-                                                    <span>/</span>
-                                                    <span>
-                                                        {
-                                                            item.badgeDto
-                                                                .badgeCondition
-                                                        }
+                                                        수집 완료
                                                     </span>
                                                 </div>
                                             </div>

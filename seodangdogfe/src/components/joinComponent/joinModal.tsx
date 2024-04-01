@@ -51,6 +51,28 @@ function Modal({
         setOpenVisibleVisible(openVisible === true ? false : true);
     }
 
+    const idCheck = async () => {
+        const userId = idEl.current ? idEl.current.value : "";
+
+        try {
+            const response = await publicFetch("/idCheck", "POST", {
+                userId,
+            });
+
+            if (response.ok) {
+                if (response.msg == "AVAILABLE") {
+                    alert("사용가능한 아이디 입니다.");
+                } else {
+                    alert("이미 존재하는 아이디 입니다.");
+                }
+            } else {
+                console.error("아이디 체크 실패");
+            }
+        } catch (error) {
+            console.error("회원가입 중 에러 발생:", error);
+        }
+    };
+
     // 회원가입버튼 클릭시 처리하는 로직
     const registHandler = async () => {
         const userId = idEl.current ? idEl.current.value : "";
@@ -128,14 +150,29 @@ function Modal({
                 </div>
                 <div className={styles.form_container}>
                     <div className={styles.input_group_id}>
-                        <input
-                            type="text"
-                            id="username"
-                            name="inputId"
-                            placeholder="아이디"
-                            ref={idEl}
-                            onKeyPress={handleKeyPress}
-                        />
+                        <div
+                            style={{
+                                display: "flex",
+                            }}
+                        >
+                            <input
+                                type="text"
+                                id="username"
+                                name="inputId"
+                                placeholder="아이디"
+                                ref={idEl}
+                                onKeyPress={handleKeyPress}
+                                style={{
+                                    width: "70%",
+                                }}
+                            />
+                            <div
+                                className={styles.id_check_btn}
+                                onClick={passwordToggle}
+                            >
+                                중복 체크
+                            </div>
+                        </div>
                         <div className={styles.horizontal}></div>
                     </div>
                     <div className={styles.input_group_id}>
