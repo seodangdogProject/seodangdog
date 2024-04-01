@@ -85,9 +85,9 @@ def renewal_news_data():
         }
 
         df_result.append({
-            'news_seq' : temp['news_seq'],
-            'keyword_str' : keyword_str,
-            'news_summary_keyword':news_summary_keyword
+            'news_seq': temp['news_seq'],
+            'keyword_str': keyword_str,
+            'news_summary_keyword': news_summary_keyword
         })
 
         result.append(temp)
