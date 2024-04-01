@@ -7,6 +7,7 @@ import com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
 import com.ssafy.seodangdogbe.news.service.NewsService;
 import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.service.UserBadgeService;
+import com.ssafy.seodangdogbe.word.controller.WordController;
 import com.ssafy.seodangdogbe.word.dto.WordApiDto;
 import com.ssafy.seodangdogbe.word.dto.UserWordDto;
 import com.ssafy.seodangdogbe.word.dto.WordDto;
@@ -28,14 +29,15 @@ import static com.ssafy.seodangdogbe.news.dto.MetaNewsDto.*;
 @RequestMapping("/api/news")
 @RequiredArgsConstructor
 public class NewsController {
+    private final WordController wordController;
 
-    public final NewsService newsService;
-    public final UserService userService;
-    public final WordService wordService;
-    public final KeywordService keywordService;
+    private final NewsService newsService;
+    private final UserService userService;
+    private final WordService wordService;
+    private final KeywordService keywordService;
 
-    public final UserWordService userWordService;
-    public final UserBadgeService userBadgeService;
+    private final UserWordService userWordService;
+    private final UserBadgeService userBadgeService;
 
     @Operation(description = "newsSeq(mysql pk)로 mongodb에 있는 뉴스 본문 조회")
     @GetMapping("/{newsSeq}")
@@ -102,14 +104,15 @@ public class NewsController {
         String word = wordDto.getWord();
         // ** 단어가 mongodb에 들어와있는지 확인하고, 없다면 api 호출해서 넣어주어야 함 -> 이렇게 접근할 일 없음
         if (!wordService.existWord(word)){
-            // 표준국어대사전 API(사전검색 api만 사용) 호출 및 결과 값 받아오기
-            WordApiDto.KorApiSearchDto korApiSearchDto = wordService.callStDictSearchApi(word);
+            wordController.getWord(word);
 
-            // 결과 값 DB에 저장
-            WordDto.MetaWordDto metaWordDto = new WordDto.MetaWordDto(korApiSearchDto);
-            wordService.saveMetaWordToMongodb(metaWordDto);
+//            // 표준국어대사전 API(사전검색 api만 사용) 호출 및 결과 값 받아오기
+//            WordApiDto.KorApiSearchDto korApiSearchDto = wordService.callStDictSearchApi(word);
+//
+//            // 결과 값 DB에 저장
+//            WordDto.MetaWordDto metaWordDto = new WordDto.MetaWordDto(korApiSearchDto);
+//            wordService.saveMetaWordToMongodb(metaWordDto);
         }
-
 
         // 사용자단어 테이블에 이미 있는지 체크
         UserWordDto userWordDto = userWordService.findUserWord(userSeq, word);
