@@ -159,14 +159,14 @@ def get_unique_news(news_data):
         for j in range(len(news_data)):
             if(i==j): continue
             compare_news = news_data[j]
-            if(len(set(target_news["newsKeyword"].keys()) & set(compare_news["newsKeyword"].keys())) >= 15):
+            if(len(set(target_news["newsKeyword"].keys()) & set(compare_news["newsKeyword"].keys())) >= 10):
                 deleted_news_index.append(j)
 
     news_data = [news for i, news in enumerate(news_data) if i not in deleted_news_index]
     return news_data
 
 @router.get("/delete_duplicated_news")
-def delete_duplicated_news(news_data):
+def delete_duplicated_news():
     deleted_news_id_list = []
     deleted_news_oid_list = []
     deleted_news_index = []
@@ -174,13 +174,15 @@ def delete_duplicated_news(news_data):
     response = mongoDB.meta_news.find({}, {"_id": 1, "news_url":1, "newsKeyword": 1})
     news_data = json.loads(json_util.dumps(response))
 
+    print(f"{len(news_data)}개 뉴스 불러오기 완료.")
+
     for i in range(len(news_data)):
         if i in deleted_news_index: continue
         target_news = news_data[i]
         for j in range(len(news_data)):
             if(i==j): continue
             compare_news = news_data[j]
-            if(len(set(target_news["newsKeyword"].keys()) & set(compare_news["newsKeyword"].keys())) >= 15):
+            if(len(set(target_news["newsKeyword"].keys()) & set(compare_news["newsKeyword"].keys())) >= 10):
                 # print("============")
                 # print(target_news["news_url"])
                 # print(target_news["newsKeyword"].keys())
@@ -191,27 +193,44 @@ def delete_duplicated_news(news_data):
                 deleted_news_oid_list.append(ObjectId(compare_news["_id"]["$oid"]))
                 deleted_news_index.append(j)
 
-    result = mongoDB.meta_news.delete_many({"_id": {"$in":deleted_news_oid_list}})
+    print(f"{len(deleted_news_oid_list)}개의 중복 뉴스 확인. 삭제하시겠습니까? (y/n)")
+    confirm = input()
+    confirm = 0
 
+    while confirm not in ['y','n']:
+        print(f"{len(deleted_news_oid_list)}개의 중복 뉴스 확인. 삭제하시겠습니까? (y/n)")
+        confirm = input()
+
+        if confirm == 'n':
+            print("중복 기사 삭제를 취소하였습니다.")
+            return
+        if confirm == 'y':
+            print("삭제를 진행합니다.")
+            break
+
+    result = mongoDB.meta_news.delete_many({"_id": {"$in":deleted_news_oid_list}})
 
     mysqlDB = mysql_create_session()
     cursor = mysqlDB.cursor()
 
     sql = (f"select news_seq from news where news_access_id in (")
+    for news_seq in deleted_news_id_list:
+        sql += f"{news_seq},"
+    sql = sql[:-1] + ");"
     cursor.execute(sql)
     news_seq_list = cursor.fetchall()
 
-    sql = (f"delete from keyword_news where news_seq in (")
-    for news_seq in news_seq_list:
-        sql += f"{news_seq},"
-    sql = sql[:-1] + ");"
-    cursor.execute(sql)
-
-    sql = (f"delete from user_news where news_seq in (")
-    for news_seq in news_seq_list:
-        sql += f"{news_seq},"
-    sql = sql[:-1] + ");"
-    cursor.execute(sql)
+    # sql = (f"delete from keyword_news where news_seq in (")
+    # for news_seq in news_seq_list:
+    #     sql += f"{news_seq},"
+    # sql = sql[:-1] + ");"
+    # cursor.execute(sql)
+    #
+    # sql = (f"delete from user_news where news_seq in (")
+    # for news_seq in news_seq_list:
+    #     sql += f"{news_seq},"
+    # sql = sql[:-1] + ");"
+    # cursor.execute(sql)
 
     sql = (f"delete from news where news_access_id in (")
     for news_seq in news_seq_list:
