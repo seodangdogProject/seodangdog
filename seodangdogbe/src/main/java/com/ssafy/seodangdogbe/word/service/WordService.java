@@ -90,17 +90,21 @@ public class WordService {
 
             StringBuilder result = new StringBuilder();
 
+//            StringBuilder sb = new StringBuilder();
+
             String line;
             while ((line = br.readLine()) != null){
                 result.append(line);
+//                sb.append(line);
+//                sb.append("\n");
             }
             br.close();
             conn.disconnect();
 
-            if (result.isEmpty())
-                return null;
-            else
-                return JsonConverter.apiJsonToEncycApiDto(result.toString());
+//            System.out.println("=======================결과=======================");
+//            System.out.println(sb.toString());
+
+            return JsonConverter.apiJsonToEncycApiDto(result.toString());
         } catch (Exception e) {
             log.error(String.valueOf(e));
             throw new RuntimeException(e);
@@ -146,16 +150,13 @@ public class WordService {
         }
     }
 
-    // api 호출 및 결과값 받아오기
-
-
     // mongodb에 MetaWord 저장
     public void saveMetaWordToMongodb(MetaWordDto metaWordDto){
         MetaWord metaWord = new MetaWord(metaWordDto);
         metaWordRepository.save(metaWord);
     }
 
-
+    // 단어장에서 단어 상태를 삭제로 변경
     public boolean setDelete(int userSeq, String word) {
         Optional<UserWord> findUserWord = userWordRepository.findByUserUserSeqAndWord(userSeq, word);
         findUserWord.ifPresent(userWord -> userWord.setIsDelete(true));
