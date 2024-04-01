@@ -1,8 +1,10 @@
 package com.ssafy.seodangdogbe.test;
 
+import com.ssafy.seodangdogbe.auth.dto.ReqUserIdDto;
 import com.ssafy.seodangdogbe.auth.dto.ReqUserLoginDto;
 import com.ssafy.seodangdogbe.auth.dto.ReqUserSignUpDto;
 import com.ssafy.seodangdogbe.auth.service.UserService;
+import com.ssafy.seodangdogbe.common.MessageResponseDto;
 import com.ssafy.seodangdogbe.jwt.JWT;
 import com.ssafy.seodangdogbe.jwt.JWTDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,5 +50,13 @@ public class testController {
         log.info("*** test 요청 *** ");
         System.out.println(userService.getUserSeq());
         return ResponseEntity.ok("ok");
+    }
+
+    @GetMapping("/check-id")
+    public ResponseEntity<MessageResponseDto> checkId(@RequestBody ReqUserIdDto userIdDto){
+        if (userService.checkIdExists(userIdDto.getUserId())){
+            return ResponseEntity.ok().body(new MessageResponseDto("impossible"));
+        } else
+            return ResponseEntity.ok().body(new MessageResponseDto("possible"));
     }
 }

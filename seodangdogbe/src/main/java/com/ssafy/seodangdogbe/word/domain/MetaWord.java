@@ -41,7 +41,8 @@ public class MetaWord {
     }
 
     public MetaWord(MetaWordDto dto){
-        this.word = dto.getWord().replaceAll("[!@#$%^&*(){}\\[\\]_\\-+=?/\\\\]", "");
+//        this.word = dto.getWord().replaceAll("[\\-^]", "");
+        this.word = dto.getWord();
         this.wordLang = dto.getWordLang();
         this.total = dto.getTotal();
         for (WordItemDto item : dto.getItems()){

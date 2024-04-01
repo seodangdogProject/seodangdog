@@ -5,7 +5,7 @@ import com.ssafy.seodangdogbe.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-@Entity
+//@Entity
 @Getter
 public class OnlineLearningData extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
