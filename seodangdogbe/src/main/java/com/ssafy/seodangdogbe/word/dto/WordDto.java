@@ -70,17 +70,23 @@ public class WordDto {
 
         // 네이버 백과사전 api 결과를 db에 저장하는 용도의 dto
         public MetaWordDto(String word, EncycApiDto encycApiDto, String wordLang) {
-            EncycApiDto dto = encycApiDto;
-
             this.wordLang = wordLang;
-            this.total = dto.getTotal();
+            this.total = encycApiDto.getTotal();
             this.word = word;
 
-            List<EncycApiDto.ItemDto> items = dto.getItems();
+            List<EncycApiDto.ItemDto> items = encycApiDto.getItems();
             int idx = 1;
             for (EncycApiDto.ItemDto item : items){
                 this.items.add(new WordItemDto(item, idx++));
             }
+        }
+
+        // 없는 단어를 db에 저장하는 용도의 dto
+        public MetaWordDto(String word, int total){
+            this.word = word;
+            this.wordLang = "none";
+            this.total = total;
+            this.items = new ArrayList<>();
         }
 
 
