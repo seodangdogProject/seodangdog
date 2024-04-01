@@ -7,7 +7,7 @@
 }
 .strictElement {
   flex-direction: row-reverse;
-  /* border-radius: 50%; */
+  border-radius: 2px;
   width: 30px;
   /* width: calc(25px / 7px); */
   /* height: 25px; */
@@ -26,7 +26,8 @@
   box-sizing: border-box;
   justify-content: center;
   align-items: center;
-  font-size: 0.7rem;
-  font-family: "pretendard";
-  font-weight: bold;
+  color: #7a7a7a;
+  font-size: 0.8rem;
+  font-family: "hambaknoon";
+  /* font-weight: bold; */
 }
