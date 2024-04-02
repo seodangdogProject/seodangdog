@@ -144,14 +144,14 @@ public class NewsService {
         int exp = userExp.getSummaryExp();
         userExp.setSummaryExp(exp + 1);
 
-        // ** 뉴스 키워드 리스트 -> 가중치를 증가시킬 키워드 리스트로 변환
-        List<String> keywordList = new ArrayList<>();
-        for (KeywordNews newsKeyword : news.getKeywordNewsList()){
-            keywordList.add(newsKeyword.getKeyword().getKeyword());
-        }
-
-        // 뉴스에 포함된 키워드 가중치 증가
-        userKeywordRepository.incrementSolvedKeywordWeight(user, keywordList, 0.99);
+//        // ** 뉴스 키워드 리스트 -> 가중치를 증가시킬 키워드 리스트로 변환
+//        List<String> keywordList = new ArrayList<>();
+//        for (KeywordNews newsKeyword : news.getKeywordNewsList()){
+//            keywordList.add(newsKeyword.getKeyword().getKeyword());
+//        }
+//
+//        // 뉴스에 포함된 키워드 가중치 증가
+//        userKeywordRepository.incrementSolvedKeywordWeight(user, keywordList, 0.99);
 
         System.out.println("사용자 뉴스풀이 저장 성공");
         return true;

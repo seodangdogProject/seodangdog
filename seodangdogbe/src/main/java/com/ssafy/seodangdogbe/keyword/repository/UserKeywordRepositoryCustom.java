@@ -15,5 +15,7 @@ public interface UserKeywordRepositoryCustom {
     void incrementSolvedKeywordWeight(User user, List<String> list, double weight);
     void incrementClickedKeywordWeight(User user, List<String> list, double weight);
 
+    void incrementClickedKeywordMapWeight(User user, Map<String, Double> map, double weight);
+
     List<UserKeyword> getWordCloudUserKeyword(User user);
 }
