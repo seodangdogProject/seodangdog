@@ -16,6 +16,7 @@ from recommend.mf_train import router as mf_train_router
 from recommend.mf_recommend import router as mf_recommend_router, renewal_news_df
 from repository.news_repository import save_news, mysql_save, update_news
 from crawling.news_crawling import crawling_main
+from recommend.mf_train import load_mf
 from gpt_connect.gpt_connection import question_validate
 
 
@@ -37,7 +38,7 @@ def scheduled_job():
     print("스케쥴 : renewal_news_data 종료")
     print("예정된 스케쥴 종료 : crawling_cron")
 
-
+# mf = load_mf()
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):

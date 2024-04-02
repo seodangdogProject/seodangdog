@@ -1,28 +1,17 @@
-from typing import List
-
-import numpy as np
-from repository.recommend_repository import select_all_ratings
 from repository.recommend_repository import select_all_news
 from fastapi import APIRouter
 from fastapi import BackgroundTasks
 import pandas as pd
-import os
-from recommend.cbf_recommend import format_weight
 from recommend.cbf_recommend import cbf_recommend, get_df_news, format_weight
-from recommend.cbf_recommend import news_id_seq
-from repository.recommend_repository import select_ratings
-from repository.recommend_repository import update_ratings
 from repository.recommend_repository import select_user_news_rating
 from repository.recommend_repository import insert_ratings
 from repository.recommend_repository import select_news_solved
-from recommend.mf_train import multiprocessing_train
 from recommend.mf_train import online_learning
 from recommend.mf_train import save_mf
 from recommend.mf_train import load_mf
 from repository.recommend_repository import select_user_ratings
 
 import asyncio
-import pickle
 import time
 from pydantic import BaseModel
 
@@ -45,8 +34,7 @@ class MfNewsDto:
         self.news_keyword = news_summary_keyword
 
 
-mf = load_mf()
-
+# mf = load_mf()
 
 def get_news_title(news_id):
     return news.loc[news_id]['title']
@@ -152,7 +140,7 @@ async def update(data: UpdateData):
 
 
 async def mf_update(data):
-    print('mf update - online learning')
+    print('mf-recommend.py ->  online learning')
     print(mf.user_id_index)
     user_seq = data.user_seq
     info = data.info
