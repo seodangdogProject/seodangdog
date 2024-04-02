@@ -2,18 +2,14 @@ package com.ssafy.seodangdogbe.news.controller;
 
 import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.common.MessageAlterResponseDto;
+import com.ssafy.seodangdogbe.keyword.dto.InfoDto;
+import com.ssafy.seodangdogbe.keyword.dto.updateWeightFastReqDto;
 import com.ssafy.seodangdogbe.keyword.service.KeywordService;
 import com.ssafy.seodangdogbe.news.dto.UserNewsDto.*;
+import com.ssafy.seodangdogbe.news.service.FastApiService;
 import com.ssafy.seodangdogbe.news.service.NewsService;
 import com.ssafy.seodangdogbe.user.domain.User;
 import com.ssafy.seodangdogbe.user.service.UserBadgeService;
-import com.ssafy.seodangdogbe.word.controller.WordController;
-import com.ssafy.seodangdogbe.word.dto.WordApiDto;
-import com.ssafy.seodangdogbe.word.dto.UserWordDto;
-import com.ssafy.seodangdogbe.word.dto.WordDto;
-import com.ssafy.seodangdogbe.word.dto.WordDto.WordRequestDto;
-import com.ssafy.seodangdogbe.word.service.UserWordService;
-import com.ssafy.seodangdogbe.word.service.WordService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,8 +28,8 @@ public class NewsController {
     private final NewsService newsService;
     private final UserService userService;
     private final KeywordService keywordService;
-
     private final UserBadgeService userBadgeService;
+    private final FastApiService fastApiService;
 
     @Operation(description = "newsSeq(mysql pk)로 mongodb에 있는 뉴스 본문 조회")
     @GetMapping("/{newsSeq}")
@@ -43,12 +39,20 @@ public class NewsController {
 
         MetaNewsResponseDto metaNewsResponseDto = newsService.getNewsDetailsByNewsSeq(newsSeq);
         List<String> newsKeywordList = new ArrayList<>(metaNewsResponseDto.getNewsKeyword().keySet());
+        // mysql db 가중치 곱
+        keywordService.addKeywordListWeight(user, newsKeywordList, 1.3);
 
         if (!newsService.getUserNewsExist(user.getUserSeq(), newsSeq)){    // 사용자-뉴스 테이블에 기록이 없을 경우 (최초접근 데이터 넣기)
-            keywordService.addKeywordListWeight(user, newsKeywordList, 1.28);
+            // fast api
+            List<InfoDto> infoDto = new ArrayList<>();
+            infoDto.add(new InfoDto(newsSeq, 2.0));
+            fastApiService.updateWeigth(new updateWeightFastReqDto(user.getUserSeq(),infoDto)); // 1.7
             newsService.setUserNewsInit(user.getUserSeq(), newsSeq);
         } else {    // 사용자-뉴스 접근기록이 있는 경우
-            keywordService.addKeywordListWeight(user, newsKeywordList, 0.33);
+            // fast api
+            List<InfoDto> infoDto = new ArrayList<>();
+            infoDto.add(new InfoDto(newsSeq, 1.7));
+            fastApiService.updateWeigth(new updateWeightFastReqDto(user.getUserSeq(),infoDto)); // 1.7
             UserNewsResponseDto userRecord = newsService.getReadOrSolveRecord(user.getUserSeq(), newsSeq);
             metaNewsResponseDto.setHighlightList(userRecord.getHighlightList());
             metaNewsResponseDto.setWordList(userRecord.getWordList());
