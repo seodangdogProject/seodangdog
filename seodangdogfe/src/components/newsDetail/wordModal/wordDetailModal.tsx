@@ -1,15 +1,10 @@
 import React, { PropsWithChildren, useState, useEffect, Fragment } from "react";
-import Link from "next/link";
 import styled from "styled-components";
 import styles from "./modal.module.css";
-import OpenPassword from "../../assets/openPassword-icon.svg";
-import ClosePassword from "../../assets/closePassword-icon.svg";
-import CloseModal from "../../assets/closeModal-icon.svg";
-import LoginLogo from "../../assets/loginLogo-icon.svg";
-import { saved_word } from "@/atoms/type";
 import CloseModalIcon from "@/assets/closeModal-icon.svg";
 import { privateFetch } from "@/utils/http-commons";
-
+import FillBookmarkIcon from "@/assets/bookmark-full-icon.svg";
+import EmptyBookmarkIcon from "@/assets/bookmark-empty-icon.svg";
 const Backdrop = styled.div`
     width: 100vw;
     height: 100vh;
@@ -36,6 +31,7 @@ type word = {
     wordLang: string;
     total: number;
     items: meanitem[];
+    exist: boolean;
 };
 
 function Modal({
@@ -44,9 +40,6 @@ function Modal({
     clickedWord,
     children,
 }: PropsWithChildren<ModalProps>) {
-    let [inputType, setInputType] = useState("password");
-    let [closeVisible, setCloseVisibleVisible] = useState(true);
-    let [openVisible, setOpenVisibleVisible] = useState(false);
     const [word, setWord] = useState<word>();
 
     const centerModal = () => {
@@ -67,11 +60,38 @@ function Modal({
         }
     };
 
-    useEffect(() => {
-        centerModal();
-        // 데이터 받아오는 함수 START
+    const saveWord = () => {
         (async () => {
-            setWord(undefined);
+            const res = await privateFetch("/news/word", "POST", {
+                word: clickedWord,
+            });
+            if (res.status === 200) {
+                const data = await res.json();
+                console.log(data);
+                getWord();
+            } else {
+                console.log("error 발생");
+            }
+        })();
+    };
+
+    const deleteWord = () => {
+        (async () => {
+            const res = await privateFetch(
+                "/news/myword/" + clickedWord,
+                "PATCH"
+            );
+            if (res.status === 200) {
+                console.log("ok");
+                getWord();
+            } else {
+                console.log("error 발생");
+            }
+        })();
+    };
+
+    const getWord = () => {
+        (async () => {
             const res = await privateFetch("/news/word/" + clickedWord, "GET");
             if (res.status === 200) {
                 const data = await res.json();
@@ -81,12 +101,30 @@ function Modal({
                 console.log("error 발생");
             }
         })();
-    }, []);
+    };
+    useEffect(() => {
+        centerModal();
+        getWord();
+    }, [clickedWord]);
     return (
         <>
             <div className={styles.modal_container} id="modal">
                 <div className={styles.title}>
-                    <div className={styles.title_word}>{clickedWord}</div>
+                    <div className={styles.title_word}>
+                        {clickedWord}
+                        {word?.exist ? (
+                            <FillBookmarkIcon
+                                className={styles.bookmark_button}
+                                onClick={deleteWord}
+                            />
+                        ) : (
+                            <EmptyBookmarkIcon
+                                className={styles.bookmark_button}
+                                onClick={saveWord}
+                            />
+                        )}
+                    </div>
+
                     <CloseModalIcon
                         className={styles.exit_button}
                         onClick={(e: React.MouseEvent) => {

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRecoilState, RecoilRoot } from "recoil";
 import styles from "./wordgame_layout.module.css";
 import GameLogo from "../../../assets/wordgame-logo-icon.svg";
-import { gameWordListState, Item } from "../../../atoms/wordGame";
+import { gameWordListState, GameItem } from "../../../atoms/wordGame";
 import Link from "next/link";
 import { privateFetch } from "@/utils/http-commons";
 
