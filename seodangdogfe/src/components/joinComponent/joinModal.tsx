@@ -58,10 +58,9 @@ function Modal({
         console.log(userId, " 아이디 중복 체크");
 
         try {
-            const response = await publicFetch(
-                `/check-id?userId=${userId}`,
-                "POST"
-            );
+            const response = await publicFetch(`/check-id`, "POST", {
+                checkId,
+            });
 
             if (response.ok) {
                 if (response.msg == "POSSIBLE") {
