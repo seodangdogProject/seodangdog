@@ -151,6 +151,8 @@ export default function NewsContent({
           {isModalOpen && (
             <div className={cx("word-modal-container")}>
               <Modal
+                setWordList={setWordList}
+                wordSeq={clickedWord.wordSeq}
                 isOpen={isModalOpen}
                 clickedWord={clickedWord.word}
                 onClose={() => {
