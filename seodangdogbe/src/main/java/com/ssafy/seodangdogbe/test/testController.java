@@ -52,7 +52,7 @@ public class testController {
         return ResponseEntity.ok("ok");
     }
 
-    @GetMapping("/check-id")
+    @PostMapping("/check-id")
     public ResponseEntity<MessageResponseDto> checkId(@RequestBody ReqUserIdDto userIdDto){
         if (userService.checkIdExists(userIdDto.getUserId())){
             return ResponseEntity.ok().body(new MessageResponseDto("IMPOSSIBLE"));

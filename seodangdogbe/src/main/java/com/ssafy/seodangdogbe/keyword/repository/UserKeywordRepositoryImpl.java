@@ -8,12 +8,12 @@ import com.ssafy.seodangdogbe.news.service.FastApiService;
 import com.ssafy.seodangdogbe.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.LazyBSONList;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     public MessageResponseDto decrementKeywordWeight(User user, List<NewsRefreshReqDto> newsRefreshReqDtoList, double highWeight, double rowWeight) {
         List<Long> seeNewsSeq = new ArrayList<>();
         List<Long> notSeenNewsSeq = new ArrayList<>();
-        loseWeightFastReqDto dto = new loseWeightFastReqDto();
+        updateWeightFastReqDto dto = new updateWeightFastReqDto();
         List<InfoDto> infoDtos = new ArrayList<>();
 
         // 만약 안본 두개의 뉴스의 키워드가 중복된다면 -> 두번 내리는거 맞는지 물어봐야됨
@@ -91,9 +91,9 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     @Transactional
     public MessageResponseDto decrementKeywordWeightV2(User user, List<DeWeightReqDto> deWeightReqDtoList) {
 
-        log.info("deWeightdto : ",deWeightReqDtoList);
+        System.out.println(deWeightReqDtoList);
         List<DeWeightReqDto.KeywordInfo> list = DeWeightReqDto.extractKeywordInfoList(deWeightReqDtoList);
-        loseWeightFastReqDto dto = new loseWeightFastReqDto();
+        updateWeightFastReqDto dto = new updateWeightFastReqDto();
 
         // 가중치 낮추기
         updateAll(user, list);
@@ -101,6 +101,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
         // fast Api로 전송하기
         dto.setUserSeq(user.getUserSeq());
         dto.setInfo(DeWeightReqDto.extractInfoDtoList(deWeightReqDtoList));
+        System.out.println(dto);
 
         // fastApi로 전송
         log.info("fast api 요청 dto " , dto);
@@ -163,7 +164,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
         queryFactory
                 .update(userKeyword)
-                .set(userKeyword.weight, userKeyword.weight.multiply(weight))
+                .set(userKeyword.weight, userKeyword.weight.multiply(weight).multiply(1e10).divide(1e10))
                 .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(newskeywordList))
                 .execute();
 
@@ -192,7 +193,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     @Transactional
     public void updateAll(User user, List<DeWeightReqDto.KeywordInfo> list) {
-        String sql = "UPDATE user_keyword SET weight = weight / 2 " +
+        String sql = "UPDATE user_keyword SET weight = ROUND(weight / 2, 10) " +
                 "WHERE user_seq =? AND keyword = ?";
 
         jdbcTemplate.batchUpdate(sql,

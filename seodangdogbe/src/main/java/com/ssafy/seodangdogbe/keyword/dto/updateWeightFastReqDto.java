@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class loseWeightFastReqDto {
+public class updateWeightFastReqDto {
     @JsonProperty("user_seq")
     int userSeq;
     List<InfoDto> info;
