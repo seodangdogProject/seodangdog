@@ -1,137 +1,147 @@
 .container {
-    display: flex;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
-    max-width: 100%;
-    height: 100vh;
-    background-color: #ffffff;
+  display: flex;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  max-width: 100%;
+  height: 100vh;
+  background-color: #ffffff;
 }
 
 .content_cotainer {
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
-    width: 90%;
-    height: 90%;
-    background-color: rgba(240, 244, 255, 1);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
+  width: 90%;
+  height: 90%;
+  background-color: rgba(240, 244, 255, 1);
 }
 
 .header {
-    display: flex;
-    height: 20%;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
-    font-family: "Pretendard-Regula";
-    font-weight: 900;
-    font-size: 60px;
-    color: rgba(73, 57, 113, 1);
+  display: flex;
+  height: 20%;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  font-family: "NanumMyeongjo";
+  font-weight: 900;
+  font-size: 60px;
+  color: rgba(73, 57, 113, 1);
 }
 .main_cotainer {
-    height: 70%;
-    display: flex;
-    justify-content: center; /* 수평 가운데 정렬 */
+  height: 70%;
+  display: flex;
+  justify-content: center; /* 수평 가운데 정렬 */
 }
 
 .left_container,
 .right_container {
-    padding: 20px;
-    height: 50%;
-    max-height: 90%;
-    position: relative;
-    align-items: flex-start;
-    display: flex;
-    flex: 1;
-    width: 50%;
-    flex-wrap: wrap;
-    width: calc(50% - 85px);
+  padding: 20px;
+  height: 50%;
+  max-height: 90%;
+  position: relative;
+  align-items: flex-start;
+  display: flex;
+  flex: 1;
+  width: 50%;
+  flex-wrap: wrap;
+  width: calc(50% - 85px);
 }
 
 .left_container {
-    margin-right: 100px;
+  margin-right: 100px;
 }
 
 .right_container {
-    margin-left: 100px;
+  margin-left: 100px;
 }
 
 .vertical_line {
-    width: 1px;
-    height: 100%;
-    border-left: 1px dashed black; /* 선을 점선으로 설정 */
-    display: flex;
-    align-self: center; /* 세로 선을 수직으로 가운데 정렬 */
-    position: relative; /* 상대 위치 지정 */
+  width: 1px;
+  height: 100%;
+  border-left: 1px dashed black; /* 선을 점선으로 설정 */
+  display: flex;
+  align-self: center; /* 세로 선을 수직으로 가운데 정렬 */
+  position: relative; /* 상대 위치 지정 */
 }
 
 .circle {
-    padding: 40px;
-    width: 150px; /* 동그라미의 너비 */
-    height: 150px; /* 동그라미의 높이 */
-    background-color: white; /* 동그라미의 배경색 */
-    border-radius: 50%; /* 동그라미를 둥글게 만듦 */
-    position: absolute; /* 절대 위치 지정 */
-    border: 10px solid rgba(240, 244, 255, 1);
-    top: 50%; /* 세로 중앙으로 이동 */
-    transform: translate(-50%, -50%); /* 동그라미를 세로 중앙에 정렬 */
+  padding: 40px;
+  width: 150px; /* 동그라미의 너비 */
+  height: 150px; /* 동그라미의 높이 */
+  background-color: white; /* 동그라미의 배경색 */
+  border-radius: 50%; /* 동그라미를 둥글게 만듦 */
+  position: absolute; /* 절대 위치 지정 */
+  border: 10px solid rgba(240, 244, 255, 1);
+  top: 50%; /* 세로 중앙으로 이동 */
+  transform: translate(-50%, -50%); /* 동그라미를 세로 중앙에 정렬 */
 
-    display: flex;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
+  display: flex;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
 }
 
 .footer {
-    justify-content: space-between; /* 요소들을 좌우로 분산 배치 */
-    font-family: "hunminjungum";
-    color: gray;
-    display: flex;
-    padding-right: 40px;
-    margin-bottom: 20px;
-    /* justify-content: center; 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
+  justify-content: space-between; /* 요소들을 좌우로 분산 배치 */
+  font-family: "hunminjungum";
+  color: gray;
+  display: flex;
+  padding-right: 40px;
+  margin-bottom: 20px;
+  /* justify-content: center; 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
 }
 
 .des_text {
-    margin-left: 50px;
+  margin-left: 50px;
 }
 
 .score {
-    font-family: "Pretendard-Regular";
-    font-size: 100px;
-    color: rgba(112, 0, 255, 1);
-    margin-bottom: 30px;
+  font-family: "Pretendard-Regular";
+  font-size: 100px;
+  color: rgba(112, 0, 255, 1);
+  margin-bottom: 30px;
 }
 
 .per {
-    font-family: "Pretendard-Regular";
-    font-size: 120px;
-    color: gray;
+  font-family: "Pretendard-Regular";
+  font-size: 120px;
+  color: gray;
 }
 
 .ten {
-    font-family: "Pretendard-Regular";
-    margin-top: 20px;
-    font-size: 30px;
-    color: rgba(84, 84, 84, 1);
+  font-family: "Pretendard-Regular";
+  margin-top: 20px;
+  font-size: 30px;
+  color: rgba(84, 84, 84, 1);
 }
 
 .wordBox {
-    position: relative;
-    flex-shrink: 0; /* 요소들이 줄어들지 않도록 설정 */
-    margin: 10px; /* 요소 사이의 간격 설정 */
-    margin-bottom: 0px; /* 단어 상자 간의 세로 간격 조정 */
-    box-sizing: border-box;
-    height: 50px;
-    display: flex;
-    padding: 10px;
-    background-color: white;
-    border-radius: 15px;
-    font-size: 20px;
-    font-family: "NanumMyeongjo";
-    cursor: pointer;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
+  position: relative;
+  flex-shrink: 0;
+  margin: 12px;
+  margin-bottom: 0px;
+  box-sizing: border-box;
+  height: 50px;
+  display: flex;
+  padding: 15px;
+  background-color: white;
+  border-radius: 15px; /* More rounded corners */
+  font-size: 25px;
+  font-family: "NanumMyeongjo";
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  border: none; /* Assuming you want to remove the border for a smoother look */
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2); /* Subtle 3D shadow */
+  transition: all 0.3s ease; /* Smooth transition for interactions */
 }
 
-.wordBox:hover {
-    box-shadow: 2px 2px 2px 2px lightslategray;
+.wordBox:hover,
+.wordBox:focus {
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.4); /* Deeper shadow on hover/focus */
+  transform: translateY(-5px); /* Slightly raise the box */
+}
+
+.wordBox:active {
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Smaller shadow for pressed effect */
+  transform: translateY(-2px); /* Less raised to mimic pressing down */
 }
