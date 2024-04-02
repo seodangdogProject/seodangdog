@@ -20,6 +20,7 @@ export default function Summary({
 }) {
   const cx = classNames.bind(styled);
   const textareaEl = useRef<HTMLTextAreaElement>(null);
+  const texts = ["기사를 읽고 요약문을 작성해보세요."];
 
   // METHOD
   function userSummaryHandler() {
@@ -34,6 +35,11 @@ export default function Summary({
               제출
             </div>
           ) : null} */}
+          {!isSolved && (
+            <div className={cx("desc-text")}>
+              기사를 읽고 요약문을 작성해보세요.
+            </div>
+          )}
 
           <div className={cx("user-summary", ["box-shodow-custom"])}>
             {!isSolved && solveQuiz !== undefined ? (
