@@ -133,7 +133,9 @@ export default function Quiz({
               >
                 <div
                   className={cx("case__number", {
-                    answer: answerList[currentQuizNumber - 1] === Number(key),
+                    answer:
+                      answerList &&
+                      answerList[currentQuizNumber - 1] === Number(key),
                   })}
                 >
                   ({key})
