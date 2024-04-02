@@ -10,7 +10,7 @@
   height: 100%;
   transform-style: preserve-3d;
   /* perspective: 1000px; */
-  font-family: "David Libre", serif;
+  font-family: "realhambaknoon";
   font-weight: bold;
 }
 
@@ -58,7 +58,7 @@
   margin: 0;
   padding: 0;
   font-size: 15em;
-  color: red;
+  color: #493971;
 }
 
 @keyframes animate {
