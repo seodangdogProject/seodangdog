@@ -15,8 +15,8 @@ interface wordCloudProps {
 
 const WordCloud = (props: wordCloudProps) => {
     useEffect(() => {}, []);
-    const fontsize: [number, number] = [20, 60];
-    const rotatingAngle: [number, number] = [0, 60];
+    const fontsize: [number, number] = [30, 80];
+    const rotatingAngle: [number, number] = [-60, 60];
     const options: Options = {
         colors: [
             "#1f77b4",
@@ -37,7 +37,7 @@ const WordCloud = (props: wordCloudProps) => {
         fontStyle: "normal",
         fontWeight: "bolder",
         padding: 1,
-        rotations: 2,
+        rotations: 20,
         rotationAngles: rotatingAngle,
         scale: "linear" as Scale,
         spiral: "archimedean",

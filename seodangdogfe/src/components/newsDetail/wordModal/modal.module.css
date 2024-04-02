@@ -60,6 +60,12 @@
     font-weight: bold;
     padding-left: 10px;
     font-size: 45px;
+    display: flex;
+}
+
+.bookmark_button {
+    width: 20px;
+    height: 20px;
 }
 
 .exit_button {

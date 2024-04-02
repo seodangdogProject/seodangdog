@@ -98,7 +98,6 @@ export default function Quiz({
   }
   return (
     <>
-      <button onClick={() => console.log(answerList)}>asd</button>
       <div className={cx("quiz-container", "not-solve")}>
         <Timer currentQuizNumber={currentQuizNumber} />
         {isCorrect && (
@@ -142,7 +141,9 @@ export default function Quiz({
               >
                 <div
                   className={cx("case__number", {
-                    answer: answerList[currentQuizNumber - 1] === Number(key),
+                    answer:
+                      answerList &&
+                      answerList[currentQuizNumber - 1] === Number(key),
                   })}
                 >
                   ({key})

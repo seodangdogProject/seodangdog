@@ -10,10 +10,11 @@ export default function Cover({ setCurrentQuiz }: Props) {
   const [gameStart, setGameStart] = useState(false);
 
   function gameStartHandler() {
-    // setGameStart(true);
-    // setTimeout(() => {
-    setCurrentQuiz(1);
-    // }, 3000);
+    const timer = setGameStart(true);
+    const time = setTimeout(() => {
+      setCurrentQuiz(1);
+    }, 3000);
+    return () => clearInterval(time);
   }
   return (
     <>

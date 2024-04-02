@@ -1,16 +1,42 @@
 /* variables */
 :root {
-    --light-purple: #f6f7fb;
+  --light-purple: #f6f7fb;
+  /* 로딩관련 */
+  --hue: 223;
+  --sat: 90%;
+  --bg: hsl(var(--hue), var(--sat), 90%);
+  --fg: hsl(var(--hue), var(--sat), 10%);
+  --bar-light-t: 60%;
+  --bar-light-l: 50%;
+  --bar-light-r: 40%;
+  --bar-a-hue: 223;
+  --bar-a-t: hsl(var(--bar-a-hue), var(--sat), var(--bar-light-t));
+  --bar-a-l: hsl(var(--bar-a-hue), var(--sat), var(--bar-light-l));
+  --bar-a-r: hsl(var(--bar-a-hue), var(--sat), var(--bar-light-r));
+  --bar-b-hue: 253;
+  --bar-b-t: hsl(var(--bar-b-hue), var(--sat), var(--bar-light-t));
+  --bar-b-l: hsl(var(--bar-b-hue), var(--sat), var(--bar-light-l));
+  --bar-b-r: hsl(var(--bar-b-hue), var(--sat), var(--bar-light-r));
+  --bar-c-hue: 283;
+  --bar-c-t: hsl(var(--bar-c-hue), var(--sat), var(--bar-light-t));
+  --bar-c-l: hsl(var(--bar-c-hue), var(--sat), var(--bar-light-l));
+  --bar-c-r: hsl(var(--bar-c-hue), var(--sat), var(--bar-light-r));
+  --bar-d-hue: 313;
+  --bar-d-t: hsl(var(--bar-d-hue), var(--sat), var(--bar-light-t));
+  --bar-d-l: hsl(var(--bar-d-hue), var(--sat), var(--bar-light-l));
+  --bar-d-r: hsl(var(--bar-d-hue), var(--sat), var(--bar-light-r));
+  --bar-shadow-op: 0.4;
+  --trans-dur: 0.3s;
 }
 
 /* commons */
 .bg-light-purple {
-    background-color: var(--light-purple);
+  background-color: var(--light-purple);
 }
 .box-shodow-custom {
-    box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
-    border-radius: 15px;
-    background-color: #fff;
+  box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.16);
+  border-radius: 15px;
+  background-color: #fff;
 }
 
 /* fonts */
@@ -23,49 +49,49 @@
 } */
 
 @font-face {
-    font-family: "hunminjungum";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff")
-        format("truetype");
-    font-weight: normal;
-    font-style: normal;
+  font-family: "hunminjungum";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff")
+    format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: "realhambaknoon";
-    font-weight: 200;
-    src: url("/fonts/SF함박눈TTF.ttf") format("truetype");
+  font-family: "realhambaknoon";
+  font-weight: 200;
+  src: url("/fonts/SF함박눈TTF.ttf") format("truetype");
 }
 @font-face {
-    font-family: "hambaknoon";
-    font-weight: 200;
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff")
-        format("truetype");
+  font-family: "hambaknoon";
+  font-weight: 200;
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff")
+    format("truetype");
 }
 @font-face {
-    font-family: "pretendard";
-    font-weight: 200;
-    src: url("/fonts/pretendardVariable.ttf") format("truetype");
+  font-family: "pretendard";
+  font-weight: 200;
+  src: url("/fonts/pretendardVariable.ttf") format("truetype");
 }
 @font-face {
-    font-family: "Pretendard-Regular";
-    src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
-        format("woff");
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "NanumMyeongjo";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff")
-        format("woff");
-    font-style: normal;
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: "RealNanumMyeongjo";
-    src: url("https://cdn.jsdelivr.net/gh/webfontworld/naver/NanumMyeongjoB.woff2")
-        format("woff");
-    font-style: normal;
+  font-family: "NanumMyeongjo";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff")
+    format("woff");
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "RealNanumMyeongjo";
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/naver/NanumMyeongjoB.woff2")
+    format("woff");
+  font-style: normal;
 }
 /* reset css */
 
@@ -150,12 +176,12 @@ time,
 mark,
 audio,
 video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -169,34 +195,34 @@ hgroup,
 menu,
 nav,
 section {
-    display: block;
+  display: block;
 }
 body {
-    line-height: 1;
+  line-height: 1;
 }
 ol,
 ul {
-    list-style: none;
+  list-style: none;
 }
 blockquote,
 q {
-    quotes: none;
+  quotes: none;
 }
 blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-    content: "";
-    content: none;
+  content: "";
+  content: none;
 }
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 ::selection {
-    background-color: rgb(193, 171, 255, 0.4);
+  background-color: rgb(193, 171, 255, 0.4);
 }

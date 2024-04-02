@@ -32,7 +32,6 @@ export default function Timer({
 
   return (
     <>
-      {currentQuizNumber}
       <div className={cx("container")}>
         <div className={cx("timer-img")}>
           <img src="/timer-icon.svg" alt="" />

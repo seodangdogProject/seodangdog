@@ -62,6 +62,7 @@
   font-family: "NanumMyeongjo";
   width: 100%; /* textarea의 너비를 부모 요소에 맞게 설정 */
   height: 100%; /* textarea의 높이를 부모 요소에 맞게 설정 */
+  height: 140px;
   box-sizing: border-box; /* textarea의 크기가 padding과 border를 포함하도록 설정 */
   resize: none; /* 사용자가 textarea 크기를 조절하지 못하도록 설정 */
   border: 0px dashed #ccc; /* 원하는 경우 border 설정 */

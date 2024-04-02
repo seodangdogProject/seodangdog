@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation.js";
 import { useEffect, useState } from "react";
-import Loading from "./loading.tsx";
+import Loading from "@/app/loading1";
 // @ts-ignore
 // eslint-disable-next-line react/display-name
 export const withAuth = (Component) => (props) => {
@@ -17,7 +17,11 @@ export const withAuth = (Component) => (props) => {
     }
   }, []);
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div style={{ width: "100%", height: "100vh", backgroundColor: "red" }}>
+        <Loading />
+      </div>
+    );
   } else {
     return <Component {...props} />;
   }
