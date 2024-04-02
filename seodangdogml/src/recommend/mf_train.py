@@ -5,7 +5,6 @@ import numpy as np
 from sklearn.utils import shuffle
 import pickle
 import os
-import time
 import multiprocessing
 
 router = APIRouter()
