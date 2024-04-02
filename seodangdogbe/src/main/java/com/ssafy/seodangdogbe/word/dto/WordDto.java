@@ -15,6 +15,9 @@ public class WordDto {
     @Getter
     @NoArgsConstructor
     public static class MetaWordDto {
+        @Setter
+        private boolean isExist;
+
         private String word;
         private String wordLang;
         private int total;
