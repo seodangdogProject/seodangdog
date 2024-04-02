@@ -93,6 +93,12 @@ export default function RankingNewsContainer() {
                         {newsList[0].newsTitle}
                       </div>
                       <div className={cx("first__card__content__date")}>
+                        {category === "most-view" ? (
+                          <>조회수 {newsList[0].countView}회 • &nbsp;</>
+                        ) : (
+                          <>풀이수 {newsList[0].countSolved}회 • &nbsp;</>
+                        )}
+
                         {changeDateFormat(newsList[0].newsCreatedAt)}
                       </div>
                     </div>
@@ -117,6 +123,11 @@ export default function RankingNewsContainer() {
                         {newsList[1].newsDescription}
                       </div>
                       <div className={cx("date")}>
+                        {category === "most-view" ? (
+                          <>조회수 {newsList[1].countView}회 • &nbsp;</>
+                        ) : (
+                          <>풀이수 {newsList[1].countSolved}회 • &nbsp;</>
+                        )}
                         {changeDateFormat(newsList[1].newsCreatedAt)}
                       </div>
                     </div>
@@ -139,6 +150,11 @@ export default function RankingNewsContainer() {
                         {newsList[2].newsDescription}
                       </div>
                       <div className={cx("date")}>
+                        {category === "most-view" ? (
+                          <>조회수 {newsList[2].countView}회&nbsp; • &nbsp;</>
+                        ) : (
+                          <>풀이수 {newsList[2].countSolved}회 &nbsp;• &nbsp;</>
+                        )}
                         {changeDateFormat(newsList[2].newsCreatedAt)}
                       </div>
                     </div>
@@ -169,6 +185,11 @@ export default function RankingNewsContainer() {
                             {item.newsDescription}
                           </div>
                           <div className={cx("date")}>
+                            {category === "most-view" ? (
+                              <>조회수 {item.countView}회&nbsp; • &nbsp;</>
+                            ) : (
+                              <>풀이수 {item.countSolved}회 &nbsp;• &nbsp;</>
+                            )}
                             {changeDateFormat(item.newsCreatedAt)}
                           </div>
                         </div>

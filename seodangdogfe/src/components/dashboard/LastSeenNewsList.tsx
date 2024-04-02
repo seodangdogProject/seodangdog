@@ -24,7 +24,7 @@ function CardNews({ data }: { data: newsDetailThumbnail }) {
       <div className={styled.desc}>
         <div className={styled.title}>{data.newsTitle}</div>
         <div className={styled.meta}>
-          조회수 {data.countView} | {changeDateFormat(data.newsCreatedAt)}
+          조회수 {data.countView} • {changeDateFormat(data.newsCreatedAt)}
         </div>
         <div className={styled.company}>
           <img src={data.media} alt="" />
