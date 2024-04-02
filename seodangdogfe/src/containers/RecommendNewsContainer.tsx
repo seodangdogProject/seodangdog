@@ -21,6 +21,8 @@ export default function RecommendNewsContainer() {
   const userRecommendEl = useRef<HTMLDivElement>(null);
   const otherRecommendEl = useRef<HTMLDivElement>(null);
 
+  const [update, setUpdate] = useState(1);
+
   const router = useRouter();
 
   // recoil 변수
@@ -36,6 +38,7 @@ export default function RecommendNewsContainer() {
   }
 
   const refresh = () => {
+    setLoadingState(true);
     refreshKeyword()
       .then(() => {
         console.log("업데이트 요청");
@@ -43,6 +46,7 @@ export default function RecommendNewsContainer() {
       })
       .then(() => {
         console.log("재추천");
+        setUpdate((prev) => prev + 1);
         // 두 요청이 모두 완료된 후에 할 일
       })
       .then(() => {
@@ -124,9 +128,20 @@ export default function RecommendNewsContainer() {
   }
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
     setLoadingState(true);
     reMainRef();
   }, [category]);
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    reMainRef();
+  }, [update]);
 
   return (
     <>
