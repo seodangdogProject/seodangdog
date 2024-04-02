@@ -92,6 +92,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
             );
@@ -165,6 +166,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
             ))
@@ -267,6 +269,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
             );
@@ -297,6 +300,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
             );
@@ -326,6 +330,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
             );

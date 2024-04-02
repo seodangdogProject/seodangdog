@@ -21,6 +21,7 @@ public class NewsPreviewListDto {
     private String newsDescription;
     private LocalDateTime newsCreatedAt;
     private int countView;
+    private int countSolved;
     private String media;
     private List<String> newsKeyword;
 
@@ -33,6 +34,7 @@ public class NewsPreviewListDto {
         this.newsDescription = news.getNewsDescription();
         this.newsCreatedAt = news.getNewsCreatedAt();
         this.countView = news.getCountView();
+        this.countSolved = news.getCountSolve();
         this.media = news.getMedia().getMediaImgUrl();
         this.newsKeyword = news.getKeywordNewsList().stream()
                 .map(keywordNews -> keywordNews.getKeyword().getKeyword())

@@ -50,6 +50,7 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
             );
@@ -82,6 +83,7 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
             );
