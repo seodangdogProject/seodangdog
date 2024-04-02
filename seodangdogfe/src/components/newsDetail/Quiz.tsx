@@ -1,6 +1,9 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styled from "./Quiz.module.css";
 import classNames from "classnames/bind";
+import Timer from "./Timer";
+import CorrectIcon from "@/assets/correct-icon.svg";
+import UncorrectIcon from "@/assets/uncorrect-icon.svg";
 interface Props {
   setCurrentQuizNumber: Dispatch<SetStateAction<number>>;
   quizData: any[];
@@ -18,10 +21,34 @@ export default function Quiz({
   setCorrectList,
 }: Props) {
   const cx = classNames.bind(styled);
+  const [selectedAnswer, setSelectedAnswer] = useState(5);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [isUnCorrect, setIsUnCorrect] = useState(false);
+
+  useEffect(() => {
+    console.log("후후후", answerList);
+    const timer = setTimeout(() => {
+      // console.log("맞았나? : ", checkAnswer());
+      // moveToNextQuiz();
+      checkAnswer();
+      setTimeout(() => {
+        moveToNextQuiz();
+      }, 500);
+    }, 15000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [answerList, currentQuizNumber]);
+
+  useEffect(() => {
+    setIsCorrect(false);
+    setIsUnCorrect(false);
+  }, [currentQuizNumber]);
 
   // METHOD
   // 정답 고르면 실행 되는 함수
   function selectAnswer(ans: number) {
+    setSelectedAnswer(ans);
     setAnswerList((prev) => {
       let newArr = prev.slice();
       newArr[currentQuizNumber - 1] = ans;
@@ -31,24 +58,64 @@ export default function Quiz({
   }
 
   function moveToNextQuiz() {
+    // checkAnswer();
+    // setCorrectList((prev) => {
+    //   let newArr = prev.slice();
+    //   newArr[currentQuizNumber - 1] = checkAnswer();
+    //   return newArr;
+    // });
+    // console.log(checkAnswer())
+    checkAnswer();
     setCurrentQuizNumber(currentQuizNumber + 1);
-    setCorrectList((prev) => {
-      let newArr = prev.slice();
-      newArr[currentQuizNumber - 1] = checkAnswer();
-      return newArr;
-    });
   }
   function checkAnswer(): boolean {
+    console.log("checkAnswer");
     const isCorrect =
       Number(quizData[currentQuizNumber - 1].answer.number) ===
       answerList[currentQuizNumber - 1];
-    console.log("정답 : ", quizData[currentQuizNumber - 1].answer.number);
-    console.log("내가 고른 거 : ", answerList[currentQuizNumber - 1]);
+    // console.log("정답 : ", quizData[currentQuizNumber - 1].answer.number);
+    // console.log("anawerList : ", answerList);
+    // console.log("내가 고른 거 : ", answerList[currentQuizNumber - 1]);
+    if (isCorrect) {
+      setIsCorrect(true);
+    } else {
+      setIsUnCorrect(true);
+    }
+    setCorrectList((prev) => {
+      let newArr = prev.slice();
+      newArr[currentQuizNumber - 1] = isCorrect;
+      return newArr;
+    });
     return isCorrect;
   }
   return (
     <>
-      <div className={cx("quiz-container")}>
+      <button onClick={() => console.log(answerList)}>asd</button>
+      <div className={cx("quiz-container", "not-solve")}>
+        <Timer currentQuizNumber={currentQuizNumber} />
+        {isCorrect && (
+          <CorrectIcon
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              marginLeft: "5%",
+              transform: "translate(-50%, -50%)",
+            }}
+          ></CorrectIcon>
+        )}
+
+        {isUnCorrect && (
+          <UncorrectIcon
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              marginLeft: "5%",
+              transform: "translate(-50%, -50%)",
+            }}
+          ></UncorrectIcon>
+        )}
         <div className={cx("quiz-content")}>
           <h4 className={cx("question")}>
             <div>{currentQuizNumber}. </div>
@@ -66,7 +133,9 @@ export default function Quiz({
               >
                 <div
                   className={cx("case__number", {
-                    answer: answerList[currentQuizNumber - 1] === Number(key),
+                    answer:
+                      answerList &&
+                      answerList[currentQuizNumber - 1] === Number(key),
                   })}
                 >
                   ({key})

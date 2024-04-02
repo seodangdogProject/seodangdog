@@ -116,6 +116,7 @@ export default function RecommendNewsContainer() {
                 }
 
                 setNewsList(subArrays);
+                console.log(subArrays);
 
                 if (newsData) {
                     const updatedReqList = newsData.map((item, idx) =>

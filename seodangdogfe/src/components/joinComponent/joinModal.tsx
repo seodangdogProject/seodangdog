@@ -9,6 +9,7 @@ import ClosePassword from "../../assets/closePassword-icon.svg";
 import CloseModal from "../../assets/closeModal-icon.svg";
 import JoinLogo from "../../assets/joinLogo-icon.svg";
 import { publicFetch } from "@/utils/http-commons";
+import { tree } from "next/dist/build/templates/app-page";
 
 const Backdrop = styled.div`
     width: 100vw;
@@ -34,6 +35,7 @@ function Modal({
     let [inputType, setInputType] = useState("password");
     let [closeVisible, setCloseVisibleVisible] = useState(true);
     let [openVisible, setOpenVisibleVisible] = useState(false);
+    let [checkId, setCheckId] = useState(false);
 
     // 서버로 보낼 데이터들
     const idEl = useRef<HTMLInputElement>(null);
@@ -53,17 +55,21 @@ function Modal({
 
     const idCheck = async () => {
         const userId = idEl.current ? idEl.current.value : "";
+        console.log(userId, " 아이디 중복 체크");
 
         try {
-            const response = await publicFetch("/idCheck", "POST", {
-                userId,
-            });
+            const response = await publicFetch(
+                `/check-id?userId=${userId}`,
+                "POST"
+            );
 
             if (response.ok) {
-                if (response.msg == "AVAILABLE") {
+                if (response.msg == "POSSIBLE") {
                     alert("사용가능한 아이디 입니다.");
+                    setCheckId(true);
                 } else {
                     alert("이미 존재하는 아이디 입니다.");
+                    setCheckId(false);
                 }
             } else {
                 console.error("아이디 체크 실패");
@@ -95,6 +101,11 @@ function Modal({
 
         if (!nickname) {
             alert("닉네임은 필수 입력 사항입니다.");
+            return;
+        }
+
+        if (!checkId) {
+            alert("아이디를 중복체크 해주세요");
             return;
         }
 
@@ -168,7 +179,7 @@ function Modal({
                             />
                             <div
                                 className={styles.id_check_btn}
-                                onClick={passwordToggle}
+                                onClick={idCheck}
                             >
                                 중복 체크
                             </div>
@@ -191,7 +202,7 @@ function Modal({
                         <div>
                             <input
                                 type={inputType}
-                                id="username"
+                                id="password"
                                 name="inputPassword"
                                 placeholder="비밀번호"
                                 ref={passwordEl}
@@ -212,7 +223,7 @@ function Modal({
                         <div>
                             <input
                                 type={inputType}
-                                id="username"
+                                id="passwordcheck"
                                 name="inputPassword"
                                 placeholder="비밀번호 확인"
                                 ref={passwordCheckEl}
