@@ -46,7 +46,7 @@ def train_mf_model():
 
     # ratings에 아무것도 없으면 에러 발생(학습데이터가 없기때문에)
     ratings = pd.DataFrame(ratings)
-    print(ratings)
+
     # 중복제거(디비의 무결성이 보장되면 필요없음)
     ratings = ratings.drop_duplicates(subset=['user_id', 'news_id'])
 
