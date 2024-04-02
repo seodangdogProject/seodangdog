@@ -47,11 +47,15 @@ export default function NewsDetailContainer() {
         }
         console.log(resData);
         setIsSolved(resData.solved);
-        setAnswerList(
-          resData.userAnswerList !== null && resData.userAnswerList.length === 0
-            ? Array(3).fill(5)
-            : resData.userAnswerList
-        );
+        console.log("useAnswerList : ", resData.userAnswerList);
+        if (
+          resData.userAnswerList === null ||
+          resData.userAnswerList.length === 0
+        ) {
+          setAnswerList(Array(3).fill(5));
+        } else {
+          setAnswerList(resData.userAnswerList);
+        }
         setKeywords(keywordList);
         setData(resData);
         setQuizData(resData.newsQuiz);
