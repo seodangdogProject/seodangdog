@@ -91,7 +91,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     @Transactional
     public MessageResponseDto decrementKeywordWeightV2(User user, List<DeWeightReqDto> deWeightReqDtoList) {
 
-        log.info("deWeightdto : ",deWeightReqDtoList);
+        System.out.println(deWeightReqDtoList);
         List<DeWeightReqDto.KeywordInfo> list = DeWeightReqDto.extractKeywordInfoList(deWeightReqDtoList);
         loseWeightFastReqDto dto = new loseWeightFastReqDto();
 
@@ -101,6 +101,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
         // fast Api로 전송하기
         dto.setUserSeq(user.getUserSeq());
         dto.setInfo(DeWeightReqDto.extractInfoDtoList(deWeightReqDtoList));
+        System.out.println(dto);
 
         // fastApi로 전송
         log.info("fast api 요청 dto " , dto);
