@@ -34,6 +34,7 @@ public class KeywordService {
     }
 
     // 클릭 시 해당 뉴스 키워드 증가
+    @Transactional
     public void addKeywordListWeight(User user, List<String> newsKeywordList, double weight){
         userKeywordRepository.incrementClickedKeywordWeight(user, newsKeywordList, weight);
     }
