@@ -69,7 +69,7 @@ const WordResult: React.FC = () => {
         <div className={styles.content_cotainer}>
           <div className={styles.header}>SCORE</div>
           <div className={styles.main_cotainer}>
-            <div className={styles.score}></div>
+            {/* <div className={styles.score}></div> */}
             <div className={styles.left_container}>
               {correctWordList.map((item, index) => (
                 <div
