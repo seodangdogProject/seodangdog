@@ -66,7 +66,7 @@ public class MypageRecentNewsRepositoryImpl implements MypageRecentNewsRepositor
                 .join(qUserNews).on(QNews.news.newsSeq.eq(QUserNews.userNews.news.newsSeq))
                 .where(QUserNews.userNews.user.userSeq.eq(userSeq)
                         .and(QUserNews.userNews.isSolved.eq(false)))
-                .orderBy(QNews.news.createdAt.desc())
+                .orderBy(QNews.news.modifiedAt.desc())
                 .limit(20)
                 .fetch();
 
