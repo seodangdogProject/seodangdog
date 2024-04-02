@@ -11,12 +11,12 @@ function RootLayout({
 }>) {
   return (
     <>
-      <main className={style.main}>
-        <RecoilRoot>
+      <RecoilRoot>
+        <main className={style.main}>
           <NavBar />
-        </RecoilRoot>
-        <section className={style.section}>{children}</section>
-      </main>
+          <section className={style.section}>{children}</section>
+        </main>
+      </RecoilRoot>
     </>
   );
 }

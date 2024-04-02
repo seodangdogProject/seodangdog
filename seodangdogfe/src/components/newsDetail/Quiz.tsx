@@ -90,7 +90,6 @@ export default function Quiz({
   }
   return (
     <>
-      <button onClick={() => console.log(answerList)}>asd</button>
       <div className={cx("quiz-container", "not-solve")}>
         <Timer currentQuizNumber={currentQuizNumber} />
         {isCorrect && (
