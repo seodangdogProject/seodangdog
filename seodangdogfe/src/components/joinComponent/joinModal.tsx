@@ -59,11 +59,13 @@ function Modal({
 
         try {
             const response = await publicFetch(`/check-id`, "POST", {
-                checkId,
+                userId,
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                if (response.msg == "POSSIBLE") {
+                if (data.msg === "POSSIBLE") {
                     alert("사용가능한 아이디 입니다.");
                     setCheckId(true);
                 } else {
