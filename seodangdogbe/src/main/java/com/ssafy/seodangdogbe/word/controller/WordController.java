@@ -27,10 +27,22 @@ public class WordController {
     @Operation(description = "단어 뜻 조회 (순서: mongodb 탐색 -> api 호출)")
     @GetMapping("/word/{word}")
     public ResponseEntity<MetaWordDto> getWord(@PathVariable("word") String word) throws Exception {
+        int userSeq = userService.getUserSeq();
 
         // mongodb에 있는 경우
-        if (wordService.existsWord(word))
-            return ResponseEntity.ok().body(wordService.findMetaWord(word));
+        if (wordService.existsWord(word)) {
+            UserWordDto userWordDto = userWordService.findUserWord(userSeq, word);
+            MetaWordDto metaWordDto = wordService.findMetaWord(word);
+            if (userWordDto != null && !userWordDto.isDelete()){
+                System.out.println("단어장에 있음");
+                metaWordDto.setExist(true);
+            } else {
+                System.out.println("단어장에 없음");
+                metaWordDto.setExist(false);
+            }
+
+            return ResponseEntity.ok().body(metaWordDto);
+        }
 
 
         // mongodb에 없는 경우
@@ -67,6 +79,8 @@ public class WordController {
         // 검색결과가 있는 경우
         MetaWordDto metaWordDto = new MetaWordDto(word, wordLang, encycApiDto);
         wordService.saveMetaWordToMongodb(metaWordDto);
+
+        metaWordDto.setExist(false);    // mongodb에 없던 단어는 사용자의 단어장에도 있을 수 없다.
 
         return ResponseEntity.ok().body(metaWordDto);
     }
@@ -111,7 +125,7 @@ public class WordController {
 
 
 //    @Operation(description = "사용자단어 테이블에서 단어를 삭제한다.")
-//    @PatchMapping("/myword/{word}")  // or word
+    @PatchMapping("/myword/{word}")  // or word
     public ResponseEntity<MessageAlterResponseDto> removeUserWord(@PathVariable("word") String word){
         int userSeq = userService.getUserSeq();
         if (wordService.setDelete(userSeq, word))
@@ -125,5 +139,17 @@ public class WordController {
     public EncycApiDto callNEncyc(@RequestParam String word){
         System.out.println("백과사전 검색");
         return wordService.callNEncycSearchApi(word);
+    }
+
+    @GetMapping("/word/exist")
+    public boolean isExist(@RequestParam String word){
+        int userSeq = userService.getUserSeq();
+        UserWordDto userWordDto = userWordService.findUserWord(userSeq, word);
+        if (userWordDto != null && !userWordDto.isDelete()){
+            System.out.println("해당 단어가 단어장에 존재합니다.");
+            return true;
+        }
+        System.out.println("해당 단어가 단어장에 존재하지 않습니다.");
+        return false;
     }
 }
