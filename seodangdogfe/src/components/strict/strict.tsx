@@ -8,10 +8,9 @@ interface grassChart {
 }
 
 const GrassChart = (props: grassChart) => {
-    // 날짜별 활동 상태를 저장할 상태 변수
-    const [activityMap, setActivityMap] = useState<{
-        [date: string]: number;
-    }>({});
+    const [activityMap, setActivityMap] = useState<
+        Map<string, number> | undefined
+    >(new Map<string, number>());
 
     // 호버한 칸의 날짜를 저장할 상태 변수
     const [hoveredDate, setHoveredDate] = useState<string | null>(null);
@@ -19,22 +18,37 @@ const GrassChart = (props: grassChart) => {
 
     // 활동 데이터를 기반으로 활동 상태를 업데이트하는 함수
     const updateActivityMap = (dates: Map<string, number> | undefined) => {
-        const newActivityMap: { [date: string]: number } = {};
+        const newActivityMap: Map<string, number> = new Map<string, number>();
         console.log("dates", dates);
         if (dates === undefined) {
-            // setActivityMap();
+            setActivityMap(new Map<string, number>());
         } else {
-            // dates.forEach((date) => {
-            //     newActivityMap[date] = true;
-            // });
-            // setActivityMap(newActivityMap);
-            
-            Array.prototype.forEach.call(dates,(value, key) => {  
-                newActivityMap[key] = value;
-            });
+            for (const [key, value] of Object.entries(dates)) {
+                newActivityMap.set(key, value);
+            }
+
             setActivityMap(newActivityMap);
+            console.log(newActivityMap);
         }
     };
+
+    //  // 활동 데이터를 기반으로 활동 상태를 업데이트하는 함수
+    //  const updateActivityMap = (dates: string[] | undefined) => {
+    //     const newActivityMap: { [date: string]: boolean } = {};
+
+    //     console.log("dates", dates);
+    //     if (dates === undefined) {
+    //         // setActivityMap();
+    //     } else {
+    //         dates.forEach((date) => {
+    //             newActivityMap[date] = true;
+
+    //         Array.prototype.forEach.call(dates,(value, key) => {
+    //             newActivityMap[key] = value;
+    //         });
+    //         setActivityMap(newActivityMap);
+    //     }
+    // };
 
     useEffect(() => {
         updateActivityMap(props?.dates);
@@ -85,15 +99,21 @@ const GrassChart = (props: grassChart) => {
                                 const dateString = date
                                     .toISOString()
                                     .split("T")[0];
-                                const isActive = activityMap[dateString];
+                                const count = activityMap?.get(dateString);
                                 return (
                                     <div
                                         key={dateIndex}
                                         className={style.strictElement}
                                         style={{
-                                            backgroundColor: isActive
-                                                ? "#37b328"
-                                                : "#E2E2E2",
+                                            backgroundColor: count
+                                                ? count === 1
+                                                    ? "#dbb6ee" // count가 1인 경우
+                                                    : count === 2
+                                                    ? "#b57edc" // count가 2인 경우
+                                                    : count >= 3
+                                                    ? "#7f4ca5" // count가 3 이상인 경우
+                                                    : "#fff0ff" // count가 0이 아니고, 1, 2, 3 이상도 아닌 경우
+                                                : "#fff0ff", // count가 없는 경우
                                         }}
                                         onMouseEnter={() =>
                                             setHoveredDate(dateString)
@@ -104,19 +124,8 @@ const GrassChart = (props: grassChart) => {
                                     >
                                         {hoveredDate === dateString && (
                                             <div
+                                                className={style.hoverDock}
                                                 style={{
-                                                    position: "absolute",
-                                                    display: "flex",
-                                                    top: "-25px",
-                                                    left: "50%",
-                                                    width: "60px",
-                                                    transform:
-                                                        "translateX(-50%)",
-                                                    backgroundColor: "white",
-                                                    padding: "2px",
-                                                    borderRadius: "4px",
-                                                    boxShadow:
-                                                        "0 2px 4px rgba(0, 0, 0, 0.2)",
                                                     color:
                                                         today.getMonth() ==
                                                             date.getMonth() &&
@@ -128,7 +137,13 @@ const GrassChart = (props: grassChart) => {
                                             >
                                                 {`${
                                                     date.getMonth() + 1
-                                                }월${date.getDate()}일`}
+                                                }월${date.getDate()}일`}{" "}
+                                                <br /> 푼 뉴스 수 :{" "}
+                                                {count! >= 3
+                                                    ? "3+"
+                                                    : count! >= 1
+                                                    ? count
+                                                    : 0}
                                             </div>
                                         )}
                                     </div>

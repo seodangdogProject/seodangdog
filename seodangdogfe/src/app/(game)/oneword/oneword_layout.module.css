@@ -119,6 +119,7 @@
 }
 
 .characterBox input {
+<<<<<<< HEAD
   font-family: "NanumMyeongjo";
   font-weight: 900;
   border: none;
@@ -131,6 +132,20 @@
   width: 100%; /* 부모 요소에 대해 가득 채우기 위해 너비를 100%로 설정합니다. */
   height: 100%;
   box-sizing: border-box; /* 입력 요소의 패딩을 고려하여 전체 너비를 조정합니다. */
+=======
+    font-family: "NanumMyeongjo";
+    font-weight: 900;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 30px;
+    align-items: center;
+    text-align: center;
+    flex: 1; /* 입력 요소가 아이템을 가득 채우도록 설정합니다. */
+    width: 100%; /* 부모 요소에 대해 가득 채우기 위해 너비를 100%로 설정합니다. */
+    height: 100%;
+    box-sizing: border-box; /* 입력 요소의 패딩을 고려하여 전체 너비를 조정합니다. */
+>>>>>>> 185ebc275f950543099cb177ea90785593ebd964
 }
 
 .timer {

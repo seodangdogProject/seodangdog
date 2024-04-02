@@ -21,6 +21,8 @@ export default function RecommendNewsContainer() {
   const userRecommendEl = useRef<HTMLDivElement>(null);
   const otherRecommendEl = useRef<HTMLDivElement>(null);
 
+  const [update, setUpdate] = useState(1);
+
   const router = useRouter();
 
   // recoil 변수
@@ -36,6 +38,7 @@ export default function RecommendNewsContainer() {
   }
 
   const refresh = () => {
+    setLoadingState(true);
     refreshKeyword()
       .then(() => {
         console.log("업데이트 요청");
@@ -43,6 +46,7 @@ export default function RecommendNewsContainer() {
       })
       .then(() => {
         console.log("재추천");
+        setUpdate((prev) => prev + 1);
         // 두 요청이 모두 완료된 후에 할 일
       })
       .then(() => {
@@ -124,9 +128,20 @@ export default function RecommendNewsContainer() {
   }
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
     setLoadingState(true);
     reMainRef();
   }, [category]);
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    reMainRef();
+  }, [update]);
 
   return (
     <>
@@ -147,10 +162,6 @@ export default function RecommendNewsContainer() {
             >
               다른 사람 뉴스
             </div>
-          </div>
-
-          <div className={styled.refreshButton} onClick={() => refresh()}>
-            <RefreshIcon className={styled.icon} />
           </div>
         </div>
         <div className={cx("section", ["box-shodow-custom"])}>
@@ -187,37 +198,19 @@ export default function RecommendNewsContainer() {
                     ))}
                   </li>
                 ))}
+                {category === "user-recommend/v2" && (
+                  <div className={cx("refresh-container")}>
+                    <div
+                      className={styled.refreshButton}
+                      onClick={() => refresh()}
+                    >
+                      <RefreshIcon className={styled.icon} />
+                    </div>
+                  </div>
+                )}
               </ul>
             </>
           )}
-          {/* {newsList.map((subGroup, index) => (
-              <li key={index} className={cx("item-container")}>
-                {subGroup.map((item: any, idx: number) => (
-                  <div
-                    onClick={() => router.push("/news/" + item.newsSeq)}
-                    key={item.newsSeq}
-                    className={cx("line-item")}
-                  >
-                    <img
-                      src={
-                        item.newsImgUrl == "None"
-                          ? "/images/default-news-image.jpg"
-                          : item.newsImgUrl
-                      }
-                      alt=""
-                    />
-                    <div className={cx("title")}>{item.newsTitle}</div>
-                    <div className={cx("description")}>
-                      {item.newsDescription}
-                    </div>
-                    <div className={cx("date")}>
-                      조회수 {item.countView} •{" "}
-                      {changeDateFormat(item.newsCreatedAt)}
-                    </div>
-                  </div>
-                ))}
-              </li>
-            ))} */}
         </div>
       </div>
     </>
