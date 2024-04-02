@@ -8,7 +8,7 @@ import {
     gameWordListState,
     correctWordListState,
     unCorrectWordListState,
-    Item,
+    GameItem,
 } from "../../../atoms/wordGame";
 import styles from "./oneword_layout.module.css";
 import TimerIcon from "../../../assets/timer-icon.svg";
@@ -35,7 +35,7 @@ const OneWord: React.FC = () => {
 
     // 단어장에 추가하기
     const addItemToList = useCallback(
-        (flag: boolean, itemToAdd: Item): void => {
+        (flag: boolean, itemToAdd: GameItem): void => {
             if (flag) {
                 setCorrectWordList([...correctWordList, itemToAdd]);
             } else {
@@ -179,7 +179,6 @@ const OneWord: React.FC = () => {
             } else if (sec == 13) {
                 setIsAnswer(false);
                 if (currentIndex == wordList.length - 1) {
-                    alert("모든 문제가 끝남");
                     clearInterval(timer1);
                     router.push("/game_result");
                 } else {
@@ -233,7 +232,9 @@ const OneWord: React.FC = () => {
                         <span> /</span>
                         <span> {wordList.length}</span>
                     </div>
-                    <div className={styles.language}>한글</div>
+                    <div className={styles.language}>
+                        {wordList[currentIndex].isEng ? "영어" : "한글"}
+                    </div>
                     <div className={styles.meaning_container}>
                         <div
                             className={styles.meaning_des}

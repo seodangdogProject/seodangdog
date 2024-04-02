@@ -10,7 +10,7 @@ import {
     gameWordListState,
     correctWordListState,
     unCorrectWordListState,
-    Item,
+    GameItem,
 } from "../../../atoms/wordGame";
 import { privateFetch } from "@/utils/http-commons";
 
@@ -47,7 +47,7 @@ const WordResult: React.FC = () => {
     };
 
     // 이동
-    const handleOpenModal = (word: Item) => {
+    const handleOpenModal = (word: GameItem) => {
         setClickedWord((prevClickedWord) => word.word); // 함수형 업데이트 사용
         setOpenModal(true);
     };
