@@ -12,6 +12,7 @@ export default function Solved({
   cx,
   currentQuizNumber,
   setCurrentQuizNumber,
+  setUserSummary,
 }: {
   data: any;
   newsSeq: number;
@@ -21,6 +22,7 @@ export default function Solved({
   currentQuizNumber: number;
   cx: Function;
   setCurrentQuizNumber: Dispatch<SetStateAction<number>>;
+  setUserSummary: Dispatch<SetStateAction<string>>;
 }) {
   return (
     <>
@@ -53,9 +55,13 @@ export default function Solved({
           ) : (
             <Summary
               isSolved={true}
-              setUserSummary={data.userSummary.userSummaryContent} // 어차피 실행 안될거라서 막 넣어줌
+              setUserSummary={setUserSummary} // 어차피 실행 안될거라서 막 넣어줌
               newsSummary={data.newsSummary[0]}
-              userSummary={data.userSummary.userSummaryContent}
+              userSummary={
+                data.userSummary !== null
+                  ? data.userSummary.userSummaryContent
+                  : ""
+              }
               setCurrentQuizNumber={setCurrentQuizNumber}
             />
           )}
