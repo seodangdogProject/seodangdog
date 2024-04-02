@@ -127,7 +127,7 @@ function Modal({
                         onClick={loginHandler}
                         className={styles.login_button}
                     >
-                        LOGIN
+                        로그인
                     </button>
                 </div>
                 {/* <Link className={styles.login_button_container} href="/main">
