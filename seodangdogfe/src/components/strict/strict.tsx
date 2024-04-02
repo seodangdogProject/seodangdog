@@ -10,7 +10,7 @@ interface grassChart {
 const GrassChart = (props: grassChart) => {
     // 날짜별 활동 상태를 저장할 상태 변수
     const [activityMap, setActivityMap] = useState<{
-        [date: string]: number;
+        Map<string, number>
     }>({});
 
     // 호버한 칸의 날짜를 저장할 상태 변수
@@ -18,16 +18,31 @@ const GrassChart = (props: grassChart) => {
     const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
 
     // 활동 데이터를 기반으로 활동 상태를 업데이트하는 함수
-    const updateActivityMap = (dates: Map<string, number> | undefined) => {
-        const newActivityMap: { [date: string]: number } = {};
+    const updateActivityMap = (dates: Map<string, number>) => {
+        const newActivityMap :Map<string, number>= new Map<string, number>();
+        console.log("dates", dates);
+        if (dates === undefined) {
+            setActivityMap({});
+        } else {
+            for (const [key, value] of Object.entries(dates)) {
+                newActivityMap.set(key, value);
+              }
+
+            setActivityMap(newActivityMap);
+        }
+    };
+
+     // 활동 데이터를 기반으로 활동 상태를 업데이트하는 함수
+     const updateActivityMap = (dates: string[] | undefined) => {
+        const newActivityMap: { [date: string]: boolean } = {};
+    
         console.log("dates", dates);
         if (dates === undefined) {
             // setActivityMap();
         } else {
-            // dates.forEach((date) => {
-            //     newActivityMap[date] = true;
-            // });
-            // setActivityMap(newActivityMap);
+            dates.forEach((date) => {
+                newActivityMap[date] = true;
+            
             
             Array.prototype.forEach.call(dates,(value, key) => {  
                 newActivityMap[key] = value;
@@ -35,6 +50,7 @@ const GrassChart = (props: grassChart) => {
             setActivityMap(newActivityMap);
         }
     };
+
 
     useEffect(() => {
         updateActivityMap(props?.dates);

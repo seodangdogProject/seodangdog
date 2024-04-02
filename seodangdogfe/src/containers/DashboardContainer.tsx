@@ -4,7 +4,7 @@ import styled from "./DashboardContainer.module.css";
 import classNames from "classnames/bind";
 import RecentNewsPreview from "@/components/dashboard/RecentNewsPreview";
 import UserCard from "@/components/dashboard/UserCard";
-import Strict from "@/components/strict/strict";
+import Streak from "@/components/strict/strict";
 import Chart from "@/components/chart/chart";
 import WordCloud from "@/components/wordCloud/wordCloud";
 import { privateFetch } from "@/utils/http-commons";
@@ -65,7 +65,7 @@ export default function DashboardContainer() {
                             <div
                                 className={cx("streak", ["box-shodow-custom"])}
                             >
-                                <Strict dates={mypageDto?.streakList}></Strict>
+                                <Streak dates={mypageDto?.streakList}></Streak>
                             </div>
                         </div>
                         <div
