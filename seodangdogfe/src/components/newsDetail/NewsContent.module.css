@@ -60,6 +60,7 @@
   font-weight: 500;
   line-height: 1.3;
   white-space: pre-wrap;
+  font-size: 20px;
 }
 
 /* 단어 관련 */
@@ -151,11 +152,16 @@
 }
 .word-circle {
   position: relative;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  border: 3px solid #fbb853;
 }
 .word-circle img {
-  width: 60px;
+  /* width: 60px; */
+  width: 100%;
   position: absolute;
-  left: -8px;
+  left: 50%;
   top: -6px;
 }
 
