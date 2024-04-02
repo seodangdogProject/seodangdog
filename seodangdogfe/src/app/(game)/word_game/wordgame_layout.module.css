@@ -1,89 +1,109 @@
 .container {
-    display: flex;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
-    max-width: 100%;
-    height: 100vh;
-    background-color: white;
-    font-family: "NanumMyeongjo";
+  display: flex;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  max-width: 100%;
+  height: 100vh;
+  background-color: white;
+  font-family: "NanumMyeongjo";
+  min-width: 1000px;
 }
 
 .content_cotainer {
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
-    align-items: center; /* 수직 가운데 정렬 */
-    width: 90%;
-    height: 90%;
-    background-color: rgba(240, 244, 255, 1);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
+  align-items: center; /* 수직 가운데 정렬 */
+  width: 90%;
+  height: 90%;
+  background-color: rgba(240, 244, 255, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .logo {
-    font-family: "NanumMyeongjo";
-    margin-top: 70px;
+  font-family: "NanumMyeongjo";
+  margin-top: 70px;
 }
 
 .word_game_logo {
-    font-family: "NanumMyeongjo";
-    margin-top: 100px;
-    margin-bottom: 80px;
-    font-size: 80px;
-    font-weight: 900;
+  font-family: "NanumMyeongjo";
+  margin-top: 100px;
+  margin-bottom: 80px;
+  font-size: 80px;
+  font-weight: 900;
 }
 
 .word_count_box {
-    border-radius: 30px;
-    background-color: #fff;
-    padding: 20px;
-    display: flex;
-    font-size: 30px;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
-    margin-bottom: 20px;
-    font-weight: 1000;
+  border-radius: 30px;
+  background-color: #fff;
+  padding: 20px;
+  display: flex;
+  font-size: 30px;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  margin-bottom: 20px;
+  font-weight: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .des_container {
-    display: flex;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    font-size: 24px;
-    flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
 }
 
 .game_start_btn {
-    /* 시작하기 버튼*/
-    margin-top: 20px;
-    border-radius: 30px;
-    background-color: rgba(150, 150, 250, 1);
-    color: #fff;
-    font-size: 50px;
-    width: 200px;
-    height: 50px;
-    font-weight: bold;
-    border: none;
-    display: flex;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-left: 60px;
-    padding-right: 60px;
+  /* 시작하기 버튼*/
+  margin-top: 20px;
+  border-radius: 30px;
+  background-color: rgba(150, 150, 250, 1);
+  color: #fff;
+  font-size: 50px;
+  width: 200px;
+  height: 50px;
+  font-weight: bold;
+  border: 2px solid transparent;
+  display: flex;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease,
+    box-shadow 0.3s ease, border-color 0.3s ease;
+  padding: 20px 60px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.game_start_btn:hover {
+  background-color: rgba(
+    170,
+    170,
+    270,
+    1
+  ); /* 마우스 호버 시 밝은 색으로 변경 */
+  /* border-color: rgba(255, 255, 255, 0.5); 호버 시 테두리가 빛나게 */
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.6); /* 호버 시 그림자를 더 밝게 */
+}
+
+.game_start_btn:active {
+  transform: translateY(
+    4px
+  ); /* 클릭 시 버튼이 아래로 약간 이동하며 눌러지는 효과 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .footer {
-    margin-top: 50px;
+  margin-top: 2%;
 }
 
 .footer_text {
-    /* position: absolute; */
-    color: grey;
-    font-family: "hunminjungum";
-    display: flex;
-    text-align: left;
-    font-size: 15px;
+  /* position: absolute; */
+  color: grey;
+  font-family: "hunminjungum";
+  display: flex;
+  text-align: left;
+  font-size: 15px;
 }
