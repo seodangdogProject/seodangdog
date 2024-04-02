@@ -198,6 +198,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
 //            );
 //        }).collect(Collectors.toList());
 
+        // 사용자가 가진 키워드 리스트
         List<String> keywordList = queryFactory
                 .select(Projections.constructor(String.class, userKeyword.keyword.keyword))
                 .from(userKeyword)
@@ -209,9 +210,9 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
         System.out.println(keywordList.size());
 
         for (String k : reqKeywords.keySet()) {
-           if(keywordList.contains(k)){
+           if (keywordList.contains(k)){     // 사용자가 이미 갖고있는 키워드면
                alreadyKeyword.put(k, reqKeywords.get(k));
-           }else {
+           }else {                          // 사용자가 갖고있지 않는 키워드면
                newKeyword.put(k, reqKeywords.get(k));
            }
         }
@@ -220,12 +221,14 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
         System.out.println(newKeyword);
         System.out.println(alreadyKeyword);
 
+        // 기존에 있는 키워드는 -> * 1.4
         queryFactory
                 .update(userKeyword)
-                .set(userKeyword.weight, userKeyword.weight.multiply(1.8))
+                .set(userKeyword.weight, userKeyword.weight.multiply(1.4).multiply(1e10).divide(1e10))
                 .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(alreadyKeyword.keySet()))
                 .execute();
 
+        // 새로 들어온 키워드
         saveAllV2(user, newKeyword);
 
         entityManager.flush();
@@ -341,11 +344,10 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
 
     @Transactional
     public void saveAllV2(User user, Map<String, Double> keywords) {
-
         List<String> keywordsList = keywords.keySet().stream().toList();
 
         String sql = "INSERT INTO user_keyword (user_seq, keyword, weight) " +
-                "VALUES (?, ?, ?)";
+                "VALUES (?, ?, ROUND(?, 10))";
 
         jdbcTemplate.batchUpdate(sql,
                 new BatchPreparedStatementSetter() {
