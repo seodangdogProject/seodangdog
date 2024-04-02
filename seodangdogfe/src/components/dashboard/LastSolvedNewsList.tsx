@@ -33,7 +33,7 @@ function CardNews({ data }: { data: newsDetailThumbnail }) {
         <ul className={styled.hashtag}>
           {data.newsKeyword.slice(0, 3).map((item, idx) => (
             <li key={idx} className={styled.item}>
-              {item}
+              # {item}
             </li>
           ))}
         </ul>

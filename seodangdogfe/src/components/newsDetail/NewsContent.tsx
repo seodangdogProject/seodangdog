@@ -170,7 +170,7 @@ export default function NewsContent({
           <div className={cx("hashtag")}>
             {keywords.map((item) => (
               <div key={item} className={cx("hashtag-item")}>
-                {item}
+                # {item}
               </div>
             ))}
           </div>
