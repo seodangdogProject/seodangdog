@@ -25,7 +25,6 @@ const OneWord: React.FC = () => {
     const [unCorrectWordList] = useRecoilState(unCorrectWordListState); // wordList
     const [inputValues, setInputValues] = useState<string[]>([]); //
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]); // 사용자 input 박스 체크
-    const [answerSec, setAnswerSec] = useState<number>(0); // 타이머 2의 초
     const [isAnswer, setIsAnswer] = useState<boolean>(false);
     const [isUnCorrect, setIsUnCorrect] = useState<boolean>(false);
     const [isCorrectIcon, setIsCorrectIcon] = useState<boolean>(false);
@@ -233,7 +232,9 @@ const OneWord: React.FC = () => {
                         <span> {wordList.length}</span>
                     </div>
                     <div className={styles.language}>
-                        {wordList[currentIndex].isEng ? "영어" : "한글"}
+                        {wordList[currentIndex]?.isEng == true
+                            ? "영어"
+                            : "한글"}
                     </div>
                     <div className={styles.meaning_container}>
                         <div
