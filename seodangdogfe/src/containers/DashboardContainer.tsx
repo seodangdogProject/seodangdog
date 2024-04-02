@@ -51,7 +51,7 @@ export default function DashboardContainer() {
                                 ["bg-light-purple"]
                             )}
                         >
-                            <div className={styled.title}>내 정보</div>
+                            <div className={styled.title}>내 정보 / 출석부</div>
                             <div className={cx("user", ["box-shodow-custom"])}>
                                 <UserCard
                                     nickname={usernickname!}
@@ -61,7 +61,6 @@ export default function DashboardContainer() {
                                 />
                             </div>
                             <div style={{ padding: "5px" }}></div>
-                            <div className={styled.title}>출석부</div>
                             <div
                                 className={cx("streak", ["box-shodow-custom"])}
                             >
