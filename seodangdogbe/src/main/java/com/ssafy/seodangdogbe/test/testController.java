@@ -55,8 +55,8 @@ public class testController {
     @GetMapping("/check-id")
     public ResponseEntity<MessageResponseDto> checkId(@RequestBody ReqUserIdDto userIdDto){
         if (userService.checkIdExists(userIdDto.getUserId())){
-            return ResponseEntity.ok().body(new MessageResponseDto("impossible"));
+            return ResponseEntity.ok().body(new MessageResponseDto("IMPOSSIBLE"));
         } else
-            return ResponseEntity.ok().body(new MessageResponseDto("possible"));
+            return ResponseEntity.ok().body(new MessageResponseDto("POSSIBLE"));
     }
 }
