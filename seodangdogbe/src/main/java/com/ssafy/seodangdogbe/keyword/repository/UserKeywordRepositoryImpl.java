@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -193,7 +194,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     @Transactional
     public void updateAll(User user, List<DeWeightReqDto.KeywordInfo> list) {
-        String sql = "UPDATE user_keyword SET weight = weight / 2 " +
+        String sql = "UPDATE user_keyword SET weight = ROUND(weight / 2, 10) " +
                 "WHERE user_seq =? AND keyword = ?";
 
         jdbcTemplate.batchUpdate(sql,
