@@ -86,7 +86,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
     mf = load_mf()
     print(mf.user_id_index)
     if user_seq in mf.user_id_index:
-
+        print("mf ",user_seq)
         top_n = 21
         recommendations = recommend_news(user_seq, mf, top_n)
         # print("mf_recommend finished in", len(recommendations))
@@ -104,6 +104,14 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
 
         # rating에 없는걸 추천받으면 넣는다
         insert_task = asyncio.create_task(insert_rating(recommendations, user_seq))
+
+        for rn in recommendations:
+            news_seq = rn.news_seq
+            rating = rn.news_similarity
+            weight = 1.5
+            # print(rn.news_id, rn.news_seq, rn.news_title, rn.news_similarity)
+            online_learning(mf, user_seq, news_seq, rating, weight)
+        save_mf(mf)
 
         print("mf_recommend", len(recommendations))
         return recommendations
@@ -127,7 +135,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
 
         for rn in recommended_news:
             news_seq = rn.news_seq
-            rating = rn.news_similarity * 20
+            rating = rn.news_similarity * 10
             weight = 3.0
             # print(rn.news_id, rn.news_seq, rn.news_title, rn.news_similarity)
             online_learning(mf, user_seq, news_seq, rating, weight)
@@ -174,6 +182,8 @@ async def mf_update(data):
 
         if weight >= 1:
             rating = rating['rating'].values[0] * 20
+        else:
+            rating = rating['rating'].values[0]
         print("rating : ", rating)
         online_learning(mf, user_seq, news_seq, rating, weight)
         print(mf.get_one_prediction(user_seq, news_seq))
