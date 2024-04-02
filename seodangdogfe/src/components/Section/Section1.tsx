@@ -49,7 +49,7 @@ const Section = (props: ISectionProps) => {
                             className={landingStyles.rounded_button}
                             onClick={onClickToggleModal}
                         >
-                            시작 하기
+                            시작하기
                         </button>
                     </div>
                 </div>
