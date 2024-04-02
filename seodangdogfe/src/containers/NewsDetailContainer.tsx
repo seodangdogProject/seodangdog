@@ -12,6 +12,9 @@ import styled from "./NewsDetailContainer.module.css";
 import Summary from "@/components/newsDetail/Summary";
 import NotSolved from "@/components/newsDetail/NotSolved";
 import Solved from "@/components/newsDetail/Solved";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { loadingState } from "@/atoms/loadingRecoil";
+import Loading from "@/app/loading1";
 export default function NewsDetailContainer() {
   // react전용 변수
   const pathname = usePathname();
@@ -34,7 +37,13 @@ export default function NewsDetailContainer() {
 
   const [currentQuizNumber, setCurrentQuizNumber] = useState<number>(0); // 0 : 커버페이지 , 1,2,3 : 퀴즈
 
+  //
+  // recoil 변수
+  const [isLoading] = useRecoilState(loadingState);
+  const setLoadingState = useSetRecoilState(loadingState);
+
   useEffect(() => {
+    setLoadingState(true);
     console.log(12345);
     // 데이터 받아오는 함수 START
     (async () => {
@@ -59,6 +68,7 @@ export default function NewsDetailContainer() {
         setKeywords(keywordList);
         setData(resData);
         setQuizData(resData.newsQuiz);
+        setLoadingState(false);
       } else {
         console.log("error 발생");
       }
@@ -96,36 +106,37 @@ export default function NewsDetailContainer() {
   }
   return (
     <>
-      {isSolved ? (
-        // 풀었으면 렌더링
-
-        <Solved
-          data={data}
-          keywords={keywords}
-          newsSeq={Number(pathname.split("/")[2])}
-          cx={cx}
-          answerList={answerList}
-          currentQuizNumber={currentQuizNumber}
-          setCurrentQuizNumber={setCurrentQuizNumber}
-          quizData={quizData}
-        />
-      ) : (
-        // 풀지 않았으면 렌더링
-        <NotSolved
-          data={data}
-          currentQuizNumber={currentQuizNumber}
-          setCurrentQuizNumber={setCurrentQuizNumber}
-          keywords={keywords}
-          quizData={quizData}
-          cx={cx}
-          newsSeq={Number(pathname.split("/")[2])}
-          setAnswerList={setAnswerList}
-          answerList={answerList}
-          setUserSummary={setUserSummary}
-          solveQuiz={solveQuiz}
-          setCorrectList={setCorrectList}
-        />
-      )}
+      <>
+        {isSolved ? (
+          // 풀었으면 렌더링
+          <Solved
+            data={data}
+            keywords={keywords}
+            newsSeq={Number(pathname.split("/")[2])}
+            cx={cx}
+            answerList={answerList}
+            currentQuizNumber={currentQuizNumber}
+            setCurrentQuizNumber={setCurrentQuizNumber}
+            quizData={quizData}
+          />
+        ) : (
+          // 풀지 않았으면 렌더링
+          <NotSolved
+            data={data}
+            currentQuizNumber={currentQuizNumber}
+            setCurrentQuizNumber={setCurrentQuizNumber}
+            keywords={keywords}
+            quizData={quizData}
+            cx={cx}
+            newsSeq={Number(pathname.split("/")[2])}
+            setAnswerList={setAnswerList}
+            answerList={answerList}
+            setUserSummary={setUserSummary}
+            solveQuiz={solveQuiz}
+            setCorrectList={setCorrectList}
+          />
+        )}
+      </>
     </>
   );
 }

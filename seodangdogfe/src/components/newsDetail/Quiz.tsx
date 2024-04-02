@@ -57,17 +57,17 @@ export default function Quiz({
     });
   }
 
-  function moveToNextQuiz() {
-    // checkAnswer();
-    // setCorrectList((prev) => {
-    //   let newArr = prev.slice();
-    //   newArr[currentQuizNumber - 1] = checkAnswer();
-    //   return newArr;
-    // });
-    // console.log(checkAnswer())
-    checkAnswer();
-    setCurrentQuizNumber(currentQuizNumber + 1);
-  }
+  // function moveToNextQuiz() {
+  //   // checkAnswer();
+  //   // setCorrectList((prev) => {
+  //   //   let newArr = prev.slice();
+  //   //   newArr[currentQuizNumber - 1] = checkAnswer();
+  //   //   return newArr;
+  //   // });
+  //   // console.log(checkAnswer())
+  //   checkAnswer();
+  //   setCurrentQuizNumber(currentQuizNumber + 1);
+  // }
   function checkAnswer(): boolean {
     console.log("checkAnswer");
     const isCorrect =
@@ -88,19 +88,27 @@ export default function Quiz({
     });
     return isCorrect;
   }
+
+  function moveToNextQuiz() {
+    const answerIsCorrect = checkAnswer();
+
+    setTimeout(() => {
+      setCurrentQuizNumber(currentQuizNumber + 1);
+    }, 1000);
+  }
   return (
     <>
-      <button onClick={() => console.log(answerList)}>asd</button>
       <div className={cx("quiz-container", "not-solve")}>
         <Timer currentQuizNumber={currentQuizNumber} />
         {isCorrect && (
           <CorrectIcon
             style={{
-              position: "fixed",
+              position: "absolute",
               top: "50%",
-              left: "50%",
+              left: "77%",
               marginLeft: "5%",
               transform: "translate(-50%, -50%)",
+              zindex: 1000,
             }}
           ></CorrectIcon>
         )}
@@ -108,9 +116,9 @@ export default function Quiz({
         {isUnCorrect && (
           <UncorrectIcon
             style={{
-              position: "fixed",
+              position: "absolute",
               top: "50%",
-              left: "50%",
+              left: "77%",
               marginLeft: "5%",
               transform: "translate(-50%, -50%)",
             }}

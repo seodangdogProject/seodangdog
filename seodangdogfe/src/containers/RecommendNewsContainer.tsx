@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import styled from "./RecommendNewsContainer.module.css";
 import classNames from "classnames/bind";
 import { privateFetch } from "../utils/http-commons";
@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 import changeDateFormat from "@/utils/changeDateFormat";
 import { RefreshReq, KeywordInfo, NewsData } from "@/atoms/type";
 import RefreshIcon from "@/assets/Refresh-icon.svg";
+import { SourceTextModule } from "vm";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { loadingState } from "@/atoms/loadingRecoil";
+import Loading from "@/app/loading1";
 
 export default function RecommendNewsContainer() {
     const cx = classNames.bind(styled);
@@ -18,6 +22,10 @@ export default function RecommendNewsContainer() {
     const otherRecommendEl = useRef<HTMLDivElement>(null);
 
     const router = useRouter();
+
+    // recoil 변수
+    const [isLoading] = useRecoilState(loadingState);
+    const setLoadingState = useSetRecoilState(loadingState);
 
     // method
     function toggle(inputCategory: string): void {
@@ -90,6 +98,7 @@ export default function RecommendNewsContainer() {
                 }
 
                 setNewsList(subArrays);
+                setLoadingState(false);
                 console.log(subArrays);
 
                 if (newsData) {
@@ -119,6 +128,7 @@ export default function RecommendNewsContainer() {
     }
 
     useEffect(() => {
+        setLoadingState(true);
         reMainRef();
     }, [category]);
 
@@ -151,42 +161,92 @@ export default function RecommendNewsContainer() {
                     </div>
                 </div>
                 <div className={cx("section", ["box-shodow-custom"])}>
-                    <ul className={cx("line")}>
-                        {newsList.map((subGroup, index) => (
-                            <li key={index} className={cx("item-container")}>
-                                {subGroup.map((item: any, idx: number) => (
-                                    <div
-                                        onClick={() =>
-                                            router.push("/news/" + item.newsSeq)
-                                        }
-                                        key={item.newsSeq}
-                                        className={cx("line-item")}
+                    {isLoading ? (
+                        <Loading />
+                    ) : (
+                        <>
+                            <ul className={cx("line")}>
+                                {newsList.map((subGroup, index) => (
+                                    <li
+                                        key={index}
+                                        className={cx("item-container")}
                                     >
-                                        <img
-                                            src={
-                                                item.newsImgUrl == "None"
-                                                    ? "/images/default-news-image.jpg"
-                                                    : item.newsImgUrl
-                                            }
-                                            alt=""
-                                        />
-                                        <div className={cx("title")}>
-                                            {item.newsTitle}
-                                        </div>
-                                        <div className={cx("description")}>
-                                            {item.newsDescription}
-                                        </div>
-                                        <div className={cx("date")}>
-                                            조회수 {item.countView} •{" "}
-                                            {changeDateFormat(
-                                                item.newsCreatedAt
-                                            )}
-                                        </div>
-                                    </div>
+                                        {subGroup.map(
+                                            (item: any, idx: number) => (
+                                                <div
+                                                    onClick={() =>
+                                                        router.push(
+                                                            "/news/" +
+                                                                item.newsSeq
+                                                        )
+                                                    }
+                                                    key={item.newsSeq}
+                                                    className={cx("line-item")}
+                                                >
+                                                    <img
+                                                        src={
+                                                            item.newsImgUrl ==
+                                                            "None"
+                                                                ? "/images/default-news-image.jpg"
+                                                                : item.newsImgUrl
+                                                        }
+                                                        alt=""
+                                                    />
+                                                    <div
+                                                        className={cx("title")}
+                                                    >
+                                                        {item.newsTitle}
+                                                    </div>
+                                                    <div
+                                                        className={cx(
+                                                            "description"
+                                                        )}
+                                                    >
+                                                        {item.newsDescription}
+                                                    </div>
+                                                    <div className={cx("date")}>
+                                                        조회수 {item.countView}{" "}
+                                                        •{" "}
+                                                        {changeDateFormat(
+                                                            item.newsCreatedAt
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )
+                                        )}
+                                    </li>
                                 ))}
-                            </li>
-                        ))}
-                    </ul>
+                            </ul>
+                        </>
+                    )}
+                    {/* {newsList.map((subGroup, index) => (
+              <li key={index} className={cx("item-container")}>
+                {subGroup.map((item: any, idx: number) => (
+                  <div
+                    onClick={() => router.push("/news/" + item.newsSeq)}
+                    key={item.newsSeq}
+                    className={cx("line-item")}
+                  >
+                    <img
+                      src={
+                        item.newsImgUrl == "None"
+                          ? "/images/default-news-image.jpg"
+                          : item.newsImgUrl
+                      }
+                      alt=""
+                    />
+                    <div className={cx("title")}>{item.newsTitle}</div>
+                    <div className={cx("description")}>
+                      {item.newsDescription}
+                    </div>
+                    <div className={cx("date")}>
+                      조회수 {item.countView} •{" "}
+                      {changeDateFormat(item.newsCreatedAt)}
+                    </div>
+                  </div>
+                ))}
+              </li>
+            ))} */}
                 </div>
             </div>
         </>
