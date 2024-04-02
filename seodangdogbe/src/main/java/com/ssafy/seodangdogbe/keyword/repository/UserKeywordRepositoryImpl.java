@@ -193,7 +193,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     @Transactional
     public void updateAll(User user, List<DeWeightReqDto.KeywordInfo> list) {
-        String sql = "UPDATE user_keyword SET weight = ROUND(weight / 2, 10) " +
+        String sql = "UPDATE user_keyword SET weight = ROUND(weight / 4, 10) " +
                 "WHERE user_seq =? AND keyword = ?";
 
         jdbcTemplate.batchUpdate(sql,
