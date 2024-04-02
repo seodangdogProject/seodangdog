@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import NewsContent from "./solved/NewsContent";
 import Quiz from "./solved/Quiz";
 import Summary from "./Summary";
+import BackButton from "../BackButton";
 
 export default function Solved({
   data,
@@ -31,6 +32,7 @@ export default function Solved({
           tabIndex={-1}
           className={cx("detail-container", ["box-shodow-custom"])}
         >
+          <BackButton />
           <NewsContent data={data} keywords={keywords} />
           <div className={cx("paging")}>
             <ul>

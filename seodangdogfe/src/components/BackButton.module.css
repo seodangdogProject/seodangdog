@@ -1,0 +1,29 @@
+.back-container {
+  position: absolute;
+  /* right: -10px;
+  top: -15px; */
+  /* left: 0; */
+  right: 10px;
+  top: 5px;
+  /* bottom: 225px; */
+  /* top: -10px;
+  width: 40px;
+  height: 40px; */
+  /* background-color: #493971; */
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  border-radius: 100%;
+  cursor: pointer;
+}
+
+.back-container:hover {
+  scale: 1.2;
+  transition: all 0.2s linear;
+}
+
+.back-container img {
+  display: inline-block;
+  padding: 10px;
+  width: 15px;
+}
