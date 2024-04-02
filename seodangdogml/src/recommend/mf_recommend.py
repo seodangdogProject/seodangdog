@@ -34,7 +34,8 @@ class MfNewsDto:
         self.news_keyword = news_summary_keyword
 
 
-# mf = load_mf()
+mf = load_mf()
+
 
 def get_news_title(news_id):
     return news.loc[news_id]['title']
@@ -129,9 +130,6 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
 
         # 온라인 학습데이터는 따로 저장할 필요가 없다 -> ratings에 반영하기때문에 재학습시 온라인데이터학습할필요없다.
         # multiprocessing_train()
-
-        # 사용자 만드는 코드 + 온라인 학습
-        # ㄷ
 
         for rn in recommended_news:
             news_seq = rn.news_seq
