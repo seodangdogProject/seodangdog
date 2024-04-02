@@ -124,7 +124,7 @@
     border: none;
     outline: none;
     background: none;
-    font-size: 50px;
+    font-size: 30px;
     align-items: center;
     text-align: center;
     flex: 1; /* 입력 요소가 아이템을 가득 채우도록 설정합니다. */

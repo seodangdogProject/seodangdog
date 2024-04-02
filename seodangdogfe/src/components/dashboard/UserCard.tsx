@@ -39,7 +39,12 @@ const UserCard = (props: userProps) => {
                     onClickToggleModal={onClickToggleModifyModal}
                 ></ModifyNicknameModal>
             )}
-            <div className={styled.king}>
+            <div
+                className={styled.king}
+                style={{
+                    cursor: "pointer",
+                }}
+            >
                 <img
                     src={props.badgeImgUrl}
                     alt=""
