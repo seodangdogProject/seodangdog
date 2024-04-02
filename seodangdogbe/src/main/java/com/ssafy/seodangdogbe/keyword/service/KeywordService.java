@@ -33,7 +33,12 @@ public class KeywordService {
         return userKeywordRepository.decrementKeywordWeightV2(user, deWeightReqDtoList);
     }
 
-    // 클릭 시 해당 뉴스 키워드 증가
+    // 클릭 시 해당 뉴스 키워드 증가 - map
+    @Transactional
+    public void addKeywordMapWeight(User user, Map<String, Double> newsKeywordMap, double weight){
+        userKeywordRepository.incrementClickedKeywordMapWeight(user, newsKeywordMap, weight);
+    }
+
     @Transactional
     public void addKeywordListWeight(User user, List<String> newsKeywordList, double weight){
         userKeywordRepository.incrementClickedKeywordWeight(user, newsKeywordList, weight);
