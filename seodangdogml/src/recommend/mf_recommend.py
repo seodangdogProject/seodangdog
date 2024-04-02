@@ -110,25 +110,31 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
     # 예외대처(온라인학습으로 했어도 예외발생시 재학습)
     else:
         # 방금회원가입했으면(mf 모델에 학습되어 있지 않으면) 추천되지 않는 cbf를 추천하고 mf를 다시 학습시킨다
-        print('User not found -> cbf reommend')
+        print('User not found -> online learn')
         # background_tasks = BackgroundTasks()
 
         # cbf 말고 유사한 사용자를 뽑아서 보여주기
         recommended_news = await cbf_recommend(background_tasks, user_seq, False)
+
 
         # update_task = asyncio.create_task(train_mf_model())
 
         # 온라인 학습데이터는 따로 저장할 필요가 없다 -> ratings에 반영하기때문에 재학습시 온라인데이터학습할필요없다.
         # multiprocessing_train()
 
+        # 사용자 만드는 코드 + 온라인 학습
+        # ㄷ
+
+        for rn in recommended_news:
+            news_seq = rn.news_seq
+            rating = rn.news_similarity * 20
+            weight = 3.0
+            # print(rn.news_id, rn.news_seq, rn.news_title, rn.news_similarity)
+            online_learning(mf, user_seq, news_seq, rating, weight)
+        save_mf(mf)
         return recommended_news
 
 
-# new_samples 예제
-# new_samples = [
-#     (mf.user_id_index[2], mf.item_id_index['J'], 9),
-#     (mf.user_id_index[3], mf.item_id_index['J'], 9)
-#     ]
 class UpdateData(BaseModel):
     user_seq: int
     info: list
@@ -165,7 +171,9 @@ async def mf_update(data):
         # 그렇다고 또 추천받으면? cbf는 업데이트되는데 mf는 안한다
         # print(mf.get_one_prediction(user_seq, news_seq))
         print("rating : ", rating['rating'].values[0])
-        rating = rating['rating'].values[0] * 20
+
+        if weight >= 1:
+            rating = rating['rating'].values[0] * 20
         print("rating : ", rating)
         online_learning(mf, user_seq, news_seq, rating, weight)
         print(mf.get_one_prediction(user_seq, news_seq))
