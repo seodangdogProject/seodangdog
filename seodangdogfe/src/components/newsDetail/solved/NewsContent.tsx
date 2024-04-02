@@ -47,8 +47,14 @@ export default function NewsContent({
                       <span
                         key={index}
                         className={cx({
-                          filled: data.highlightList.includes(index),
-                          "word-circle": data.wordList.includes(index),
+                          filled:
+                            data.highlightList !== null
+                              ? data.highlightList.includes(index)
+                              : false,
+                          "word-circle":
+                            data.wordList !== null
+                              ? data.wordList.includes(index)
+                              : false,
                         })}
                         data-highlight-idx={index}
                       >
@@ -60,7 +66,10 @@ export default function NewsContent({
                       <span
                         key={index}
                         className={cx({
-                          filled: data.highlightList.includes(index),
+                          filled:
+                            data.highlightList !== null
+                              ? data.highlightList.includes(index)
+                              : false,
                         })}
                         data-highlight-idx={index}
                       >
