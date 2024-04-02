@@ -148,10 +148,6 @@ export default function RecommendNewsContainer() {
               다른 사람 뉴스
             </div>
           </div>
-
-          <div className={styled.refreshButton} onClick={() => refresh()}>
-            <RefreshIcon className={styled.icon} />
-          </div>
         </div>
         <div className={cx("section", ["box-shodow-custom"])}>
           {isLoading ? (
@@ -187,37 +183,19 @@ export default function RecommendNewsContainer() {
                     ))}
                   </li>
                 ))}
+                {category === "user-recommend/v2" && (
+                  <div className={cx("refresh-container")}>
+                    <div
+                      className={styled.refreshButton}
+                      onClick={() => refresh()}
+                    >
+                      <RefreshIcon className={styled.icon} />
+                    </div>
+                  </div>
+                )}
               </ul>
             </>
           )}
-          {/* {newsList.map((subGroup, index) => (
-              <li key={index} className={cx("item-container")}>
-                {subGroup.map((item: any, idx: number) => (
-                  <div
-                    onClick={() => router.push("/news/" + item.newsSeq)}
-                    key={item.newsSeq}
-                    className={cx("line-item")}
-                  >
-                    <img
-                      src={
-                        item.newsImgUrl == "None"
-                          ? "/images/default-news-image.jpg"
-                          : item.newsImgUrl
-                      }
-                      alt=""
-                    />
-                    <div className={cx("title")}>{item.newsTitle}</div>
-                    <div className={cx("description")}>
-                      {item.newsDescription}
-                    </div>
-                    <div className={cx("date")}>
-                      조회수 {item.countView} •{" "}
-                      {changeDateFormat(item.newsCreatedAt)}
-                    </div>
-                  </div>
-                ))}
-              </li>
-            ))} */}
         </div>
       </div>
     </>
