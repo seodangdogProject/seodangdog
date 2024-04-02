@@ -4,6 +4,12 @@
   padding: 0 30px;
   display: flex;
   align-items: center;
+  /* flex-direction: column;
+  justify-content: center; */
+}
+.quiz-container.not-solve {
+  flex-direction: column;
+  justify-content: center;
 }
 .quiz-content {
   width: 100%;
@@ -29,11 +35,13 @@
   word-break: keep-all;
   display: flex;
   gap: 10px;
+  font-family: "Pretendard-Regular";
 }
 
 .case-container {
   font-size: 1.2rem;
   font-weight: 400;
+  font-family: "Pretendard-Regular";
 }
 .case {
   margin-top: 30px;

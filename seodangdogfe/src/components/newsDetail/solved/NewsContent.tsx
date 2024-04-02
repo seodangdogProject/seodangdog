@@ -48,6 +48,7 @@ export default function NewsContent({
                         key={index}
                         className={cx({
                           filled: data.highlightList.includes(index),
+                          "word-circle": data.wordList.includes(index),
                         })}
                         data-highlight-idx={index}
                       >

@@ -19,14 +19,21 @@ import GameIcon from "../assets/game-icon.svg";
 import LogoutIcon from "../assets/logout-icon.svg";
 import HottopicIcon from "../assets/hottopic-icon.svg";
 import { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { navState } from "@/atoms/navRecoil";
 export default function NavBar() {
   const cx = classNames.bind(style);
   const [active, setActive] = useState<string>("");
   const [isLogout, setIsLogout] = useState<boolean>(false);
   const pathname: string = usePathname();
   const router = useRouter();
+
+  const [navStateG] = useRecoilState(navState);
+  const setNavState = useSetRecoilState(navState);
+
   useEffect(() => {
     setActive(pathname.split("/")[1]);
+    console.log("asdf", navStateG);
   }, [pathname]);
 
   useEffect(() => {
@@ -45,14 +52,17 @@ export default function NavBar() {
   return (
     <>
       <nav className={style.nav}>
-        <Link href="/main">
-          <h3 className={style.logo}>서당독</h3>
+        <Link onClick={() => setNavState("main")} href="/main">
+          {/* <h3 className={style.logo}>서당독</h3> */}
+          <h3 className={style.logo}>
+            <img src="/logo-icon.svg" alt="" />
+          </h3>
         </Link>
         <ul className={style.item_container}>
-          <Link href="/main">
+          <Link onClick={() => setNavState("main")} href="/main">
             <li
               className={cx("item", {
-                active: active === "main",
+                active: active === "main" || navStateG === "main",
               })}
             >
               <div>
@@ -61,10 +71,10 @@ export default function NavBar() {
               <div>홈</div>
             </li>
           </Link>
-          <Link href="/hottopic">
+          <Link onClick={() => setNavState("hottopic")} href="/hottopic">
             <li
               className={cx("item", {
-                active: active === "hottopic",
+                active: active === "hottopic" || navStateG === "hottopic",
                 hottopic: active === "hottopic",
               })}
             >
@@ -74,8 +84,7 @@ export default function NavBar() {
               <div>핫토픽</div>
             </li>
           </Link>
-          
-          <Link href="/word_list">
+          <Link onClick={() => setNavState("word_list")} href="/word_list">
             <li
               className={cx("item", {
                 active: active === "word_list",
@@ -87,7 +96,7 @@ export default function NavBar() {
               <div>단어장</div>
             </li>
           </Link>
-          <Link href="/word_game">
+          <Link onClick={() => setNavState("word_game")} href="/word_game">
             <li
               className={cx("item", {
                 active: active === "word_game",
@@ -99,7 +108,7 @@ export default function NavBar() {
               <div>게임</div>
             </li>
           </Link>
-          <Link href="/dashboard">
+          <Link onClick={() => setNavState("dashboard")} href="/dashboard">
             <li
               className={cx("item", {
                 active: active === "dashboard",
@@ -112,7 +121,7 @@ export default function NavBar() {
             </li>
           </Link>
         </ul>
-        
+
         <div className={cx("logout")}>
           <div onClick={handleLogout} className={cx("item", "logout_item")}>
             <div>
