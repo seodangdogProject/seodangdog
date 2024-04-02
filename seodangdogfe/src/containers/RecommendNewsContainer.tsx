@@ -191,7 +191,7 @@ export default function RecommendNewsContainer() {
                           {item.newsDescription}
                         </div>
                         <div className={cx("date")}>
-                          조회수 {item.countView} •{" "}
+                          조회수 {item.countView}회 • &nbsp;
                           {changeDateFormat(item.newsCreatedAt)}
                         </div>
                       </div>

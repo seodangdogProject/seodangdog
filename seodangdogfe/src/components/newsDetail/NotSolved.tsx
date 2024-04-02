@@ -8,6 +8,7 @@ import CountDown from "./CountDown";
 import { useRecoilValue } from "recoil";
 import { loadingState } from "@/atoms/loadingRecoil";
 import Loading from "@/app/loading1";
+import BackButton from "../BackButton";
 export default function NotSolved({
   data,
   currentQuizNumber,
@@ -60,6 +61,7 @@ export default function NotSolved({
         ref={detailContainerEl}
         className={cx("detail-container", ["box-shodow-custom"])}
       >
+        <BackButton />
         {isLoading ? (
           <div
             style={{ backgroundColor: "red", width: "100%", height: "100%" }}

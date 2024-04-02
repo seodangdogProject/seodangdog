@@ -4,13 +4,21 @@
   box-sizing: border-box;
   padding: 0 30px;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
+  margin-top: 50px;
   position: relative;
 }
 .summary-container {
   width: 100%;
   border-radius: 20px;
   box-sizing: border-box;
+}
+.desc-text {
+  width: 100%;
+  height: 50px;
+  font-size: 20px;
+  font-family: "hunminjungum";
+  color: #493971;
 }
 .naver-summary {
   border-radius: 15px;

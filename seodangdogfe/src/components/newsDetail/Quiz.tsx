@@ -26,21 +26,6 @@ export default function Quiz({
   const [isUnCorrect, setIsUnCorrect] = useState(false);
 
   useEffect(() => {
-    console.log("후후후", answerList);
-    const timer = setTimeout(() => {
-      // console.log("맞았나? : ", checkAnswer());
-      // moveToNextQuiz();
-      checkAnswer();
-      setTimeout(() => {
-        moveToNextQuiz();
-      }, 500);
-    }, 15000);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [answerList, currentQuizNumber]);
-
-  useEffect(() => {
     setIsCorrect(false);
     setIsUnCorrect(false);
   }, [currentQuizNumber]);
@@ -57,25 +42,12 @@ export default function Quiz({
     });
   }
 
-  // function moveToNextQuiz() {
-  //   // checkAnswer();
-  //   // setCorrectList((prev) => {
-  //   //   let newArr = prev.slice();
-  //   //   newArr[currentQuizNumber - 1] = checkAnswer();
-  //   //   return newArr;
-  //   // });
-  //   // console.log(checkAnswer())
-  //   checkAnswer();
-  //   setCurrentQuizNumber(currentQuizNumber + 1);
-  // }
   function checkAnswer(): boolean {
     console.log("checkAnswer");
     const isCorrect =
       Number(quizData[currentQuizNumber - 1].answer.number) ===
       answerList[currentQuizNumber - 1];
-    // console.log("정답 : ", quizData[currentQuizNumber - 1].answer.number);
-    // console.log("anawerList : ", answerList);
-    // console.log("내가 고른 거 : ", answerList[currentQuizNumber - 1]);
+
     if (isCorrect) {
       setIsCorrect(true);
     } else {
@@ -99,7 +71,6 @@ export default function Quiz({
   return (
     <>
       <div className={cx("quiz-container", "not-solve")}>
-        <Timer currentQuizNumber={currentQuizNumber} />
         {isCorrect && (
           <CorrectIcon
             style={{

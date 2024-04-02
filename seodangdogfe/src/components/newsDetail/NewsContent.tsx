@@ -151,6 +151,8 @@ export default function NewsContent({
           {isModalOpen && (
             <div className={cx("word-modal-container")}>
               <Modal
+                setWordList={setWordList}
+                wordSeq={clickedWord.wordSeq}
                 isOpen={isModalOpen}
                 clickedWord={clickedWord.word}
                 onClose={() => {
@@ -168,7 +170,7 @@ export default function NewsContent({
           <div className={cx("hashtag")}>
             {keywords.map((item) => (
               <div key={item} className={cx("hashtag-item")}>
-                {item}
+                # {item}
               </div>
             ))}
           </div>
