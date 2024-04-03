@@ -235,7 +235,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     // 새로고침 -> 나누기 2, 소수점 10번째 자리
     @Transactional
     public void updateAll(User user, List<DeWeightReqDto.KeywordInfo> list) {
-        String sql = "UPDATE user_keyword SET weight = ROUND(weight / 2, 10) " +
+        String sql = "UPDATE user_keyword SET weight = ROUND(weight / 4, 10) " +
                 "WHERE user_seq =? AND keyword = ?";
 
         jdbcTemplate.batchUpdate(sql,
