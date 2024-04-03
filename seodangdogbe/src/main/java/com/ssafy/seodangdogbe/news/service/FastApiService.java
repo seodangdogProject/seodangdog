@@ -40,7 +40,7 @@ public class FastApiService {
                 .bodyToFlux(CbfRecommendResponse.class)
                         .collectList();
 
-        System.out.println(list.blockOptional().get());
+//        System.out.println(list.blockOptional().get());
         return list;
     }
 

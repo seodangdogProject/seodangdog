@@ -24,6 +24,7 @@ import com.ssafy.seodangdogbe.news.service.FastApiService.MfRecommendResponse;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -137,8 +138,9 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
         Map<String, Double> alreadyKeyword = new HashMap<>();
         Map<String, Double> newKeyword = new HashMap<>();
         List<MainNewsPreviewDto> newsPreviewLists = new ArrayList<>();
+        System.out.println(LocalDateTime.now());
         List<CbfRecommendResponse> result = fastApiService.fetchRecommendations().block().stream().toList();
-
+        System.out.println(LocalDateTime.now());
         List<Long> recommendedNewsSeqs = result.stream()
                 .map(CbfRecommendResponse::getNews_seq)
                 .collect(Collectors.toList());
@@ -237,6 +239,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
 //        entityManager.flush();
 //        entityManager.clear();
 
+        System.out.println(LocalDateTime.now());
         return new UserRecommendResponseDtoV2(newsPreviewLists);
     }
 
