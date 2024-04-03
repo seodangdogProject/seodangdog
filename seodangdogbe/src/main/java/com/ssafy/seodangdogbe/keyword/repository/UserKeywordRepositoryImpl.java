@@ -161,14 +161,22 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
             }
         }
 
+        // 없으면
+        // newsKeywordList.get(keyword)  (몽고디비의 뉴스 서머리 키워드의 가중치) * weight(1.5)
+
+        // 있으면
+        // 기존의 mysql에 저장된 가중치 + 3 * 몽고db가중치 = mysql 키워드 가중치
+
         System.out.println("새로운 키워드 : " + insertKeyword);
         saveAll(user, insertKeyword);
 
         System.out.println("기존에 존재하는 키워드 : " + updateKeyword);
-        updateMultiAll(user, updateKeyword, weight);
+        updateMultiAll(user, updateKeyword, newsKeywordList, 3);
     }
 
 
+
+    // 사용 안함 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     @Override
     @Transactional
     public void incrementClickedKeywordWeight(User user, List<String> newskeywordList, double weight) {
@@ -188,6 +196,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
                 updateKeyword.add(keyword);
             }
         }
+
 
         System.out.println("새로운 키워드 : " + insertKeyword);
         saveAll(user, insertKeyword);
@@ -247,8 +256,11 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
 
     @Transactional
-    public void updateMultiAll(User user, List<String> list, double mult) {
-        String sql = "UPDATE user_keyword SET weight = ROUND(weight * ?, 10) " +
+    public void updateMultiAll(User user, List<String> list, Map<String, Double> map, double mult) {
+        // 있으면
+        // 기존의 mysql에 저장된 가중치 + 3 * 몽고db가중치 = mysql 키워드 가중치
+
+        String sql = "UPDATE user_keyword SET weight = ROUND( weight + ? * ?, 10) " +
                 "WHERE user_seq =? AND keyword = ?";
 
         jdbcTemplate.batchUpdate(sql,
@@ -256,8 +268,9 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
                     @Override
                     public void setValues(PreparedStatement sql, int i) throws SQLException {
                         sql.setDouble(1, mult);
-                        sql.setInt(2, user.getUserSeq());
-                        sql.setString(3, list.get(i));
+                        sql.setDouble(2, map.get(list.get(i)));
+                        sql.setInt(3, user.getUserSeq());
+                        sql.setString(4, list.get(i));
                     }
 
                     @Override
