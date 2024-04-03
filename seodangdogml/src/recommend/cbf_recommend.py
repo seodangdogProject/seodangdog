@@ -41,12 +41,12 @@ class News:
 
 
 class NewsDto:
-    def __init__(self, news_id, news_seq, news_title, news_similarity,news_summary_keyword):
+    def __init__(self, news_id, news_seq, news_title, news_similarity,news_keyword):
         self.news_id = news_id
         self.news_seq = news_seq
         self.news_title = news_title
         self.news_similarity = news_similarity
-        self.news_keyword = news_summary_keyword
+        self.news_keyword = news_keyword
 
 
 news_data = []
@@ -80,20 +80,21 @@ def renewal_news_data():
             "news_id": news_id,
             "news_seq": news_id_seq[news_id],
             "news_title": news_title,
-            "keyword_str": keyword_str,
-            "news_summary_keyword": news_summary_keyword
+            # "keyword_str": keyword_str,
+            # "news_summary_keyword": news_summary_keyword
+            "news_keyword": news_keyword
         }
 
         df_result.append({
             'news_seq': temp['news_seq'],
             'keyword_str': keyword_str,
-            'news_summary_keyword': news_summary_keyword
+            'news_keyword': news_keyword
         })
-
+        # print(news_summary_keyword)
         result.append(temp)
     news_data = result
 
-    df_news = pd.DataFrame(df_result, columns=['news_seq', 'keyword_str', 'news_summary_keyword'])
+    df_news = pd.DataFrame(df_result, columns=['news_seq', 'keyword_str', 'news_keyword'])
     tfidf_vectorizer = TfidfVectorizer()
     corpus = df_news['keyword_str']
     news_vectors = tfidf_vectorizer.fit_transform(corpus)
@@ -239,11 +240,11 @@ async def recommend_news(user_seq, user_keywords, keyword_weights, flag):
         news_id = news_data[i]['news_id']
         news_seq = news_id_seq[news_id]
         news_title = news_data[i]['news_title']
-        news_summary_keyword = news_data[i]['news_summary_keyword']
+        news_keyword = news_data[i]['news_keyword']
         if news_seq not in solved_news_list:
-            filtered_recommendations.append((news_id, news_title, similarities[0][i], news_summary_keyword))
+            filtered_recommendations.append((news_id, news_title, similarities[0][i], news_keyword))
         else:
-            solved_recommendations.append((news_id, news_title, similarities[0][i], news_summary_keyword))
+            solved_recommendations.append((news_id, news_title, similarities[0][i], news_keyword))
 
     recommended_news = filtered_recommendations
     # + solved_recommendations)
