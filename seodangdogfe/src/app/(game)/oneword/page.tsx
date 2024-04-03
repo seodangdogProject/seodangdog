@@ -8,7 +8,7 @@ import {
   gameWordListState,
   correctWordListState,
   unCorrectWordListState,
-  Item,
+  GameItem,
 } from "../../../atoms/wordGame";
 import styles from "./oneword_layout.module.css";
 import TimerIcon from "../../../assets/timer-icon.svg";
@@ -35,7 +35,7 @@ const OneWord: React.FC = () => {
 
   // 단어장에 추가하기
   const addItemToList = useCallback(
-    (flag: boolean, itemToAdd: Item): void => {
+    (flag: boolean, itemToAdd: GameItem): void => {
       if (flag) {
         setCorrectWordList([...correctWordList, itemToAdd]);
       } else {
