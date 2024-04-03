@@ -251,7 +251,11 @@ const OneWord: React.FC = () => {
                 })(),
               }}
             >
-              {wordList[currentIndex]?.mean}
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: wordList[currentIndex]?.mean,
+                }}
+              />
             </div>
           </div>
 
