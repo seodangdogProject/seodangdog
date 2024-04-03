@@ -13,6 +13,7 @@ import com.ssafy.seodangdogbe.news.dto.MostViewRecommendResponseDto;
 import com.ssafy.seodangdogbe.user.domain.User;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -33,6 +34,7 @@ import static com.ssafy.seodangdogbe.news.domain.QUserNews.userNews;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCustom {
 
     private final EntityManager entityManager;
@@ -130,6 +132,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
     @Transactional
     public UserRecommendResponseDtoV2 findNewsRecommendationsV2(User user) {
 
+        log.info(" ==  추천 요청 == ");
         Map<String, Double> reqKeywords = new HashMap<>();
         Map<String, Double> alreadyKeyword = new HashMap<>();
         Map<String, Double> newKeyword = new HashMap<>();
@@ -205,9 +208,9 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .where(userKeyword.user.eq(user))
                 .fetch();
 
-        System.out.println("======================");
-        System.out.println(keywordList);
-        System.out.println(keywordList.size());
+//        System.out.println("======================");
+//        System.out.println(keywordList);
+//        System.out.println(keywordList.size());
 
         for (String k : reqKeywords.keySet()) {
            if (keywordList.contains(k)){     // 사용자가 이미 갖고있는 키워드면
@@ -216,10 +219,10 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                newKeyword.put(k, reqKeywords.get(k));
            }
         }
-
-        System.out.println("======================");
-        System.out.println(newKeyword);
-        System.out.println(alreadyKeyword);
+//
+//        System.out.println("======================");
+//        System.out.println(newKeyword);
+//        System.out.println(alreadyKeyword);
 
         // 기존에 있는 키워드는 -> * 1.4
 //        queryFactory
