@@ -227,10 +227,10 @@ class NEW_MF():
         # dot(self.Q[j,:].T): 잠재 요인 벡터를 내적(dot product)하여 사용자 i와 아이템 j 간의 상호작용을 모델링
         # ->  i와 아이템 j 간의 평점 예측치를 계산하는 식
 
-        print("self.b", self.b)
-        print("self.b_u[i]", self.b_u[i])
-        print("self.b_d[j]", self.b_d[j])
-        print("self.P[i, :].dot(self.Q[j, :].T)",self.P[i, :].dot(self.Q[j, :].T))
+        # print("self.b", self.b)
+        # print("self.b_u[i]", self.b_u[i])
+        # print("self.b_d[j]", self.b_d[j])
+        # print("self.P[i, :].dot(self.Q[j, :].T)",self.P[i, :].dot(self.Q[j, :].T))
         prediction = self.b + self.b_u[i] + self.b_d[j] + self.P[i, :].dot(self.Q[j, :].T)
         return prediction
 

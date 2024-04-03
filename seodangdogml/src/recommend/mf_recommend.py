@@ -49,11 +49,11 @@ def recommend_news(user_seq, mf_model, top_n=21):
     solved_news_list = [sn['news_seq'] for sn in solved_news]
 
     for item_id in mf_model.item_id_index.keys():
-        print(mf_model.user_id_index[user_seq])
-        print(mf_model.item_id_index[item_id])
-        print()
+        # print(mf_model.user_id_index[user_seq])
+        # print(mf_model.item_id_index[item_id])
+        # print()
         predicted_rating = mf_model.get_one_prediction(user_seq, item_id)
-        print("recom ",predicted_rating)
+        # print("recom ",predicted_rating)
         if item_id not in solved_news_list:
             predicted_ratings.append((item_id, predicted_rating))
         else:
