@@ -14,7 +14,7 @@ export default function Summary({
   setUserSummary: Dispatch<SetStateAction<string>>;
   solveQuiz?: Function;
   isSolved: boolean;
-  newsSummary: string[];
+  newsSummary?: string[];
   userSummary?: string;
   setCurrentQuizNumber: Dispatch<SetStateAction<number>>;
 }) {
@@ -79,7 +79,7 @@ export default function Summary({
             </h3>
             <div className={cx("content", { lock: !isSolved })}>
               {isSolved ? (
-                newsSummary.map((item) => (
+                newsSummary?.map((item) => (
                   <>
                     {item}
                     <br></br>
