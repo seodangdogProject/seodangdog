@@ -7,6 +7,8 @@ import { privateFetch } from "@/utils/http-commons";
 import { newsDetailThumbnail } from "@/atoms/type";
 import changeDateFormat from "@/utils/changeDateFormat";
 import BackButton from "../BackButton";
+import checkHttpSImg from "@/utils/checkHttpsImg";
+import { useRouter } from "next/navigation";
 
 function CardNews({ data }: { data: newsDetailThumbnail }) {
   return (
@@ -14,7 +16,7 @@ function CardNews({ data }: { data: newsDetailThumbnail }) {
       <div className={styled.imageContainer}>
         <img
           src={
-            data.newsImgUrl == "None"
+            data.newsImgUrl == "None" || !checkHttpSImg(data.newsImgUrl)
               ? "/images/default-news-image.jpg"
               : data.newsImgUrl
           }
@@ -44,6 +46,7 @@ function CardNews({ data }: { data: newsDetailThumbnail }) {
 export default function LastNewsList() {
   const cx = classNames.bind(styled);
   const [newsList, setNewsList] = useState<newsDetailThumbnail[]>([]);
+  const router = useRouter();
   //키워드 추출
   useEffect(() => {
     const fetchKeywords = async () => {
@@ -69,13 +72,14 @@ export default function LastNewsList() {
           </div>
           <div className={styled.content}>
             {newsList.map((item, idx) => (
-              <Link
+              <div
+                className={cx("card")}
+                onClick={() => router.replace(`/news/${item.newsSeq}`)}
                 key={idx}
                 style={{ color: "#000" }}
-                href={`/news/${item.newsSeq}`}
               >
                 <CardNews key={idx} data={item} />
-              </Link>
+              </div>
             ))}
           </div>
         </div>

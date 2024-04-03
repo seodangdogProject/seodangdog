@@ -11,6 +11,7 @@ import { SourceTextModule } from "vm";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { loadingState } from "@/atoms/loadingRecoil";
 import Loading from "@/app/loading1";
+import checkHttpSImg from "@/utils/checkHttpsImg";
 
 export default function RecommendNewsContainer() {
   const cx = classNames.bind(styled);
@@ -180,7 +181,8 @@ export default function RecommendNewsContainer() {
                       >
                         <img
                           src={
-                            item.newsImgUrl == "None"
+                            item.newsImgUrl == "None" ||
+                            !checkHttpSImg(item.newsImgUrl)
                               ? "/images/default-news-image.jpg"
                               : item.newsImgUrl
                           }
