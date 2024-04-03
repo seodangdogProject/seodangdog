@@ -135,10 +135,12 @@ function Modal({
 
       if (response.ok) {
         console.log("회원가입 성공");
-        setToastMessage(`${nickname}님, 환영해요!`);
+        setToastMessage(`회원가입 완료`);
         setToast(true);
-        onClickToggleModal();
-        window.location.href = "/";
+        setTimeout(() => {
+          onClickToggleModal();
+          window.location.href = "/";
+        }, 1500);
       } else {
         console.error("회원가입 실패");
       }

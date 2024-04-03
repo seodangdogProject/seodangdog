@@ -124,7 +124,7 @@ const OneWord: React.FC = () => {
         // alert("모든 문제를 완료했습니다.");
         setTimeout(() => {
           router.push("/game_result");
-        }, 1200);
+        }, 800);
       }
     } else {
       setIsUnCorrect(true);
