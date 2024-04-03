@@ -34,14 +34,21 @@ public class NewsController {
     private final FastApiService fastApiService;
 
     @Operation(description = "newsSeq(mysql pk)로 mongodb에 있는 뉴스 본문 조회")
-    @GetMapping("/{newsSeq}")
-    public MetaNewsResponseDto getNewsDetails(@PathVariable(name = "newsSeq") Long newsSeq){
+    @GetMapping("/{newsSeq}/{isAlready}")
+    public MetaNewsResponseDto getNewsDetails(@PathVariable(name = "newsSeq") Long newsSeq,
+                                              @PathVariable(name = "isAlready") boolean isSpecial){
         // 로그인한 사용자 jwt에서 user가져오기
         User user = userService.getUser();
 
         MetaNewsResponseDto metaNewsResponseDto = newsService.getNewsDetailsByNewsSeq(newsSeq);
         Map<String, Double> newsKeywordMap = new HashMap<>(metaNewsResponseDto.getNewsSummaryKeyword());
-        keywordService.addKeywordMapWeight(user, newsKeywordMap, 1.5);  // 클릭한 뉴스의 키워드 가중치 * 1.5
+        if(isSpecial){
+            keywordService.addKeywordMapWeight(user, newsKeywordMap, 1.5);  // 클릭한 뉴스의 키워드 가중치 * 1.5
+
+        }else{
+            keywordService.addKeywordMapWeight(user, newsKeywordMap, 1.5);  // 클릭한 뉴스의 키워드 가중치 * 1.5
+
+        }
 
         newsService.addViewCount(newsSeq);
 
