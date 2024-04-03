@@ -12,243 +12,219 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { loadingState } from "@/atoms/loadingRecoil";
 import Loading from "@/app/loading1";
 import checkHttpSImg from "@/utils/checkHttpsImg";
+import createQueryString from "@/utils/createQueryString";
 
 export default function RecommendNewsContainer() {
-    const cx = classNames.bind(styled);
-    const [category, setCategory] = useState<string>("user-recommend/v2");
-    const [newsData, setNewsData] = useState<NewsData[]>([]);
-    const [newsList, setNewsList] = useState<any[]>([]);
-    const [reqList, setReqList] = useState<RefreshReq[]>([]);
-    const userRecommendEl = useRef<HTMLDivElement>(null);
-    const otherRecommendEl = useRef<HTMLDivElement>(null);
+  const cx = classNames.bind(styled);
+  const [category, setCategory] = useState<string>("user-recommend/v2");
+  const [newsData, setNewsData] = useState<NewsData[]>([]);
+  const [newsList, setNewsList] = useState<any[]>([]);
+  const [reqList, setReqList] = useState<RefreshReq[]>([]);
+  const userRecommendEl = useRef<HTMLDivElement>(null);
+  const otherRecommendEl = useRef<HTMLDivElement>(null);
 
-    const [update, setUpdate] = useState(1);
+  const [update, setUpdate] = useState(1);
 
-    const router = useRouter();
+  const router = useRouter();
 
-    // recoil 변수
-    const [isLoading] = useRecoilState(loadingState);
-    const setLoadingState = useSetRecoilState(loadingState);
+  // recoil 변수
+  const [isLoading] = useRecoilState(loadingState);
+  const setLoadingState = useSetRecoilState(loadingState);
 
-    // method
-    function toggle(inputCategory: string): void {
-        if (category === inputCategory) return;
-        setCategory((prev) => inputCategory);
-        userRecommendEl.current?.classList.toggle(cx("active"));
-        otherRecommendEl.current?.classList.toggle(cx("active"));
-    }
+  // method
+  function toggle(inputCategory: string): void {
+    if (category === inputCategory) return;
+    setCategory((prev) => inputCategory);
+    userRecommendEl.current?.classList.toggle(cx("active"));
+    otherRecommendEl.current?.classList.toggle(cx("active"));
+  }
 
-    const refresh = () => {
-        setLoadingState(true);
-        refreshKeyword()
-            .then(() => {
-                console.log("업데이트 요청");
-                return reMainRef();
-            })
-            .then(() => {
-                console.log("재추천");
-                setUpdate((prev) => prev + 1);
-                // 두 요청이 모두 완료된 후에 할 일
-            })
-            .then(() => {
-                setReqList([]);
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                // 에러 처리
-            });
-    };
+  const refresh = () => {
+    setLoadingState(true);
+    refreshKeyword()
+      .then(() => {
+        console.log("업데이트 요청");
+        return reMainRef();
+      })
+      .then(() => {
+        console.log("재추천");
+        setUpdate((prev) => prev + 1);
+        // 두 요청이 모두 완료된 후에 할 일
+      })
+      .then(() => {
+        setReqList([]);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // 에러 처리
+      });
+  };
 
-    const refreshKeyword = () => {
-        return (async () => {
-            try {
-                console.log("newsData :", newsData);
-                if (newsData != undefined) {
-                    console.log("변환");
-                    const updatedReqList = newsData.map((item, idx) =>
-                        convertToDTO(item)
-                    );
-                    setReqList(updatedReqList);
-                    console.log("updatedReqList : ", updatedReqList);
-                }
-
-                const res = await privateFetch(
-                    "/keyword/refre",
-                    "POST",
-                    reqList
-                );
-                let data = await res.json();
-                console.log(data);
-            } catch (error) {
-                console.error(error);
-            }
-        })();
-    };
-
-    const reMainRef = () => {
-        return (async () => {
-            try {
-                const res = await privateFetch("/main/" + category, "GET");
-                let data = await res.json();
-                if (data instanceof Array) {
-                    data = data[0].newsPreviewList;
-                    setNewsData(data);
-                } else {
-                    data = data.newsPreviewList;
-                    setNewsData(data);
-                }
-                let subArrays = [];
-                for (let i = 0; i < data.length; i += 3) {
-                    subArrays.push(data.slice(i, i + 3));
-                }
-
-                setNewsList(subArrays);
-                setLoadingState(false);
-                console.log(subArrays);
-
-                if (newsData) {
-                    const updatedReqList = newsData.map((item, idx) =>
-                        convertToDTO(item)
-                    );
-                    setReqList(updatedReqList);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        })();
-    };
-
-    function convertToDTO(obj: NewsData): RefreshReq {
-        const newsSeq = obj.newsSeq;
-        const keywordInfoList: KeywordInfo[] = [];
-
-        for (const [keyword, weight] of Object.entries(obj.newsKeyword)) {
-            keywordInfoList.push({ keyword, weight });
+  const refreshKeyword = () => {
+    return (async () => {
+      try {
+        console.log("newsData :", newsData);
+        if (newsData != undefined) {
+          console.log("변환");
+          const updatedReqList = newsData.map((item, idx) =>
+            convertToDTO(item)
+          );
+          setReqList(updatedReqList);
+          console.log("updatedReqList : ", updatedReqList);
         }
 
-        return {
-            newsSeq,
-            keywordInfoList,
-        };
+        const res = await privateFetch("/keyword/refre", "POST", reqList);
+        let data = await res.json();
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  };
+
+  const reMainRef = () => {
+    return (async () => {
+      try {
+        const res = await privateFetch("/main/" + category, "GET");
+        let data = await res.json();
+        if (data instanceof Array) {
+          data = data[0].newsPreviewList;
+          setNewsData(data);
+        } else {
+          data = data.newsPreviewList;
+          setNewsData(data);
+        }
+        let subArrays = [];
+        for (let i = 0; i < data.length; i += 3) {
+          subArrays.push(data.slice(i, i + 3));
+        }
+
+        setNewsList(subArrays);
+        setLoadingState(false);
+        console.log(subArrays);
+
+        if (newsData) {
+          const updatedReqList = newsData.map((item, idx) =>
+            convertToDTO(item)
+          );
+          setReqList(updatedReqList);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  };
+
+  function convertToDTO(obj: NewsData): RefreshReq {
+    const newsSeq = obj.newsSeq;
+    const keywordInfoList: KeywordInfo[] = [];
+
+    for (const [keyword, weight] of Object.entries(obj.newsKeyword)) {
+      keywordInfoList.push({ keyword, weight });
     }
 
-    useEffect(() => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
-        setLoadingState(true);
-        reMainRef();
-    }, [category]);
-    useEffect(() => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
-        reMainRef();
-    }, [update]);
+    return {
+      newsSeq,
+      keywordInfoList,
+    };
+  }
 
-    return (
-        <>
-            <div className={styled.container}>
-                <div className={styled.toggle__container}>
-                    <div className={cx("toggle")}>
-                        <div
-                            onClick={() => toggle("user-recommend/v2")}
-                            ref={userRecommendEl}
-                            className={cx("toggle__item", "active")}
-                        >
-                            내 취향 뉴스
-                        </div>
-                        <div
-                            onClick={() => toggle("other-recommend")}
-                            ref={otherRecommendEl}
-                            className={cx("toggle__item")}
-                        >
-                            다른 사람 뉴스
-                        </div>
-                    </div>
-                </div>
-                <div className={cx("section", ["box-shodow-custom"])}>
-                    {isLoading ? (
-                        <Loading />
-                    ) : (
-                        <>
-                            <ul className={cx("line")}>
-                                {newsList.map((subGroup, index) => (
-                                    <li
-                                        key={index}
-                                        className={cx("item-container")}
-                                    >
-                                        {subGroup.map(
-                                            (item: any, idx: number) => (
-                                                <div
-                                                    onClick={() =>
-                                                        router.push(
-                                                            "/news/" +
-                                                                item.newsSeq +
-                                                                (category ==
-                                                                "user-recommend/v2"
-                                                                    ? true
-                                                                    : false)
-                                                        )
-                                                    }
-                                                    key={item.newsSeq}
-                                                    className={cx("line-item")}
-                                                >
-                                                    <img
-                                                        src={
-                                                            item.newsImgUrl ==
-                                                                "None" ||
-                                                            !checkHttpSImg(
-                                                                item.newsImgUrl
-                                                            )
-                                                                ? "/images/default-news-image.jpg"
-                                                                : item.newsImgUrl
-                                                        }
-                                                        alt=""
-                                                    />
-                                                    <div
-                                                        className={cx("title")}
-                                                    >
-                                                        {item.newsTitle}
-                                                    </div>
-                                                    <div
-                                                        className={cx(
-                                                            "description"
-                                                        )}
-                                                    >
-                                                        {item.newsDescription}
-                                                    </div>
-                                                    <div className={cx("date")}>
-                                                        조회수 {item.countView}
-                                                        회 • &nbsp;
-                                                        {changeDateFormat(
-                                                            item.newsCreatedAt
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            )
-                                        )}
-                                    </li>
-                                ))}
-                                {category === "user-recommend/v2" && (
-                                    <div className={cx("refresh-container")}>
-                                        <div
-                                            className={styled.refreshButton}
-                                            onClick={() => refresh()}
-                                        >
-                                            <RefreshIcon
-                                                className={styled.icon}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-                            </ul>
-                        </>
-                    )}
-                </div>
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    setLoadingState(true);
+    reMainRef();
+  }, [category]);
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    reMainRef();
+  }, [update]);
+
+  return (
+    <>
+      <div className={styled.container}>
+        <div className={styled.toggle__container}>
+          <div className={cx("toggle")}>
+            <div
+              onClick={() => toggle("user-recommend/v2")}
+              ref={userRecommendEl}
+              className={cx("toggle__item", "active")}
+            >
+              내 취향 뉴스
             </div>
-        </>
-    );
+            <div
+              onClick={() => toggle("other-recommend")}
+              ref={otherRecommendEl}
+              className={cx("toggle__item")}
+            >
+              다른 사람 뉴스
+            </div>
+          </div>
+        </div>
+        <div className={cx("section", ["box-shodow-custom"])}>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <>
+              <ul className={cx("line")}>
+                {newsList.map((subGroup, index) => (
+                  <li key={index} className={cx("item-container")}>
+                    {subGroup.map((item: any, idx: number) => (
+                      <div
+                        onClick={() =>
+                          router.push(
+                            "/news/" +
+                              item.newsSeq +
+                              "?" +
+                              (category == "user-recommend/v2"
+                                ? createQueryString("user", true)
+                                : createQueryString("user", false))
+                          )
+                        }
+                        key={item.newsSeq}
+                        className={cx("line-item")}
+                      >
+                        <img
+                          src={
+                            item.newsImgUrl == "None" ||
+                            !checkHttpSImg(item.newsImgUrl)
+                              ? "/images/default-news-image.jpg"
+                              : item.newsImgUrl
+                          }
+                          alt=""
+                        />
+                        <div className={cx("title")}>{item.newsTitle}</div>
+                        <div className={cx("description")}>
+                          {item.newsDescription}
+                        </div>
+                        <div className={cx("date")}>
+                          조회수 {item.countView}회 • &nbsp;
+                          {changeDateFormat(item.newsCreatedAt)}
+                        </div>
+                      </div>
+                    ))}
+                  </li>
+                ))}
+                {category === "user-recommend/v2" && (
+                  <div className={cx("refresh-container")}>
+                    <div
+                      className={styled.refreshButton}
+                      onClick={() => refresh()}
+                    >
+                      <RefreshIcon className={styled.icon} />
+                    </div>
+                  </div>
+                )}
+              </ul>
+            </>
+          )}
+        </div>
+      </div>
+    </>
+  );
 }
