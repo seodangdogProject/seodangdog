@@ -168,7 +168,7 @@ async def mf_update(data):
         print(i)
         news_seq = i['news_seq']
         weight = i['weight']
-
+        # print(type(0))
         rating = result[result['news_seq'] == news_seq]
 
         if len(rating) <= 0:
