@@ -162,10 +162,10 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
         }
 
         // 없으면
-        // newsKeywordList.get(keyword)  (몽고디비의 뉴스 서머리 키워드의 가중치) * weight(1.5)
+        // newsKeywordList.get(keyword)  (몽고디비의 뉴스 서머리 키워드의 가중치) * weight(3.0 or 1.5)
 
         // 있으면
-        // 기존의 mysql에 저장된 가중치 + 3 * 몽고db가중치 = mysql 키워드 가중치
+        // 기존의 mysql에 저장된 가중치 + 3.0 or 1.5 * 몽고db가중치 = mysql 키워드 가중치
 
         System.out.println("새로운 키워드 : " + insertKeyword);
         saveAll(user, insertKeyword);
