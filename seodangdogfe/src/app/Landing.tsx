@@ -1,29 +1,14 @@
 "use client";
-import Head from "next/head";
 import Buttons from "@/components/Buttons";
 import Section1 from "@/components/Section/Section1";
 import Section2 from "@/components/Section/Section2";
 import Section3 from "@/components/Section/Section3";
-import Section4 from "@/components/Section/Section4";
+import Section4 from "@/components/Section/Section6";
 import Section5 from "@/components/Section/Section5";
-import Section6 from "@/components/Section/Section6";
 import { useEffect, useRef, useState } from "react";
+import { pageObjArray } from "./page";
 
-export interface IPageObj {
-  pageNum: number;
-  bgColor: string;
-}
-
-const pageObjArray = [
-  { pageNum: 1 },
-  { pageNum: 2 },
-  { pageNum: 3 },
-  { pageNum: 4 },
-  { pageNum: 5 },
-  { pageNum: 6 },
-];
-
-const Landing = () => {
+export const Landing = () => {
   const [windowObj, setWindowObj] = useState<Window>();
   const [currentPageNum, setCurrentPageNum] = useState<number>(1);
   const totalNum = pageObjArray.length;
@@ -109,6 +94,13 @@ const Landing = () => {
           pageRefs={pageRefs}
           status={status[2]}
         />
+        <Section5
+          key={6}
+          pageNum={6}
+          window={windowObj!}
+          pageRefs={pageRefs}
+          status={status[5]}
+        />
         <Section4
           key={4}
           pageNum={4}
@@ -122,13 +114,6 @@ const Landing = () => {
           window={windowObj!}
           pageRefs={pageRefs}
           status={status[4]}
-        />
-        <Section6
-          key={6}
-          pageNum={6}
-          window={windowObj!}
-          pageRefs={pageRefs}
-          status={status[5]}
         />
 
         <div
@@ -152,5 +137,3 @@ const Landing = () => {
     </>
   );
 };
-
-export default Landing;

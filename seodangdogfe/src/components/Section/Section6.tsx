@@ -34,9 +34,8 @@ const Section = (props: ISectionProps) => {
               onInit={(typewriter) => {
                 typewriter
                   .typeString(
-                    "여러분의 <span style='color: #9758FF;'> 히스토리를</span><br/>"
+                    "다시 보고 싶은 <br/> <span style='color: #9758FF;'> 단어를 저장</span>할 수 있습니다"
                   )
-                  .typeString("깔끔한 화면으로 보여줍니다.")
                   .start();
               }}
               options={{
@@ -48,8 +47,9 @@ const Section = (props: ISectionProps) => {
 
           {props.status && (
             <div className={commonStyles.content}>
-              뱃지의 획득여부를 확인하고 <br />
-              대표 뱃지 이미지를 선택할 수 있습니다.
+              뉴스를 읽을 때 <br />
+              단어를 스크랩하여 <br />
+              나만의 단어장에 저장할 수 있습니다.
             </div>
           )}
         </div>
@@ -66,7 +66,7 @@ const Section = (props: ISectionProps) => {
             style={{
               width: "620px",
             }}
-            src="/images/landing-main2-image.jpg"
+            src="/images/landing-fourth.webp"
             alt=""
           />
         )}
