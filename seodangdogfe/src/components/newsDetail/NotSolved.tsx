@@ -45,10 +45,6 @@ export default function NotSolved({
   function changeCursor(cursorToChange: number) {
     setCursor(cursorToChange);
   }
-  function nextCursor(e: any) {
-    if (e.keyCode === 32 || e.keyCode == 17)
-      setCursor((prev) => (prev + 1) % 3);
-  }
   useEffect(() => {
     detailContainerEl.current?.focus();
   }, []);
@@ -57,7 +53,6 @@ export default function NotSolved({
       <div
         tabIndex={-1}
         id="newsDetailFocus"
-        onKeyDown={(e) => nextCursor(e)}
         ref={detailContainerEl}
         className={cx("detail-container", ["box-shodow-custom"])}
       >
