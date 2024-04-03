@@ -244,7 +244,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .select(news)
                 .from(news)
                 .leftJoin(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq)).fetchJoin()
-                .where(news.newsSeq.in(recommendedNewsSeqs).and(userNews.isSolved.isNull().or(userNews.isSolved.eq(false)))
+                .where(news.newsSeq.in(recommendedNewsSeqs)
                 ).fetch();
 
         // 추천된 순서대로 뉴스 목록 정렬
