@@ -114,11 +114,10 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
             news_seq = rn.news_seq
             rating = rn.news_similarity
             weight = 1.5
-            print(news_seq, rating)
             online_learning(mf, user_seq, news_seq, rating, weight)
         save_mf(mf)
 
-        print("mf_recommend", len(recommendations))
+        print("mf_recommend", user_seq, len(recommendations))
         return recommendations
     # 예외대처(온라인학습으로 했어도 예외발생시 재학습)
     else:
@@ -139,7 +138,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
             news_seq = rn.news_seq
             rating = rn.news_similarity * 10
             weight = 3.0
-            print("cbf", rn.news_id, rn.news_seq, rn.news_title, rn.news_similarity)
+            # print("cbf", rn.news_id, rn.news_seq, rn.news_title, rn.news_similarity)
             online_learning(mf, user_seq, news_seq, rating, weight)
         save_mf(mf)
         return recommended_news

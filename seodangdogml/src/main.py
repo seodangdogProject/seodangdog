@@ -35,12 +35,11 @@ def scheduled_job():
     update_news()
     print("스케쥴 : 뉴스 문제 저장 종료")
     renewal_news_data()
+    renewal_news_df()
     print("스케쥴 : renewal_news_data 종료")
     print("예정된 스케쥴 종료 : crawling_cron")
 
-    # cbf추천을 위한 초기데이터 설정(recommend.cbf_recommend)
-    renewal_news_data()
-    renewal_news_df()
+
 
 # mf = load_mf()
 
