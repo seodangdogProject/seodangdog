@@ -49,7 +49,11 @@ def recommend_news(user_seq, mf_model, top_n=21):
     solved_news_list = [sn['news_seq'] for sn in solved_news]
 
     for item_id in mf_model.item_id_index.keys():
+        # print(mf_model.user_id_index[user_seq])
+        # print(mf_model.item_id_index[item_id])
+        # print()
         predicted_rating = mf_model.get_one_prediction(user_seq, item_id)
+        # print("recom ",predicted_rating)
         if item_id not in solved_news_list:
             predicted_ratings.append((item_id, predicted_rating))
         else:
@@ -57,8 +61,8 @@ def recommend_news(user_seq, mf_model, top_n=21):
             # print("solved ", item_id)
 
     # 예측 평점을 기준으로 내림차순 정렬
-    predicted_ratings.sort(key=lambda x: x[1], reverse=False)
-    predicted_ratings_solved.sort(key=lambda x: x[1], reverse=False)
+    predicted_ratings.sort(key=lambda x: x[1], reverse=True)
+    predicted_ratings_solved.sort(key=lambda x: x[1], reverse=True)
 
     predicted_ratings = predicted_ratings
     # +predicted_ratings_solved
@@ -110,11 +114,10 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
             news_seq = rn.news_seq
             rating = rn.news_similarity
             weight = 1.5
-            # print(rn.news_id, rn.news_seq, rn.news_title, rn.news_similarity)
             online_learning(mf, user_seq, news_seq, rating, weight)
         save_mf(mf)
 
-        print("mf_recommend", len(recommendations))
+        print("mf_recommend", user_seq, len(recommendations))
         return recommendations
     # 예외대처(온라인학습으로 했어도 예외발생시 재학습)
     else:
@@ -135,7 +138,7 @@ async def mf_recommend(background_tasks: BackgroundTasks, user_seq: int):
             news_seq = rn.news_seq
             rating = rn.news_similarity * 10
             weight = 3.0
-            # print(rn.news_id, rn.news_seq, rn.news_title, rn.news_similarity)
+            # print("cbf", rn.news_id, rn.news_seq, rn.news_title, rn.news_similarity)
             online_learning(mf, user_seq, news_seq, rating, weight)
         save_mf(mf)
         return recommended_news
@@ -165,7 +168,7 @@ async def mf_update(data):
         print(i)
         news_seq = i['news_seq']
         weight = i['weight']
-
+        # print(type(0))
         rating = result[result['news_seq'] == news_seq]
 
         if len(rating) <= 0:
