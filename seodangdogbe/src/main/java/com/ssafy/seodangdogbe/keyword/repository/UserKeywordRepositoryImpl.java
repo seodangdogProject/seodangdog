@@ -285,7 +285,8 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     public List<UserKeyword> getWordCloudUserKeyword(User user) {
         return queryFactory.selectFrom(userKeyword)
                 .where(userKeyword.user.eq(user))
-                .limit(400)
+                .orderBy(userKeyword.weight.desc())
+                .limit(50)
                 .fetch();
     }
 }
