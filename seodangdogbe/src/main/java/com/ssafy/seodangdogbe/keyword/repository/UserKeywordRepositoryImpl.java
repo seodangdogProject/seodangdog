@@ -92,7 +92,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     @Transactional
     public MessageResponseDto decrementKeywordWeightV2(User user, List<DeWeightReqDto> deWeightReqDtoList) {
 
-        System.out.println(deWeightReqDtoList);
+//        System.out.println(deWeightReqDtoList);
         List<DeWeightReqDto.KeywordInfo> list = DeWeightReqDto.extractKeywordInfoList(deWeightReqDtoList);
         updateWeightFastReqDto dto = new updateWeightFastReqDto();
 
@@ -102,10 +102,10 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
         // fast Api로 전송하기
         dto.setUserSeq(user.getUserSeq());
         dto.setInfo(DeWeightReqDto.extractInfoDtoList(deWeightReqDtoList));
-        System.out.println(dto);
+//        System.out.println(dto);
 
         // fastApi로 전송
-        log.info("fast api 요청 dto " , dto);
+//        log.info("fast api 요청 dto " , dto);
         return fastApiService.updateWeigth(dto);
     }
 
@@ -129,7 +129,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
             }
         }
 
-        System.out.println("새로운 키워드 : " + insertKeyword);
+//        System.out.println("새로운 키워드 : " + insertKeyword);
         saveAll(user, insertKeyword);
 
         queryFactory
@@ -167,10 +167,10 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
         // 있으면
         // 기존의 mysql에 저장된 가중치 + 3.0 or 1.5 * 몽고db가중치 = mysql 키워드 가중치
 
-        System.out.println("새로운 키워드 : " + insertKeyword);
+//        System.out.println("새로운 키워드 : " + insertKeyword);
         saveAll(user, insertKeyword);
 
-        System.out.println("기존에 존재하는 키워드 : " + updateKeyword);
+//        System.out.println("기존에 존재하는 키워드 : " + updateKeyword);
         updateMultiAll(user, updateKeyword, newsKeywordList, 3);
     }
 
@@ -198,7 +198,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
         }
 
 
-        System.out.println("새로운 키워드 : " + insertKeyword);
+//        System.out.println("새로운 키워드 : " + insertKeyword);
         saveAll(user, insertKeyword);
 
         // 소수점 10째자리까지 만들어주기 위해서 *e10/e10
