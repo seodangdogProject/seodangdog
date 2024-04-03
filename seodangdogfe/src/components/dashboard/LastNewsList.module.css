@@ -77,16 +77,29 @@
 }
 
 .cardNews {
-  width: 95%;
+  width: 90%;
   height: 30%;
-  margin-bottom: 50px;
+  /* margin-bottom: 15px; */
   display: flex;
 }
 
 .imageContainer {
-  width: 40%;
+  width: 35%;
   height: 100%;
   display: flex;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.card {
+  width: 95%;
+  /* height: 100%; */
+  padding: 10px;
+  margin-bottom: 15px;
+}
+.card:hover {
+  background-color: rgba(55, 25, 205, 0.103);
+  border-radius: 15px;
+  cursor: pointer;
 }
 
 .imageContainer img {

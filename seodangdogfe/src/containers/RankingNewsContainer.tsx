@@ -8,6 +8,7 @@ import changeDateFormat from "@/utils/changeDateFormat";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { loadingState } from "@/atoms/loadingRecoil";
 import Loading from "@/app/loading1";
+import checkHttpSImg from "@/utils/checkHttpsImg";
 export default function RankingNewsContainer() {
   const cx = classNames.bind(styled);
   const [newsList, setNewsList] = useState<any[]>([]);
@@ -82,7 +83,8 @@ export default function RankingNewsContainer() {
                   <div className={cx("first__card")}>
                     <img
                       src={
-                        newsList[0].newsImgUrl == "None"
+                        newsList[0].newsImgUrl == "None" ||
+                        !checkHttpSImg(newsList[0].newsImgUrl)
                           ? "/images/default-news-image.jpg"
                           : newsList[0].newsImgUrl
                       }
@@ -111,7 +113,8 @@ export default function RankingNewsContainer() {
                   >
                     <img
                       src={
-                        newsList[1].newsImgUrl == "None"
+                        newsList[1].newsImgUrl == "None" ||
+                        !checkHttpSImg(newsList[1].newsImgUrl)
                           ? "/images/default-news-image.jpg"
                           : newsList[1].newsImgUrl
                       }
@@ -138,7 +141,8 @@ export default function RankingNewsContainer() {
                   >
                     <img
                       src={
-                        newsList[2].newsImgUrl == "None"
+                        newsList[2].newsImgUrl == "None" ||
+                        !checkHttpSImg(newsList[2].newsImgUrl)
                           ? "/images/default-news-image.jpg"
                           : newsList[2].newsImgUrl
                       }
@@ -173,7 +177,8 @@ export default function RankingNewsContainer() {
                       >
                         <img
                           src={
-                            item.newsImgUrl == "None"
+                            item.newsImgUrl == "None" ||
+                            !checkHttpSImg(item.newsImgUrl)
                               ? "/images/default-news-image.jpg"
                               : item.newsImgUrl
                           }
