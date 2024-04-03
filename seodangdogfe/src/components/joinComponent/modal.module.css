@@ -1,151 +1,155 @@
 .horizontal {
-    width: 100%; /* 수평선의 가로 길이 */
-    height: 1px; /* 수평선의 세로 길이 */
-    background-color: #ccc; /* 수평선의 색상 */
-    margin: 10px 0; /* 수평선 위 아래 여백 */
+  width: 100%; /* 수평선의 가로 길이 */
+  height: 1px; /* 수평선의 세로 길이 */
+  background-color: #ccc; /* 수평선의 색상 */
+  margin: 10px 0; /* 수평선 위 아래 여백 */
 }
 
 .close_button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .id_check_btn {
-    cursor: pointer;
-    margin-left: auto;
-    font-size: 10px;
-    width: "20%";
-    font-family: "prentendard";
-    background-color: grey;
-    border-radius: 20px;
-    padding: 5px;
-    display: inline-block;
-    color: white;
+  cursor: pointer;
+  margin-left: auto;
+  font-size: 10px;
+  width: "20%";
+  font-family: "prentendard";
+  background-color: grey;
+  border-radius: 20px;
+  padding: 5px;
+  display: inline-block;
+  color: white;
 }
 
 .modal_content {
-    position: absolute;
-    background-color: white;
-    border-radius: 5px;
-    transition: opacity 0.3s;
+  position: absolute;
+  background-color: white;
+  border-radius: 5px;
+  transition: opacity 0.3s;
 }
 
 .modal_container {
-    border-radius: 10px;
-    width: 30%;
-    display: flex;
-    position: fixed;
-    flex-direction: column; /* 세로로 정렬 */
-    justify-content: center;
-    background-color: white;
-    height: 80%;
-    /* border: 1px solid red; */
-    z-index: 100;
-    padding: 10px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  border-radius: 10px;
+  width: 30%;
+  display: flex;
+  position: fixed;
+  flex-direction: column; /* 세로로 정렬 */
+  justify-content: center;
+  background-color: white;
+  height: 80%;
+  /* border: 1px solid red; */
+  z-index: 100;
+  padding: 10px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .header_container {
-    height: 20%;
-    /* border: 1px solid blue; */
-    display: flex;
-    flex-direction: column; /* 세로로 정렬 */
-    align-items: center;
-    margin-bottom: 20px;
+  height: 20%;
+  /* border: 1px solid blue; */
+  display: flex;
+  flex-direction: column; /* 세로로 정렬 */
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .exit_button {
-    cursor: pointer;
-    align-self: flex-end; /* 오른쪽 정렬 */
-    margin-right: 2%;
-    margin-top: 2%;
-    display: inline-block;
+  cursor: pointer;
+  align-self: flex-end; /* 오른쪽 정렬 */
+  margin-right: 2%;
+  margin-top: 2%;
+  display: inline-block;
 }
 
 .logo_container {
-    display: flex;
-    flex-direction: column; /* 세로로 정렬 */
+  display: flex;
+  flex-direction: column; /* 세로로 정렬 */
 }
 
 /*form container*/
 .form_container {
-    height: 60%;
-    /* border: 1px solid blue; */
-    padding-top: 5%;
-    padding-left: 10%;
-    padding-right: 10%;
-    display: flex;
-    justify-content: center; /* 수평 가운데 정렬 */
-    flex-direction: column; /* 세로로 정렬 */
+  height: 60%;
+  /* border: 1px solid blue; */
+  padding-top: 5%;
+  padding-left: 10%;
+  padding-right: 10%;
+  display: flex;
+  justify-content: center; /* 수평 가운데 정렬 */
+  flex-direction: column; /* 세로로 정렬 */
 }
 
 .input_group_id,
 .input_group_pass {
-    height: 25%;
+  height: 25%;
 }
 
 .input_group_id input {
-    width: 100%;
-    border: none; /* 테두리 제거 */
-    outline: none; /* 포커스 효과 제거 */
+  width: 100%;
+  border: none; /* 테두리 제거 */
+  outline: none; /* 포커스 효과 제거 */
 }
 
 .input_group_pass input {
-    width: 90%;
-    border: none; /* 테두리 제거 */
-    outline: none; /* 포커스 효과 제거 */
+  width: 90%;
+  border: none; /* 테두리 제거 */
+  outline: none; /* 포커스 효과 제거 */
 }
 
 .login_button_container {
-    display: flex;
-    height: 20%;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
+  display: flex;
+  height: 20%;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
 }
 
 .login_button {
-    /* 시작하기 버튼*/
-    border-radius: 25px;
-    background-image: linear-gradient(
-        to right,
-        rgba(73, 57, 113, 1),
-        rgba(103, 68, 192, 1)
-    );
-    font-family: "hambaknun";
-    color: #fff;
-    font-size: 20px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 25px;
-    padding-right: 25px;
-    width: 70%;
+  /* 시작하기 버튼*/
+  border-radius: 25px;
+  background-image: linear-gradient(
+    to right,
+    rgba(73, 57, 113, 1),
+    rgba(103, 68, 192, 1)
+  );
+  font-family: "hambaknun";
+  color: #fff;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 25px;
+  padding-right: 25px;
+  width: 70%;
 }
 
 /*footer container*/
 .footer {
-    width: 100%;
-    height: 10%;
+  width: 100%;
+  height: 10%;
 
-    display: flex;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
+  display: flex;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
 }
 
 .link {
-    color: red;
-    cursor: pointer;
+  color: red;
+  cursor: pointer;
 }
 
 .pass_button {
-    cursor: pointer;
-    display: inline-block;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.toast-popup {
+  width: 300px;
 }
