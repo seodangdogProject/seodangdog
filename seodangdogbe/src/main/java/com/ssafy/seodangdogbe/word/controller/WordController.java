@@ -124,7 +124,7 @@ public class WordController {
 
 
 
-//    @Operation(description = "사용자단어 테이블에서 단어를 삭제한다.")
+    @Operation(description = "사용자단어 테이블에서 단어를 삭제한다.")
     @PatchMapping("/myword/{word}")  // or word
     public ResponseEntity<MessageAlterResponseDto> removeUserWord(@PathVariable("word") String word){
         int userSeq = userService.getUserSeq();

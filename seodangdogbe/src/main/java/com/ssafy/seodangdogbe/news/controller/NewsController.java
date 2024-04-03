@@ -17,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.ssafy.seodangdogbe.news.dto.MetaNewsDto.*;
 
@@ -35,24 +37,27 @@ public class NewsController {
     @GetMapping("/{newsSeq}")
     public MetaNewsResponseDto getNewsDetails(@PathVariable(name = "newsSeq") Long newsSeq){
         // 로그인한 사용자 jwt에서 user가져오기
-       User user = userService.getUser();
+        User user = userService.getUser();
 
         MetaNewsResponseDto metaNewsResponseDto = newsService.getNewsDetailsByNewsSeq(newsSeq);
-        List<String> newsKeywordList = new ArrayList<>(metaNewsResponseDto.getNewsKeyword().keySet());
-        // mysql db 가중치 곱
-        keywordService.addKeywordListWeight(user, newsKeywordList, 1.3);
+        Map<String, Double> newsKeywordMap = new HashMap<>(metaNewsResponseDto.getNewsSummaryKeyword());
+        keywordService.addKeywordMapWeight(user, newsKeywordMap, 1.5);  // 클릭한 뉴스의 키워드 가중치 * 1.5
+
+        newsService.addViewCount(newsSeq);
 
         if (!newsService.getUserNewsExist(user.getUserSeq(), newsSeq)){    // 사용자-뉴스 테이블에 기록이 없을 경우 (최초접근 데이터 넣기)
             // fast api
             List<InfoDto> infoDto = new ArrayList<>();
             infoDto.add(new InfoDto(newsSeq, 2.0));
-            fastApiService.updateWeigth(new updateWeightFastReqDto(user.getUserSeq(),infoDto)); // 1.7
+            fastApiService.updateWeigth(new updateWeightFastReqDto(user.getUserSeq(),infoDto)); // 2.0
+
             newsService.setUserNewsInit(user.getUserSeq(), newsSeq);
         } else {    // 사용자-뉴스 접근기록이 있는 경우
             // fast api
             List<InfoDto> infoDto = new ArrayList<>();
             infoDto.add(new InfoDto(newsSeq, 1.7));
             fastApiService.updateWeigth(new updateWeightFastReqDto(user.getUserSeq(),infoDto)); // 1.7
+
             UserNewsResponseDto userRecord = newsService.getReadOrSolveRecord(user.getUserSeq(), newsSeq);
             metaNewsResponseDto.setHighlightList(userRecord.getHighlightList());
             metaNewsResponseDto.setWordList(userRecord.getWordList());
@@ -85,8 +90,18 @@ public class NewsController {
     public ResponseEntity<MessageAlterResponseDto> setSolveRecord(@RequestBody UserNewsSolveRequestDto dto){
         User user = userService.getUser();
 
+        MetaNewsResponseDto metaNewsResponseDto = newsService.getNewsDetailsByNewsSeq(dto.getNewsSeq());
+        Map<String, Double> newsKeywordMap = new HashMap<>(metaNewsResponseDto.getNewsSummaryKeyword());
+        keywordService.addKeywordMapWeight(user, newsKeywordMap, 1.2);  // 클릭한 뉴스의 키워드 가중치 * 1.2
+
+        // fast api
+        List<InfoDto> infoDto = new ArrayList<>();
+        infoDto.add(new InfoDto(dto.getNewsSeq(), 2.0));
+        fastApiService.updateWeigth(new updateWeightFastReqDto(user.getUserSeq(),infoDto)); // 2.0
+
+        // 뱃지 획득체크
         if (newsService.setUserNewsSolve(user.getUserSeq(), dto)) {
-            String alterMsg = userBadgeService.checkNewBadge(user)  ; // 뱃지 획득체크
+            String alterMsg = userBadgeService.checkNewBadge(user);
             if (alterMsg != null){
                 return ResponseEntity.status(HttpStatus.OK).body(new MessageAlterResponseDto("풀이기록 저장 성공", alterMsg));
             }
