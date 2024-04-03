@@ -146,7 +146,7 @@ def select_news_id_seq():
         # 연결 종료
         connection.close()
 # 테스트를 위해 뽑아온 키워드들을 모든 사용자에게 부여한다.
-@router.get('/fast/insert_all_user_keyword')
+# @router.get('/fast/insert_all_user_keyword')
 def insert_all_user_keyword():
     print('start -  insert_all_user_keyword')
     limit = 50  # 유저당 넣을 키워드 수
@@ -358,6 +358,7 @@ async def async_update_ratings(rating_data):
 # cbf추천을 위해 몽고디비에서 데이터를 들고온다. 뉴스제목, 아이디, 키워드를 들고온다
 def get_news_title_keyword():
     response = client.meta_news.find({}, {"_id": 1, "newsTitle": 1, "newsKeyword": 1, "newsSummaryKeyword": 1})
+    # response = client.meta_news.find({}, {"_id": 1, "newsTitle": 1, "newsKeyword": 1, "newsSummaryKeyword": 1})
     # result = [doc for doc in response]
 
     if not response:
