@@ -43,6 +43,8 @@ public class NewsController {
         Map<String, Double> newsKeywordMap = new HashMap<>(metaNewsResponseDto.getNewsSummaryKeyword());
         keywordService.addKeywordMapWeight(user, newsKeywordMap, 1.5);  // 클릭한 뉴스의 키워드 가중치 * 1.5
 
+        newsService.addViewCount(newsSeq);
+
         if (!newsService.getUserNewsExist(user.getUserSeq(), newsSeq)){    // 사용자-뉴스 테이블에 기록이 없을 경우 (최초접근 데이터 넣기)
             // fast api
             List<InfoDto> infoDto = new ArrayList<>();
