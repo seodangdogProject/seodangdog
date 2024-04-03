@@ -89,7 +89,7 @@ const WordResult: React.FC = () => {
               <div className={styles.circle}>
                 <span className={styles.score}>{correctWordList.length}</span>
                 <span className={styles.per}>/</span>
-                <span className={styles.ten}>10</span>
+                <span className={styles.ten}>3</span>
               </div>
             </div>
             <div className={styles.right_container}>
