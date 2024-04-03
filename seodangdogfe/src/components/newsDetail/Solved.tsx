@@ -58,7 +58,7 @@ export default function Solved({
             <Summary
               isSolved={true}
               setUserSummary={setUserSummary} // 어차피 실행 안될거라서 막 넣어줌
-              newsSummary={data.newsSummary[0]}
+              newsSummary={data.newsSummary}
               userSummary={
                 data.userSummary !== null
                   ? data.userSummary.userSummaryContent
