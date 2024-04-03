@@ -37,6 +37,8 @@ function Modal({
   let [closeVisible, setCloseVisibleVisible] = useState(true);
   let [openVisible, setOpenVisibleVisible] = useState(false);
   let [checkId, setCheckId] = useState(false);
+  const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   // 서버로 보낼 데이터들
   const idEl = useRef<HTMLInputElement>(null);
@@ -82,9 +84,6 @@ function Modal({
       console.error("회원가입 중 에러 발생:", error);
     }
   };
-
-  const [toast, setToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
 
   // 회원가입버튼 클릭시 처리하는 로직
   const registHandler = async () => {

@@ -15,6 +15,7 @@ import TimerIcon from "../../../assets/timer-icon.svg";
 import GameIcon from "../../../assets/quiz-logo-icon.svg";
 import CorrectIcon from "../../../assets/correct-icon.svg";
 import UncorrectIcon from "../../../assets/uncorrect-icon.svg";
+import ToastPopup from "@/components/toast/Toast";
 
 const OneWord: React.FC = () => {
   const router = useRouter();
@@ -32,6 +33,8 @@ const OneWord: React.FC = () => {
   const [isUnCorrectIcon, setIsUnCorrectIcon] = useState<boolean>(false);
   const setCorrectWordList = useSetRecoilState(correctWordListState);
   const setUnCorrectWordList = useSetRecoilState(unCorrectWordListState);
+  const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   // 단어장에 추가하기
   const addItemToList = useCallback(
@@ -119,7 +122,9 @@ const OneWord: React.FC = () => {
       } else {
         // 마지막 문제라면 모든 문제를 완료했음을 알립니다.
         // alert("모든 문제를 완료했습니다.");
-        router.push("/game_result");
+        setTimeout(() => {
+          router.push("/game_result");
+        }, 1200);
       }
     } else {
       setIsUnCorrect(true);
@@ -177,8 +182,9 @@ const OneWord: React.FC = () => {
       } else if (sec == 13) {
         setIsAnswer(false);
         if (currentIndex == wordList.length - 1) {
-          alert("모든 문제가 끝남");
           clearInterval(timer1);
+          // setToastMessage("모든 문제가 끝남");
+          // setToast(true);
           router.push("/game_result");
         } else {
           setCurrentIndex((prevIndex) =>
@@ -248,6 +254,11 @@ const OneWord: React.FC = () => {
               {wordList[currentIndex]?.mean}
             </div>
           </div>
+
+          <div>
+            {toast && <ToastPopup setToast={setToast} message={toastMessage} />}
+          </div>
+
           <div className={styles.answer_conatiner}>
             {inputValues.map((value, index) => (
               <div key={index} className={styles.characterBox}>

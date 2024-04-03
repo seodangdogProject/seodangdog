@@ -7,6 +7,7 @@ import Link from "next/link";
 import styles from "./game_layout.module.css";
 import JoinModal from "../../../components/joinComponent/joinModal";
 import { publicFetch } from "../../../utils/http-commons";
+import ToastPopup from "@/components/toast/Toast";
 
 interface Keyword {
   id: number;
@@ -25,6 +26,9 @@ export default function Join() {
   const [userKeywordsSize, setUserKeywordsSize] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [allKeywords, setAllKeywords] = useState<Keyword[]>([]);
+
+  const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   //배열 섞기
   function shuffleArray(array: Keyword[]) {
@@ -87,7 +91,8 @@ export default function Join() {
     if (userKeywordsSize > 9) {
       setOpenModal(!isOpenModal);
     } else {
-      alert("단어를 10개 이상 선택해주세요.");
+      setToastMessage("단어를 10개 이상 선택해주세요.");
+      setToast(true);
     }
   }, [isOpenModal, userKeywordsSize]);
 
@@ -174,6 +179,10 @@ export default function Join() {
         >
           새로운 키워드 받기
         </button>
+
+        <div>
+          {toast && <ToastPopup setToast={setToast} message={toastMessage} />}
+        </div>
 
         <Link href="/join_game">
           <div
