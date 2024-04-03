@@ -27,11 +27,11 @@ def renewal_news_df():
 
 
 class MfNewsDto:
-    def __init__(self, news_seq, news_title, news_similarity, news_summary_keyword):
+    def __init__(self, news_seq, news_title, news_similarity, news_keyword):
         self.news_seq = news_seq
         self.news_title = news_title
         self.news_similarity = news_similarity
-        self.news_keyword = news_summary_keyword
+        self.news_keyword = news_keyword
 
 
 mf = load_mf()
@@ -74,8 +74,8 @@ def recommend_news(user_seq, mf_model, top_n=21):
         news_title = get_news_title(news_seq)
         # news_similarity = format_weight(predicted_ratings[i][1])
         news_similarity = format_weight(predicted_ratings[i][1])
-        news_summary_keyword= df_news[df_news['news_seq'] == news_seq]['news_summary_keyword'].values[0]
-        recommended_news.append(MfNewsDto(news_seq, news_title, news_similarity, news_summary_keyword))
+        news_keyword= df_news[df_news['news_seq'] == news_seq]['news_keyword'].values[0]
+        recommended_news.append(MfNewsDto(news_seq, news_title, news_similarity, news_keyword))
 
     return recommended_news
 
