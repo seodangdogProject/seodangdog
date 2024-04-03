@@ -26,7 +26,7 @@ const RecentNewsPreview = (props: newsProps) => {
                                         display: "flex",
                                         width: "100%",
                                     }}
-                                    href={`/news/${props.seenNewsthumbnail.newsSeq}`}
+                                    href={`/news/${props.seenNewsthumbnail.newsSeq}/true`}
                                 >
                                     <div className={styled.date}>
                                         {changeDateFormat(
@@ -90,7 +90,7 @@ const RecentNewsPreview = (props: newsProps) => {
                                         display: "flex",
                                         width: "100%",
                                     }}
-                                    href={`/news/${props.solvedNewsthumbnail.newsSeq}`}
+                                    href={`/news/${props.solvedNewsthumbnail.newsSeq}/true`}
                                 >
                                     <div className={styled.date}>
                                         {changeDateFormat(
