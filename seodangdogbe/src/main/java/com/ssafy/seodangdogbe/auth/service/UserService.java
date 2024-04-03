@@ -67,8 +67,8 @@ public class UserService {
         user = userRepository.save(user); // 저장
 
         for (String keyword : userSignUpDto.getKeywords()) {
-            // 회원가입 시 선택한 키워드들에 대해 UserKeyword 엔티티 생성 및 저장 (가중치 1)
-            UserKeyword userKeyword = new UserKeyword(user, keyword, 1.0);
+            // 회원가입 시 선택한 키워드들에 대해 UserKeyword 엔티티 생성 및 저장 (가중치 5)
+            UserKeyword userKeyword = new UserKeyword(user, keyword, 5.0);
             userKeywordRepository.save(userKeyword);
         }
 
