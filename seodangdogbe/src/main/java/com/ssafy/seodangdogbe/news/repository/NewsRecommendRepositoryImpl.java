@@ -222,17 +222,17 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
         System.out.println(alreadyKeyword);
 
         // 기존에 있는 키워드는 -> * 1.4
-        queryFactory
-                .update(userKeyword)
-                .set(userKeyword.weight, userKeyword.weight.multiply(1.4).multiply(1e10).divide(1e10))
-                .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(alreadyKeyword.keySet()))
-                .execute();
-
-        // 새로 들어온 키워드
-        saveAllV2(user, newKeyword);
-
-        entityManager.flush();
-        entityManager.clear();
+//        queryFactory
+//                .update(userKeyword)
+//                .set(userKeyword.weight, userKeyword.weight.multiply(1.4).multiply(1e10).divide(1e10))
+//                .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(alreadyKeyword.keySet()))
+//                .execute();
+//
+//        // 새로 들어온 키워드
+         saveAllV2(user, newKeyword);
+//
+//        entityManager.flush();
+//        entityManager.clear();
 
         return new UserRecommendResponseDtoV2(newsPreviewLists);
     }
@@ -355,7 +355,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     public void setValues(PreparedStatement sql, int i) throws SQLException {
                         sql.setInt(1, user.getUserSeq());
                         sql.setString(2, keywordsList.get(i));
-                        sql.setDouble(3, keywords.get(keywordsList.get(i)) * 2);
+                        sql.setDouble(3, keywords.get(keywordsList.get(i)) * 1.5);
                     }
 
                     @Override
