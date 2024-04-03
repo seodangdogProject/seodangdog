@@ -178,15 +178,19 @@ public class NewsService {
         UserNews initUserNews = new UserNews(user, news);
         userNewsRepository.save(initUserNews);
 
-        // 뉴스 자체에 조회수 추가
-        int count = news.getCountView();
-        news.setCountView(count + 1);
-
         // 뉴스읽기 경험치 증가
         UserExp userExp = user.getUserExp();
         int exp = userExp.getNewsExp();
         userExp.setNewsExp(exp + 1);
     }
+
+    // 뉴스 조회수 증가
+    public void addViewCount(Long newsSeq){
+        News news = newsRepository.findByNewsSeq(newsSeq).orElseThrow(NullPointerException::new);
+        int count = news.getCountView();
+        news.setCountView(count + 1);
+    }
+
 
     // 사용자-뉴스 기록(읽기/읽기+풀이) 조회
     public UserNewsResponseDto getReadOrSolveRecord(int userSeq, Long newsSeq) {
