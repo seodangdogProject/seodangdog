@@ -33,7 +33,6 @@ export default function NavBar() {
 
   useEffect(() => {
     setActive(pathname.split("/")[1]);
-    console.log("asdf", navStateG);
   }, [pathname]);
 
   useEffect(() => {
