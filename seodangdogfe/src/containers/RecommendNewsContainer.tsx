@@ -83,6 +83,7 @@ export default function RecommendNewsContainer() {
   };
 
   const reMainRef = () => {
+    setLoadingState(true);
     return (async () => {
       try {
         const res = await privateFetch("/main/" + category, "GET");
@@ -101,7 +102,6 @@ export default function RecommendNewsContainer() {
 
         setNewsList(subArrays);
         setLoadingState(false);
-        console.log(subArrays);
 
         if (newsData) {
           const updatedReqList = newsData.map((item, idx) =>
