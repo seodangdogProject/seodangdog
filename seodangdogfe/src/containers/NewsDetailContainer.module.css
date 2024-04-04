@@ -1,0 +1,122 @@
+.container {
+  min-width: 1300px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.detail-container {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  background-color: red;
+  background-color: #fff;
+  padding: 40px 0 35px 60px;
+  box-sizing: border-box;
+  position: relative;
+}
+.detail-container:focus {
+  outline: none;
+}
+.news-content {
+  display: flex;
+  flex-direction: column;
+}
+.title {
+  font-size: 3rem;
+}
+.date {
+  font-size: 20px;
+  color: #4d4d4d;
+  text-align: end;
+  padding-right: 30px;
+}
+.hashtag {
+  display: flex;
+}
+.hashtag-item {
+  background-color: #d1c2f2;
+  padding: 6px 17px;
+  border-radius: 20px;
+  color: #fff;
+}
+.img {
+  text-align: center;
+  margin: 50px 0;
+}
+.img img {
+  width: 50%;
+  object-fit: cover;
+  text-align: center;
+}
+
+/* 페이지네이션 css */
+.paging {
+  background-color: blue;
+  position: relative;
+  z-index: 99;
+}
+.paging ul {
+  position: absolute;
+  gap: 10px;
+  display: flex;
+  left: 25px;
+}
+.paging ul li {
+  width: 17px;
+  height: 17px;
+  border-radius: 100%;
+  border: 3px solid #d1c2f2;
+  cursor: pointer;
+}
+.paging-active {
+  background-color: #d1c2f2;
+}
+
+/* 그리기 툴 css */
+.pentool {
+  position: absolute;
+  width: 43px;
+  height: 201px;
+  border-radius: 20px;
+  left: -20px;
+  top: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.pentool__item {
+  text-align: center;
+  cursor: pointer;
+  width: 60%;
+  padding: 20%;
+}
+.pentool__item.active {
+  background-color: #00000011;
+  border-radius: 8px;
+}
+.pentool__item:hover {
+  background-color: #00000011;
+  border-radius: 8px;
+  color: #fff;
+}
+.pentool__item img {
+  width: 100%;
+}
+.highlight {
+  cursor: url("../assets/highlighter-cursor.svg") 0 0, auto;
+}
+.finder {
+  cursor: url("../assets/search-cursor.svg") 0 0, auto;
+}
+.eraser {
+  cursor: url("../assets/eraser-cursor.svg") 0 0, auto;
+}
+.not-solved-container {
+  width: 40%;
+}

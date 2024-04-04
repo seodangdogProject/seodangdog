@@ -1,0 +1,145 @@
+.container {
+  font-family: "Pretendard-Regular";
+  width: 40%;
+  box-sizing: border-box;
+  padding: 0 30px;
+  display: flex;
+  /* align-items: center; */
+  margin-top: 50px;
+  position: relative;
+}
+.summary-container {
+  width: 100%;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+.desc-text {
+  width: 100%;
+  height: 50px;
+  font-size: 20px;
+  font-family: "hunminjungum";
+  color: #493971;
+}
+.naver-summary {
+  border-radius: 15px;
+  border: 1px solid #a000d8;
+  padding: 15px 25px;
+  box-sizing: border-box;
+  height: 200px;
+}
+.naver-color {
+  color: green;
+}
+.title {
+  display: flex;
+  align-items: center;
+  font-family: "hambaknoon";
+  color: #454545;
+  margin-bottom: 10px;
+}
+.title > div:first-child {
+  margin-right: 10px;
+  /* display: flex;
+  align-items: center; */
+}
+.content {
+  font-family: "NanumMyeongjo";
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 1.3;
+}
+.user-summary .title img {
+  width: 22px;
+}
+
+.user-summary {
+  padding: 15px 25px;
+  box-sizing: border-box;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  height: 200px;
+  position: relative;
+}
+
+/* 안 푼거에대한 css */
+.lock {
+  text-align: center;
+}
+
+.textarea {
+  font-family: "NanumMyeongjo";
+  width: 100%; /* textarea의 너비를 부모 요소에 맞게 설정 */
+  height: 100%; /* textarea의 높이를 부모 요소에 맞게 설정 */
+  height: 140px;
+  box-sizing: border-box; /* textarea의 크기가 padding과 border를 포함하도록 설정 */
+  resize: none; /* 사용자가 textarea 크기를 조절하지 못하도록 설정 */
+  border: 0px dashed #ccc; /* 원하는 경우 border 설정 */
+  line-height: 1.3;
+  box-sizing: border-box;
+  outline: none;
+  overflow: hidden;
+}
+
+.next-btn {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  cursor: pointer;
+  box-sizing: border-box;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100px;
+  border-radius: 20px;
+  background-color: #493971;
+  border: none;
+  color: #fff;
+  font-family: "Pretendard-Regular";
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 버튼 관련 css */
+.btn-container {
+  position: absolute;
+  right: 30px;
+  display: flex;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  /* margin-top: 2rem; */
+  padding-right: 5px;
+  padding-top: 10px;
+}
+/* .btn-container {
+  background-color: red;
+  height: 100%;
+  width: 100%;
+} */
+.btn {
+  cursor: pointer;
+  box-sizing: border-box;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100px;
+  border-radius: 20px;
+  background-color: #493971;
+  border: none;
+  color: #fff;
+  font-family: "Pretendard-Regular";
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.prev-icon {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+.prev-icon img {
+  width: 10px;
+  cursor: pointer;
+}

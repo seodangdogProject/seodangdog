@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 
 # 명령어 실행 (의존성 설치)
-RUN npm install
+RUN npm install --save --legacy-peer-deps
 
 # 호스트 머신의 현재 디렉토리 파일들을 컨테이너 내부로 전부 복사
 COPY ./ ./

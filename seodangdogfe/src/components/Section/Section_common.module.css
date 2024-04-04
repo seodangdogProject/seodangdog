@@ -1,0 +1,77 @@
+.main {
+    /* 메인 컨테이너*/
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    overflow: hidden;
+    /* align-items: center; */
+    height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
+    width: 100vw;
+    background-image: url("../../assets/landing-background-image.png");
+    z-index: -1;
+}
+
+.description {
+    letter-spacing: 0.4em; /* 자간을 0.1em으로 설정합니다. */
+    line-height: 1.5; /* 줄 간격을 1.5로 설정합니다. */
+}
+
+.title {
+    position: absolute;
+    padding-bottom: 20px;
+    font-family: "hambaknoon";
+    font-size: 40px;
+}
+
+.content {
+    margin-top: 200px;
+    font-family: "NanumMyeongjo";
+    font-size: 30px;
+    animation: fadein 3s;
+    -moz-animation: fadein 3s; /* Firefox */
+    -webkit-animation: fadein 3s; /* Safari and Chrome */
+    -o-animation: fadein 3s; /* Opera */
+}
+
+.image {
+    animation: fadein 3s;
+    -moz-animation: fadein 3s; /* Firefox */
+    -webkit-animation: fadein 3s; /* Safari and Chrome */
+    -o-animation: fadein 3s; /* Opera */
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-moz-keyframes fadein {
+    /* Firefox */
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-webkit-keyframes fadein {
+    /* Safari and Chrome */
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-o-keyframes fadein {
+    /* Opera */
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
