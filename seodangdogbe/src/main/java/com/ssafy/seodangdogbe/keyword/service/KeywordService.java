@@ -1,24 +1,16 @@
 package com.ssafy.seodangdogbe.keyword.service;
 
 import com.ssafy.seodangdogbe.common.MessageResponseDto;
-import com.ssafy.seodangdogbe.keyword.domain.JoinKeyword;
-import com.ssafy.seodangdogbe.keyword.domain.Keyword;
-import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.keyword.dto.*;
 import com.ssafy.seodangdogbe.keyword.repository.JoinKeywordRepository;
-import com.ssafy.seodangdogbe.keyword.repository.JoinKeywordRepositoryCustom;
 import com.ssafy.seodangdogbe.keyword.repository.UserKeywordRepository;
 import com.ssafy.seodangdogbe.user.domain.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Transient;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static com.ssafy.seodangdogbe.keyword.dto.NewsKeywordDto.*;
 
 @Service
 @Transactional
@@ -41,9 +33,15 @@ public class KeywordService {
         return userKeywordRepository.decrementKeywordWeightV2(user, deWeightReqDtoList);
     }
 
-    // 클릭 시 해당 뉴스 키워드 증가
+    // 클릭 시 해당 뉴스 키워드 증가 - map
+    @Transactional
+    public void addKeywordMapWeight(User user, Map<String, Double> newsKeywordMap, double weight){
+        userKeywordRepository.incrementClickedKeywordMapWeight(user, newsKeywordMap, weight);
+    }
+
+    @Transactional
     public void addKeywordListWeight(User user, List<String> newsKeywordList, double weight){
-        userKeywordRepository.incrementKeywordWeight(user, newsKeywordList, weight);
+        userKeywordRepository.incrementClickedKeywordWeight(user, newsKeywordList, weight);
     }
 
     public List<JoinKeywordDto> findAllKeywords() {

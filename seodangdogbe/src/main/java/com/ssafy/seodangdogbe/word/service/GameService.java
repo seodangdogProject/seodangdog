@@ -35,7 +35,7 @@ public class GameService {
     public GameActivatedResponseDto checkGameActivation() {
         int userSeq = userService.getUserSeq();
         long wordCount = gameRepository.countUserWords(userSeq);
-        if (wordCount < 10) {
+        if (wordCount < 3) {
             // 게임 비활성화: 단어 개수가 부족하여 GameActivatedResponseDto에 isActivated를 false로 설정
             return new GameActivatedResponseDto(false, wordCount);
         }
@@ -46,17 +46,20 @@ public class GameService {
 
     public GameGetProblemResponseDto getProblems() {
         int userSeq = userService.getUserSeq();
-        List<UserWord> randomWords = gameRepository.findRandomWordsByUserSeq(userSeq, 10);
+        List<UserWord> randomWords = gameRepository.findRandomWordsByUserSeq(userSeq, 3);
         List<GameGetProblemResponseDto.WordInfo> wordInfos = randomWords.stream()
                 .map(word -> {
                     WordDto.MetaWordDto metaWordDto = wordMeanService.findMeanByWord(word.getWord());
                     String definition = metaWordDto != null && !metaWordDto.getItems().isEmpty()
                             ? metaWordDto.getItems().get(0).getDefinition() // 첫 번째 뜻을 사용
                             : "뜻을 찾을 수 없음"; // 뜻이 없는 경우의 기본값 처리
+
+                    boolean isEng = "eng".equals(metaWordDto.getWordLang());
                     return new GameGetProblemResponseDto.WordInfo(
                             word.getWordSeq(),
                             word.getWord(),
-                            definition
+                            definition,
+                            isEng
                     );
                 })
                 .collect(Collectors.toList());
