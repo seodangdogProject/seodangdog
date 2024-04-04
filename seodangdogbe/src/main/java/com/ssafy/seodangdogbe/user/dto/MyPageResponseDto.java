@@ -63,10 +63,10 @@ public class MyPageResponseDto {
 
             long duringDate = ChronoUnit.DAYS.between(user.getCreatedAt(), LocalDateTime.now());
             this.constantAbility = (float) attendanceCount / duringDate;
-            if (this.wordAbility > 1) this.constantAbility = 1;
-            if (this.inferenceAbility > 1) this.constantAbility = 1;
-            if (this.judgementAbility > 1) this.constantAbility = 1;
-            if (this.summaryAbility > 1) this.constantAbility = 1;
+            if (this.wordAbility > 1) this.wordAbility = 1;
+            if (this.inferenceAbility > 1) this.inferenceAbility = 1;
+            if (this.judgementAbility > 1) this.judgementAbility = 1;
+            if (this.summaryAbility > 1) this.summaryAbility = 1;
             if (this.constantAbility > 1) this.constantAbility = 1;
         }
     }
