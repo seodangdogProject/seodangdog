@@ -1,7 +1,6 @@
 package com.ssafy.seodangdogbe.news.service;
 
 import com.ssafy.seodangdogbe.auth.repository.UserRepository;
-import com.ssafy.seodangdogbe.keyword.dto.NewsRefreshRequestDto;
 import com.ssafy.seodangdogbe.keyword.repository.UserKeywordRepository;
 import com.ssafy.seodangdogbe.news.domain.KeywordNews;
 import com.ssafy.seodangdogbe.news.repository.MetaNewsRepository;
@@ -16,7 +15,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.plaf.PanelUI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -146,14 +144,14 @@ public class NewsService {
         int exp = userExp.getSummaryExp();
         userExp.setSummaryExp(exp + 1);
 
-        // ** 뉴스 키워드 리스트 -> 가중치를 증가시킬 키워드 리스트로 변환
-        List<String> keywordList = new ArrayList<>();
-        for (KeywordNews newsKeyword : news.getKeywordNewsList()){
-            keywordList.add(newsKeyword.getKeyword().getKeyword());
-        }
-
-        // 뉴스에 포함된 키워드 가중치 증가
-        userKeywordRepository.incrementKeywordWeight(user, keywordList, 0.99);
+//        // ** 뉴스 키워드 리스트 -> 가중치를 증가시킬 키워드 리스트로 변환
+//        List<String> keywordList = new ArrayList<>();
+//        for (KeywordNews newsKeyword : news.getKeywordNewsList()){
+//            keywordList.add(newsKeyword.getKeyword().getKeyword());
+//        }
+//
+//        // 뉴스에 포함된 키워드 가중치 증가
+//        userKeywordRepository.incrementSolvedKeywordWeight(user, keywordList, 0.99);
 
         System.out.println("사용자 뉴스풀이 저장 성공");
         return true;
@@ -180,15 +178,19 @@ public class NewsService {
         UserNews initUserNews = new UserNews(user, news);
         userNewsRepository.save(initUserNews);
 
-        // 뉴스 자체에 조회수 추가
-        int count = news.getCountView();
-        news.setCountView(count + 1);
-
         // 뉴스읽기 경험치 증가
         UserExp userExp = user.getUserExp();
         int exp = userExp.getNewsExp();
         userExp.setNewsExp(exp + 1);
     }
+
+    // 뉴스 조회수 증가
+    public void addViewCount(Long newsSeq){
+        News news = newsRepository.findByNewsSeq(newsSeq).orElseThrow(NullPointerException::new);
+        int count = news.getCountView();
+        news.setCountView(count + 1);
+    }
+
 
     // 사용자-뉴스 기록(읽기/읽기+풀이) 조회
     public UserNewsResponseDto getReadOrSolveRecord(int userSeq, Long newsSeq) {

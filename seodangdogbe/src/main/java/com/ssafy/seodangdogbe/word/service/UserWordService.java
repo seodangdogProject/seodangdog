@@ -7,7 +7,6 @@ import com.ssafy.seodangdogbe.word.dto.UserWordDto;
 import com.ssafy.seodangdogbe.word.repository.UserWordRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -34,11 +33,10 @@ public class UserWordService {
     }
 
     // 사용자단어 테이블에 삭제된 단어를 update
-    public boolean updateUserWordExist(int userSeq, String word) {
+    public void updateUserWordExist(int userSeq, String word) {
         Optional<UserWord> findUserWord = userWordRepository.findByUserUserSeqAndWord(userSeq, word);
         findUserWord.ifPresent(userWord -> userWord.setIsDelete(false));
         System.out.println("사용자 단어 복구 성공");
-        return true;
     }
 
 }

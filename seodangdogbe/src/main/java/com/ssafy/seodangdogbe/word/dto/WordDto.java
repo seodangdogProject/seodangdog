@@ -15,6 +15,9 @@ public class WordDto {
     @Getter
     @NoArgsConstructor
     public static class MetaWordDto {
+        @Setter
+        private boolean isExist;
+
         private String word;
         private String wordLang;
         private int total;
@@ -59,7 +62,7 @@ public class WordDto {
 
             this.wordLang = "kor";
             this.total = dto.getTotal();
-            this.word = dto.getItem().get(0).getWord(); //첫번째로 가져온 item의 단어를 대표 단어로 저장
+            this.word = dto.getItem().get(0).getWord().replaceAll("[\\-^]", "");     //첫번째로 가져온 item의 단어를 대표 단어로 저장
 
             List<KorApiSearchDto.ItemDto> items = dto.getItem();
             for (KorApiSearchDto.ItemDto item : items){
@@ -69,18 +72,23 @@ public class WordDto {
 
 
         // 네이버 백과사전 api 결과를 db에 저장하는 용도의 dto
-        public MetaWordDto(String word, EncycApiDto encycApiDto, String wordLang) {
-            EncycApiDto dto = encycApiDto;
-
-            this.wordLang = wordLang;
-            this.total = dto.getTotal();
+        public MetaWordDto(String word, String wordLang, EncycApiDto encycApiDto) {
             this.word = word;
+            this.wordLang = wordLang;
+            this.total = encycApiDto.getTotal();
 
-            List<EncycApiDto.ItemDto> items = dto.getItems();
+            List<EncycApiDto.ItemDto> items = encycApiDto.getItems();
             int idx = 1;
             for (EncycApiDto.ItemDto item : items){
                 this.items.add(new WordItemDto(item, idx++));
             }
+        }
+
+        // 없는 단어를 db에 저장하는 용도의 dto
+        public MetaWordDto(String word, int total){
+            this.word = word;
+            this.wordLang = "none";
+            this.total = total;
         }
 
 

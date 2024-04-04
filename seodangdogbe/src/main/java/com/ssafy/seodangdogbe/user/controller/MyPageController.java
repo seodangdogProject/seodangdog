@@ -6,9 +6,7 @@ import com.ssafy.seodangdogbe.keyword.domain.UserKeyword;
 import com.ssafy.seodangdogbe.keyword.dto.UserKeywordDto;
 import com.ssafy.seodangdogbe.keyword.service.KeywordService;
 import com.ssafy.seodangdogbe.user.domain.User;
-import com.ssafy.seodangdogbe.user.dto.MyPageResponseDto;
-import com.ssafy.seodangdogbe.user.dto.UserInfoCorrectResponseDto;
-import com.ssafy.seodangdogbe.user.dto.UserNicknameModifyReqDto;
+import com.ssafy.seodangdogbe.user.dto.*;
 import com.ssafy.seodangdogbe.user.service.MyPageService;
 import com.ssafy.seodangdogbe.user.service.UserBadgeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -88,5 +86,32 @@ public class MyPageController {
         User user = userService.getUser();
 
         return new UserInfoCorrectResponseDto(user.getNickname(), userBadgeService.getBadgeImgUrl(user));
+    }
+
+    @Operation(description = "비밀번호 변경")
+    @PatchMapping("/password")
+    public ResponseEntity<MessageResponseDto> modifyPassword(@RequestBody UserPasswordModifyReqDto dto){
+        MessageResponseDto result;
+        try{
+            userService.modifyPassword(dto);
+            result = new MessageResponseDto("성공");
+        }catch (IllegalArgumentException e){
+            result = new MessageResponseDto("실패");
+        }
+        return ResponseEntity.ok(result);
+    }
+
+
+    @Operation(description = "회원정보 변경")
+    @PatchMapping("/info")
+    public ResponseEntity<MessageResponseDto> modifyPassword(@RequestBody UserInfoModifyReqDto dto){
+        MessageResponseDto result;
+        try{
+            userService.modifyUserInfo(dto);
+            result = new MessageResponseDto("성공");
+        }catch (IllegalArgumentException e){
+            result = new MessageResponseDto("실패");
+        }
+        return ResponseEntity.ok(result);
     }
 }
