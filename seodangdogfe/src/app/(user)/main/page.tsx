@@ -1,7 +1,13 @@
+"use client";
+import RecommendNewsContainer from "@/containers/RecommendNewsContainer";
+import { RecoilRoot } from "recoil";
+
 export default function Main() {
   return (
     <>
-    <h3>Main 페이지</h3>
+      <RecoilRoot>
+        <RecommendNewsContainer />
+      </RecoilRoot>
     </>
   );
 }

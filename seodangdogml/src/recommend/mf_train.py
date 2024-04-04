@@ -5,7 +5,6 @@ import numpy as np
 from sklearn.utils import shuffle
 import pickle
 import os
-import time
 import multiprocessing
 
 router = APIRouter()
@@ -31,11 +30,9 @@ def save_mf(model):
 
 
 def load_mf():
-    print(os.getcwd())
-    base_src = 'recommend'
+    base_src = './recommend'
     model_name = 'mf_online.pkl'
-    # save_path = os.path.join(base_src, model_name)
-    save_path = base_src+"/"+model_name
+    save_path = os.path.join(base_src, model_name)
     if not os.path.exists(save_path):
         train_mf_model()
     with open(save_path, 'rb') as f:
@@ -46,6 +43,8 @@ def load_mf():
 def train_mf_model():
 
     ratings = select_all_ratings()
+
+    # ratings에 아무것도 없으면 에러 발생(학습데이터가 없기때문에)
     ratings = pd.DataFrame(ratings)
 
     # 중복제거(디비의 무결성이 보장되면 필요없음)
@@ -106,12 +105,14 @@ def train_mf_model():
 
 # 변수로 넘어온 user_seq, news_seq는 인덱스(0부터)로 변환해서 학습을 시켜야한다.
 def online_learning(mf, user_id, item_id, rating, weight=1):
-
+    print("mf online", user_id, item_id, rating, weight)
     if user_id not in mf.user_id_index:
         # 새로운 사용자인 경우, 사용자를 모델에 추가하고 초기화
         mf.user_id_index[user_id] = mf.num_users
         mf.index_user_id[mf.num_users] = user_id
         mf.num_users += 1
+
+        print("new user mf", mf.user_id_index[user_id])
 
         # 새로운 사용자의 특성을 추가하기 위해 mf.P에 새로운 행을 추가
         # np.random.normal() 함수를 사용하여 임의로 생성되며, 각 요소는 평균이 0이고 표준 편차가 1/mf.K 인 정규 분포를 따르는 난수
@@ -128,7 +129,7 @@ def online_learning(mf, user_id, item_id, rating, weight=1):
         # 새로운 아이템인 경우, 아이템을 모델에 추가하고 초기화
         mf.item_id_index[item_id] = mf.num_items
 
-        print(mf.item_id_index[item_id])
+        print("new item mf", mf.item_id_index[item_id])
         mf.index_item_id[mf.num_items] = item_id
         mf.num_items += 1
         existing_item_features = mf.Q.mean(axis=0)  # 예시로 평균 사용
@@ -225,6 +226,11 @@ class NEW_MF():
         # self.Q[j,].T : 아이템 요인에 대해서 트랜포지안 값을 연산을 하
         # dot(self.Q[j,:].T): 잠재 요인 벡터를 내적(dot product)하여 사용자 i와 아이템 j 간의 상호작용을 모델링
         # ->  i와 아이템 j 간의 평점 예측치를 계산하는 식
+
+        # print("self.b", self.b)
+        # print("self.b_u[i]", self.b_u[i])
+        # print("self.b_d[j]", self.b_d[j])
+        # print("self.P[i, :].dot(self.Q[j, :].T)",self.P[i, :].dot(self.Q[j, :].T))
         prediction = self.b + self.b_u[i] + self.b_d[j] + self.P[i, :].dot(self.Q[j, :].T)
         return prediction
 

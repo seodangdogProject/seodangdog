@@ -1,0 +1,52 @@
+.strictContainer {
+    display: flex;
+    flex-wrap: wrap;
+    height: 25px;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+.strictElement {
+    flex-direction: row-reverse;
+    border-radius: 2px;
+    width: 30px;
+    /* width: calc(25px / 7px); */
+    /* height: 25px; */
+    height: calc(25px / 7px);
+    height: 15px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 4px;
+    margin-right: 4px;
+    position: relative;
+}
+.weekName {
+    width: 40px;
+    height: 15px;
+    display: flex;
+    /* margin: 2px; */
+    margin: 2px 0px;
+    /* padding-top: 10px; */
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    color: #7a7a7a;
+    font-size: 0.8rem;
+    font-family: "hambaknoon";
+    /* font-weight: bold; */
+}
+
+.hoverDock {
+    position: absolute;
+    display: flex;
+    top: -35px;
+    left: 50%;
+    width: 100px;
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 2px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    z-index: 999;
+    font-family: "pretendard";
+}

@@ -1,0 +1,77 @@
+.main {
+    /* 메인 컨테이너*/
+    display: flex;
+    justify-content: center;
+    flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
+    overflow: hidden;
+    /* align-items: center; */
+    height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
+    background-image: url("../../assets/landing-background-image-first.png");
+}
+
+.rounded_button {
+    /* 시작하기 버튼*/
+    border-radius: 20px;
+    background-color: #493971;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    width: 394px;
+    height: 100px;
+    transition: background-color 0.3s ease;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-family: "hambaknoon";
+}
+
+.description {
+    font-size: 60px;
+    margin-bottom: 50px;
+}
+
+.center_container {
+    margin-top: 5%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* 요소들을 세로로 정렬하기 위해 column으로 설정 */
+    font-family: "hambaknoon";
+    margin-bottom: 20px;
+}
+
+.bottom_news {
+    position: relative;
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page_button {
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out; /* transform 속성에 대한 스무스한 트랜지션 효과 추가 */
+}
+
+.page_button:hover {
+    transform: translateY(-10px); /* 호버될 때 위로 이동 */
+}
+
+.text-animated {
+    animation: slideInLeft 0.5s ease-in-out forwards 0s;
+}
+
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-30px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0px);
+        opacity: 1;
+    }
+}
