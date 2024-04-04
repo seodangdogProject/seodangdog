@@ -3,7 +3,7 @@ package com.ssafy.seodangdogbe.news.service;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.seodangdogbe.auth.service.UserService;
 import com.ssafy.seodangdogbe.common.MessageResponseDto;
-import com.ssafy.seodangdogbe.keyword.dto.loseWeightFastReqDto;
+import com.ssafy.seodangdogbe.keyword.dto.updateWeightFastReqDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,11 +40,11 @@ public class FastApiService {
                 .bodyToFlux(CbfRecommendResponse.class)
                         .collectList();
 
-        System.out.println(list.blockOptional().get());
+//        System.out.println(list.blockOptional().get());
         return list;
     }
 
-    public MessageResponseDto updateWeigth(loseWeightFastReqDto loseWeightFastReqDtoList) {
+    public MessageResponseDto updateWeigth(updateWeightFastReqDto loseWeightFastReqDtoList) {
         return this.webClient.post()
                 .uri("/fast/mf_recom/update")
                 .bodyValue(loseWeightFastReqDtoList)

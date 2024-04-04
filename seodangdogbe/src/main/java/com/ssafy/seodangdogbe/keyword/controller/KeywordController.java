@@ -45,6 +45,7 @@ public class KeywordController {
     @PostMapping("/refre")
     public ResponseEntity<MessageResponseDto> minusWeightV2(@RequestBody List<DeWeightReqDto> deWeightReqDtosList){
         User user = userService.getUser();
+        // System.out.println(deWeightReqDtosList);
         MessageResponseDto result = keywordService.minusKeywordListWeightV2(user, deWeightReqDtosList);
         return ResponseEntity.ok(result);
     }

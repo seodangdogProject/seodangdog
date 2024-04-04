@@ -29,7 +29,7 @@ public class BadgeController {
         return badgeService.getAllBadgeList();
     }
 
-    @Operation(description = "사용자 뱃지 목록 조회")
+    @Operation(description = "사용자 보유 뱃지 목록 조회")
     @GetMapping("/user")
     public List<BadgeDto> getMyBadgeList(){
         User user = userService.getUser();

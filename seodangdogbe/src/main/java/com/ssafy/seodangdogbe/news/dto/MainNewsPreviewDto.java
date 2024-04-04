@@ -20,6 +20,7 @@ public class MainNewsPreviewDto {
     private String newsDescription;
     private LocalDateTime newsCreatedAt;
     private int countView;
+    private int countSolve;
     private String media;
     private Map<String, Double> newsKeyword;
 

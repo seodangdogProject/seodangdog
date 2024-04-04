@@ -7,22 +7,25 @@ import com.ssafy.seodangdogbe.keyword.dto.*;
 import com.ssafy.seodangdogbe.news.service.FastApiService;
 import com.ssafy.seodangdogbe.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.bson.LazyBSONList;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.ssafy.seodangdogbe.keyword.domain.QUserKeyword.userKeyword;
 import static com.ssafy.seodangdogbe.news.domain.QUserNews.userNews;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
@@ -34,7 +37,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     public MessageResponseDto decrementKeywordWeight(User user, List<NewsRefreshReqDto> newsRefreshReqDtoList, double highWeight, double rowWeight) {
         List<Long> seeNewsSeq = new ArrayList<>();
         List<Long> notSeenNewsSeq = new ArrayList<>();
-        loseWeightFastReqDto dto = new loseWeightFastReqDto();
+        updateWeightFastReqDto dto = new updateWeightFastReqDto();
         List<InfoDto> infoDtos = new ArrayList<>();
 
         // 만약 안본 두개의 뉴스의 키워드가 중복된다면 -> 두번 내리는거 맞는지 물어봐야됨
@@ -89,8 +92,9 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     @Transactional
     public MessageResponseDto decrementKeywordWeightV2(User user, List<DeWeightReqDto> deWeightReqDtoList) {
 
+//        System.out.println(deWeightReqDtoList);
         List<DeWeightReqDto.KeywordInfo> list = DeWeightReqDto.extractKeywordInfoList(deWeightReqDtoList);
-        loseWeightFastReqDto dto = new loseWeightFastReqDto();
+        updateWeightFastReqDto dto = new updateWeightFastReqDto();
 
         // 가중치 낮추기
         updateAll(user, list);
@@ -98,14 +102,16 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
         // fast Api로 전송하기
         dto.setUserSeq(user.getUserSeq());
         dto.setInfo(DeWeightReqDto.extractInfoDtoList(deWeightReqDtoList));
+//        System.out.println(dto);
 
         // fastApi로 전송
+//        log.info("fast api 요청 dto " , dto);
         return fastApiService.updateWeigth(dto);
     }
 
     @Override
     @Transactional
-    public void incrementKeywordWeight(User user, List<String> newskeywordList, double weight) {
+    public void incrementSolvedKeywordWeight(User user, List<String> newskeywordList, double weight) {
         List<UserKeyword> insertKeyword = new ArrayList<>();
         List<String> updateKeyword = new ArrayList<>();
 
@@ -123,7 +129,7 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
             }
         }
 
-        System.out.println("새로운 키워드 : " + insertKeyword);
+//        System.out.println("새로운 키워드 : " + insertKeyword);
         saveAll(user, insertKeyword);
 
         queryFactory
@@ -134,11 +140,80 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
 
     }
 
+    // 클릭한 뉴스에 대해서 Map<String, Double> 가중치 추가
+    @Override
+    @Transactional
+    public void incrementClickedKeywordMapWeight(User user, Map<String,Double> newsKeywordList, double weight) {
+        List<UserKeyword> insertKeyword = new ArrayList<>();
+        List<String> updateKeyword = new ArrayList<>();
+
+        for (String keyword : newsKeywordList.keySet()) {
+            boolean exists = queryFactory.selectOne()
+                    .from(userKeyword)
+                    .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.eq(keyword))
+                    .fetchFirst() != null;
+
+            if (!exists) {
+                UserKeyword newKeyword = new UserKeyword(user, keyword, newsKeywordList.get(keyword) * weight);
+                insertKeyword.add(newKeyword);
+            }else {
+                updateKeyword.add(keyword);
+            }
+        }
+
+        // 없으면
+        // newsKeywordList.get(keyword)  (몽고디비의 뉴스 서머리 키워드의 가중치) * weight(3.0 or 1.5)
+
+        // 있으면
+        // 기존의 mysql에 저장된 가중치 + 3.0 or 1.5 * 몽고db가중치 = mysql 키워드 가중치
+
+//        System.out.println("새로운 키워드 : " + insertKeyword);
+        saveAll(user, insertKeyword);
+
+//        System.out.println("기존에 존재하는 키워드 : " + updateKeyword);
+        updateMultiAll(user, updateKeyword, newsKeywordList, 3);
+    }
+
+
+
+    // 사용 안함 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    @Override
+    @Transactional
+    public void incrementClickedKeywordWeight(User user, List<String> newskeywordList, double weight) {
+        List<UserKeyword> insertKeyword = new ArrayList<>();
+        List<String> updateKeyword = new ArrayList<>();
+
+        for (String keyword : newskeywordList) {
+            boolean exists = queryFactory.selectOne()
+                    .from(userKeyword)
+                    .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.eq(keyword))
+                    .fetchFirst() != null;
+
+            if (!exists) {
+                UserKeyword newKeyword = new UserKeyword(user, keyword, weight);
+                insertKeyword.add(newKeyword);
+            }else {
+                updateKeyword.add(keyword);
+            }
+        }
+
+
+//        System.out.println("새로운 키워드 : " + insertKeyword);
+        saveAll(user, insertKeyword);
+
+        // 소수점 10째자리까지 만들어주기 위해서 *e10/e10
+        queryFactory
+                .update(userKeyword)
+                .set(userKeyword.weight, userKeyword.weight.multiply(weight).multiply(1e10).divide(1e10))
+                .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(newskeywordList))
+                .execute();
+    }
 
     @Transactional
     public void saveAll(User user, List<UserKeyword> list) {
+        // 새로운 키워드 유입 시, 가중치 소수점 10째자리까지 반올림해서 넣기
         String sql = "INSERT INTO user_keyword (user_seq, keyword, weight) " +
-                "VALUES (?, ?, ?)";
+                "VALUES (?, ?, ROUND(?,10))";
 
         jdbcTemplate.batchUpdate(sql,
                 new BatchPreparedStatementSetter() {
@@ -156,9 +231,11 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
                 });
     }
 
+
+    // 새로고침 -> 나누기 2, 소수점 10번째 자리
     @Transactional
     public void updateAll(User user, List<DeWeightReqDto.KeywordInfo> list) {
-        String sql = "UPDATE user_keyword SET weight = weight / 2 " +
+        String sql = "UPDATE user_keyword SET weight = ROUND(weight / 4, 10) " +
                 "WHERE user_seq =? AND keyword = ?";
 
         jdbcTemplate.batchUpdate(sql,
@@ -178,12 +255,38 @@ public class UserKeywordRepositoryImpl implements UserKeywordRepositoryCustom{
     }
 
 
+    @Transactional
+    public void updateMultiAll(User user, List<String> list, Map<String, Double> map, double mult) {
+        // 있으면
+        // 기존의 mysql에 저장된 가중치 + 3 * 몽고db가중치 = mysql 키워드 가중치
+
+        String sql = "UPDATE user_keyword SET weight = ROUND( weight + ? * ?, 10) " +
+                "WHERE user_seq =? AND keyword = ?";
+
+        jdbcTemplate.batchUpdate(sql,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement sql, int i) throws SQLException {
+                        sql.setDouble(1, mult);
+                        sql.setDouble(2, map.get(list.get(i)));
+                        sql.setInt(3, user.getUserSeq());
+                        sql.setString(4, list.get(i));
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return list.size();
+                    }
+                });
+    }
+
     @Override
     @Transactional
     public List<UserKeyword> getWordCloudUserKeyword(User user) {
         return queryFactory.selectFrom(userKeyword)
                 .where(userKeyword.user.eq(user))
-                .limit(400)
+                .orderBy(userKeyword.weight.desc())
+                .limit(50)
                 .fetch();
     }
 }
