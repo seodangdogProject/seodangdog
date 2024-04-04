@@ -77,13 +77,13 @@ export default function WordGame() {
                       className={styles.word_count}
                       style={{ color: "rgba(88, 104, 255, 1)" }}
                     >
-                      3+
+                      10+
                     </span>
                   </>
                 )}
 
                 <span> /</span>
-                <span> 3</span>
+                <span> 10</span>
               </div>
               {!isAvailable && (
                 <>
