@@ -1,265 +1,224 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import styles from './game_layout.module.css';
-interface FallingLetter {
-    id: number;
-    keyword: string;
-    x: number;
-    y: number;
-    isCaught: boolean;
-    isShown: boolean;
-    speed: number;
+"use client";
+import React, { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { useRecoilState, RecoilRoot } from "recoil";
+import { userKeywords } from "../../../atoms/joinRecoil";
+import Link from "next/link";
+import styles from "./game_layout.module.css";
+import JoinModal from "../../../components/joinComponent/joinModal";
+import { publicFetch } from "../../../utils/http-commons";
+import ToastPopup from "@/components/toast/Toast";
+
+interface Keyword {
+  id: number;
+  keyword: string;
 }
 
 export default function Join() {
-    const [fallingLetters, setFallingLetters] = useState<FallingLetter[]>([]);
-    const [userKeywords, setUserKeywords] = useState<
-        { id: number; keyword: string }[]
-    >([]);
-    const [keywordListIndex, setKeywordListIndex] = useState(0);
-    const [startIndex, setStartIndex] = useState(0);
-    const [unLock, setUnLock] = useState(true);
-    const [userKeywordsSize, setUserKeywordsSize] = useState(0);
-    function lockToggle() {
-        setUnLock(false);
+  const router = useRouter();
+  const [letters, setLetters] = useState<Keyword[]>([]);
+  const [isOpenModal, setOpenModal] = useState<boolean>(false);
+  const [userKeywords, setUserKeywords] = useState<
+    { id: number; keyword: string }[]
+  >([]);
+  const [clickedKeywords, setClickedKeywords] = useState<string[]>([]);
+  const [unLock, setUnLock] = useState(true);
+  const [userKeywordsSize, setUserKeywordsSize] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [allKeywords, setAllKeywords] = useState<Keyword[]>([]);
+
+  const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+
+  //배열 섞기
+  function shuffleArray(array: Keyword[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
+  }
+  //배열 분할
+  function chunkArray(array: Keyword[], size: number) {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size));
+    }
+    return result;
+  }
 
-    const [xy, setXY] = useState({ x: 0, y: 0 });
+  function lockToggle() {
+    setUnLock(false);
+  }
 
-    const xyHandler: React.MouseEventHandler<HTMLDivElement> = (e) => {
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
+  //키워드 추출
+  useEffect(() => {
+    const fetchKeywords = async () => {
+      try {
+        const response = await publicFetch("/keyword/join", "GET");
+        // if (!response.ok) throw new Error("Failed to fetch keywords");
+        const data = await response.json();
+        // console.log("Received data:", data);
 
-        setXY({ x: mouseX, y: mouseY });
+        let keywordList: Keyword[] = data.map((item: any) => ({
+          id: item.joinKeywordSeq,
+          keyword: item.keyword,
+        }));
+
+        keywordList = shuffleArray(keywordList);
+        setAllKeywords(keywordList);
+      } catch (error) {
+        console.error("Error fetching keywords:", error);
+      }
     };
 
-    useEffect(() => {
-        const keywordList = [
-            { id: 1, keyword: '사과' },
-            { id: 2, keyword: '바나나' },
-            { id: 3, keyword: '딸기' },
-            { id: 4, keyword: '포도' },
-            { id: 5, keyword: '수박' },
-            { id: 6, keyword: '오렌지' },
-            { id: 7, keyword: '파인애플' },
-            { id: 8, keyword: '체리' },
-            { id: 9, keyword: '멜론' },
-            { id: 10, keyword: '레몬' },
-            { id: 11, keyword: '라임' },
-            { id: 12, keyword: '복숭아' },
-            { id: 13, keyword: '배' },
-            { id: 14, keyword: '키위' },
-            { id: 15, keyword: '밤' },
-            { id: 16, keyword: '자두' },
-            { id: 17, keyword: '체리' },
-            { id: 18, keyword: '오렌지' },
-            { id: 19, keyword: '수박' },
-            { id: 20, keyword: '딸기' },
-            { id: 21, keyword: '사과' },
-            { id: 22, keyword: '바나나' },
-            { id: 23, keyword: '파인애플' },
-            { id: 24, keyword: '포도' },
-            { id: 25, keyword: '배' },
-            { id: 26, keyword: '체리' },
-            { id: 27, keyword: '키위' },
-            { id: 28, keyword: '멜론' },
-            { id: 29, keyword: '오렌지' },
-            { id: 30, keyword: '밤' },
-            { id: 31, keyword: '자두' },
-            { id: 32, keyword: '복숭아' },
-            { id: 33, keyword: '딸기' },
-            { id: 34, keyword: '파인애플' },
-            { id: 35, keyword: '수박' },
-            { id: 36, keyword: '라임' },
-            { id: 37, keyword: '사과' },
-            { id: 38, keyword: '바나나' },
-            { id: 39, keyword: '딸기' },
-            { id: 40, keyword: '포도' },
-            { id: 41, keyword: '체리' },
-            { id: 42, keyword: '오렌지' },
-            { id: 43, keyword: '파인애플' },
-            { id: 44, keyword: '멜론' },
-            { id: 45, keyword: '레몬' },
-            { id: 46, keyword: '복숭아' },
-            { id: 47, keyword: '배' },
-            { id: 48, keyword: '키위' },
-            { id: 49, keyword: '밤' },
-            { id: 50, keyword: '자두' },
-        ];
+    fetchKeywords();
+  }, []);
 
-        const createFallingLetter = (keywordItem: {
-            id: number;
-            keyword: string;
-        }) => {
-            const randomSpeed = Math.random() * 2;
-            return {
-                id: keywordItem.id,
-                keyword: keywordItem.keyword,
-                x: 10 + Math.random() * (window.innerWidth - 70),
-                y: 0,
-                isCaught: false,
-                isShown: true,
-                speed: randomSpeed,
-            };
-        };
+  //키워드 20개씩 조회
+  useEffect(() => {
+    const chunkedKeywords = chunkArray(allKeywords, 30);
+    if (currentPage < chunkedKeywords.length) {
+      setLetters(chunkedKeywords[currentPage]);
+    }
+  }, [currentPage, allKeywords]);
 
-        const initialFallingLetters: FallingLetter[] = keywordList
-            .slice(startIndex, startIndex + 10)
-            .map((keywordItem) => createFallingLetter(keywordItem));
+  const nextPage = useCallback(() => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  }, []);
 
-        setFallingLetters(initialFallingLetters);
+  const onClickToggleModal = useCallback(() => {
+    if (userKeywordsSize > 9) {
+      setOpenModal(!isOpenModal);
+    } else {
+      setToastMessage("단어를 10개 이상 선택해주세요.");
+      setToast(true);
+    }
+  }, [isOpenModal, userKeywordsSize]);
 
-        const fallingInterval = setInterval(() => {
-            let newStartIndex = startIndex + 10;
-            console.log(newStartIndex);
-            if (newStartIndex >= keywordList.length) {
-                console.log('리스트 끝남');
-                clearInterval(fallingInterval);
-                return; // Interval 종료
-            }
-
-            let newFallingLetters: FallingLetter[];
-            if (newStartIndex + 10 >= keywordList.length) {
-                newFallingLetters = keywordList
-                    .slice(newStartIndex, keywordList.length) // startIndex 대신 newStartIndex 사용
-                    .map((keywordItem) => createFallingLetter(keywordItem));
-            } else {
-                newFallingLetters = keywordList
-                    .slice(newStartIndex, newStartIndex + 10) // startIndex 대신 newStartIndex 사용
-                    .map((keywordItem) => createFallingLetter(keywordItem));
-            }
-
-            setFallingLetters((prevLetters) => [
-                ...prevLetters,
-                ...newFallingLetters,
-            ]);
-
-            setStartIndex(newStartIndex);
-        }, 6000);
-
-        const update = () => {
-            setFallingLetters((prevLetters) =>
-                prevLetters
-                    .map((letter) => ({
-                        ...letter,
-                        y: letter.y + letter.speed,
-                        isShown: letter.y < innerHeight - 100,
-                    }))
-                    .filter((letter) => letter.isShown && !letter.isCaught)
-            );
-            requestAnimationFrame(update);
-        };
-
-        setFallingLetters(initialFallingLetters);
-
-        const animationId = requestAnimationFrame(update);
-
-        return () => {
-            clearInterval(fallingInterval);
-            cancelAnimationFrame(animationId);
-        };
-    }, [keywordListIndex, startIndex]);
-
-    const handleLetterClick = async (id: number, keyword: string) => {
-        console.log(keyword, ' 잡음');
-        setUserKeywords((prevKeywords) => [...prevKeywords, { id, keyword }]);
-        setUserKeywordsSize((count) => count + 1);
-        setFallingLetters((prevLetters) =>
-            prevLetters.map((letter) =>
-                letter.id === id
-                    ? { ...letter, isCaught: true, isShown: true }
-                    : letter
-            )
-        );
-        console.log(userKeywordsSize);
-
-        if (userKeywordsSize >= 9) {
-            lockToggle();
-        }
-
-        // 잡았을 때 커서 변경 및 2초 후 복구
-        // document.body.classList.add('custom-cursor');
-        // setTimeout(() => {
-        //     document.body.classList.remove('custom-cursor');
-        // }, 2000);
-    };
-
-    const goNext = () => {
-        console.log(' 다음페이지로 넘어가기 ');
-    };
-
-    return (
-        <div
-            className={`${styles.stage_bg} ${styles.stage} ${styles.mouse}`}
-            onMouseMove={xyHandler}
-            style={{
-                width: '100%',
-                height: '100vh',
-                backgroundSize: 'cover', // 이미지가 요소에 맞게 자동으로 조절되도록 cover 값을 설정합니다.
-                backgroundPosition: 'center', // 이미지를 가운데 정렬합니다.
-                backgroundImage:
-                    'url(https://images.unsplash.com/photo-1628006203055-b4aa5f6300f3?q=60&w=2000',
-            }}
-        >
-            <div
-                className={styles.pointer}
-                style={{
-                    transform: `translate(${xy.x}px, ${xy.y}px)`,
-                }}
-            />
-            {fallingLetters.map(
-                (letter) =>
-                    letter.isShown && (
-                        <div
-                            key={letter.id} // 요소의 id를 고유한 키로 사용
-                            style={{
-                                color: 'black',
-                                position: 'absolute',
-                                top: letter.y,
-                                left: letter.x,
-                                fontSize: '60px',
-                                zIndex: 1, // 클릭 가능하도록 다른 요소보다 위에 표시
-                            }}
-                            onClick={() =>
-                                handleLetterClick(letter.id, letter.keyword)
-                            }
-                        >
-                            {letter.keyword}
-                        </div>
-                    )
-            )}
-            <div
-                style={{
-                    fontSize: '50px',
-                    position: 'absolute',
-                    top: 40,
-                    left: 40,
-                    color: 'white',
-                    zIndex: '',
-                }}
-            >
-                <p>
-                    담은 개수 : {userKeywords.length}
-                    {/* 잡은 키워드 :  */}
-                    {/* {userKeywords
-                        .map((keyword) => `${keyword.keyword}(${keyword.id})`)
-                        .join(', ')} */}
-                </p>
-            </div>
-            <div
-                onClick={goNext}
-                style={{
-                    fontSize: '100px',
-                    position: 'absolute',
-                    bottom: 40,
-                    left: 20,
-                    color: 'white',
-                    zIndex: '',
-                }}
-            >
-                {unLock && '🔒'}
-                {!unLock && '🔓'}
-            </div>
-        </div>
+  const handleLetterClick = async (id: number, keyword: string) => {
+    // 이미 선택된 단어인지 확인
+    const isAlreadySelected = userKeywords.some(
+      (item) => item.keyword === keyword
     );
+    if (isAlreadySelected) {
+      // 이미 선택된 단어라면, 리스트에서 제거
+      setUserKeywords(userKeywords.filter((item) => item.keyword !== keyword));
+      //   console.log(keyword, " 제거");
+      setUserKeywordsSize((count) => count - 1);
+      setClickedKeywords(
+        clickedKeywords.filter((existingKeyword) => existingKeyword !== keyword)
+      );
+    } else {
+      // 선택되지 않은 새로운 단어라면, 리스트에 추가
+      setUserKeywords((prevKeywords) => [...prevKeywords, { id, keyword }]);
+      setClickedKeywords([...clickedKeywords, keyword]);
+      //   console.log(keyword, " 잡음");
+      setUserKeywordsSize((count) => count + 1);
+    }
+  };
+  //담긴 키워드 목록 확인
+  //   useEffect(() => {
+  //     console.log("현재 선택된 키워드 목록:", userKeywords);
+  //   }, [userKeywords]);
+
+  useEffect(() => {
+    setUserKeywordsSize(userKeywords.length);
+    setUnLock(userKeywords.length < 10);
+  }, [userKeywords]);
+
+  useEffect(() => {
+    console.log("클릭된 키워드 목록:", clickedKeywords);
+  }, [clickedKeywords]);
+
+  useEffect(() => {
+    setUserKeywordsSize(userKeywords.length);
+    console.log("현재 선택된 키워드 개수:", userKeywords.length);
+  }, [userKeywords]);
+
+  return (
+    <>
+      <div
+        className={`${styles.stage_bg} ${styles.mouse}`}
+        style={{
+          width: "100%",
+          height: "100vh",
+          backgroundSize: "cover", // 이미지가 요소에 맞게 자동으로 조절되도록 cover 값을 설정합니다.
+          backgroundPosition: "center", // 이미지를 가운데 정렬합니다.
+        }}
+      >
+        <div className={styles.titleContainer}>
+          좋아하는 키워드를 선택하세요.
+        </div>
+        {isOpenModal && (
+          <JoinModal
+            data={userKeywords}
+            onClickToggleModal={onClickToggleModal}
+          ></JoinModal>
+        )}
+
+        <div className={styles.wordContainer}>
+          {letters.map((item, index) => (
+            <div
+              key={item.id}
+              className={`${styles.wordBox} ${
+                clickedKeywords.includes(item.keyword) ? styles.clicked : ""
+              }`}
+              //   style={getRandomPosition()} // 랜덤 위치 적용
+              onClick={() => handleLetterClick(item.id, item.keyword)}
+            >
+              {item.keyword}
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={nextPage}
+          className={`${styles.buttonNewKeywords} ${styles.mouse}`}
+          style={{ top: "50px", right: "30px" }}
+        >
+          새로운 키워드 받기
+        </button>
+
+        <div>
+          {toast && <ToastPopup setToast={setToast} message={toastMessage} />}
+        </div>
+
+        <Link href="/join_game">
+          <div
+            onClick={onClickToggleModal}
+            style={{
+              fontSize: "80px",
+              position: "absolute",
+              bottom: "50px",
+              right: "80px",
+              color: "white",
+              zIndex: 1,
+            }}
+            className={`${styles.mouse} ${
+              unLock ? styles.lock : styles.unlock
+            }`}
+          >
+            {unLock && "🔒"}
+            {!unLock && "🔓"}
+          </div>
+          <button
+            onClick={onClickToggleModal}
+            className={`${styles.nextButton} ${styles.mouse} ${
+              userKeywordsSize >= 10 ? styles.active : ""
+            }`}
+          >
+            다음
+          </button>
+        </Link>
+
+        <div className={styles.selectedWordCount}>
+          선택한 키워드 개수: {userKeywordsSize}
+        </div>
+        <div className={styles.minimumKeywordAlert}>
+          키워드를 10개 이상 선택해주세요.
+        </div>
+      </div>
+    </>
+  );
 }

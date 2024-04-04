@@ -1,88 +1,290 @@
 .stage_bg {
-    background: linear-gradient(rgba(0, 0, 0, 0) 77%, rgba(0, 0, 0, 0.5));
-    font-family: 'hunminjungum';
+  background: linear-gradient(rgba(0, 0, 0, 0) 77%, rgba(0, 0, 0, 0.5));
+  font-family: "hambaknoon";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  min-width: 1500px;
+  position: relative;
+  background-image: url("../../../assets/landing-background-image.png");
 }
 
-.follower {
-    font-size: 150px;
-    pointer-events: none;
+.titleContainer {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  padding: 20px 30px;
+  border-radius: 10px;
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
 }
 
-.stage {
-    width: 100%;
-    height: 100%;
+.wordContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 1%;
+  bottom: 10%;
+  width: 70%;
+  height: 80%;
+  height: auto;
+  overflow: hidden;
+}
+
+@keyframes wordPop {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.wordBox {
+  display: flex;
+  /* position: relative; */
+  flex-shrink: 0;
+  display: flex;
+  color: grey;
+  margin: 1%;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: 32px;
+  border: 3px solid #848484;
+  border-radius: 20px;
+  padding: 8px;
+  background-color: white;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+  animation: wordPop 0.5s ease-out forwards;
+}
+
+.wordBox:hover {
+  transform: scale(1.1) !important;
+  transition: all 0.3s ease;
+}
+
+.clicked {
+  color: #210b61;
+  font-weight: bold;
+  transition: color 0.5s ease;
+  border: 3px solid #8258fa;
+  background-color: #f1def0;
+  box-shadow: 0 0 8px 2px #8258fa;
+}
+
+.buttonNewKeywords {
+  white-space: nowrap;
+  overflow: visible;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transition: color 0.4s;
+  transition: color 0.4s;
+
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
+
+  background: linear-gradient(to right, #1488cc, #2b32b2);
+  box-shadow: 0 2px 25px rgba(20, 137, 204, 0.3);
+  position: absolute;
+}
+
+@keyframes buttonMove {
+  30% {
+    -webkit-transform: translate3d(0, -5px, 0) rotate(5deg);
+    transform: translate3d(0, -5px, 0) rotate(5deg);
+  }
+  50% {
+    -webkit-transform: translate3d(0, -3px, 0) rotate(-4deg);
+    transform: translate3d(0, -3px, 0) rotate(-4deg);
+  }
+  80% {
+    -webkit-transform: translate3d(0, 0, 0) rotate(-3deg);
+    transform: translate3d(0, 0, 0) rotate(-3deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+}
+
+.buttonNewKeywords:hover {
+  -webkit-animation-name: buttonMove;
+  animation-name: buttonMove;
+  -webkit-animation-duration: 0.4s;
+  animation-duration: 0.4s;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: 2;
+  animation-iteration-count: 2;
+
+  background-color: #009bff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+
+  background: linear-gradient(
+    to right,
+    rgba(20, 136, 204, 0.9),
+    rgba(43, 50, 178, 0.9)
+  );
+  box-shadow: 0 2px 25px rgba(20, 137, 204, 0.5);
+}
+
+@keyframes unlockAnimation {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+}
+
+.lock:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.unlock {
+  animation: unlockAnimation 1s forwards;
+}
+
+.nextButton {
+  white-space: nowrap;
+  position: absolute;
+  bottom: 65px;
+  right: 50px;
+  width: 160px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s, visibility 0.5s;
+
+  padding: 10px 20px;
+  background-color: #f1def0;
+  color: black;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 0 8px 2px #8258fa;
+  border: 3px solid #8258fa;
+  font-weight: bold;
+  font-size: 16px;
+  font-family: "hambaknoon";
+  letter-spacing: 3px;
+}
+
+.nextButton.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.nextButton:hover {
+  background-color: #cbacec;
+  box-shadow: 0 0 15px 5px rgba(130, 88, 250, 0.5);
+  font-size: 18px;
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+}
+
+.selectedWordCount {
+  white-space: nowrap;
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  /* background-color: rgba(255, 255, 255, 0.7); */
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 24px;
+  color: #333;
+}
+
+.minimumKeywordAlert {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: gray;
+  text-align: center;
+  z-index: 10;
 }
 
 .score {
-    font-size: 40px;
-    left: 20px;
-    top: 10px;
-    font-family: 'Kdam Thmor Pro', sans-serif;
-    color: #fff;
+  font-size: 40px;
+  left: 20px;
+  top: 10px;
+  font-family: "Kdam Thmor Pro", sans-serif;
+  color: #fff;
 }
 
 .score .num {
-    font-size: 0.65em;
-    color: #ccc;
+  font-size: 0.65em;
+  color: #ccc;
 }
 
 .timer {
-    font-size: 85px;
-    top: unset;
-    bottom: 115px;
-    left: 15px;
-    display: flex;
+  font-size: 85px;
+  top: unset;
+  bottom: 115px;
+  left: 15px;
+  display: flex;
 }
 
 .timer .face {
-    overflow: hidden;
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    left: 10px;
-    top: 22px;
+  overflow: hidden;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  left: 10px;
+  top: 22px;
 }
 
 .timer .face .inner {
-    left: -10px;
-    top: -22px;
+  left: -10px;
+  top: -22px;
 }
 
 .replay {
-    font-size: 25px;
-    width: 200px;
-    left: 105px;
-    top: 35px;
-    font-family: 'Kdam Thmor Pro', sans-serif;
-    color: #fff;
+  font-size: 25px;
+  width: 200px;
+  left: 105px;
+  top: 35px;
+  font-family: "Kdam Thmor Pro", sans-serif;
+  color: #fff;
 }
 
 .next_button_enable {
-    cursor: pointer;
-    pointer-events: auto;
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .next_button_block {
-    visibility: visible;
-    pointer-events: none;
+  visibility: visible;
+  pointer-events: none;
 }
 
 .mouse {
-    /* cursor: url('../../../assets/punch-icon.svg'), auto; */
-    /* cursor: url('../../../assets/closeModal-icon.svg'), auto; */
-}
-
-.custom-cursor {
-    /* cursor: url('../../../assets/punch-icon.svg'), auto; */
-}
-
-.pointer {
-    position: absolute;
-    background-color: rgb(108, 12, 31);
-    /* background-image: url('../../../assets/punch-icon.svg'); */
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    left: -15px;
-    top: -15px;
+  cursor: url("../../../assets/cursor.cur") 10 20, auto;
 }

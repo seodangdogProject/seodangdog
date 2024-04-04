@@ -1,22 +1,28 @@
 .nav {
   background-color: #493971;
-  width: 187px;
+  min-width: 187px;
   height: 100vh;
   display: flex;
   flex-direction: column;
 }
+
 .logo {
   font-size: 45px;
-  font-family: "hambaknoon";
+  font-family: "realhambaknoon";
   font-weight: 900;
   margin-top: 35px;
   text-align: center;
   color: #fff;
 }
+.logo img {
+  width: 140px;
+}
+
 .item_container {
   margin-top: 58px;
   text-align: center;
 }
+
 .item {
   font-family: "hunminjungum";
   font-size: 20px;
@@ -39,6 +45,13 @@
   background-color: #fff;
   color: #000;
 }
+.item.active:hover {
+  background-color: #fff;
+  color: #000;
+}
+.item:hover {
+  background-color: rgba(0, 0, 0, 0.273);
+}
 
 .logout {
   flex-grow: 1;
@@ -47,10 +60,17 @@
   justify-content: flex-end;
   margin-bottom: 50px;
 }
-/* .logout > div {
-  margin-bottom: 50px;
-} */
+
+.logout_item {
+  cursor: pointer;
+}
+.logout_item:hover {
+  background-color: rgba(0, 0, 0, 0.273);
+}
 .logout_item div:first-child {
   display: flex;
   justify-content: center;
+}
+.item.active .hottopic {
+  color: red;
 }
