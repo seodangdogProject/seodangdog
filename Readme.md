@@ -88,27 +88,36 @@
 - 빌드/배포 관리: Jenkins
 - 커뮤니케이션: Mattermost, Notion, Discord
 - 디자인: Figma
-- 개발 환경
-  - IDE
-    - Visual Studio Code 1.85.1
-    - IntelliJ IDEA 2023.03.02 (Community Edition)
-    - PyCharm IDE 2023.03.02 (Community Edition)
-  - 서버: AWS EC2
-    - Ubuntu 20.04 LTS
-    - Nginx 1.18.0
-    - OpenSSL 1.1.1f
-  - Front-End
-    - Node.js 20.11.1
-    - Next.js 14.1.0
-  - Back-End
-    - Java 17 (Azul Zulu version 17.48.15)
-    - Spring boot 3.2.4
-    - Python 3.11.0
-    - scikit-learn 1.4.1
-    - konlpy 0.6.0
-    - pandas 2.2.1
-    - MySQL 8.0.36
-    - MongoDB 7.0.6
+- IDE
+  - Visual Studio Code 1.85.1
+  - IntelliJ IDEA 2023.03.02 (Community Edition)
+  - PyCharm IDE 2023.03.02 (Community Edition)
+- 서버: AWS EC2
+  - Ubuntu 20.04 LTS
+  - Nginx 1.18.0
+  - OpenSSL 1.1.1f
+- Front-End
+  - Node.js 20.11.1
+  - Next.js 14.1.0
+- Back-End
+  - Java 17 (Azul Zulu version 17.48.15)
+  - Spring boot 3.2.4
+  - Python 3.11.0
+  - scikit-learn 1.4.1
+  - konlpy 0.6.0
+  - pandas 2.2.1
+  - MySQL 8.0.36
+  - MongoDB 7.0.6
 
 # 시스템 아키텍쳐
 ![architecture](./image/architecture.png)
+
+# 팀원 소개
+| 이름                                          | 역할       | 담당                                                 |
+| --------------------------------------------- | ---------- | ---------------------------------------------------- |
+| [박찬영](https://github.com/Park-chan-00)     | 팀장, 백엔드   | 크롤링, 추천 시스템, 자연어 처리, 뉴스 문제 생성 자동화, 디자인           |
+| [김창희](https://github.com/changhi97)     | 백엔드   | 추천 시스템 총괄, DB 설계, API 설계           |
+| [김아림](https://github.com/arim-kim)     | CI/CD   | DB 설계, API 설계, API 키 관리, EC2 서버 관리, CI/CD, UI/UX 설계, UCC 제작           |
+| [정창휘](https://github.com/JungChnagHwi)     | 백엔드   | API 설계,  DB 설계, UI/UX 설계, 디자인           |
+| [위재원](https://github.com)     | 백엔드   |  API 설계,  DB 설계, 협업 툴 관리       |
+| [양윤모](https://github.com/momo-abcd)     | 프론트엔드   |  UI/UX 설계 총괄, 디자인       |
