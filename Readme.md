@@ -115,13 +115,13 @@
 # 기술 특이점
 - 뉴스 기사에서 ```키워드 추출```
     - 전처리 후 TF-IDF를 사용하여 단어의 중요도 추출
-    ![tfidf](./image/tfidf.png) 
+![tfidf](./image/tfidf.png) 
 - ```콘텐츠 기반 필터링``` 추천
     - 사용자의 키워드와 뉴스의 키워드를 벡터화하여 코사인 유사도 계산
-    ![cosine](./image/cosineSim.png)
+![cosine](./image/cosineSim.png)
 - ```협업 필터링``` 추천
     - 사용자와 뉴스 간의 연관도를 분석하여 추천 진행
-    ![MF](./image/MF.png)
+![MF](./image/MF.png)
 - 뉴스 기사 본문 ```하이라이트```
 - GPT API를 사용하여 문제 생성
 - 10개의 언론사에서 매일 기사 수집
