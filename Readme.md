@@ -96,25 +96,25 @@
 - 커뮤니케이션: Mattermost, Notion, Discord
 - 디자인: Figma
 - IDE
-  - Visual Studio Code 1.85.1
+  - Visual Studio Code ```1.85.1```
   - IntelliJ IDEA 2023.03.02 (Community Edition)
   - PyCharm IDE 2023.03.02 (Community Edition)
 - 서버: AWS EC2
-  - Ubuntu 20.04 LTS
-  - Nginx 1.18.0
-  - OpenSSL 1.1.1f
+  - Ubuntu ```20.04 LTS```
+  - Nginx ```1.18.0```
+  - OpenSSL ```1.1.1f```
 - Front-End
-  - Node.js 20.11.1
-  - Next.js 14.1.0
+  - Node.js ```20.11.1```
+  - Next.js ```14.1.0```
 - Back-End
-  - Java 17 (Azul Zulu version 17.48.15)
-  - Spring boot 3.2.4
-  - Python 3.11.0
-  - scikit-learn 1.4.1
-  - konlpy 0.6.0
-  - pandas 2.2.1
-  - MySQL 8.0.36
-  - MongoDB 7.0.6
+  - Java ```17``` (Azul Zulu version 17.48.15)
+  - Spring boot ```3.2.4```
+  - Python ```3.11.0```
+  - scikit-learn ```1.4.1```
+  - konlpy ```0.6.0```
+  - pandas ```2.2.1```
+  - MySQL ```8.0.36```
+  - MongoDB ```7.0.6```
 
 # 시스템 아키텍쳐
 ![architecture](./image/architecture.png)
