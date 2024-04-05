@@ -17,7 +17,7 @@
 ## 🎞️ UCC
 [![logo-ucc](./image/logo-ucc.png)](https://www.youtube.com/watch?v=3mPX0aQhI00) 
 
-# 🖥️ 서비스 화면
+# 👀 서비스 화면
 ### 랜딩 페이지
 - 서비스의 주요 기능에 대한 소개
 ![landing](./image/landing.gif)
@@ -112,6 +112,20 @@
 # 시스템 아키텍쳐
 ![architecture](./image/architecture.png)
 
+# 기술 특이점
+- 뉴스 기사에서 ```키워드 추출```
+    - 전처리 후 TF-IDF를 사용하여 단어의 중요도 추출
+    ![tfidf](./image/tfidf.png) 
+- ```콘텐츠 기반 필터링``` 추천
+    - 사용자의 키워드와 뉴스의 키워드를 벡터화하여 코사인 유사도 계산
+    ![cosine](./image/cosineSim.png)
+- ```협업 필터링``` 추천
+    - 사용자와 뉴스 간의 연관도를 분석하여 추천 진행
+    ![MF](./image/MF.png)
+- 뉴스 기사 본문 ```하이라이트```
+- GPT API를 사용하여 문제 생성
+- 10개의 언론사에서 매일 기사 수집
+
 # 팀원 소개
 | 이름                                          | 역할       | 담당                                                 |
 | --------------------------------------------- | ---------- | ---------------------------------------------------- |
@@ -119,5 +133,5 @@
 | [김창희](https://github.com/changhi97)     | 백엔드   | 추천 시스템 총괄, DB 설계, API 설계           |
 | [김아림](https://github.com/arim-kim)     | CI/CD   | DB 설계, API 설계, API 키 관리, EC2 서버 관리, CI/CD, UI/UX 설계, UCC 제작           |
 | [정창휘](https://github.com/JungChnagHwi)     | 백엔드   | API 설계,  DB 설계, UI/UX 설계, 디자인           |
-| [위재원](https://github.com)     | 백엔드   |  API 설계,  DB 설계, 협업 툴 관리       |
+| [위재원](https://github.com/jaewonwi)     | 백엔드   |  API 설계,  DB 설계, 협업 툴 관리       |
 | [양윤모](https://github.com/momo-abcd)     | 프론트엔드   |  UI/UX 설계 총괄, 디자인       |
