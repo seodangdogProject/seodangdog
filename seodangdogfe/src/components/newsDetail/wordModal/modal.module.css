@@ -1,0 +1,101 @@
+.horizontal {
+  width: 100%; /* 수평선의 가로 길이 */
+  height: 1px; /* 수평선의 세로 길이 */
+  background-color: #ccc; /* 수평선의 색상 */
+  margin: 10px 0; /* 수평선 위 아래 여백 */
+}
+
+.modal_content {
+  font-family: "RealNanumMyeongjo";
+  position: absolute;
+  background-color: white;
+  border-radius: 5px;
+  transition: opacity 0.3s;
+}
+
+.modal_container {
+  font-family: "RealNanumMyeongjo";
+  border-radius: 10px;
+  border: 1px solid black;
+  width: 45%;
+  display: flex;
+  position: fixed;
+  flex-direction: column; /* 세로로 정렬 */
+  justify-content: center;
+  justify-content: flex-start; /* title을 위로 정렬 */
+  background-color: white;
+  height: 40%;
+  /* border: 1px solid red; */
+  z-index: 100;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.modal_container::-webkit-scrollbar {
+  width: 20px; /* 스크롤 바의 너비 */
+}
+.modal_container::-webkit-scrollbar-track {
+  background: #f0f0f0; /* 추적부분의 배경색 */
+  opacity: 0.7;
+  border-radius: 15px;
+}
+.modal_container::-webkit-scrollbar-thumb {
+  background: #493971; /* 슬라이더의 배경색 */
+  border-radius: 10px; /* 슬라이더의 모서리를 둥글게 만듦 */
+}
+
+.title {
+  margin-top: 10px;
+  font-family: "NanumMyeongjo";
+  display: flex;
+  width: 100%;
+  position: absolute;
+  overflow: hidden;
+  font-family: "RealNanumMyeongjo";
+}
+
+.title_word {
+  width: 90%;
+  font-weight: bold;
+  padding-left: 10px;
+  font-size: 45px;
+  display: flex;
+}
+
+.bookmark_button {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+}
+
+.exit_button {
+  width: 20%;
+  cursor: pointer;
+}
+
+.mean_container {
+  font-family: "RealNanumMyeongjo";
+  margin-top: 10%;
+  font-size: 20px;
+  background-color: aliceblue;
+  padding: 20px;
+}
+
+.mean {
+  margin: 10px;
+  line-height: 1.5rem;
+}
+
+.horizontal {
+  border-top: 1px solid #000; /* 가로선 스타일 및 두께 */
+  margin: 20px 0; /* 원하는 여백 설정 */
+}
+
+.meanIndex {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  padding: 0 8px;
+}

@@ -1,15 +1,146 @@
 from repository.recommend_repository import select_all_ratings
-from repository.recommend_repository import select_all_news
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 import pickle
 import os
-import time
+import multiprocessing
 
 router = APIRouter()
+
+@router.get('/fast/mf_recom/train')
+def user_register_train():
+    multiprocessing_train()
+
+
+def multiprocessing_train():
+    process = multiprocessing.Process(target=train_mf_model)
+    process.start()
+
+    return {"msg": "Training started."}
+
+
+def save_mf(model):
+    base_src = './recommend'
+    model_name = 'mf_online.pkl'
+    save_path = os.path.join(base_src, model_name)
+    with open(save_path, 'wb') as f:
+        pickle.dump(model, f)
+
+
+def load_mf():
+    base_src = './recommend'
+    model_name = 'mf_online.pkl'
+    save_path = os.path.join(base_src, model_name)
+    if not os.path.exists(save_path):
+        train_mf_model()
+    with open(save_path, 'rb') as f:
+        model = pickle.load(f)
+    return model
+
+
+def train_mf_model():
+
+    ratings = select_all_ratings()
+
+    # ratings에 아무것도 없으면 에러 발생(학습데이터가 없기때문에)
+    ratings = pd.DataFrame(ratings)
+
+    # 중복제거(디비의 무결성이 보장되면 필요없음)
+    ratings = ratings.drop_duplicates(subset=['user_id', 'news_id'])
+
+    TRAIN_SIZE = 0.75
+    # (사용자 - 영화 - 평점)
+    # 데이터를 섞는다. 데이터의 순서를 무작위로 변경하여 모델이 특정 순서에 의존하지 않도록 한다.
+    # random_state 매개변수를 사용하여 재현 가능한 결과를 얻을 수 있도록 설정
+    ratings = shuffle(ratings, random_state=2021)
+
+    # 전체 데이터에서 훈련 세트의 크기를 결정하는 기준을 설정
+    cutoff = int(TRAIN_SIZE * len(ratings))
+    ratings_train = ratings.iloc[:cutoff]
+    ratings_test = ratings.iloc[cutoff:]
+
+    R_temp = ratings.pivot(index='user_id', columns='news_id', values='rating').fillna(0)
+
+    hyper_params = {
+        'K': 5,
+        'alpha': 0.001,
+        'beta': 0.02,
+        'iterations': 3900,
+        'verbose': True
+    }
+
+    mf = NEW_MF(R_temp, hyper_params)
+    test_set = mf.set_test(ratings_test)
+    result = mf.test()
+    print("학습완료")
+    # 학습을 통해 최적의 K값 찾기 start
+    # results = []
+    # index = []
+
+    # R_temp = ratings.pivot(index = 'user_id', columns = 'news_id', values = 'rating').fillna(0)
+
+    # for K in range (1,261,10):
+    #   print(f'K : {K}')
+    #   hyper_params = {
+    #     'K' : K,
+    #     'alpha' : 0.001,
+    #     'beta' : 0.02,
+    #     'iterations' : 300,
+    #     'verbose' : True
+    #   }
+    #   mf = NEW_MF(R_temp, hyper_params)
+
+    # test_set = mf.set_test(ratings_test)
+
+    # result = mf.test()
+    # 학습을 통해 최적의 K값 찾기 end
+
+    save_mf(mf)
+    print("mf.user_id_index : ", mf.user_id_index)
+    print('모델저장완료')
+
+
+
+# 변수로 넘어온 user_seq, news_seq는 인덱스(0부터)로 변환해서 학습을 시켜야한다.
+def online_learning(mf, user_id, item_id, rating, weight=1):
+    print("mf online", user_id, item_id, rating, weight)
+    if user_id not in mf.user_id_index:
+        # 새로운 사용자인 경우, 사용자를 모델에 추가하고 초기화
+        mf.user_id_index[user_id] = mf.num_users
+        mf.index_user_id[mf.num_users] = user_id
+        mf.num_users += 1
+
+        print("new user mf", mf.user_id_index[user_id])
+
+        # 새로운 사용자의 특성을 추가하기 위해 mf.P에 새로운 행을 추가
+        # np.random.normal() 함수를 사용하여 임의로 생성되며, 각 요소는 평균이 0이고 표준 편차가 1/mf.K 인 정규 분포를 따르는 난수
+        # 새로운 사용자의 초기 특성을 무작위로 설정
+
+        # np.random.normal() 함수는 정규 분포를 따르는 난수를 생성하는 함수(평균과 표준 편차가 인자)
+        ## scale=1./mf.K로 표준 편차를 설정 -> 1/mf.K를 표준 편차로 가지는 정규 분포를 따르는 난수
+        ### size=(1, mf.K) -> 1행, mf.K(잠재요인)열 형태의 난수를 생성
+        existing_user_features = mf.P.mean(axis=0)  # 예시로 평균 사용
+        mf.P = np.vstack([mf.P, existing_user_features])
+        mf.b_u = np.append(mf.b_u, 0)
+
+    if item_id not in mf.item_id_index:
+        # 새로운 아이템인 경우, 아이템을 모델에 추가하고 초기화
+        mf.item_id_index[item_id] = mf.num_items
+
+        print("new item mf", mf.item_id_index[item_id])
+        mf.index_item_id[mf.num_items] = item_id
+        mf.num_items += 1
+        existing_item_features = mf.Q.mean(axis=0)  # 예시로 평균 사용
+        mf.Q = np.vstack([mf.Q, existing_item_features])
+        mf.b_d = np.append(mf.b_d, 0)
+
+    # 사용자와 아이템을 모델에 추가한 후에는 모델을 업데이트
+    i = mf.user_id_index[user_id]
+    j = mf.item_id_index[item_id]
+    mf.online_sgd((i, j, rating), weight)
+
 
 class NEW_MF():
     def __init__(self, ratings, hyper_params):
@@ -21,7 +152,7 @@ class NEW_MF():
         self.alpha = hyper_params['alpha']  # 학습률
         self.beta = hyper_params['beta']  # 정규화개수
         self.iterations = hyper_params['iterations']  # SGD의 계산을 할 때의 반복 횟수
-        self.verbose = hyper_params['verbose']  # 학습과정을 중간에 출력할건지? 플래그 변수
+        self.verbose = hyper_params['verbose']  # 학습과정을 중/간에 출력할건지? 플래그 변수
 
         # movielens같은 경우는 데이터가 아주 잘 정리되어있고 연속된값이다.
         # 하지만 실제는 그렇지 않을 경우가 더 많을 것이다
@@ -95,6 +226,11 @@ class NEW_MF():
         # self.Q[j,].T : 아이템 요인에 대해서 트랜포지안 값을 연산을 하
         # dot(self.Q[j,:].T): 잠재 요인 벡터를 내적(dot product)하여 사용자 i와 아이템 j 간의 상호작용을 모델링
         # ->  i와 아이템 j 간의 평점 예측치를 계산하는 식
+
+        # print("self.b", self.b)
+        # print("self.b_u[i]", self.b_u[i])
+        # print("self.b_d[j]", self.b_d[j])
+        # print("self.P[i, :].dot(self.Q[j, :].T)",self.P[i, :].dot(self.Q[j, :].T))
         prediction = self.b + self.b_u[i] + self.b_d[j] + self.P[i, :].dot(self.Q[j, :].T)
         return prediction
 
@@ -182,13 +318,13 @@ class NEW_MF():
     ### 가중치 없는 온라인 학습 end###
 
     ### 가중치 있는 온라인 학습 start###
-    def online_learning(self, new_samples, new_weight):
-        for sample, weight in zip(new_samples, new_weight):
-            self.online_sgd(sample, weight)
+    def online_learning(self, new_sample, new_weight):
+        # new_sample에는 유저, 뉴스, 점수 new_weight는 중요도
+        self.online_sgd(new_sample, new_weight)
 
     def online_sgd(self, new_sample, new_weight):
         i, j, r = new_sample
-        # 새로운 데이터에 가중치를 적용하여 업데이트 수행
+        # 새로운 데이터에 가중치를 적용하여 업데이트 수행(오차에 가중치를 크게 곱하면 중요도증가)
         prediction = self.get_prediction(i, j)
         e = (r - prediction) * new_weight
 
@@ -202,84 +338,9 @@ class NEW_MF():
 
     # 유저아이디와 아이템 아이디로 예측치를 계산해서 돌려준다
     # -> 어떤 인덱스 값이 들어와도 자동으로 매핑되서 예측치계산
-    def get_one_prediction(self, user_id:int, item_id):
+    def get_one_prediction(self, user_id, item_id):
         return self.get_prediction(self.user_id_index[user_id],
                                    self.item_id_index[item_id])
 
     def full_prediction(self):
         return self.b + self.b_u[:, np.newaxis] + self.b_d[np.newaxis, :] + self.P.dot(self.Q.T)
-
-
-@router.get('/fast/mf/train')
-def train_mf_model():
-    start_time = time.time()
-
-    # 아마 커넥션 두개 써서 안되는듯 레이팅은 비동기로 하는데 이건 동기니까
-    ratings = select_all_ratings()
-    ratings = pd.DataFrame(ratings)
-
-    # 중복제거(디비의 무결성이 보장되면 필요없음)
-    ratings = ratings.drop_duplicates(subset=['user_id', 'news_id'])
-
-    TRAIN_SIZE = 0.75
-    # (사용자 - 영화 - 평점)
-    # 데이터를 섞는다. 데이터의 순서를 무작위로 변경하여 모델이 특정 순서에 의존하지 않도록 한다.
-    # random_state 매개변수를 사용하여 재현 가능한 결과를 얻을 수 있도록 설정
-    ratings = shuffle(ratings, random_state=2021)
-
-    # 전체 데이터에서 훈련 세트의 크기를 결정하는 기준을 설정
-    cutoff = int(TRAIN_SIZE * len(ratings))
-    ratings_train = ratings.iloc[:cutoff]
-    ratings_test = ratings.iloc[cutoff:]
-
-    R_temp = ratings.pivot(index='user_id', columns='news_id', values='rating').fillna(0)
-
-    hyper_params = {
-        'K': 5,
-        'alpha': 0.001,
-        'beta': 0.02,
-        'iterations': 3900,
-        'verbose': True
-    }
-
-    mf = NEW_MF(R_temp, hyper_params)
-    test_set = mf.set_test(ratings_test)
-    result = mf.test()
-    print("학습완료")
-    print(ratings['user_id'][20])
-    # 학습을 통해 최적의 K값 찾기 start
-    # results = []
-    # index = []
-
-    # R_temp = ratings.pivot(index = 'user_id', columns = 'news_id', values = 'rating').fillna(0)
-
-    # for K in range (1,261,10):
-    #   print(f'K : {K}')
-    #   hyper_params = {
-    #     'K' : K,
-    #     'alpha' : 0.001,
-    #     'beta' : 0.02,
-    #     'iterations' : 300,
-    #     'verbose' : True
-    #   }
-    #   mf = NEW_MF(R_temp, hyper_params)
-
-    # test_set = mf.set_test(ratings_test)
-
-    # result = mf.test()
-    # 학습을 통해 최적의 K값 찾기 end
-        
-    end_time = time.time()
-    execution_time = end_time - start_time
-    print(f"mf 훈련시간: {execution_time} 초")
-
-
-    base_src = './recommend'
-    # print(os.listdir(base_src))
-    model_name = 'mf_online.pkl'
-    save_path = os.path.join(base_src, model_name)
-    with open(save_path, 'wb') as f:
-        pickle.dump(mf, f)
-    print(mf.index_user_id)
-    print()
-    print(mf.user_id_index)

@@ -13,6 +13,7 @@ import com.ssafy.seodangdogbe.news.dto.MostViewRecommendResponseDto;
 import com.ssafy.seodangdogbe.user.domain.User;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,7 @@ import com.ssafy.seodangdogbe.news.service.FastApiService.MfRecommendResponse;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,7 @@ import static com.ssafy.seodangdogbe.news.domain.QUserNews.userNews;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCustom {
 
     private final EntityManager entityManager;
@@ -57,15 +60,24 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .map(CbfRecommendResponse::getNews_seq)
                 .collect(Collectors.toList());
 
-        List<News> newsList = queryFactory
+        List<News> unorderedNewsList = queryFactory
                 .select(news)
                 .from(news)
                 .leftJoin(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq)).fetchJoin()
                 .where(news.newsSeq.in(recommendedNewsSeqs).and(userNews.isSolved.isNull().or(userNews.isSolved.eq(false)))
                 ).fetch();
 
-        System.out.println(newsList);
-        List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
+        Map<Long, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < recommendedNewsSeqs.size(); i++) {
+            indexMap.put(recommendedNewsSeqs.get(i), i);
+        }
+
+        List<News> sortedNewsList = unorderedNewsList.stream()
+                .sorted(Comparator.comparingInt(news -> indexMap.getOrDefault(news.getNewsSeq(), -1)))
+                .collect(Collectors.toList());
+
+//        System.out.println(newsList);
+        List<NewsPreviewListDto> newsPreviewLists = sortedNewsList.stream().map(news -> {
             List<String> keywords = news.getKeywordNewsList().stream()
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
@@ -83,6 +95,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
             );
@@ -120,76 +133,113 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
     @Transactional
     public UserRecommendResponseDtoV2 findNewsRecommendationsV2(User user) {
 
+        log.info(" ==  추천 요청 == ");
         Map<String, Double> reqKeywords = new HashMap<>();
         Map<String, Double> alreadyKeyword = new HashMap<>();
         Map<String, Double> newKeyword = new HashMap<>();
-
+        List<MainNewsPreviewDto> newsPreviewLists = new ArrayList<>();
+        System.out.println(LocalDateTime.now());
         List<CbfRecommendResponse> result = fastApiService.fetchRecommendations().block().stream().toList();
-
+        System.out.println(LocalDateTime.now());
         List<Long> recommendedNewsSeqs = result.stream()
                 .map(CbfRecommendResponse::getNews_seq)
                 .collect(Collectors.toList());
 
-        List<News> newsList = queryFactory
+        List<News> unorderedNewsList = queryFactory
                 .select(news)
                 .from(news)
                 .where(news.newsSeq.in(recommendedNewsSeqs)).fetch();
 
-        List<MainNewsPreviewDto> newsPreviewLists = newsList.stream().map(news -> {
+        Map<Long, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < recommendedNewsSeqs.size(); i++) {
+            indexMap.put(recommendedNewsSeqs.get(i), i);
+        }
+        List<News> sortedNewsList = unorderedNewsList.stream()
+                .sorted(Comparator.comparingInt(n -> indexMap.getOrDefault(n.getNewsSeq(), -1)))
+                .collect(Collectors.toList());
 
-            Map<String, Double> keywords = result.stream()
-                    .flatMap(n -> n.getNews_keyword().entrySet().stream())
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue));
-
+        for(int i = 0; i < sortedNewsList.size(); i++){
+            Map<String, Double> keywords = result.get(i).getNews_keyword();
+            News news = sortedNewsList.get(i);
+            String mediaImgUrl = news.getMedia().getMediaImgUrl();
             reqKeywords.putAll(keywords);
 
-            String mediaImgUrl = news.getMedia().getMediaImgUrl();
-
-            return new MainNewsPreviewDto(
+            newsPreviewLists.add(new MainNewsPreviewDto(
                     news.getNewsSeq(),
                     news.getNewsImgUrl(),
                     news.getNewsTitle(),
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
-            );
-        }).collect(Collectors.toList());
+            ))
+            ;
+        }
 
+//        List<MainNewsPreviewDto> newsPreviewLists = sortedNewsList.stream().map(news -> {
+//
+//            Map<String, Double> keywords = news.get()
+//
+//                    .flatMap(n -> n.getNews_keyword().entrySet().stream())
+//                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue));
+//
+//            System.out.println(keywords);
+//
+//            reqKeywords.putAll(keywords);
+//
+//            String mediaImgUrl = news.getMedia().getMediaImgUrl();
+//
+//            return new MainNewsPreviewDto(
+//                    news.getNewsSeq(),
+//                    news.getNewsImgUrl(),
+//                    news.getNewsTitle(),
+//                    news.getNewsDescription(),
+//                    news.getNewsCreatedAt(),
+//                    news.getCountView(),
+//                    mediaImgUrl,
+//                    keywords
+//            );
+//        }).collect(Collectors.toList());
+
+        // 사용자가 가진 키워드 리스트
         List<String> keywordList = queryFactory
                 .select(Projections.constructor(String.class, userKeyword.keyword.keyword))
                 .from(userKeyword)
                 .where(userKeyword.user.eq(user))
                 .fetch();
 
-        System.out.println("======================");
-        System.out.println(keywordList);
-        System.out.println(keywordList.size());
+//        System.out.println("======================");
+//        System.out.println(keywordList);
+//        System.out.println(keywordList.size());
 
         for (String k : reqKeywords.keySet()) {
-           if(keywordList.contains(k)){
+           if (keywordList.contains(k)){     // 사용자가 이미 갖고있는 키워드면
                alreadyKeyword.put(k, reqKeywords.get(k));
-           }else {
+           }else {                          // 사용자가 갖고있지 않는 키워드면
                newKeyword.put(k, reqKeywords.get(k));
            }
         }
+//
+//        System.out.println("======================");
+//        System.out.println(newKeyword);
+//        System.out.println(alreadyKeyword);
 
-        System.out.println("======================");
-        System.out.println(newKeyword);
-        System.out.println(alreadyKeyword);
+        // 기존에 있는 키워드는 -> * 1.4
+//        queryFactory
+//                .update(userKeyword)
+//                .set(userKeyword.weight, userKeyword.weight.multiply(1.4).multiply(1e10).divide(1e10))
+//                .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(alreadyKeyword.keySet()))
+//                .execute();
+//
+//        // 새로 들어온 키워드
+         saveAllV2(user, newKeyword);
+//
+//        entityManager.flush();
+//        entityManager.clear();
 
-        queryFactory
-                .update(userKeyword)
-                .set(userKeyword.weight, userKeyword.weight.multiply(1.8))
-                .where(userKeyword.user.eq(user), userKeyword.keyword.keyword.in(alreadyKeyword.keySet()))
-                .execute();
-
-        saveAllV2(user, newKeyword);
-
-        entityManager.flush();
-        entityManager.clear();
-
+        System.out.println(LocalDateTime.now());
         return new UserRecommendResponseDtoV2(newsPreviewLists);
     }
 
@@ -199,14 +249,24 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .map(MfRecommendResponse::getNewsSeq)
                 .collect(Collectors.toList());
 
-        List<News> newsList = queryFactory
+        List<News> unorderedNewsList = queryFactory
                 .select(news)
                 .from(news)
                 .leftJoin(qUserNews).on(qNews.newsSeq.eq(qUserNews.news.newsSeq)).fetchJoin()
-                .where(news.newsSeq.in(recommendedNewsSeqs).and(userNews.isSolved.isNull().or(userNews.isSolved.eq(false)))
+                .where(news.newsSeq.in(recommendedNewsSeqs)
                 ).fetch();
 
-        List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
+        // 추천된 순서대로 뉴스 목록 정렬
+        Map<Long, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < recommendedNewsSeqs.size(); i++) {
+            indexMap.put(recommendedNewsSeqs.get(i), i);
+        }
+
+        List<News> sortedNewsList = unorderedNewsList.stream()
+                .sorted(Comparator.comparingInt(news -> indexMap.getOrDefault(news.getNewsSeq(), -1)))
+                .collect(Collectors.toList());
+
+        List<NewsPreviewListDto> newsPreviewLists = sortedNewsList.stream().map(news -> {
             List<String> keywords = news.getKeywordNewsList().stream()
                     .map(keywordNews -> keywordNews.getKeyword().getKeyword())
                     .collect(Collectors.toList());
@@ -218,6 +278,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
             );
@@ -233,7 +294,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
         List<News> newsList = queryFactory
                 .selectFrom(news)
                 .orderBy(news.countSolve.desc())
-                .limit(10)
+                .limit(50)
                 .fetch();
 
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
@@ -248,6 +309,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
             );
@@ -262,7 +324,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                 .selectFrom(news)
 //                .where(qUserNews.user.userSeq.eq(userSeq))
                 .orderBy(news.countView.desc())
-                .limit(10)
+                .limit(50)
                 .fetch();
 
         List<NewsPreviewListDto> newsPreviewLists = newsList.stream().map(news -> {
@@ -277,6 +339,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     news.getNewsDescription(),
                     news.getNewsCreatedAt(),
                     news.getCountView(),
+                    news.getCountSolve(),
                     mediaImgUrl,
                     keywords
             );
@@ -287,11 +350,10 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
 
     @Transactional
     public void saveAllV2(User user, Map<String, Double> keywords) {
-
         List<String> keywordsList = keywords.keySet().stream().toList();
 
         String sql = "INSERT INTO user_keyword (user_seq, keyword, weight) " +
-                "VALUES (?, ?, ?)";
+                "VALUES (?, ?, ROUND(?, 10))";
 
         jdbcTemplate.batchUpdate(sql,
                 new BatchPreparedStatementSetter() {
@@ -299,7 +361,7 @@ public class NewsRecommendRepositoryImpl implements NewsRecommendRepositoryCusto
                     public void setValues(PreparedStatement sql, int i) throws SQLException {
                         sql.setInt(1, user.getUserSeq());
                         sql.setString(2, keywordsList.get(i));
-                        sql.setDouble(3, keywords.get(keywordsList.get(i)) * 2);
+                        sql.setDouble(3, keywords.get(keywordsList.get(i)) * 1.5);
                     }
 
                     @Override

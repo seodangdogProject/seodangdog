@@ -53,10 +53,13 @@ public class GameService {
                     String definition = metaWordDto != null && !metaWordDto.getItems().isEmpty()
                             ? metaWordDto.getItems().get(0).getDefinition() // 첫 번째 뜻을 사용
                             : "뜻을 찾을 수 없음"; // 뜻이 없는 경우의 기본값 처리
+
+                    boolean isEng = "eng".equals(metaWordDto.getWordLang());
                     return new GameGetProblemResponseDto.WordInfo(
                             word.getWordSeq(),
                             word.getWord(),
-                            definition
+                            definition,
+                            isEng
                     );
                 })
                 .collect(Collectors.toList());

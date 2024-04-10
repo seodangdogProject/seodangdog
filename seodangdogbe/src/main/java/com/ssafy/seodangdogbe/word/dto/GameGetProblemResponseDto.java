@@ -18,6 +18,7 @@ public class GameGetProblemResponseDto {
         private long wordSeq;
         private String word;
         private String mean;
+        private Boolean isEng;
     }
 }
 
